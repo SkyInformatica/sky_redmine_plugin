@@ -20,6 +20,14 @@ class CopyTaskController < ApplicationController
         new_issue.custom_field_values = { custom_field.id => custom_field_value }
       end
 
+      # Localizar a versão com nome "Aptas para desenvolvimento"
+      fixed_version = new_project.versions.find_by(name: "Aptas para desenvolvimento")
+      if fixed_version
+        new_issue.fixed_version_id = fixed_version.id
+      else
+        Rails.logger.info ">>> Não foi encontrada a versão 'Aptas para desenvolvimento' no projeto #{new_project.name}"
+      end
+
       new_issue.save
 
       # Mensagem de sucesso com o número da nova tarefa e o nome do projeto destino
