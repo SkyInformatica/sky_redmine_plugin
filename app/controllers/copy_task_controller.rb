@@ -8,24 +8,22 @@ class CopyTaskController < ApplicationController
       new_issue = @issue.copy(:project_id => new_project.id)
 
       # Limpar campos, exceto target_version_id
+      new_issue.tracker = Tracker.find_by_name("Retorno de testes") # Substitua pelo nome do tipo de tarefa desejado
       new_issue.assigned_to_id = nil
       new_issue.start_date = nil
       new_issue.estimated_hours = nil
 
       # Definir campo personalizado
       custom_field_id = 13
-      custom_field_value = ""
+      custom_field_value = nil
       if custom_field = IssueCustomField.find_by(id: custom_field_id)
         new_issue.custom_field_values = { custom_field.id => custom_field_value }
       end
 
-      # Alterar tipo e situação da tarefa copiada
-      new_issue.tracker = Tracker.find_by_name("Retorno de testes") # Substitua pelo nome do tipo de tarefa desejado
-      new_issue.status = IssueStatus.find_by(name: "Fechado") # Substitua pelo nome da situação fechada
       new_issue.save
 
       # Mensagem de sucesso com o número da nova tarefa e o nome do projeto destino
-      flash[:notice] = "Tarefa ##{new_issue.id} de retorno de testes foi criada para o projeto #{new_project.name}"
+      flash[:notice] = "Tarefa #{new_issue.id} de retorno de testes foi criada para o projeto #{new_project.name}"
     else
       flash[:warning] = "Não foi possível encontrar o projeto de origem para criar o retorno de testes. A cópia não foi realizada."
     end
