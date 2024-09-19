@@ -45,31 +45,32 @@ class CopyTaskController < ApplicationController
     current_project_id = issue.project_id
     new_project = nil
 
-    Rails.logger.info ">>> Current issue ID: #{current_issue.id}, Project ID: #{current_project_id}, Parent ID: #{current_issue.parent_id}"
+    Rails.logger.info ">>> Current issue ID: #{current_issue.id}, Project ID: #{current_project_id}"
 
-    # Percorre a cadeia de cópias até encontrar um projeto diferente
-    while current_issue.parent_id
-      Rails.logger.info ">>>> WHILE, Current issue ID: #{current_issue.id}, Project ID: #{current_project_id}, Parent ID: #{current_issue.parent_id}"
+    # Procura na lista de relações da tarefa para encontrar a origem
+    loop do
+      Rails.logger.info ">>>> Checking issue ID: #{current_issue.id}, Project ID: #{current_issue.project_id}"
 
-      parent_issue = Issue.find_by(id: current_issue.parent_id)
-
-      Rails.logger.info ">>>> Parent issue ID: #{parent_issue&.id}, Parent Project ID: #{parent_issue&.project_id}"
-
-      # Verifica se o pai é encontrado e se é de um projeto diferente
-      if parent_issue.nil?
-        Rails.logger.info ">>>> No parent issue found. Stopping search."
-        break # Se não encontrar o pai, interrompe a busca
-      elsif parent_issue.project_id != current_project_id
-        new_project = parent_issue.project # Define o novo projeto se for diferente do projeto atual
+      # Verifica se o projeto da tarefa atual é diferente do projeto original
+      if current_issue.project_id != current_project_id
+        new_project = current_issue.project
         Rails.logger.info ">>>> Found new project: #{new_project&.name}"
         break
       end
 
-      current_issue = parent_issue
+      # Verifica as relações da tarefa para encontrar a tarefa original
+      related_issues = IssueRelation.where(issue_to_id: current_issue.id, relation_type: "copied_to")
+
+      if related_issues.any?
+        Rails.logger.info ">>>> related_issues.first.issue_id: #{related_issues.first.issue_id}"
+        # Escolhe a primeira relação como exemplo (ajuste conforme necessário)
+        related_issue = Issue.find_by(id: related_issues.first.issue_id)
+        current_issue = related_issue
+      else
+        break
+      end
     end
 
-    Rails.logger.info ">>> retornando o projeto #{new_project}"
-
-    new_project # Retorna o projeto encontrado ou nil se não for encontrado
+    new_project
   end
 end
