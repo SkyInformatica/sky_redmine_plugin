@@ -30,6 +30,15 @@ class CopyTaskController < ApplicationController
 
       new_issue.save
 
+      # Agora vamos alterar o status da tarefa original (issue)
+      status_nok = IssueStatus.find_by(name: "Teste NOK - Fechada")
+      if status_nok
+        @issue.update(status_id: status_nok.id)
+        Rails.logger.info ">>> Status da tarefa original #{@issue.id} alterado para 'Teste NOK - Fechada'"
+      else
+        Rails.logger.info ">>> Não foi encontrado o status 'Teste NOK - Fechada'"
+      end
+
       # Mensagem de sucesso com o número da nova tarefa e o nome do projeto destino
       flash[:notice] = "Tarefa #{new_issue.id} de retorno de testes foi criada para o projeto #{new_project.name}"
     else
