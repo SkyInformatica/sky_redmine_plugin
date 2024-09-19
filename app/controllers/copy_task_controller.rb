@@ -62,9 +62,9 @@ class CopyTaskController < ApplicationController
       related_issues = IssueRelation.where(issue_to_id: current_issue.id, relation_type: "copied_to")
 
       if related_issues.any?
-        Rails.logger.info ">>>> related_issues.first.issue_id: #{related_issues.first.issue_id}"
+        Rails.logger.info ">>>> related_issues.first.issue_id: #{related_issues.first.issue_from_id}"
         # Escolhe a primeira relação como exemplo (ajuste conforme necessário)
-        related_issue = Issue.find_by(id: related_issues.first.issue_id)
+        related_issue = Issue.find_by(id: related_issues.first.issue_from_id)
         current_issue = related_issue
       else
         break
