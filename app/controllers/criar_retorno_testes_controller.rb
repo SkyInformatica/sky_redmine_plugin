@@ -28,7 +28,10 @@ class CriarRetornoTestesController < ApplicationController
           new_issue.custom_field_values = { custom_field.id => custom_field_value }
         end
 
-        new_issue.fixed_version = Version.find_by(name: "Aptas para desenvolvimento", project_id: new_project.id)
+        sprint = Version.find_by(name: "Aptas para desenvolvimento", project_id: new_project.id)
+        if sprint
+          new_issue.fixed_version = sprint
+        end
         new_issue.save
 
         # Atualizar a tarefa original
@@ -52,7 +55,8 @@ class CriarRetornoTestesController < ApplicationController
           Rails.logger.info ">>> Não foi encontrado o status 'Teste NOK - Fechada'"
         end
 
-        flash[:notice] = "Tarefa ##{new_issue.id} de retorno de testes foi criada para o projeto #{new_project.name}"
+        flash[:notice] = "Tarefa #{view_context.link_to "##{new_issue.id}", issue_path(new_issue)} de retorno de testes foi criada.<br>" \
+        "Tarefa criada no projeto: <strong>#{new_project.name}</strong> Sprint: <strong>Aptas para desenvolvimento</strong>".html_safe
       else
         flash[:warning] = "Não foi possível encontrar o projeto de origem (desenvolvimento) para criar o retorno de testes."
       end
