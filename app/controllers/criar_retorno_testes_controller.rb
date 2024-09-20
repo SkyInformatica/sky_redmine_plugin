@@ -1,5 +1,5 @@
 class CriarRetornoTestesController < ApplicationController
-  before_action :localizarIssue, only: [:criar_retorno_testes]
+  before_action :obter_tarefa, only: [:criar_retorno_testes]
 
   def criar_retorno_testes
     allowed_projects = ["Notarial - QS", "Registral - QS"]
@@ -9,7 +9,7 @@ class CriarRetornoTestesController < ApplicationController
     if allowed_projects.include?(@issue.project.name) && @issue.status == nok_status
 
       # localizar a tarefa de origem do desenvolvimento
-      original_issue = localizarTarefaOrigemCopiaDesenvolvimento(@issue)
+      original_issue = localizar_tarefa_origem_copia_desenvolvimento(@issue)
 
       if original_issue
         new_project = original_issue.project
@@ -32,20 +32,20 @@ class CriarRetornoTestesController < ApplicationController
         new_issue.save
 
         # Atualizar a tarefa original
-        fechada_cont_retorno_testes = IssueStatus.find_by(name: "Fechada - cont retorno testes")
-        if fechada_cont_retorno_testes
+        fechada_cont_retorno_testes_status = IssueStatus.find_by(name: "Fechada - cont retorno testes")
+        if fechada_cont_retorno_testes_status
           #original_issue.update(status_id: fechada_cont_retorno_testes.id)
-          original_issue.status = fechada_cont_retorno_testes
+          original_issue.status = fechada_cont_retorno_testes_status
           original_issue.save
         else
           Rails.logger.info ">>> nao foi encontrado o status 'Fechado - cont. retorno teste'"
         end
 
         # Agora vamos alterar o status da tarefa original (issue)
-        status_nok = IssueStatus.find_by(name: "Teste NOK - Fechada")
-        if status_nok
+        status_nok_status = IssueStatus.find_by(name: "Teste NOK - Fechada")
+        if status_nok_status
           #@issue.update(status_id: status_nok.id)
-          @issue.status = status_nok
+          @issue.status = status_nok_status
           @issue.save
           Rails.logger.info ">>> Status da tarefa original #{@issue.id} alterado para 'Teste NOK - Fechada'"
         else
@@ -65,26 +65,26 @@ class CriarRetornoTestesController < ApplicationController
 
   private
 
-  def localizarIssue
+  def obter_tarefa
     @issue = Issue.find(params[:id])
   end
 
-  def localizarTarefaOrigemCopiaDesenvolvimento(issue)
+  def localizar_tarefa_origem_copia_desenvolvimento(issue)
     Rails.logger.info ">>> Inicio find_original_issue"
     current_issue = issue
     current_project_id = issue.project_id
     original_issue = nil
 
-    Rails.logger.info ">>> Current issue ID: #{current_issue.id}, Project ID: #{current_project_id}"
+    Rails.logger.info ">>> current_issue ID: #{current_issue.id}, Project ID: #{current_project_id}"
 
     # Procura na lista de relações da tarefa para encontrar a origem
     loop do
-      Rails.logger.info ">>>> Checking issue ID: #{current_issue.id}, Project ID: #{current_issue.project_id}"
+      Rails.logger.info ">>>> Verificando issue ID: #{current_issue.id}, Project ID: #{current_issue.project_id}"
 
       # Verifica se o projeto da tarefa atual é diferente do projeto original
       if current_issue.project_id != current_project_id
         original_issue = current_issue
-        Rails.logger.info ">>>> Found original issue in project: #{original_issue.project.name}"
+        Rails.logger.info ">>>> Projeto encontrado: #{original_issue.project.name}"
         break
       end
 
@@ -92,8 +92,6 @@ class CriarRetornoTestesController < ApplicationController
       related_issues = IssueRelation.where(issue_to_id: current_issue.id, relation_type: "copied_to")
 
       if related_issues.any?
-        Rails.logger.info ">>>> related_issues.first.issue_id: #{related_issues.first.issue_from_id}"
-        # Escolhe a primeira relação como exemplo (ajuste conforme necessário)
         related_issue = Issue.find_by(id: related_issues.first.issue_from_id)
         current_issue = related_issue
       else
