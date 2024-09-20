@@ -1,4 +1,4 @@
-<% if (@issue.project.name == "Notarial - QS" || @issue.project.name == "Registral - QS") && @issue.status.name == "Tarefa NOK" %>
+<% if (((@issue.project.name == "Notarial - QS") || (@issue.project.name == "Registral - QS")) && (@issue.status.name == "Teste NOK")) %>
     <%= link_to "Criar tarefa de retorno de testes",
                 criar_retorno_testes_path(:id => @issue.id),
                 method: :post,
