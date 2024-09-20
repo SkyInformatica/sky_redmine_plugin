@@ -27,7 +27,8 @@ class CopyTaskController < ApplicationController
       # Atualizar a tarefa original
       fechada_cont_retorno_testes = IssueStatus.find_by(name: "Fechada - cont retorno testes")
       if fechada_cont_retorno_testes
-        original_issue.update(status_id: fechada_cont_retorno_testes.id)
+        #original_issue.update(status_id: fechada_cont_retorno_testes.id)
+        original_issue.status = fechada_cont_retorno_testes
         original_issue.save
       else
         Rails.logger.info ">>> nao foi encontrado o status 'Fechado - cont. retorno teste'"
