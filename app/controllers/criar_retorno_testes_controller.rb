@@ -1,7 +1,7 @@
 class CriarRetornoTestesController < ApplicationController
-  before_action :localizarIssue, only: [:criarRetornoTestes]
+  before_action :localizarIssue, only: [:criar_retorno_testes]
 
-  def criarRetornoTestes
+  def criar_retorno_testes
     allowed_projects = ["Notarial - QS", "Registral - QS"]
     nok_status = IssueStatus.find_by(name: "Teste NOK")
 
