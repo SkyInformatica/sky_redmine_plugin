@@ -1,10 +1,11 @@
 class CriarRetornoTestesController < ApplicationController
-  before_action :obter_tarefa, only: [:criar_retorno_testes_qs]
+  before_action :obter_tarefa, only: [:criar_retorno_testes_devel, :criar_retorno_testes_qs]
 
-  #def criar_retorno_testes_devel
-  #  # Código existente do método
-  #  flash[:notice] = "criar_retorno_testes_devel foi executado"
-  #end
+  def criar_retorno_testes_devel
+    flash[:notice] = "criar_retorno_testes_devel foi executado"
+
+    redirect_to issue_path(@issue)
+  end
 
   def criar_retorno_testes_qs
     allowed_projects = ["Notarial - QS", "Registral - QS"]
