@@ -1,7 +1,7 @@
 class CriarRetornoTestesController < ApplicationController
-  before_action :obter_tarefa, only: [:criar_retorno_testes]
+  before_action :obter_tarefa, only: [:criar_retorno_testes_qs]
 
-  def criar_retorno_testes
+  def criar_retorno_testes_qs
     allowed_projects = ["Notarial - QS", "Registral - QS"]
     nok_status = IssueStatus.find_by(name: "Teste NOK")
 
@@ -56,12 +56,8 @@ class CriarRetornoTestesController < ApplicationController
         end
 
         flash[:notice] = "Tarefa #{view_context.link_to "#{new_issue.tracker.name} ##{new_issue.id}", issue_path(new_issue)} foi criada no projeto #{view_context.link_to new_project.name, project_path(new_project)} na sprint #{view_context.link_to new_issue.fixed_version.name, version_path(new_issue.fixed_version)}"
-
-        flash[:info] = "Tarefa original do desenvolvimento #{view_context.link_to "#{original_issue.tracker.name} ##{original_issue.id}", issue_path(original_issue)} foi ajustada o status para <strong><em>#{original_issue.status.name}</em></strong><br>" \
+        flash[:info] = "Tarefa do desenvolvimento #{view_context.link_to "#{original_issue.tracker.name} ##{original_issue.id}", issue_path(original_issue)} foi ajustada o status para <strong><em>#{original_issue.status.name}</em></strong><br>" \
         "Essa tarefa de testes foi fechada e ajustado seu status para <strong><em>#{@issue.status.name}</em></strong>".html_safe
-
-        #flash[:notice] = "Tarefa #{view_context.link_to "##{new_issue.id}", issue_path(new_issue)} de retorno de testes foi criada."
-        #"Tarefa criada no projeto: <strong>#{new_project.name}</strong> na Sprint: <strong>Aptas para desenvolvimento</strong>".html_safe
       else
         flash[:warning] = "Não foi possível encontrar o projeto de origem (desenvolvimento) para criar o retorno de testes."
       end
