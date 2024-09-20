@@ -1,4 +1,4 @@
-require_relative "lib/task_copy_hook"
+require_relative "lib/CriarRetornoTestesHook"
 
 Redmine::Plugin.register :sky_redmine_plugin do
   name "Sky Redmine plugin"
