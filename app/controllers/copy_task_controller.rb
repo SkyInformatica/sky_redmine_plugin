@@ -36,7 +36,9 @@ class CopyTaskController < ApplicationController
       # Agora vamos alterar o status da tarefa original (issue)
       status_nok = IssueStatus.find_by(name: "Teste NOK - Fechada")
       if status_nok
-        @issue.update(status_id: status_nok.id)
+        #@issue.update(status_id: status_nok.id)
+        @issue.status = status_nok
+        @issue.save
         Rails.logger.info ">>> Status da tarefa original #{@issue.id} alterado para 'Teste NOK - Fechada'"
       else
         Rails.logger.info ">>> Não foi encontrado o status 'Teste NOK - Fechada'"
