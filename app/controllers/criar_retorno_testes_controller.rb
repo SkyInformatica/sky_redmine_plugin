@@ -55,8 +55,11 @@ class CriarRetornoTestesController < ApplicationController
           Rails.logger.info ">>> Não foi encontrado o status 'Teste NOK - Fechada'"
         end
 
-        flash[:notice] = "Tarefa #{view_context.link_to "##{new_issue.id}", issue_path(new_issue)} de retorno de testes foi criada.<br>" \
-        "Tarefa criada no projeto: <strong>#{new_project.name}</strong> Sprint: <strong>Aptas para desenvolvimento</strong>".html_safe
+        flash[:notice] = "Tarefa #{view_context.link_to "##{new_issue.id}", issue_path(new_issue)} de retorno de testes foi criada para o projeto #{new_project.name}"
+        flash[:info] = "Tarefa criada no projeto: <strong>#{new_project.name}</strong> na Sprint: <strong>Aptas para desenvolvimento</strong>".html_safe
+
+        #flash[:notice] = "Tarefa #{view_context.link_to "##{new_issue.id}", issue_path(new_issue)} de retorno de testes foi criada."
+        #"Tarefa criada no projeto: <strong>#{new_project.name}</strong> na Sprint: <strong>Aptas para desenvolvimento</strong>".html_safe
       else
         flash[:warning] = "Não foi possível encontrar o projeto de origem (desenvolvimento) para criar o retorno de testes."
       end
