@@ -35,7 +35,10 @@ class CriarRetornoTestesController < ApplicationController
 
         atualizar_status_tarefa(original_issue, "Fechada - cont retorno testes")
         atualizar_status_tarefa(@issue, "Teste NOK - Fechada")
+
+        #limpar tags da tarefa de QS
         @issue.tag_list = []
+        @issue.save
 
         flash[:notice] = "Tarefa #{view_context.link_to "#{new_issue.tracker.name} ##{new_issue.id}", issue_path(new_issue)} foi criada no projeto #{view_context.link_to original_issue.project.name, project_path(original_issue.project)} na sprint #{view_context.link_to new_issue.fixed_version.name, version_path(new_issue.fixed_version)} com tempo estimado de 1.0h"
         flash[:info] = "Tarefa do desenvolvimento #{view_context.link_to "#{original_issue.tracker.name} ##{original_issue.id}", issue_path(original_issue)} foi ajustada o status para <strong><em>#{original_issue.status.name}</em></strong><br>" \
