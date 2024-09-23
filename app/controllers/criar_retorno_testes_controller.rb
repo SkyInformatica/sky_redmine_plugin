@@ -33,11 +33,14 @@ class CriarRetornoTestesController < ApplicationController
       copied_to_qs_issue = related_issues.map { |relation| Issue.find_by(id: relation.issue_to_id) }
         .find { |issue| qs_projects.include?(issue.project.name) }
 
+      Rails.logger.info ">>> procurando tarefa copiado para QS"
       tarefa_qs_removida = false
       # Se existir uma cópia e seu status for "Nova"
       if copied_to_qs_issue
+        Rails.logger.info ">>> encontrou tarefa copiado para QS"
         if copied_to_qs_issue.status == nova_status
-          flash[:warning] = "A tarefa já havia sido encaminhada para o QS em  #{view_context.link_to "#{copied_to_qs_issue.tracker.name} ##{copied_to_qs_issue.id}", issue_path(copied_to_qs_issue)} e ainda estava com status #{copied_to_qs_issue.status.name}, portanto foi removida do backlog do QS"
+          Rails.logger.info ">>> a tarefa no qs está como nova"
+
           # Remover a cópia
           tarefa_qs_removida = true
           copied_to_qs_issue.destroy
