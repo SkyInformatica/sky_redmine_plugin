@@ -34,6 +34,8 @@ class CriarRetornoTestesController < ApplicationController
         .find { |issue| qs_projects.include?(issue.project.name) }
 
       Rails.logger.info ">>> procurando tarefa copiado para QS"
+      Rails.logger.info ">>> related_issues: #{related_issues}"
+      Rails.logger.info ">>> copied_to_qs_issue: #{copied_to_qs_issue}"
       tarefa_qs_removida = false
       # Se existir uma cópia e seu status for "Nova"
       if copied_to_qs_issue
