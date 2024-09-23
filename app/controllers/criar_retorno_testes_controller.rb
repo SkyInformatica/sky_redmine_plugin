@@ -70,9 +70,7 @@ class CriarRetornoTestesController < ApplicationController
       new_issue.custom_field_values = { custom_field.id => nil }
     end
 
-    Tarefa antecipada na sprint
-
-    sprint = Version.find_by(name: "Aptas para desenvolvimento", project_id: original_issue.project.id)
+    sprint = Version.find_by(name: "Aptas para desenvolvimento", project_id: project_id)
     new_issue.fixed_version = sprint if sprint
     new_issue
   end
