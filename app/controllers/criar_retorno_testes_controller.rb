@@ -43,8 +43,7 @@ class CriarRetornoTestesController < ApplicationController
         else
           # A tarefa já foi encaminhada para QS e não está como "Nova"
           flash[:warning] = "Os testes já foram iniciados pelo QS em  #{view_context.link_to "#{copied_to_qs_issue.tracker.name} ##{copied_to_qs_issue.id}", issue_path(copied_to_qs_issue)} e está com status #{copied_to_qs_issue.status.name}. Neste caso não possivel criar um retorno de testes para a tarefa de desenvolvimento. Ou crie uma nova tarefa de Defeito ou crie um retorno de testes apartir da tarefa do QS."
-          #redirect_to issue_path(@issue) and return
-          return
+          redirect_to issue_path(@issue) and return
         end
       end
 
