@@ -5,8 +5,14 @@ class CriarRetornoTestesController < ApplicationController
     qs_projects = ["Notarial - QS", "Registral - QS"]
     resolvida_status = IssueStatus.find_by(name: "Resolvida")
 
-    # Verificar se a tarefa pertence aos projetos permitidos e se o status é "Teste NOK"
-    if ((!qs_projects.include?(@issue.project.name)) && (@issue.status == resolvida_status))
+    # Check if the issue is not in QS projects and its status is "Resolvida"
+    if (!qs_projects.include?(@issue.project.name)) && (@issue.status == resolvida_status)
+      new_issue = criar_nova_tarefa(@issue.project.id)
+
+      atualizar_status_tarefa(@issue, "Fechada - cont retorno testes")
+
+      flash[:notice] = "Tarefa #{view_context.link_to "#{new_issue.tracker.name} ##{new_issue.id}", issue_path(new_issue)} foi criada no projeto #{view_context.link_to new_issue.project.name, project_path(new_issue.project)} na sprint #{view_context.link_to new_issue.fixed_version.name, version_path(new_issue.fixed_version)}"
+      flash[:info] = "A tarefa de desenvolvimento #{@issue.id} teve seu status ajustado para <strong><em>#{@issue.status.name}</em></strong>".html_safe
     else
       flash[:warning] = "O retorno de testes só pode ser criado se a tarefa de desenvolvimento estiver nos projetos das equipes de desenvolvimento com status 'Resolvida'."
     end
@@ -25,48 +31,10 @@ class CriarRetornoTestesController < ApplicationController
       original_issue = localizar_tarefa_origem_copia_desenvolvimento(@issue)
 
       if original_issue
-        new_project = original_issue.project
-        new_issue = @issue.copy(:project_id => new_project.id)
+        new_issue = criar_nova_tarefa(original_issue.project.id)
 
-        # Limpar campos, exceto target_version_id
-        new_issue.tracker = Tracker.find_by_name("Retorno de testes")
-        new_issue.assigned_to_id = nil
-        new_issue.start_date = nil
-        new_issue.estimated_hours = nil
-
-        # Definir campo personalizado
-        custom_field_id = 13
-        custom_field_value = nil
-        if custom_field = IssueCustomField.find_by(id: custom_field_id)
-          new_issue.custom_field_values = { custom_field.id => custom_field_value }
-        end
-
-        sprint = Version.find_by(name: "Aptas para desenvolvimento", project_id: new_project.id)
-        if sprint
-          new_issue.fixed_version = sprint
-        end
-        new_issue.save
-
-        # Atualizar a tarefa original
-        fechada_cont_retorno_testes_status = IssueStatus.find_by(name: "Fechada - cont retorno testes")
-        if fechada_cont_retorno_testes_status
-          #original_issue.update(status_id: fechada_cont_retorno_testes.id)
-          original_issue.status = fechada_cont_retorno_testes_status
-          original_issue.save
-        else
-          Rails.logger.info ">>> nao foi encontrado o status 'Fechado - cont. retorno teste'"
-        end
-
-        # Agora vamos alterar o status da tarefa original (issue)
-        status_nok_status = IssueStatus.find_by(name: "Teste NOK - Fechada")
-        if status_nok_status
-          #@issue.update(status_id: status_nok.id)
-          @issue.status = status_nok_status
-          @issue.save
-          Rails.logger.info ">>> Status da tarefa original #{@issue.id} alterado para 'Teste NOK - Fechada'"
-        else
-          Rails.logger.info ">>> Não foi encontrado o status 'Teste NOK - Fechada'"
-        end
+        atualizar_status_tarefa(original_issue, "Fechada - cont retorno testes")
+        atualizar_status_tarefa(@issue, "Teste NOK - Fechada")
 
         flash[:notice] = "Tarefa #{view_context.link_to "#{new_issue.tracker.name} ##{new_issue.id}", issue_path(new_issue)} foi criada no projeto #{view_context.link_to new_project.name, project_path(new_project)} na sprint #{view_context.link_to new_issue.fixed_version.name, version_path(new_issue.fixed_version)}"
         flash[:info] = "Tarefa do desenvolvimento #{view_context.link_to "#{original_issue.tracker.name} ##{original_issue.id}", issue_path(original_issue)} foi ajustada o status para <strong><em>#{original_issue.status.name}</em></strong><br>" \
@@ -85,6 +53,28 @@ class CriarRetornoTestesController < ApplicationController
 
   def obter_tarefa
     @issue = Issue.find(params[:id])
+  end
+
+  def criar_nova_tarefa(project_id)
+    new_issue = @issue.copy(project_id: project_id)
+    new_issue.tracker = Tracker.find_by_name("Retorno de testes")
+    new_issue.assigned_to_id = nil
+    new_issue.start_date = nil
+    new_issue.estimated_hours = 1
+
+    if custom_field = IssueCustomField.find_by(name: "Tarefa não planejada IMEDIATA")
+      new_issue.custom_field_values = { custom_field.id => nil }
+    end
+
+    if custom_field = IssueCustomField.find_by(name: "Tarefa antecipada na sprint")
+      new_issue.custom_field_values = { custom_field.id => nil }
+    end
+
+    Tarefa antecipada na sprint
+
+    sprint = Version.find_by(name: "Aptas para desenvolvimento", project_id: original_issue.project.id)
+    new_issue.fixed_version = sprint if sprint
+    new_issue
   end
 
   def localizar_tarefa_origem_copia_desenvolvimento(issue)
@@ -118,5 +108,13 @@ class CriarRetornoTestesController < ApplicationController
     end
 
     original_issue
+  end
+
+  def atualizar_status_tarefa(issue, novo_status_descricao)
+    novo_status = IssueStatus.find_by(name: novo_status_descricao)
+    if novo_status
+      issue.status = novo_status
+      issue.save
+    end
   end
 end
