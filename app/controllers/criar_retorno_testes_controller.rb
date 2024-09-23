@@ -28,7 +28,7 @@ class CriarRetornoTestesController < ApplicationController
     if (qs_projects.include?(@issue.project.name) && (@issue.status == nok_status))
 
       # localizar a tarefa de origem do desenvolvimento
-      original_issue = localizar_tarefa_origem_copia_desenvolvimento(@issue)
+      original_issue = localizar_tarefa_origem_copia_outro_projeto(@issue)
 
       if original_issue
         new_issue = criar_nova_tarefa(original_issue.project.id)
@@ -72,25 +72,21 @@ class CriarRetornoTestesController < ApplicationController
 
     sprint = Version.find_by(name: "Aptas para desenvolvimento", project_id: project_id)
     new_issue.fixed_version = sprint if sprint
+    new_issue.save
     new_issue
   end
 
-  def localizar_tarefa_origem_copia_desenvolvimento(issue)
-    Rails.logger.info ">>> Inicio find_original_issue"
+  def localizar_tarefa_origem_copia_outro_projeto(issue)
     current_issue = issue
     current_project_id = issue.project_id
     original_issue = nil
 
-    Rails.logger.info ">>> current_issue ID: #{current_issue.id}, Project ID: #{current_project_id}"
-
     # Procura na lista de relações da tarefa para encontrar a origem
     loop do
-      Rails.logger.info ">>>> Verificando issue ID: #{current_issue.id}, Project ID: #{current_issue.project_id}"
 
       # Verifica se o projeto da tarefa atual é diferente do projeto original
       if current_issue.project_id != current_project_id
         original_issue = current_issue
-        Rails.logger.info ">>>> Projeto encontrado: #{original_issue.project.name}"
         break
       end
 
