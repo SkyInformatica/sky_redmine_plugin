@@ -33,11 +33,13 @@ class CriarRetornoTestesController < ApplicationController
       copied_to_qs_issue = related_issues.map { |relation| Issue.find_by(id: relation.issue_to_id) }
         .find { |issue| qs_projects.include?(issue.project.name) }
 
+      tarefa_qs_removida = false
       # Se existir uma cópia e seu status for "Nova"
       if copied_to_qs_issue
         if copied_to_qs_issue.status == nova_status
           flash[:warning] = "A tarefa já havia sido encaminhada para o QS em  #{view_context.link_to "#{copied_to_qs_issue.tracker.name} ##{copied_to_qs_issue.id}", issue_path(copied_to_qs_issue)} e ainda estava com status #{copied_to_qs_issue.status.name}, portanto foi removida do backlog do QS"
           # Remover a cópia
+          tarefa_qs_removida = true
           copied_to_qs_issue.destroy
           # Remover a relação de cópia
           IssueRelation.where(issue_from_id: @issue.id, issue_to_id: copied_to_qs_issue.id, relation_type: "copied_to").destroy_all
@@ -53,7 +55,10 @@ class CriarRetornoTestesController < ApplicationController
       atualizar_status_tarefa(@issue, "Fechada - cont retorno testes")
 
       flash[:notice] = "Tarefa #{view_context.link_to "#{new_issue.tracker.name} ##{new_issue.id}", issue_path(new_issue)} foi criada no projeto #{view_context.link_to new_issue.project.name, project_path(new_issue.project)} na sprint #{view_context.link_to new_issue.fixed_version.name, version_path(new_issue.fixed_version)} com tempo estimado de 1.0h"
-      flash[:info] = "Essa tarefa teve seu status ajustado para <strong><em>#{@issue.status.name}</em></strong>".html_safe
+      flash[:info] = "Essa tarefa teve seu status ajustado para <strong><em>#{@issue.status.name}</em></strong>"
+      if tarefa_qs_removida
+        flash[:info] = flash[:info] + "<br>A tarefa já havia sido encaminhada para o QS e ainda estava com status Nova, portanto foi removida do backlog do QS".html_safe
+      end
     else
       flash[:warning] = "O retorno de testes só pode ser criado se a tarefa de desenvolvimento estiver nos projetos das equipes de desenvolvimento com status 'Resolvida'."
     end
