@@ -20,6 +20,47 @@ class CriarRetornoTestesController < ApplicationController
     redirect_to issue_path(@issue)
   end
 
+  def criar_retorno_testes_devel
+    qs_projects = ["Notarial - QS", "Registral - QS"]
+    resolvida_status = IssueStatus.find_by(name: "Resolvida")
+    nova_status = IssueStatus.find_by(name: "Nova")
+
+    # Check if the issue is not in QS projects and its status is "Resolvida"
+    if (!qs_projects.include?(@issue.project.name)) && (@issue.status == resolvida_status)
+
+      # Verificar se já existe uma cópia da tarefa nos projetos QS
+      related_issues = IssueRelation.where(issue_from_id: @issue.id, relation_type: "copied_to")
+      copied_to_qs_issue = related_issues.map { |relation| Issue.find_by(id: relation.issue_to_id) }
+        .find { |issue| qs_projects.include?(issue.project.name) }
+
+      # Se existir uma cópia e seu status for "Nova"
+      if copied_to_qs_issue
+        if copied_to_qs_issue.status == nova_status
+          # Remover a cópia
+          copied_to_qs_issue.destroy
+          # Remover a relação de cópia
+          IssueRelation.where(issue_from_id: @issue.id, issue_to_id: copied_to_qs_issue.id, relation_type: "copied_to").destroy_all
+        else
+          # A tarefa já foi encaminhada para QS e não está como "Nova"
+          flash[:warning] = "Os testes já foram iniciados pelo QS em  #{view_context.link_to "#{copied_to_qs_issue.tracker.name} ##{copied_to_qs_issue.id}", issue_path(copied_to_qs_issue)} e está com status #{copied_to_qs_issue.status.name}. Neste caso não possivel criar um retorno de testes para a tarefa de desenvolvimento. Ou crie uma nova tarefa de Defeito ou crie um retorno de testes apartir da tarefa do QS."
+          #redirect_to issue_path(@issue) and return
+          return
+        end
+      end
+
+      new_issue = criar_nova_tarefa(@issue.project.id)
+
+      atualizar_status_tarefa(@issue, "Fechada - cont retorno testes")
+
+      flash[:notice] = "Tarefa #{view_context.link_to "#{new_issue.tracker.name} ##{new_issue.id}", issue_path(new_issue)} foi criada no projeto #{view_context.link_to new_issue.project.name, project_path(new_issue.project)} na sprint #{view_context.link_to new_issue.fixed_version.name, version_path(new_issue.fixed_version)} com tempo estimado de 1.0h"
+      flash[:info] = "Essa tarefa teve seu status ajustado para <strong><em>#{@issue.status.name}</em></strong>".html_safe
+    else
+      flash[:warning] = "O retorno de testes só pode ser criado se a tarefa de desenvolvimento estiver nos projetos das equipes de desenvolvimento com status 'Resolvida'."
+    end
+
+    redirect_to issue_path(@issue)
+  end
+
   def criar_retorno_testes_qs
     qs_projects = ["Notarial - QS", "Registral - QS"]
     nok_status = IssueStatus.find_by(name: "Teste NOK")
