@@ -42,7 +42,7 @@ class CriarRetornoTestesController < ApplicationController
           IssueRelation.where(issue_from_id: @issue.id, issue_to_id: copied_to_qs_issue.id, relation_type: "copied_to").destroy_all
         else
           # A tarefa já foi encaminhada para QS e não está como "Nova"
-          flash[:warning] = "Os testes já foram iniciados pelo QS em  #{view_context.link_to "#{copied_to_qs_issue.tracker.name} ##{copied_to_qs_issue.id}", issue_path(copied_to_qs_issue)} e está com status #{copied_to_qs_issue.status.name}. Neste caso não possivel criar um retorno de testes para a tarefa de desenvolvimento. Ou crie uma nova tarefa de Defeito ou crie um retorno de testes apartir da tarefa do QS."
+          flash[:warning] = "Os testes já foram iniciados pelo QS em  #{view_context.link_to "#{copied_to_qs_issue.tracker.name} ##{copied_to_qs_issue.id}", issue_path(copied_to_qs_issue)} e está com status #{copied_to_qs_issue.status.name}.<br>Neste caso não possivel criar um retorno de testes para a tarefa de desenvolvimento.<br>Ou crie uma nova tarefa de Defeito ou crie um retorno de testes apartir da tarefa do QS.".html_safe
           redirect_to issue_path(@issue) and return
         end
       end
