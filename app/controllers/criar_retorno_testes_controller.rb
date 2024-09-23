@@ -2,17 +2,24 @@ class CriarRetornoTestesController < ApplicationController
   before_action :obter_tarefa, only: [:criar_retorno_testes_devel, :criar_retorno_testes_qs]
 
   def criar_retorno_testes_devel
-    flash[:notice] = "criar_retorno_testes_devel foi executado"
+    qs_projects = ["Notarial - QS", "Registral - QS"]
+    resolvida_status = IssueStatus.find_by(name: "Resolvida")
+
+    # Verificar se a tarefa pertence aos projetos permitidos e se o status é "Teste NOK"
+    if ((!qs_projects.include?(@issue.project.name)) && (@issue.status == resolvida_status))
+    else
+      flash[:warning] = "O retorno de testes só pode ser criado se a tarefa de desenvolvimento estiver nos projetos das equipes de desenvolvimento com status 'Resolvida'."
+    end
 
     redirect_to issue_path(@issue)
   end
 
   def criar_retorno_testes_qs
-    allowed_projects = ["Notarial - QS", "Registral - QS"]
+    qs_projects = ["Notarial - QS", "Registral - QS"]
     nok_status = IssueStatus.find_by(name: "Teste NOK")
 
     # Verificar se a tarefa pertence aos projetos permitidos e se o status é "Teste NOK"
-    if allowed_projects.include?(@issue.project.name) && @issue.status == nok_status
+    if (qs_projects.include?(@issue.project.name) && (@issue.status == nok_status))
 
       # localizar a tarefa de origem do desenvolvimento
       original_issue = localizar_tarefa_origem_copia_desenvolvimento(@issue)
