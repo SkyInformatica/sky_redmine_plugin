@@ -36,6 +36,7 @@ class CriarRetornoTestesController < ApplicationController
       # Se existir uma cópia e seu status for "Nova"
       if copied_to_qs_issue
         if copied_to_qs_issue.status == nova_status
+          flash[:warning] = "A tarefa já havia sido encaminhada para o QS em  #{view_context.link_to "#{copied_to_qs_issue.tracker.name} ##{copied_to_qs_issue.id}", issue_path(copied_to_qs_issue)} e ainda estava com status #{copied_to_qs_issue.status.name}, portanto foi removida do backlog do QS"
           # Remover a cópia
           copied_to_qs_issue.destroy
           # Remover a relação de cópia
