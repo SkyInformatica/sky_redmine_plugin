@@ -1,7 +1,5 @@
 # Sky Plugin Redmine
 
-Este documento descreve as funcionalidades do plugin [https://github.com/maglancd/sky-redmine-plugin](https://github.com/maglancd/sky-redmine-plugin)
-
 # Como instalar o plugin
 
 - Fazer download da ultima versão disponivel em [https://github.com/maglancd/sky-redmine-plugin/releases](https://github.com/maglancd/sky-redmine-plugin/releases)
