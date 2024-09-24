@@ -1,16 +1,21 @@
 (function () {
-    var oldBuildContextMenu = contextMenuRightClick.prototype.buildContextMenu;
+    // Certifique-se que a função de criação de menus de contexto já está definida
+    console.log('inicio sky_redmine_plugin_context_menu')
+    if (typeof contextMenuRightClick !== "undefined") {
+        const originalBuildContextMenu = contextMenuRightClick.prototype.buildContextMenu;
 
-    contextMenuRightClick.prototype.buildContextMenu = function (event) {
-        var menu = oldBuildContextMenu.call(this, event);
+        contextMenuRightClick.prototype.buildContextMenu = function (event) {
+            const menu = originalBuildContextMenu.call(this, event); // Chama o original
 
-        if (this.getSelection().length == 1) {
-            var issue = this.getSelection()[0];
-            var issueStatus = issue.querySelector('.status').textContent.trim();
-            var projectName = issue.querySelector('.project').textContent.trim();
-            var issueId = issue.getAttribute('data-issue-id');
+            // Verifique se uma tarefa única está selecionada
+            if (this.getSelection().length === 1) {
+                const issue = this.getSelection()[0];
 
-            if (issueStatus == "Teste NOK" && ["Notarial - QS", "Registral - QS"].includes(projectName)) {
+                const issueStatus = issue.querySelector('.status').textContent.trim();
+                const projectName = issue.querySelector('.project').textContent.trim();
+                const issueId = issue.getAttribute('data-issue-id');
+                console.log(issueId)
+
                 menu.push({
                     title: 'Criar tarefa de retorno de testes para essa tarefa de testes',
                     callback: function () {
@@ -18,17 +23,29 @@
                             .done(function () { location.reload(); });
                     }
                 });
-            } else if (issueStatus == "Resolvida" && !["Notarial - QS", "Registral - QS"].includes(projectName)) {
-                menu.push({
-                    title: 'Criar tarefa de retorno de testes para essa tarefa de desenvolvimento',
-                    callback: function () {
-                        $.post(criar_retorno_testes_devel_path({ id: issueId }))
-                            .done(function () { location.reload(); });
-                    }
-                });
+                /*
+                // Verifique as condições para adicionar o menu
+                if (issueStatus === "Teste NOK" && ["Notarial - QS", "Registral - QS"].includes(projectName)) {
+                    menu.push({
+                        title: 'Criar tarefa de retorno de testes para essa tarefa de testes',
+                        callback: function() {
+                            $.post(criar_retorno_testes_qs_path({ id: issueId }))
+                                .done(function() { location.reload(); });
+                        }
+                    });
+                } else if (issueStatus === "Resolvida" && !["Notarial - QS", "Registral - QS"].includes(projectName)) {
+                    menu.push({
+                        title: 'Criar tarefa de retorno de testes para essa tarefa de desenvolvimento',
+                        callback: function() {
+                            $.post(criar_retorno_testes_devel_path({ id: issueId }))
+                                .done(function() { location.reload(); });
+                        }
+                    });
+                }
+                */
             }
-        }
 
-        return menu;
-    };
+            return menu; // Retorna o menu atualizado
+        };
+    }
 })();
