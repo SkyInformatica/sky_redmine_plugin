@@ -14,15 +14,8 @@
                 const issueStatus = issue.querySelector('.status').textContent.trim();
                 const projectName = issue.querySelector('.project').textContent.trim();
                 const issueId = issue.getAttribute('data-issue-id');
-                console.log(issueId)
+                console.log("issueId: ", issueId)
 
-                menu.push({
-                    title: 'Criar tarefa de retorno de testes para essa tarefa de testes',
-                    callback: function () {
-                        $.post(criar_retorno_testes_qs_path({ id: issueId }))
-                            .done(function () { location.reload(); });
-                    }
-                });
                 /*
                 // Verifique as condições para adicionar o menu
                 if (issueStatus === "Teste NOK" && ["Notarial - QS", "Registral - QS"].includes(projectName)) {
