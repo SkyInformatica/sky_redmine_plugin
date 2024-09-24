@@ -1,6 +1,6 @@
 (function () {
     // Certifique-se que a função de criação de menus de contexto já está definida
-    console.log('inicio sky_redmine_plugin_context_menu')
+    //console.log('inicio sky_redmine_plugin_context_menu')
     if (typeof contextMenuRightClick !== "undefined") {
         const originalBuildContextMenu = contextMenuRightClick.prototype.buildContextMenu;
 
@@ -14,7 +14,7 @@
                 const issueStatus = issue.querySelector('.status').textContent.trim();
                 const projectName = issue.querySelector('.project').textContent.trim();
                 const issueId = issue.getAttribute('data-issue-id');
-                console.log("issueId: ", issueId)
+                //console.log("issueId: ", issueId)
 
                 /*
                 // Verifique as condições para adicionar o menu
