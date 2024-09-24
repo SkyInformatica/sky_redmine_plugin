@@ -2,6 +2,7 @@
     // Certifique-se que a função de criação de menus de contexto já está definida
     console.log('inicio sky_redmine_plugin_context_menu')
 
+    /*
     const originalBuildContextMenu = contextMenuRightClick.prototype.buildContextMenu;
 
     contextMenuRightClick.prototype.buildContextMenu = function (event) {
@@ -16,7 +17,7 @@
             const issueId = issue.getAttribute('data-issue-id');
             console.log("issueId: ", issueId)
 
-            /*
+            
             // Verifique as condições para adicionar o menu
             if (issueStatus === "Teste NOK" && ["Notarial - QS", "Registral - QS"].includes(projectName)) {
                 menu.push({
@@ -35,11 +36,12 @@
                     }
                 });
             }
-            */
+            
         }
 
         return menu; // Retorna o menu atualizado
     };
+    */
 
 })();
 
