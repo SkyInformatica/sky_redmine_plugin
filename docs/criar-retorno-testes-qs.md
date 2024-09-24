@@ -2,7 +2,7 @@
 
 Quando a tarefa for dos projetos do QS e estiver com seu status "Teste NOK" é possível criar uma tarefa de retorno de testes clicando no link "Criar tarefa de retorno de testes para essa tarefa de testes" conforme exemplo abaixo
 
-![redmine-criar-retorno-testes-qs](docs/redmine-criar-retorno-testes-qs.png)
+![redmine-criar-retorno-testes-qs](redmine-criar-retorno-testes-qs.png)
 
 Ao clicar no link o Redmine irá criar uma nova tarefa apartir de uma cópia fazendo os ajustes necessários conforme a documentação [Fluxograma do processo de testes](https://docs.google.com/document/d/1H_ADkIaIxo5wy2QCW3bFRrw7l23HpUkaPUXaeZMbJCY/edit), realizando as seguintes ações
 
@@ -25,4 +25,4 @@ Ao clicar no link o Redmine irá criar uma nova tarefa apartir de uma cópia faz
 
 Abaixo pode-se ver o fluxograma da execução das ações executadas
 
-![fluxograma-criar-retorno-testes-qs](docs/fluxograma-criar-retorno-testes-qs.png)
+![fluxograma-criar-retorno-testes-qs](fluxograma-criar-retorno-testes-qs.png)
