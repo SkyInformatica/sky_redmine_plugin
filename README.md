@@ -14,5 +14,5 @@ bundle exec rake redmine:plugins:migrate RAILS_ENV=production
 
 # Funcionalidades
 
-- [Criar tarefa de retorno de testes para tarefas do desenvolvimento](docs/criar-retorno-testes-devel.md)
 - [Criar tarefa de retorno de testes para tarefas do QS](docs/criar-retorno-testes-qs.md)
+- [Criar tarefa de retorno de testes para tarefas do desenvolvimento](docs/criar-retorno-testes-devel.md)
