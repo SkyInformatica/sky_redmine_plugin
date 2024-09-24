@@ -2,6 +2,18 @@
 
 Este documento descreve as funcionalidades do plugin [https://github.com/maglancd/sky-redmine-plugin](https://github.com/maglancd/sky-redmine-plugin)
 
+# Como instalar o plugin
+
+Fazer download da ultima versão disponivel em [https://github.com/maglancd/sky-redmine-plugin/archive/refs/tags/2024.09.24.0.tar.gz](https://github.com/maglancd/sky-redmine-plugin/archive/refs/tags/2024.09.24.0.tar.gz) (ou superior)  
+Descompactar o plugin na pasta \<redmine\>/plugins. Normalmente o redmine está instalado em /opt/redmine  
+Normalmente colocamos o plugin na pasta /opt/redmine/sky-redmine-plugin
+
+Executar o comando de instalação/atualização dos [plugins instalados conforme documentacao do Redmine](https://www.redmine.org/projects/redmine/wiki/plugins)
+
+```
+bundle exec rake redmine:plugins:migrate RAILS_ENV=production
+```
+
 # Funcionalidades
 
 ## **Criar tarefa de retorno de testes para tarefas do desenvolvimento**
