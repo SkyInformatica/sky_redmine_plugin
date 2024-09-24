@@ -4,25 +4,6 @@ class CriarRetornoTestesController < ApplicationController
   def criar_retorno_testes_devel
     qs_projects = ["Notarial - QS", "Registral - QS"]
     resolvida_status = IssueStatus.find_by(name: "Resolvida")
-
-    # Check if the issue is not in QS projects and its status is "Resolvida"
-    if (!qs_projects.include?(@issue.project.name)) && (@issue.status == resolvida_status)
-      new_issue = criar_nova_tarefa(@issue.project.id)
-
-      atualizar_status_tarefa(@issue, "Fechada - cont retorno testes")
-
-      flash[:notice] = "Tarefa #{view_context.link_to "#{new_issue.tracker.name} ##{new_issue.id}", issue_path(new_issue)} foi criada no projeto #{view_context.link_to new_issue.project.name, project_path(new_issue.project)} na sprint #{view_context.link_to new_issue.fixed_version.name, version_path(new_issue.fixed_version)} com tempo estimado de 1.0h"
-      flash[:info] = "Essa tarefa teve seu status ajustado para <strong><em>#{@issue.status.name}</em></strong>".html_safe
-    else
-      flash[:warning] = "O retorno de testes só pode ser criado se a tarefa de desenvolvimento estiver nos projetos das equipes de desenvolvimento com status 'Resolvida'."
-    end
-
-    redirect_to issue_path(@issue)
-  end
-
-  def criar_retorno_testes_devel
-    qs_projects = ["Notarial - QS", "Registral - QS"]
-    resolvida_status = IssueStatus.find_by(name: "Resolvida")
     nova_status = IssueStatus.find_by(name: "Nova")
 
     # Check if the issue is not in QS projects and its status is "Resolvida"
@@ -33,16 +14,10 @@ class CriarRetornoTestesController < ApplicationController
       copied_to_qs_issue = related_issues.map { |relation| Issue.find_by(id: relation.issue_to_id) }
         .find { |issue| qs_projects.include?(issue.project.name) }
 
-      Rails.logger.info ">>> procurando tarefa copiado para QS"
-      Rails.logger.info ">>> related_issues: #{related_issues.to_json}"
-      Rails.logger.info ">>> copied_to_qs_issue: #{copied_to_qs_issue.to_json}"
       tarefa_qs_removida = false
       # Se existir uma cópia e seu status for "Nova"
       if copied_to_qs_issue
-        Rails.logger.info ">>> encontrou tarefa copiado para QS"
         if copied_to_qs_issue.status == nova_status
-          Rails.logger.info ">>> a tarefa no qs está como nova"
-
           # Remover a cópia
           tarefa_qs_removida = true
           copied_to_qs_issue.destroy
@@ -56,7 +31,6 @@ class CriarRetornoTestesController < ApplicationController
       end
 
       new_issue = criar_nova_tarefa(@issue.project.id)
-
       atualizar_status_tarefa(@issue, "Fechada - cont retorno testes")
 
       flash[:notice] = "Tarefa #{view_context.link_to "#{new_issue.tracker.name} ##{new_issue.id}", issue_path(new_issue)} foi criada no projeto #{view_context.link_to new_issue.project.name, project_path(new_issue.project)} na sprint #{view_context.link_to new_issue.fixed_version.name, version_path(new_issue.fixed_version)} com tempo estimado de 1.0h"
