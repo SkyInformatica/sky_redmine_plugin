@@ -1,5 +1,3 @@
-# sky-redmine-plugin
-
 # Sky Plugin Redmine
 
 Este documento descreve as funcionalidades do plugin [https://github.com/maglancd/sky-redmine-plugin](https://github.com/maglancd/sky-redmine-plugin)
