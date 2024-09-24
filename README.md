@@ -8,7 +8,7 @@ Este documento descreve as funcionalidades do plugin [https://github.com/maglanc
 
 Quando a tarefa for dos projetos do desenvolvimento e estiver com seu status "Resolvido" é possível criar uma tarefa de retorno de testes clicando no link "Criar tarefa de retorno de testes para essa tarefa de desenvolvimento" conforme exemplo abaixo
 
-![][image1]
+![redmine-criar-retorno-testes-devel](docs/redmine-criar-retorno-testes-devel.png)
 
 Ao clicar no link o Redmine irá criar uma nova tarefa apartir de uma cópia fazendo os ajustes necessários conforme a documentação [Fluxograma do processo de testes](https://docs.google.com/document/d/1H_ADkIaIxo5wy2QCW3bFRrw7l23HpUkaPUXaeZMbJCY/edit), realizando as seguintes ações
 
