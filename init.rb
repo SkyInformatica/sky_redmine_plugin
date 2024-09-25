@@ -1,4 +1,5 @@
-require_relative "lib/criar_retorno_testes_hook"
+require "redmine"
+require_dependency "sky_redmine_plugin/hooks"
 
 Redmine::Plugin.register :sky_redmine_plugin do
   name "Sky Redmine plugin"
