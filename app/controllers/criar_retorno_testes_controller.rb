@@ -1,5 +1,6 @@
 class CriarRetornoTestesController < ApplicationController
   before_action :obter_tarefa, only: [:criar_retorno_testes_devel, :criar_retorno_testes_qs]
+  before_action :find_issues, only: [:criar_tarefa_retorno_testes_qs_lote]
 
   def criar_retorno_testes_devel
     qs_projects = ["Notarial - QS", "Registral - QS"]
@@ -78,6 +79,12 @@ class CriarRetornoTestesController < ApplicationController
     end
 
     redirect_to issue_path(@issue)
+  end
+
+  def criar_tarefa_retorno_testes_qs_lote
+    Rails.logger.info ">>> criar_tarefa_retorno_testes_qs_lote"
+    @issue_ids = params[:ids]
+    Rails.logger.info ">>> #{@issue_ids.to_json}"
   end
 
   private

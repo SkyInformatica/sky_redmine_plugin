@@ -1,4 +1,4 @@
 <li><%= context_menu_link "Criar tarefa de retorno de testes",
-                         criar_retorno_testes_qs_path(id: @issue.id),
+                         criar_retorno_testes_qs_lote_path(:ids => @issue_ids),
                          :remote => true,
                          class: "icon icon-copy" %></li>
