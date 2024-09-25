@@ -1,5 +1,4 @@
 require "redmine"
-require_dependency "sky_redmine_plugin/hooks"
 
 Redmine::Plugin.register :sky_redmine_plugin do
   name "Sky Redmine plugin"
@@ -9,3 +8,5 @@ Redmine::Plugin.register :sky_redmine_plugin do
   author_url "mailto:maglan.diemer@skyinformatica.com.br"
   version "2024.09.24.1"
 end
+
+require File.dirname(__FILE__) + "/lib/sky_redmine_plugin"
