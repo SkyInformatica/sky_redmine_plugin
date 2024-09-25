@@ -1,6 +1,6 @@
 class CriarRetornoTestesController < ApplicationController
   before_action :obter_tarefa, only: [:criar_retorno_testes_devel, :criar_retorno_testes_qs]
-  before_action :find_issues, only: [:criar_tarefa_retorno_testes_qs_lote]
+  #before_action :find_issues, only: [:criar_tarefa_retorno_testes_qs_lote]
 
   def criar_retorno_testes_devel
     qs_projects = ["Notarial - QS", "Registral - QS"]
