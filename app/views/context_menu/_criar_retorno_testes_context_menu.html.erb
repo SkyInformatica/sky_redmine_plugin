@@ -1,0 +1,11 @@
+<% if @issue.status.name == "Teste NOK" && ["Notarial - QS", "Registral - QS"].include?(@issue.project.name) %>
+  <li><%= context_menu_link "Criar tarefa de retorno de testes",
+                            criar_retorno_testes_qs_path(id: @issue.id),
+                            :remote => true,
+                            class: "icon icon-copy" %></li>
+<% elsif @issue.status.name == "Resolvida" && !["Notarial - QS", "Registral - QS"].include?(@issue.project.name) %>
+  <li><%= context_menu_link "Criar tarefa de retorno de testes para desenvolvimento",
+                            criar_retorno_testes_devel_path(id: @issue.id),
+                            :remote => true,
+                            class: "icon icon-copy" %></li>
+<% end %>
