@@ -81,7 +81,7 @@ class CriarRetornoTestesController < ApplicationController
     redirect_to issue_path(@issue)
   end
 
-  def criar_tarefa_retorno_testes_qs_lote
+  def criar_retorno_testes_qs_lote
     Rails.logger.info ">>> criar_tarefa_retorno_testes_qs_lote"
     @issue_ids = params[:ids]
     Rails.logger.info ">>> #{@issue_ids.to_json}"
