@@ -91,6 +91,8 @@ class CriarRetornoTestesController < ApplicationController
       @issue = Issue.find(issue_id)
       criar_retorno_testes_qs(true)
     end
+
+    flash[:notice] = "Somente as tarefas com Teste NOK foram processadas"
     redirect_to issues_path
   end
 
