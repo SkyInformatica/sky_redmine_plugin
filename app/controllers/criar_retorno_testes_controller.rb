@@ -90,7 +90,7 @@ class CriarRetornoTestesController < ApplicationController
     @processed_issues = []
     @issue_ids.each do |issue_id|
       @issue = Issue.find(issue_id)
-      @processed_issues << "#{@issue.tracker.name} ##{@issue.id} - #{@issue.subject}"
+      @processed_issues << "#{view_context.link_to "#{@issue.tracker.name} ##{@issue.id}", issue_path(@issue)} - #{@issue.subject}"
 
       criar_retorno_testes_qs(true)
     end

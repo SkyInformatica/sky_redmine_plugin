@@ -1,5 +1,9 @@
-<li><%= context_menu_link "Criar tarefa de retorno de testes",
-                         criar_retorno_testes_qs_lote_path(:ids => @issue_ids),
-                         remote: true,
-                         class: "icon icon-copy" %></li>
+<% if ["Notarial - QS", "Registral - QS"].include?(@issue.project.name) && (@issue.status.name == "Teste NOK") %>
+  <li><%= context_menu_link "Criar tarefa de retorno de testes",
+                            criar_retorno_testes_qs_lote_path(:ids => @issue_ids),
+                            remote: true,
+                            class: "icon icon-copy" %></li>
+
+<% end %>
+                        
 
