@@ -1,5 +1,6 @@
 class CriarRetornoTestesController < ApplicationController
   before_action :obter_tarefa, only: [:criar_retorno_testes_devel, :criar_retorno_testes_qs]
+  before_action :find_issue, only: [:criar_retorno_testes_qs_lote]
 
   def criar_retorno_testes_devel
     qs_projects = ["Notarial - QS", "Registral - QS"]
@@ -93,8 +94,7 @@ class CriarRetornoTestesController < ApplicationController
     end
 
     respond_to do |format|
-      format.js # Isso espera um arquivo de resposta JavaScript (criar_retorno_testes_qs_lote.js.erb)
-      format.html { redirect_to issues_path }
+      format.js { flash.now[:notice] = "A ação foi executada com sucesso." }
     end
   end
 
