@@ -91,7 +91,7 @@ class CriarRetornoTestesController < ApplicationController
       @issue = Issue.find(issue_id)
       criar_retorno_testes_qs(true)
     end
-    redirect_to issue_path
+    redirect_to issues_path
   end
 
   private
