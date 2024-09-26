@@ -1,7 +1,10 @@
-// fechar o menu de contexto
-$('.context-menu').hide(); // ajuste o seletor conforme necessário
+// Escondendo o menu de contexto
+$('.context-menu').hide(); // Certifique-se de que o seletor está correto
 
-// opcional: adicionar a mensagem flash à página
-if ("<%= flash[:notice] %>") {
-  alert("<%= j flash[:notice] %>");
-}
+// Redirecionar para a lista de tarefas após uma pequena pausa para garantir que o menu seja fechado
+setTimeout(function() {
+  window.location.href = '<%= issues_path %>'; // Redireciona para a lista de tarefas
+}, 500); // Essa pausa de 500ms pode ser ajustada conforme necessário
+
+// Se você não deseja usar alert ou deseja mostrar a mensagem antes do redirecionamento, você pode fazer algo assim:
+alert("Todas as tarefas com Teste NOK foram processadas e os retornos de testes foram criados");
