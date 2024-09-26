@@ -3,4 +3,4 @@
 post "criar_retorno_testes_qs/:id", to: "criar_retorno_testes#criar_retorno_testes_qs", as: "criar_retorno_testes_qs"
 post "criar_retorno_testes_devel/:id", to: "criar_retorno_testes#criar_retorno_testes_devel", as: "criar_retorno_testes_devel"
 
-post "criar_retorno_testes_qs_lote/:ids", to: "criar_retorno_testes#criar_retorno_testes_qs_lote" as: "criar_retorno_testes_qs_lote"
+post "criar_retorno_testes_qs_lote/:ids", to: "criar_retorno_testes#criar_retorno_testes_qs_lote", as: "criar_retorno_testes_qs_lote"
