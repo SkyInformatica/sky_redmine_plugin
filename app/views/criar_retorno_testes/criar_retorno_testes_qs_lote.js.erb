@@ -1,0 +1,7 @@
+// fechar o menu de contexto
+$('.context-menu').hide(); // ajuste o seletor conforme necessário
+
+// opcional: adicionar a mensagem flash à página
+if ("<%= flash[:notice] %>") {
+  alert("<%= j flash[:notice] %>");
+}

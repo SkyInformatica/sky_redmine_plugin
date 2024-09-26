@@ -92,8 +92,12 @@ class CriarRetornoTestesController < ApplicationController
       criar_retorno_testes_qs(true)
     end
 
-    flash[:notice] = "Somente as tarefas com Teste NOK foram processadas"
-    redirect_to issues_path
+    flash[:notice] = "Todas as tarefas com Teste NOK foram processadas e os retornos de testes foram criados"
+
+    respond_to do |format|
+      format.js # Isso espera um arquivo de resposta JavaScript (criar_retorno_testes_qs_lote.js.erb)
+      format.html { redirect_to issues_path }
+    end
   end
 
   private
