@@ -68,14 +68,14 @@ class CriarRetornoTestesController < ApplicationController
           @issue.save
         end
 
-        flash[:notice] = "Tarefa #{view_context.link_to "#{new_issue.tracker.name} ##{new_issue.id}", issue_path(new_issue)} foi criada no projeto #{view_context.link_to original_issue.project.name, project_path(original_issue.project)} na sprint #{view_context.link_to new_issue.fixed_version.name, version_path(new_issue.fixed_version)} com tempo estimado de 1.0h"
+        flash[:notice] = "Tarefa #{view_context.link_to "#{new_issue.tracker.name} ##{new_issue.id}", issue_path(new_issue)} foi criada no projeto #{view_context.link_to original_issue.project.name, project_path(original_issue.project)} na sprint #{view_context.link_to new_issue.fixed_version.name, version_path(new_issue.fixed_version)} com tempo estimado de 1.0h" unless is_batch_call
         flash[:info] = "Tarefa do desenvolvimento #{view_context.link_to "#{original_issue.tracker.name} ##{original_issue.id}", issue_path(original_issue)} foi ajustada o status para <strong><em>#{original_issue.status.name}</em></strong><br>" \
-        "Essa tarefa de testes foi fechada e ajustado seu status para <strong><em>#{@issue.status.name}</em></strong>".html_safe
+        "Essa tarefa de testes foi fechada e ajustado seu status para <strong><em>#{@issue.status.name}</em></strong>".html_safe unless is_batch_call
       else
-        flash[:warning] = "Não foi possível encontrar o projeto de origem (desenvolvimento) para criar o retorno de testes."
+        flash[:warning] = "Não foi possível encontrar o projeto de origem (desenvolvimento) para criar o retorno de testes." unless is_batch_call
       end
     else
-      flash[:warning] = "O retorno de testes só pode ser criado se a tarefa de testes estiver nos projetos 'Notarial - QS' ou 'Registral - QS' com status 'Teste NOK'."
+      flash[:warning] = "O retorno de testes só pode ser criado se a tarefa de testes estiver nos projetos 'Notarial - QS' ou 'Registral - QS' com status 'Teste NOK'." unless is_batch_call
     end
 
     redirect_to issue_path(@issue) unless is_batch_call
