@@ -45,7 +45,7 @@ class CriarRetornoTestesController < ApplicationController
     redirect_to issue_path(@issue)
   end
 
-  def criar_retorno_testes_qs
+  def criar_retorno_testes_qs(is_batch_call = false)
     Rails.logger.info ">>> criar_retorno_testes_qs #{@issue.id}"
     qs_projects = ["Notarial - QS", "Registral - QS"]
     nok_status = IssueStatus.find_by(name: "Teste NOK")
@@ -78,7 +78,7 @@ class CriarRetornoTestesController < ApplicationController
       flash[:warning] = "O retorno de testes só pode ser criado se a tarefa de testes estiver nos projetos 'Notarial - QS' ou 'Registral - QS' com status 'Teste NOK'."
     end
 
-    redirect_to issue_path(@issue)
+    redirect_to issue_path(@issue) unless is_batch_call
   end
 
   def criar_retorno_testes_qs_lote
@@ -89,7 +89,7 @@ class CriarRetornoTestesController < ApplicationController
     # Itera sobre cada ID recebido
     @issue_ids.each do |issue_id|
       @issue = Issue.find(issue_id)
-      criar_retorno_testes_qs
+      criar_retorno_testes_qs(true)
     end
     redirect_to issue_path
   end
