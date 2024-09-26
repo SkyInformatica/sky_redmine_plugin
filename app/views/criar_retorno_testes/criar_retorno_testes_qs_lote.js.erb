@@ -1,2 +1,15 @@
-alert('Retorno de testes criado');
-window.location.reload(); 
+
+(function() {
+  var message = '<%= j "<b>Tarefas processadas.</b><br>#{@processed_issues.join("<br>")}" %>';
+  var dialogHtml = '<div id="dialog-message" title="Criar Retorno de Testes">' + message + '</div>';
+  
+  $(dialogHtml).dialog({
+    modal: true,
+    buttons: {
+      Ok: function() {
+        $(this).dialog("close");
+        window.location.reload();
+      }
+    }
+  });
+})();

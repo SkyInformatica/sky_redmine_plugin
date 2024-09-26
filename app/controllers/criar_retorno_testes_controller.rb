@@ -87,8 +87,11 @@ class CriarRetornoTestesController < ApplicationController
     Rails.logger.info ">>> #{@issue_ids.to_json}"
 
     # Itera sobre cada ID recebido
+    @processed_issues = []
     @issue_ids.each do |issue_id|
       @issue = Issue.find(issue_id)
+      @processed_issues << "#{@issue.tracker.name} ##{@issue.id} - #{@issue.subject}"
+
       criar_retorno_testes_qs(true)
     end
 
