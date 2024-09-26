@@ -46,6 +46,7 @@ class CriarRetornoTestesController < ApplicationController
   end
 
   def criar_retorno_testes_qs
+    Rails.logger.info ">>> criar_retorno_testes_qs #{@issue.id}"
     qs_projects = ["Notarial - QS", "Registral - QS"]
     nok_status = IssueStatus.find_by(name: "Teste NOK")
 
@@ -84,6 +85,13 @@ class CriarRetornoTestesController < ApplicationController
     Rails.logger.info ">>> criar_tarefa_retorno_testes_qs_lote"
     @issue_ids = params[:ids]
     Rails.logger.info ">>> #{@issue_ids.to_json}"
+
+    # Itera sobre cada ID recebido
+    @issue_ids.each do |issue_id|
+      @issue = Issue.find(issue_id)
+      criar_retorno_testes_qs
+    end
+    redirect_to issue_path
   end
 
   private
