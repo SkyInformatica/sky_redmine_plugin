@@ -94,7 +94,7 @@ class CriarRetornoTestesController < ApplicationController
     end
 
     respond_to do |format|
-      format.js { flash.now[:notice] = "A ação foi executada com sucesso." }
+      format.js
     end
   end
 
