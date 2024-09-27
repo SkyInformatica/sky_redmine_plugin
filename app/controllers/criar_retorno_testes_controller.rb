@@ -91,8 +91,7 @@ class CriarRetornoTestesController < ApplicationController
 
   def criar_retorno_testes_lote
     Rails.logger.info ">>> criar_tarefa_retorno_testes_qs_lote"
-    #tipo = params[:tipo]  # Recebe 'qs' ou 'devel' como parâmetro
-    @tipo_retorno_teste = params[:tipo]
+    @tipo_retorno_teste = params[:tipo] # Recebe 'QS' ou 'DEVEL' como parâmetro
     @issue_ids = params[:ids]
     Rails.logger.info ">>> #{@issue_ids.to_json}"
 
