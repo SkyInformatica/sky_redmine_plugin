@@ -5,7 +5,7 @@
          issue.status.name == "Teste NOK" %>
   <% end %>
   <% if !all_task_valid_qs %>
-    <% all_tasks_valid_devel = @issues.all? do |issue| %>
+    <% all_tasks_valid_qs = @issues.all? do |issue| %>
       <% issue.project.present? && issue.status.present? &&
            !["Notarial - QS", "Registral - QS"].include?(issue.project.name) &&
            issue.status.name == "Resolvida" %>
