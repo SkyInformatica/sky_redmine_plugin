@@ -1,10 +1,10 @@
-class CriarRetornoTestesController < ApplicationController
+class RetornoTestesController < ApplicationController
   before_action :inicializar
-  before_action :find_issue, only: [:criar_retorno_testes_devel, :criar_retorno_testes_qs]
-  before_action :find_issues, only: [:criar_retorno_testes_lote]
+  before_action :find_issue, only: [:retorno_testes_devel, :retorno_testes_qs]
+  before_action :find_issues, only: [:retorno_testes_lote]
 
-  def criar_retorno_testes_devel(is_batch_call = false)
-    Rails.logger.info ">>> criar_retorno_testes_devel #{@issue.id}"
+  def retorno_testes_devel(is_batch_call = false)
+    Rails.logger.info ">>> retorno_testes_devel #{@issue.id}"
     qs_projects = ["Notarial - QS", "Registral - QS"]
     resolvida_status = IssueStatus.find_by(name: "Resolvida")
     nova_status = IssueStatus.find_by(name: "Nova")
@@ -51,8 +51,8 @@ class CriarRetornoTestesController < ApplicationController
     redirect_to issue_path(@issue) unless is_batch_call
   end
 
-  def criar_retorno_testes_qs(is_batch_call = false)
-    Rails.logger.info ">>> criar_retorno_testes_qs #{@issue.id}"
+  def retorno_testes_qs(is_batch_call = false)
+    Rails.logger.info ">>> retorno_testes_qs #{@issue.id}"
     qs_projects = ["Notarial - QS", "Registral - QS"]
     nok_status = IssueStatus.find_by(name: "Teste NOK")
 
@@ -89,7 +89,7 @@ class CriarRetornoTestesController < ApplicationController
     redirect_to issue_path(@issue) unless is_batch_call
   end
 
-  def criar_retorno_testes_lote
+  def retorno_testes_lote
     Rails.logger.info ">>> criar_tarefa_retorno_testes_qs_lote"
 
     @origem_retorno_teste = params[:origem] # Recebe 'QS' ou 'DEVEL' como parâmetro
@@ -99,13 +99,13 @@ class CriarRetornoTestesController < ApplicationController
     # Itera sobre cada issue
     # O metodo find_issues (Redmine) define o @issues quando eh processamento em lote
     @issues.each do |issue|
-      # os metodos criar_retorno_testes_qs e criar_retorno_testes_devel usam @issue para referencia a tarefa que deve ser copiada
+      # os metodos retorno_testes_qs e retorno_testes_devel usam @issue para referencia a tarefa que deve ser copiada
       # o @issue eh definido pelo find_issue (Redmine) quando eh um processamento individual de uma tarefa
       @issue = issue
       if (@origem_retorno_teste == "QS")
-        criar_retorno_testes_qs(true)
+        retorno_testes_qs(true)
       elsif (@origem_retorno_teste == "DEVEL")
-        criar_retorno_testes_devel(true)
+        retorno_testes_devel(true)
       end
     end
 
