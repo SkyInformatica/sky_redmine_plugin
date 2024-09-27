@@ -1,5 +1,5 @@
 (function() {
-  var message = '<%= raw "<b>Tarefas de Retorno de Teste criadas com sucesso para as seguintes tarefas.</b><br>#{@processed_issues.join("<br>")}" %>';
+  var message = '<%= raw "<b>Tarefas de Retorno de Teste criadas com sucesso para as seguintes tarefas.</b><br><br>#{@processed_issues.join("<br>")}" %>';
   var dialogHtml = '<div id="dialog-message" title="Criar Retorno de Testes">' + message + '</div>';
   
   $(dialogHtml).dialog({
