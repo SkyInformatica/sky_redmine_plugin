@@ -97,8 +97,11 @@ class CriarRetornoTestesController < ApplicationController
     Rails.logger.info ">>> #{@issue_ids.to_json}"
 
     # Itera sobre cada issue
-    # O metodo find_issues definir o @issues
+    # O metodo find_issues (Redmine) define o @issues quando eh processamento em lote
     @issues.each do |issue|
+      # os metodos criar_retorno_testes_qs e criar_retorno_testes_devel usam @issue para referencia a tarefa que deve ser copiada
+      # o @issue eh definido pelo find_issue (Redmine) quando eh um processamento individual de uma tarefa
+      @issue = issue
       if (@origem_retorno_teste == "QS")
         criar_retorno_testes_qs(true)
       elsif (@origem_retorno_teste == "DEVEL")
