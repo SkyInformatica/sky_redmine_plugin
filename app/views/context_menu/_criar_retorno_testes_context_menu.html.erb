@@ -22,12 +22,12 @@
 <% end %>
 <% if all_tasks_valid_qs %>
    <li><%= context_menu_link "Criar Retorno de Testes",
-                             criar_retorno_testes_lote_path(ids: @issue_ids),
+                             criar_retorno_testes_lote_path(ids: @issue_ids, tipo: "QS"),
                              remote: true,
                              class: "icon icon-copy" %></li>
 <% elsif all_tasks_valid_devel %>
    <li><%= context_menu_link "Criar Retorno de Testes",
-                             criar_retorno_testes_lote_path(ids: @issue_ids),
+                             criar_retorno_testes_lote_path(ids: @issue_ids, tipo: "DEVEL"),
                              remote: true,
                              class: "icon icon-copy" %></li>      
 <% end %>
