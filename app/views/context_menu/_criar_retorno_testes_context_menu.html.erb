@@ -1,5 +1,4 @@
-<% if @issue_ids.present? %>
-  <% @issues = Issue.where(id: @issue_ids).includes(:project, :status) %>
+<% if @issue_ids.present? %>  
   <% all_tasks_valid = @issues.all? do |issue| %>
     <% issue.project.present? && issue.status.present? &&
          ["Notarial - QS", "Registral - QS"].include?(issue.project.name) &&
