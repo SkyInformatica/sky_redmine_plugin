@@ -1,6 +1,7 @@
 class CriarRetornoTestesController < ApplicationController
-  before_action :find_issue, :inicializar only: [:criar_retorno_testes_devel, :criar_retorno_testes_qs]
-  before_action :find_issues, :inicializar only: [:criar_retorno_testes_lote]
+  before_action :inicializar
+  before_action :find_issue, only: [:criar_retorno_testes_devel, :criar_retorno_testes_qs]
+  before_action :find_issues, only: [:criar_retorno_testes_lote]
 
   def criar_retorno_testes_devel(is_batch_call = false)
     Rails.logger.info ">>> criar_retorno_testes_devel #{@issue.id}"
