@@ -86,7 +86,7 @@ class CriarRetornoTestesController < ApplicationController
   def criar_retorno_testes_lote
     Rails.logger.info ">>> criar_tarefa_retorno_testes_qs_lote"
     #tipo = params[:tipo]  # Recebe 'qs' ou 'devel' como parâmetro
-    tipo = params[:tipo]
+    @tipo_retorno_teste = params[:tipo]
     @issue_ids = params[:ids]
     Rails.logger.info ">>> #{@issue_ids.to_json}"
 
@@ -96,9 +96,9 @@ class CriarRetornoTestesController < ApplicationController
       @issue = Issue.find(issue_id)
       @processed_issues << "#{view_context.link_to "#{@issue.tracker.name} ##{@issue.id}", issue_path(@issue)} - #{@issue.subject}"
 
-      if (tipo == "QS")
+      if (@tipo_retorno_teste == "QS")
         criar_retorno_testes_qs(true)
-      elsif (tipo == "DEVEL")
+      elsif (@tipo_retorno_teste == "DEVEL")
         criar_retorno_testes_devel(true)
       end
     end
