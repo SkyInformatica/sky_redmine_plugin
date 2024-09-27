@@ -1,5 +1,5 @@
 class CriarRetornoTestesController < ApplicationController
-  before_action :find_issue, only: [:criar_retorno_testes_devel, :criar_retorno_testes_qs, :criar_retorno_testes_lote]
+  before_action :find_issue, only: [:criar_retorno_testes_devel, :criar_retorno_testes_qs]
   before_action :find_issues, only: [:criar_retorno_testes_lote]
 
   def criar_retorno_testes_devel(is_batch_call = false)
