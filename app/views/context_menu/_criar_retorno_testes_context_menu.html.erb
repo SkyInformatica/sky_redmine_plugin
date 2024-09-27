@@ -1,4 +1,3 @@
-<!--
 <% all_tasks_valid_qs = false %> 
 <% all_tasks_valid_devel = false %>
 
@@ -31,25 +30,4 @@
                              criar_retorno_testes_lote_path(ids: @issue_ids, tipo: "DEVEL"),
                              remote: true,
                              class: "icon icon-copy" %></li>      
-<% end %>
--->
-   
-<% if @issue_ids.present? %>  
-  <% all_tasks_valid = @issues.all? do |issue| %>
-    <% issue.project.present? && issue.status.present? &&
-         ["Notarial - QS", "Registral - QS"].include?(issue.project.name) &&
-         issue.status.name == "Teste NOK" %>
-  <% end %>
-<% else %>
-  <% if @issue.present? %>
-    <% all_tasks_valid = ["Notarial - QS", "Registral - QS"].include?(@issue.project.name) && (@issue.status.name == "Teste NOK") %>
-  <% else %>
-    <% all_tasks_valid = false %>
-  <% end %>
-<% end %>
-<% if all_tasks_valid %>
-  <li><%= context_menu_link "Criar tarefa de retorno de testes",
-                            criar_retorno_testes_qs_lote_path(ids: @issue_ids),
-                            remote: true,
-                            class: "icon icon-copy" %></li>
 <% end %>
