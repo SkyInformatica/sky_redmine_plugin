@@ -1,9 +1,13 @@
+<% all_tasks_valid_qs = false %> 
+<% all_tasks_valid_devel = false %>
+
 <% if @issue_ids.present? %>  
   <% all_tasks_valid_qs = @issues.all? do |issue| %>
     <% issue.project.present? && issue.status.present? &&
          ["Notarial - QS", "Registral - QS"].include?(issue.project.name) &&
          issue.status.name == "Teste NOK" %>
   <% end %>
+
   <% if !all_tasks_valid_qs %>
     <% all_tasks_valid_devel = @issues.all? do |issue| %>
       <% issue.project.present? && issue.status.present? &&
@@ -29,6 +33,5 @@
                             remote: true,
                             class: "icon icon-copy" %></li>      
 <% end %>
-
 
    
