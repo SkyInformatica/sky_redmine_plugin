@@ -1,6 +1,6 @@
 class CriarRetornoTestesController < ApplicationController
-  before_action :find_issue, only: [:criar_retorno_testes_devel, :criar_retorno_testes_qs]
-  before_action :find_issues, only: [:criar_retorno_testes_lote]
+  before_action :find_issue, :inicializar only: [:criar_retorno_testes_devel, :criar_retorno_testes_qs]
+  before_action :find_issues, :inicializar only: [:criar_retorno_testes_lote]
 
   def criar_retorno_testes_devel(is_batch_call = false)
     Rails.logger.info ">>> criar_retorno_testes_devel #{@issue.id}"
@@ -27,7 +27,7 @@ class CriarRetornoTestesController < ApplicationController
           IssueRelation.where(issue_from_id: @issue.id, issue_to_id: copied_to_qs_issue.id, relation_type: "copied_to").destroy_all
         else
           # A tarefa já foi encaminhada para QS e não está como "Nova"
-          flash[:warning] = "Os testes já foram iniciados pelo QS em  #{view_context.link_to "#{copied_to_qs_issue.tracker.name} ##{copied_to_qs_issue.id}", issue_path(copied_to_qs_issue)} e está com status #{copied_to_qs_issue.status.name}.<br>Neste caso não possivel criar um retorno de testes para a tarefa de desenvolvimento.<br>Ou crie uma nova tarefa de Defeito ou crie um retorno de testes apartir da tarefa do QS.".html_safe
+          flash[:warning] = "Os testes já foram iniciados pelo QS em  #{view_context.link_to "#{copied_to_qs_issue.tracker.name} ##{copied_to_qs_issue.id}", issue_path(copied_to_qs_issue)} e está com status #{copied_to_qs_issue.status.name}.<br>Neste caso não possivel criar um retorno de testes para a tarefa de desenvolvimento.<br>Ou crie uma nova tarefa de Defeito ou crie um retorno de testes apartir da tarefa do QS.".html_safe unless is_batch_call
           @processed_issues << "#{view_context.link_to "#{@issue.tracker.name} ##{@issue.id}", issue_path(@issue)} - #{@issue.subject} - tarefa já foi encaminhada para o QS em  #{view_context.link_to "#{copied_to_qs_issue.tracker.name} ##{copied_to_qs_issue.id}", issue_path(copied_to_qs_issue)} e está com status #{copied_to_qs_issue.status.name}"
           redirect_to issue_path(@issue) and return unless is_batch_call
         end
@@ -95,7 +95,6 @@ class CriarRetornoTestesController < ApplicationController
     Rails.logger.info ">>> #{@issue_ids.to_json}"
 
     # Itera sobre cada ID recebido
-    @processed_issues = []
     @issue_ids.each do |issue_id|
       @issue = Issue.find(issue_id)
 
@@ -112,6 +111,10 @@ class CriarRetornoTestesController < ApplicationController
   end
 
   private
+
+  def inicializar
+    @processed_issues = []
+  end
 
   def criar_nova_tarefa(project_id)
     new_issue = @issue.copy(project_id: project_id)
