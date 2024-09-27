@@ -2,7 +2,8 @@ class CriarRetornoTestesController < ApplicationController
   before_action :find_issue, only: [:criar_retorno_testes_devel, :criar_retorno_testes_qs]
   before_action :find_issues, only: [:criar_retorno_testes_qs_lote]
 
-  def criar_retorno_testes_devel
+  def criar_retorno_testes_devel(is_batch_call = false)
+    Rails.logger.info ">>> criar_retorno_testes_devel #{@issue.id}"
     qs_projects = ["Notarial - QS", "Registral - QS"]
     resolvida_status = IssueStatus.find_by(name: "Resolvida")
     nova_status = IssueStatus.find_by(name: "Nova")
@@ -34,16 +35,16 @@ class CriarRetornoTestesController < ApplicationController
       new_issue = criar_nova_tarefa(@issue.project.id)
       atualizar_status_tarefa(@issue, "Fechada - cont retorno testes")
 
-      flash[:notice] = "Tarefa #{view_context.link_to "#{new_issue.tracker.name} ##{new_issue.id}", issue_path(new_issue)} foi criada no projeto #{view_context.link_to new_issue.project.name, project_path(new_issue.project)} na sprint #{view_context.link_to new_issue.fixed_version.name, version_path(new_issue.fixed_version)} com tempo estimado de 1.0h"
-      flash[:info] = "Essa tarefa teve seu status ajustado para <strong><em>#{@issue.status.name}</em></strong>"
+      flash[:notice] = "Tarefa #{view_context.link_to "#{new_issue.tracker.name} ##{new_issue.id}", issue_path(new_issue)} foi criada no projeto #{view_context.link_to new_issue.project.name, project_path(new_issue.project)} na sprint #{view_context.link_to new_issue.fixed_version.name, version_path(new_issue.fixed_version)} com tempo estimado de 1.0h" unless is_batch_call
+      flash[:info] = "Essa tarefa teve seu status ajustado para <strong><em>#{@issue.status.name}</em></strong>" unless is_batch_call
       if tarefa_qs_removida
-        flash[:info] = flash[:info] + "<br>A tarefa já havia sido encaminhada para o QS e ainda estava com status Nova, portanto foi removida do backlog do QS".html_safe
+        flash[:info] = flash[:info] + "<br>A tarefa já havia sido encaminhada para o QS e ainda estava com status Nova, portanto foi removida do backlog do QS".html_safe unless is_batch_call
       end
     else
-      flash[:warning] = "O retorno de testes só pode ser criado se a tarefa de desenvolvimento estiver nos projetos das equipes de desenvolvimento com status 'Resolvida'."
+      flash[:warning] = "O retorno de testes só pode ser criado se a tarefa de desenvolvimento estiver nos projetos das equipes de desenvolvimento com status 'Resolvida'." unless is_batch_call
     end
 
-    redirect_to issue_path(@issue)
+    redirect_to issue_path(@issue) unless is_batch_call
   end
 
   def criar_retorno_testes_qs(is_batch_call = false)
@@ -82,8 +83,9 @@ class CriarRetornoTestesController < ApplicationController
     redirect_to issue_path(@issue) unless is_batch_call
   end
 
-  def criar_retorno_testes_qs_lote
+  def criar_retorno_testes_lote
     Rails.logger.info ">>> criar_tarefa_retorno_testes_qs_lote"
+    tipo = params[:tipo]  # Recebe 'qs' ou 'devel' como parâmetro
     @issue_ids = params[:ids]
     Rails.logger.info ">>> #{@issue_ids.to_json}"
 
@@ -93,7 +95,11 @@ class CriarRetornoTestesController < ApplicationController
       @issue = Issue.find(issue_id)
       @processed_issues << "#{view_context.link_to "#{@issue.tracker.name} ##{@issue.id}", issue_path(@issue)} - #{@issue.subject}"
 
-      criar_retorno_testes_qs(true)
+      if tipo == "QS"
+        criar_retorno_testes_qs(true)
+      elsif tipo == "DEVEL"
+        criar_retorno_testes_devel(true)
+      end
     end
 
     respond_to do |format|
@@ -102,10 +108,6 @@ class CriarRetornoTestesController < ApplicationController
   end
 
   private
-
-  def obter_tarefa
-    @issue = Issue.find(params[:id])
-  end
 
   def criar_nova_tarefa(project_id)
     new_issue = @issue.copy(project_id: project_id)
