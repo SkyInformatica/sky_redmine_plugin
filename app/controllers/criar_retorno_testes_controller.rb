@@ -89,7 +89,6 @@ class CriarRetornoTestesController < ApplicationController
     @issue_ids = params[:ids]
     Rails.logger.info ">>> #{@issue_ids.to_json}"
 
-    #forcar atualizacao
     # Itera sobre cada ID recebido
     @processed_issues = []
     @issue_ids.each do |issue_id|
