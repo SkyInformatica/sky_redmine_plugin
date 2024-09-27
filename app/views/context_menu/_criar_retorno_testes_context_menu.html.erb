@@ -4,8 +4,8 @@
          ["Notarial - QS", "Registral - QS"].include?(issue.project.name) &&
          issue.status.name == "Teste NOK" %>
   <% end %>
-  <% if !all_task_valid_qs %>
-    <% all_tasks_valid_qs = @issues.all? do |issue| %>
+  <% if !all_tasks_valid_qs %>
+    <% all_tasks_valid_devel = @issues.all? do |issue| %>
       <% issue.project.present? && issue.status.present? &&
            !["Notarial - QS", "Registral - QS"].include?(issue.project.name) &&
            issue.status.name == "Resolvida" %>
@@ -15,6 +15,7 @@
   <% if @issue.present? %>
     <% all_tasks_valid_qs = ["Notarial - QS", "Registral - QS"].include?(@issue.project.name) && (@issue.status.name == "Teste NOK") %>
     <% all_tasks_valid_devel = !["Notarial - QS", "Registral - QS"].include?(@issue.project.name) && (@issue.status.name == "Resolvida") %>  
+  <% end %>
 <% end %>
 
 <% if all_tasks_valid_qs %>
