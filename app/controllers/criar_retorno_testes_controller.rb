@@ -83,6 +83,25 @@ class CriarRetornoTestesController < ApplicationController
     redirect_to issue_path(@issue) unless is_batch_call
   end
 
+  def criar_retorno_testes_qs_lote
+    Rails.logger.info ">>> criar_tarefa_retorno_testes_qs_lote"
+    @issue_ids = params[:ids]
+    Rails.logger.info ">>> #{@issue_ids.to_json}"
+
+    # Itera sobre cada ID recebido
+    @processed_issues = []
+    @issue_ids.each do |issue_id|
+      @issue = Issue.find(issue_id)
+      @processed_issues << "#{view_context.link_to "#{@issue.tracker.name} ##{@issue.id}", issue_path(@issue)} - #{@issue.subject}"
+
+      criar_retorno_testes_qs(true)
+    end
+
+    respond_to do |format|
+      format.js
+    end
+  end
+
   def criar_retorno_testes_lote
     Rails.logger.info ">>> criar_tarefa_retorno_testes_qs_lote"
     tipo = params[:tipo]  # Recebe 'qs' ou 'devel' como parâmetro
@@ -95,9 +114,9 @@ class CriarRetornoTestesController < ApplicationController
       @issue = Issue.find(issue_id)
       @processed_issues << "#{view_context.link_to "#{@issue.tracker.name} ##{@issue.id}", issue_path(@issue)} - #{@issue.subject}"
 
-      if tipo == "QS"
+      if (tipo == "QS")
         criar_retorno_testes_qs(true)
-      elsif tipo == "DEVEL"
+      elsif (tipo == "DEVEL")
         criar_retorno_testes_devel(true)
       end
     end
