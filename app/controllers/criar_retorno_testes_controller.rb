@@ -90,18 +90,13 @@ class CriarRetornoTestesController < ApplicationController
   end
 
   def criar_retorno_testes_lote
-    Rails.logger.info ">>> criar_tarefa_retorno_testes_qs_lote"
-    @tipo_retorno_teste = params[:tipo] # Recebe 'QS' ou 'DEVEL' como parâmetro
-    @issue_ids = params[:ids]
-    Rails.logger.info ">>> #{@issue_ids.to_json}"
-
+    Rails.logger.info ">>> criar_tarefa_retorno_testes_qs_lote #{@params[:ids].to_json}"
+    @origem_retorno_teste = params[:origem] # Recebe 'QS' ou 'DEVEL' como parâmetro
     # Itera sobre cada ID recebido
-    @issue_ids.each do |issue_id|
-      @issue = Issue.find(issue_id)
-
-      if (@tipo_retorno_teste == "QS")
+    @issues.each do |issue|
+      if (@origem_retorno_teste == "QS")
         criar_retorno_testes_qs(true)
-      elsif (@tipo_retorno_teste == "DEVEL")
+      elsif (@origem_retorno_teste == "DEVEL")
         criar_retorno_testes_devel(true)
       end
     end
