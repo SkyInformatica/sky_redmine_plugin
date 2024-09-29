@@ -69,10 +69,10 @@ class RetornoTestesController < ApplicationController
         atualizar_status_tarefa(@issue, "Teste NOK - Fechada")
 
         #limpar tags da tarefa de QS
-        if @issue.respond_to?(:tag_list)
-          @issue.tag_list = []
-          @issue.save
-        end
+        #if @issue.respond_to?(:tag_list)
+        @issue.tag_list = []
+        @issue.save
+        #end
 
         flash[:notice] = "Tarefa #{view_context.link_to "#{new_issue.tracker.name} ##{new_issue.id}", issue_path(new_issue)} foi criada no projeto #{view_context.link_to original_issue.project.name, project_path(original_issue.project)} na sprint #{view_context.link_to new_issue.fixed_version.name, version_path(new_issue.fixed_version)} com tempo estimado de 1.0h" unless is_batch_call
         flash[:info] = "Tarefa do desenvolvimento #{view_context.link_to "#{original_issue.tracker.name} ##{original_issue.id}", issue_path(original_issue)} foi ajustada o status para <strong><em>#{original_issue.status.name}</em></strong><br>" \
@@ -127,9 +127,9 @@ class RetornoTestesController < ApplicationController
     new_issue.start_date = nil
     new_issue.estimated_hours = 1
 
-    if @new_issue.respond_to?(:tag_list)
-      new_issue.tag_list = [] # Definindo a lista de tags como vazia
-    end
+    #if @new_issue.respond_to?(:tag_list)
+    new_issue.tag_list = [] # Definindo a lista de tags como vazia
+    #end
 
     if custom_field = IssueCustomField.find_by(name: "Tarefa não planejada IMEDIATA")
       new_issue.custom_field_values = { custom_field.id => nil }
