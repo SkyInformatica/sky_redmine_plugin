@@ -45,7 +45,7 @@ class RetornoTestesController < ApplicationController
       end
       @processed_issues << "[OK] #{view_context.link_to "#{@issue.tracker.name} ##{@issue.id}", issue_path(@issue)} - #{@issue.subject} - retorno de testes criado em #{view_context.link_to "#{new_issue.tracker.name} ##{new_issue.id}", issue_path(new_issue)} "
     else
-      flash[:warning] = "O retorno de testes só pode ser criado se a tarefa de desenvolvimento estiver nos projetos das equipes de desenvolvimento com status 'Resolvida'." unless is_batch_call
+      flash[:warning] = "O retorno de testes só pode ser criado se a tarefa estiver nos projetos das equipes de desenvolvimento com status 'Resolvida'." unless is_batch_call
     end
 
     redirect_to issue_path(@issue) unless is_batch_call
@@ -90,7 +90,7 @@ class RetornoTestesController < ApplicationController
   end
 
   def retorno_testes_lote
-    Rails.logger.info ">>> criar_tarefa_retorno_testes_qs_lote"
+    Rails.logger.info ">>> retorno_testes_lote"
 
     @origem_retorno_teste = params[:origem] # Recebe 'QS' ou 'DEVEL' como parâmetro
     @issue_ids = params[:ids]
@@ -121,6 +121,7 @@ class RetornoTestesController < ApplicationController
   end
 
   def criar_nova_tarefa(project_id)
+    Rails.logger.info ">>> criar_nova_tarefa"
     new_issue = @issue.copy(project_id: project_id)
     new_issue.tracker = Tracker.find_by_name("Retorno de testes")
     new_issue.assigned_to_id = nil

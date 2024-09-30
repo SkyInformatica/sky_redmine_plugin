@@ -1,0 +1,19 @@
+(function() {
+  var message = '<%= raw "<b>Resultado do processamento conforme listado abaixo</b><br><br>#{@processed_issues.join("<br>")}" %>';
+  var dialogHtml = '<div id="dialog-message" title="Encaminhar QS">' + message + '</div>';
+  
+  $(dialogHtml).dialog({
+    modal: true,
+    width: 'auto',
+    maxWidth: 600,
+    buttons: {
+      Ok: function() {
+        $(this).dialog("close");
+        window.location.reload();
+      }
+    }
+  });
+})();
+
+
+
