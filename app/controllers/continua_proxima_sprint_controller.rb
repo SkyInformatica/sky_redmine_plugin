@@ -1,10 +1,10 @@
 class EncaminharQsController < ApplicationController
   before_action :inicializar
-  before_action :find_issue, only: [:encaminhar_qs]
-  before_action :find_issues, only: [:encaminhar_qs_lote]
+  before_action :find_issue, only: [:continua_proxima_sprint]
+  before_action :find_issues, only: [:continua_proxima_sprint_lote]
 
-  def encaminhar_qs(is_batch_call = false)
-    Rails.logger.info ">>> encaminhar_qs #{@issue.id}"
+  def continua_proxima_sprint(is_batch_call = false)
+    Rails.logger.info ">>> continua_proxima_sprint #{@issue.id}"
     qs_projects = ["Notarial - QS", "Registral - QS"]
     resolvida_status = IssueStatus.find_by(name: "Resolvida")
     nova_status = IssueStatus.find_by(name: "Nova")
@@ -38,8 +38,8 @@ class EncaminharQsController < ApplicationController
     redirect_to issue_path(@issue) unless is_batch_call
   end
 
-  def encaminhar_qs_lote
-    Rails.logger.info ">>> encaminhar_qs_lote"
+  def continua_proxima_sprint_lote
+    Rails.logger.info ">>> continua_proxima_sprint_lote"
 
     @issue_ids = params[:ids]
     Rails.logger.info ">>> #{@issue_ids.to_json}"
@@ -50,7 +50,7 @@ class EncaminharQsController < ApplicationController
       # o metodo encaminhar_qs usa @issue para referencia a tarefa que deve ser copiada
       # o @issue eh definido pelo find_issue (Redmine) quando eh um processamento individual de uma tarefa
       @issue = issue
-      encaminhar_qs(true)
+      continua_proxima_sprint(true)
     end
 
     respond_to do |format|
