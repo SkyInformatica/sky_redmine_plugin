@@ -1,8 +1,8 @@
-<% all_tasks_valid_devel = false %>
+<% all_tasks_valid_devel = true %>
 
 
 <% if all_tasks_valid_devel %>
-   <li><%= context_menu_link "Encaminhar QS",
+   <li><%= context_menu_link "Encaminhar",
                              encaminhar_qs_lote_path(ids: @issue_ids),
                              remote: true,
                              class: "icon icon-copy" %></li>
