@@ -1,4 +1,4 @@
-class EncaminharQsController < ApplicationController
+class ContinuaProximaSprintController < ApplicationController
   before_action :inicializar
   before_action :find_issue, only: [:continua_proxima_sprint]
   before_action :find_issues, only: [:continua_proxima_sprint_lote]
