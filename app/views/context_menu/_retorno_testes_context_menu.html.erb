@@ -25,9 +25,10 @@
                              retorno_testes_lote_path(ids: @issue_ids, origem: "QS"),
                              remote: true,
                              class: "icon icon-copy" %></li>
+   
 <% elsif all_tasks_valid_devel %>
    <li><%= context_menu_link "Criar Retorno de Testes",
                              retorno_testes_lote_path(ids: @issue_ids, origem: "DEVEL"),
                              remote: true,
-                             class: "icon icon-copy" %></li>      
+                             class: "icon icon-copy" %></li>                                 
 <% end %>
