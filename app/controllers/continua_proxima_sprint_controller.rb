@@ -79,13 +79,14 @@ class ContinuaProximaSprintController < ApplicationController
     new_issue = @issue.copy(project: qs_project)
     new_issue.assigned_to_id = nil
     new_issue.start_date = nil
+    new_issue.done_ratio = 0
     new_issue.estimated_hours = 1
 
     #if @new_issue.respond_to?(:tag_list)
     new_issue.tag_list = [] # Definindo a lista de tags como vazia
     #end
 
-    ["Tarefa não planejada IMEDIATA", "Tarefa antecipada na sprint", "Responsável pelo teste", "Teste no desenvolvimento", "Teste QS", "Versão estável"].each do |field_name|
+    ["Tarefa não planejada IMEDIATA", "Tarefa antecipada na sprint", "Responsável pelo teste", "Teste QS"].each do |field_name|
       if custom_field = IssueCustomField.find_by(name: field_name)
         new_issue.custom_field_values = { custom_field.id => nil }
       end

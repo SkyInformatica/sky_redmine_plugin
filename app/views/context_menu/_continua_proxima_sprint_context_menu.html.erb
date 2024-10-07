@@ -10,6 +10,7 @@
      <% all_tasks_valid = ["Nova", "Em andamento", "Interrompida"].include?(issue.status.name) %>
    <% end %>
 <% end %>
+<% all_tasks_valid = false %>
 <% if all_tasks_valid %>
    <li><%= context_menu_link "Continua na proxima sprint",
                              continua_proxima_sprint_lote_path(ids: @issue_ids),

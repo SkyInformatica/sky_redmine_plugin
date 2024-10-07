@@ -126,34 +126,17 @@ class RetornoTestesController < ApplicationController
     new_issue.tracker = Tracker.find_by_name("Retorno de testes")
     new_issue.assigned_to_id = nil
     new_issue.start_date = nil
+    new_issue.done_ratio = 0
     new_issue.estimated_hours = 1
 
     #if @new_issue.respond_to?(:tag_list)
     new_issue.tag_list = [] # Definindo a lista de tags como vazia
     #end
 
-    if custom_field = IssueCustomField.find_by(name: "Tarefa não planejada IMEDIATA")
-      new_issue.custom_field_values = { custom_field.id => nil }
-    end
-
-    if custom_field = IssueCustomField.find_by(name: "Tarefa antecipada na sprint")
-      new_issue.custom_field_values = { custom_field.id => nil }
-    end
-
-    if custom_field = IssueCustomField.find_by(name: "Responsável pelo teste")
-      new_issue.custom_field_values = { custom_field.id => nil }
-    end
-
-    if custom_field = IssueCustomField.find_by(name: "Teste no desenvolvimento")
-      new_issue.custom_field_values = { custom_field.id => nil }
-    end
-
-    if custom_field = IssueCustomField.find_by(name: "Teste QS")
-      new_issue.custom_field_values = { custom_field.id => nil }
-    end
-
-    if custom_field = IssueCustomField.find_by(name: "Versão estável")
-      new_issue.custom_field_values = { custom_field.id => nil }
+    ["Tarefa não planejada IMEDIATA", "Tarefa antecipada na sprint", "Responsável pelo teste", "Teste no desenvolvimento", "Teste QS", "Versão estável", "Versão teste"].each do |field_name|
+      if custom_field = IssueCustomField.find_by(name: field_name)
+        new_issue.custom_field_values = { custom_field.id => nil }
+      end
     end
 
     sprint = Version.find_by(name: "Aptas para desenvolvimento", project_id: project_id)

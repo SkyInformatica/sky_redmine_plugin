@@ -65,12 +65,12 @@ class EncaminharQsController < ApplicationController
   end
 
   def criar_nova_tarefa
-    registral_projects = ["Equipe Civil", "Equipe TED", "Equipe Registral"]
+    registral_projects = ["Equipe Civil", "Equipe TED", "Equipe Imoveis"]
     notarial_projects = ["Equipe Notar", "Equipe Protesto", "Equipe Financeiro"]
 
-    if (registral_projects.include?(@issue.project.name))
+    if registral_projects.include?(@issue.project.name)
       qs_project = "Registral - QS"
-    elsif (notarial_projects.include?(@issue.project.name))
+    elsif notarial_projects.include?(@issue.project.name)
       qs_project = "Notarial - QS"
     end
 
@@ -79,11 +79,15 @@ class EncaminharQsController < ApplicationController
     new_issue = @issue.copy(project: qs_project)
     new_issue.assigned_to_id = nil
     new_issue.start_date = nil
+    new_issue.done_ratio = 0
     new_issue.estimated_hours = 1
 
-    #if @new_issue.respond_to?(:tag_list)
-    new_issue.tag_list = [] # Definindo a lista de tags como vazia
-    #end
+    # Mantém a tag original da tarefa
+    new_issue.tag_list = @issue.tag_list
+
+    # Adiciona a nova tag
+    tag_name = @issue.project.name.sub("Equipe ", "").upcase + "_TESTAR"
+    new_issue.tag_list.add(tag_name)
 
     ["Tarefa não planejada IMEDIATA", "Tarefa antecipada na sprint", "Responsável pelo teste", "Teste no desenvolvimento", "Teste QS", "Versão estável"].each do |field_name|
       if custom_field = IssueCustomField.find_by(name: field_name)

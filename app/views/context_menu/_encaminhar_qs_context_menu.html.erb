@@ -11,6 +11,7 @@
      <% all_tasks_valid_devel = !["Notarial - QS", "Registral - QS"].include?(@issue.project.name) && (@issue.status.name == "Resolvida") %>  
    <% end %>
 <% end %>
+<% all_tasks_valid_devel = false %>
 <% if all_tasks_valid_devel %>
    <li><%= context_menu_link "Encaminhar para QS",
                              encaminhar_qs_lote_path(ids: @issue_ids),
