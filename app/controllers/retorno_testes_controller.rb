@@ -132,7 +132,7 @@ class RetornoTestesController < ApplicationController
     # Concatenando o valor do campo "Resultado Teste NOK" à descrição
     if custom_field = IssueCustomField.find_by(name: "Resultado Teste NOK")
       resultado_teste_nok_value = @issue.custom_field_value(custom_field.id)
-      new_issue.description = "*Retorno de Teste NOK:*\n\n#{resultado_teste_nok_value}\n---\n##{new_issue.description}"
+      new_issue.description = "*[RETORNO DE TESTES DO QS]*\n\n#{resultado_teste_nok_value}\n\n---\n\n##{new_issue.description}"
     end
 
     #if @new_issue.respond_to?(:tag_list)
