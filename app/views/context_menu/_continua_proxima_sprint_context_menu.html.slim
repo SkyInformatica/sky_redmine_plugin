@@ -2,10 +2,11 @@
 
 - if @issue_ids.present?
   - all_tasks_valid = @issues.all? do |issue|
-    issue.status.present? &&
-    ["Nova", "Em andamento", "Interrompida"].include?(issue.status.name)
+    - if issue.status.present? && issue.status.name.present?
+      - ["Nova", "Em andamento", "Interrompida"].include?(issue.status.name)
+
 - else
-  - if @issue.present?
+  - if @issue.present? && @issue.status.present? && @issue.status.name.present?
     - all_tasks_valid = ["Nova", "Em andamento", "Interrompida"].include?(@issue.status.name)
 
 - if all_tasks_valid
