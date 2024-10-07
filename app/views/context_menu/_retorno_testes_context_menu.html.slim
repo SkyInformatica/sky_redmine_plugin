@@ -3,14 +3,14 @@
 
 - if @issue_ids.present?  
   - all_tasks_valid_qs = @issues.all? do |issue|
-      issue.project.present? && issue.status.present? &&
-      ["Notarial - QS", "Registral - QS"].include?(issue.project.name) &&
-      issue.status.name == "Teste NOK"
+    issue.project.present? && issue.status.present? &&
+    ["Notarial - QS", "Registral - QS"].include?(issue.project.name) &&
+    issue.status.name == "Teste NOK"
   - if !all_tasks_valid_qs
     - all_tasks_valid_devel = @issues.all? do |issue|
-        issue.project.present? && issue.status.present? &&
-        !["Notarial - QS", "Registral - QS"].include?(issue.project.name) &&
-        issue.status.name == "Resolvida"
+      issue.project.present? && issue.status.present? &&
+      !["Notarial - QS", "Registral - QS"].include?(issue.project.name) &&
+      issue.status.name == "Resolvida"
 - else
   - if @issue.present?
     - all_tasks_valid_qs = ["Notarial - QS", "Registral - QS"].include?(@issue.project.name) && (@issue.status.name == "Teste NOK")

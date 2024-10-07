@@ -2,11 +2,12 @@
 
 - if @issue_ids.present?
   - all_tasks_valid = @issues.all? do |issue|
-      issue.status.present? &&
-      ["Nova", "Em andamento", "Interrompida"].include?(issue.status.name)
+    issue.status.present? &&
+    ["Nova", "Em andamento", "Interrompida"].include?(issue.status.name)
 - else
   - if @issue.present?
-    - all_tasks_valid = ["Nova", "Em andamento", "Interrompida"].include?(issue.status.name)
+    - all_tasks_valid = ["Nova", "Em andamento", "Interrompida"].include?(@issue.status.name)
+
 - if all_tasks_valid
   li
     = context_menu_link "Continua na proxima sprint",
