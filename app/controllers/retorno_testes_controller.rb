@@ -129,6 +129,12 @@ class RetornoTestesController < ApplicationController
     new_issue.done_ratio = 0
     new_issue.estimated_hours = 1
 
+    # Concatenando o valor do campo "Resultado Teste NOK" à descrição
+    if custom_field = IssueCustomField.find_by(name: "Resultado Teste NOK")
+      resultado_teste_nok_value = @issue.custom_field_value(custom_field.id)
+      new_issue.description = "#{new_issue.description}\n---\n#{resultado_teste_nok_value}"
+    end
+
     #if @new_issue.respond_to?(:tag_list)
     new_issue.tag_list = [] # Definindo a lista de tags como vazia
     #end
