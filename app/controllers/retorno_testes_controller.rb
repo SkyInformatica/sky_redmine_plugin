@@ -38,7 +38,8 @@ class RetornoTestesController < ApplicationController
       new_issue = criar_nova_tarefa(@issue.project.id)
       atualizar_status_tarefa(@issue, "Fechada - cont retorno testes")
 
-      flash[:notice] = "Tarefa #{view_context.link_to "#{new_issue.tracker.name} ##{new_issue.id}", issue_path(new_issue)} foi criada no projeto #{view_context.link_to new_issue.project.name, project_path(new_issue.project)} na sprint #{view_context.link_to new_issue.fixed_version.name, version_path(new_issue.fixed_version)} com tempo estimado de 1.0h" unless is_batch_call
+      flash[:notice] = "Tarefa #{view_context.link_to "#{new_issue.tracker.name} ##{new_issue.id}", issue_path(new_issue)} foi criada no projeto #{view_context.link_to new_issue.project.name, project_path(new_issue.project)} na sprint #{view_context.link_to new_issue.fixed_version.name, version_path(new_issue.fixed_version)} com tempo estimado de 1.0h<br>" \
+      "Ajuste a descrição da tarefa com o resultado dos testes e orientacoes o que deve ser corrigido".html_safe unless is_batch_call
       flash[:info] = "Essa tarefa teve seu status ajustado para <strong><em>#{@issue.status.name}</em></strong>" unless is_batch_call
       if tarefa_qs_removida
         flash[:info] = flash[:info] + "<br>A tarefa já havia sido encaminhada para o QS e ainda estava com status Nova, portanto foi removida do backlog do QS".html_safe unless is_batch_call
@@ -132,7 +133,9 @@ class RetornoTestesController < ApplicationController
     # Concatenando o valor do campo "Resultado Teste NOK" à descrição
     if custom_field = IssueCustomField.find_by(name: "Resultado Teste NOK")
       resultado_teste_nok_value = @issue.custom_field_value(custom_field.id)
-      new_issue.description = "*[RETORNO DE TESTES DO QS]*\n\n#{resultado_teste_nok_value}\n\n---\n\n##{new_issue.description}"
+      if resultado_teste_nok_value && !resultado_teste_nok_value.empty?
+        new_issue.description = "*[RETORNO DE TESTES DO QS]*\n\n#{resultado_teste_nok_value}\n\n---\n\n##{new_issue.description}"
+      end
     end
 
     #if @new_issue.respond_to?(:tag_list)
