@@ -5,6 +5,7 @@ class RetornoTestesController < ApplicationController
 
   def retorno_testes_devel(is_batch_call = false)
     Rails.logger.info ">>> retorno_testes_devel #{@issue.id}"
+    @origem_retorno_teste = "DEVEL"
     qs_projects = ["Notarial - QS", "Registral - QS"]
     resolvida_status = IssueStatus.find_by(name: "Resolvida")
     nova_status = IssueStatus.find_by(name: "Nova")
@@ -54,6 +55,7 @@ class RetornoTestesController < ApplicationController
 
   def retorno_testes_qs(is_batch_call = false)
     Rails.logger.info ">>> retorno_testes_qs #{@issue.id}"
+    @origem_retorno_teste = "QS"
     qs_projects = ["Notarial - QS", "Registral - QS"]
     nok_status = IssueStatus.find_by(name: "Teste NOK")
 
@@ -131,11 +133,15 @@ class RetornoTestesController < ApplicationController
     new_issue.estimated_hours = 1
 
     # Concatenando o valor do campo "Resultado Teste NOK" à descrição
-    if custom_field = IssueCustomField.find_by(name: "Resultado Teste NOK")
-      resultado_teste_nok_value = @issue.custom_field_value(custom_field.id)
-      if resultado_teste_nok_value && !resultado_teste_nok_value.empty?
-        new_issue.description = "*[RETORNO DE TESTES DO QS]*\n\n#{resultado_teste_nok_value}\n\n---\n\n##{new_issue.description}"
+    if (@origem_retorno_teste == "QS")
+      if custom_field = IssueCustomField.find_by(name: "Resultado Teste NOK")
+        resultado_teste_nok_value = @issue.custom_field_value(custom_field.id)
+        if resultado_teste_nok_value && !resultado_teste_nok_value.empty?
+          new_issue.description = "*[RETORNO DE TESTES DO QS]*\n\n#{resultado_teste_nok_value}\n\n---\n\n##{new_issue.description}"
+        end
       end
+    elsif (@origem_retorno_teste == "DEVEL")
+      new_issue.description = "*[RETORNO DE TESTES DO DESENVOLVIMENTO]*\n\n---\n\n##{new_issue.description}"
     end
 
     #if @new_issue.respond_to?(:tag_list)
