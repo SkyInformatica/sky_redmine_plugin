@@ -1,0 +1,184 @@
+diff -ruN ./additional_tags-main/app/helpers/additional_tags_helper.rb ./additional_tags-main_sky_patch/app/helpers/additional_tags_helper.rb
+--- ./additional_tags-main/app/helpers/additional_tags_helper.rb	2024-09-25 05:10:29
++++ ./additional_tags-main_sky_patch/app/helpers/additional_tags_helper.rb	2024-10-08 15:37:41
+@@ -91,7 +91,7 @@
+     when :list
+       list_el = 'ul'
+       item_el = 'li'
+-    when :simple_cloud, :cloud
++    when :simple_cloud, :cloud, :list_cloud
+       list_el = 'div'
+       item_el = 'span'
+     else
+@@ -99,9 +99,9 @@
+     end
+ 
+     content = +''.html_safe
+-    if style == :list && AdditionalTags.setting(:tags_sort_by) == 'name'
++    if [:list, :list_cloud].include?(style) && AdditionalTags.setting(:tags_sort_by) == 'name'
+       tags.group_by { |tag| tag.name.downcase.first }.each do |letter, grouped_tags|
+-        content << content_tag(item_el, letter.upcase, class: 'letter')
++        content << content_tag((style == :list_cloud ? 'li' : item_el), letter.upcase, class: 'letter')
+         add_tags style, grouped_tags, content, item_el, options
+       end
+     else
+Binary files ./additional_tags-main/app/views/.DS_Store and ./additional_tags-main_sky_patch/app/views/.DS_Store differ
+diff -ruN ./additional_tags-main/app/views/additional_tags/settings/_general.html.slim ./additional_tags-main_sky_patch/app/views/additional_tags/settings/_general.html.slim
+--- ./additional_tags-main/app/views/additional_tags/settings/_general.html.slim	2024-09-25 05:10:29
++++ ./additional_tags-main_sky_patch/app/views/additional_tags/settings/_general.html.slim	2024-10-08 14:59:22
+@@ -3,7 +3,7 @@
+ 
+   p
+     = additionals_settings_select :tags_sidebar,
+-                                  options_for_select(%w[none list cloud simple_cloud].collect { |v| [l("tags_sidebar_#{v}"), v] },
++                                  options_for_select(%w[none list cloud simple_cloud list_cloud].collect { |v| [l("tags_sidebar_#{v}"), v] },
+                                                      @settings[:tags_sidebar])
+ 
+   p
+diff -ruN ./additional_tags-main/assets/stylesheets/tags.css ./additional_tags-main_sky_patch/assets/stylesheets/tags.css
+--- ./additional_tags-main/assets/stylesheets/tags.css	2024-09-25 05:10:29
++++ ./additional_tags-main_sky_patch/assets/stylesheets/tags.css	2024-10-08 15:14:55
+@@ -156,3 +156,11 @@
+ #checklist-menu {
+   z-index: 1;
+ }
++
++.letter {
++  font-weight: bold;
++  margin: 10px 0;
++  display: block; /* Mantém as letras em sua própria linha */
++  border-bottom: 1px dotted #ccc; /* Adiciona uma linha pontilhada abaixo da letra */
++}
++
+diff -ruN ./additional_tags-main/config/locales/bg.yml ./additional_tags-main_sky_patch/config/locales/bg.yml
+--- ./additional_tags-main/config/locales/bg.yml	2024-09-25 05:10:29
++++ ./additional_tags-main_sky_patch/config/locales/bg.yml	2024-10-08 15:11:23
+@@ -39,6 +39,7 @@
+   tags_order_by_name: "Име"
+   tags_sidebar_cloud: "Облак"
+   tags_sidebar_list: "Списък"
++  tags_sidebar_list_cloud: "List cloud"
+   tags_sidebar_none: "Не"
+   tags_sidebar_simple_cloud: "Обикновен облак"
+   tags_sort_by_count: "брой обекти"
+diff -ruN ./additional_tags-main/config/locales/cs.yml ./additional_tags-main_sky_patch/config/locales/cs.yml
+--- ./additional_tags-main/config/locales/cs.yml	2024-09-25 05:10:29
++++ ./additional_tags-main_sky_patch/config/locales/cs.yml	2024-10-08 15:12:09
+@@ -38,6 +38,7 @@
+   tags_order_by_last_created: "Naposledy vytvořeno"
+   tags_order_by_name: "Název"
+   tags_sidebar_cloud: "Cloud"
++  tags_sidebar_list_cloud: "List cloud"
+   tags_sidebar_list: "Seznam"
+   tags_sidebar_none: "Žádný"
+   tags_sidebar_simple_cloud: "Simple cloud"
+diff -ruN ./additional_tags-main/config/locales/de.yml ./additional_tags-main_sky_patch/config/locales/de.yml
+--- ./additional_tags-main/config/locales/de.yml	2024-09-25 05:10:29
++++ ./additional_tags-main_sky_patch/config/locales/de.yml	2024-10-08 15:12:09
+@@ -39,6 +39,7 @@
+   tags_order_by_name: Name
+   tags_sidebar_cloud: Cloud
+   tags_sidebar_list: Liste
++  tags_sidebar_list_cloud: "List cloud"
+   tags_sidebar_none: Keine
+   tags_sidebar_simple_cloud: Einfache Cloud
+   tags_sort_by_count: Anzahl
+diff -ruN ./additional_tags-main/config/locales/en.yml ./additional_tags-main_sky_patch/config/locales/en.yml
+--- ./additional_tags-main/config/locales/en.yml	2024-09-25 05:10:29
++++ ./additional_tags-main_sky_patch/config/locales/en.yml	2024-10-08 15:12:09
+@@ -39,6 +39,7 @@
+   tags_order_by_name: "Name"
+   tags_sidebar_cloud: "Cloud"
+   tags_sidebar_list: "List"
++  tags_sidebar_list_cloud: "List cloud"
+   tags_sidebar_none: "None"
+   tags_sidebar_simple_cloud: "Simple cloud"
+   tags_sort_by_count: "Count"
+diff -ruN ./additional_tags-main/config/locales/fa.yml ./additional_tags-main_sky_patch/config/locales/fa.yml
+--- ./additional_tags-main/config/locales/fa.yml	2024-09-25 05:10:29
++++ ./additional_tags-main_sky_patch/config/locales/fa.yml	2024-10-08 15:12:09
+@@ -39,6 +39,7 @@
+   tags_order_by_name: "نام"
+   tags_sidebar_cloud: "ابر"
+   tags_sidebar_list: "لیست"
++  tags_sidebar_list_cloud: "List cloud"
+   tags_sidebar_none: "هیچکدام"
+   tags_sidebar_simple_cloud: "ابر ساده"
+   tags_sort_by_count: "تعداد"
+diff -ruN ./additional_tags-main/config/locales/fr.yml ./additional_tags-main_sky_patch/config/locales/fr.yml
+--- ./additional_tags-main/config/locales/fr.yml	2024-09-25 05:10:29
++++ ./additional_tags-main_sky_patch/config/locales/fr.yml	2024-10-08 15:12:09
+@@ -39,6 +39,7 @@
+   tags_order_by_name: "Nom"
+   tags_sidebar_cloud: "Cloud"
+   tags_sidebar_list: "Liste"
++  tags_sidebar_list_cloud: "List cloud"
+   tags_sidebar_none: "Aucune"
+   tags_sidebar_simple_cloud: "Simple cloud"
+   tags_sort_by_count: "Compter"
+diff -ruN ./additional_tags-main/config/locales/it.yml ./additional_tags-main_sky_patch/config/locales/it.yml
+--- ./additional_tags-main/config/locales/it.yml	2024-09-25 05:10:29
++++ ./additional_tags-main_sky_patch/config/locales/it.yml	2024-10-08 15:12:09
+@@ -39,6 +39,7 @@
+   tags_order_by_name: "Nome"
+   tags_sidebar_cloud: "Cloud"
+   tags_sidebar_list: "Elenco"
++  tags_sidebar_list_cloud: "List cloud"
+   tags_sidebar_none: "Nessuno"
+   tags_sidebar_simple_cloud: "Simple cloud"
+   tags_sort_by_count: "Contate"
+diff -ruN ./additional_tags-main/config/locales/ja.yml ./additional_tags-main_sky_patch/config/locales/ja.yml
+--- ./additional_tags-main/config/locales/ja.yml	2024-09-25 05:10:29
++++ ./additional_tags-main_sky_patch/config/locales/ja.yml	2024-10-08 15:12:09
+@@ -39,6 +39,7 @@
+   tags_order_by_name: "名前"
+   tags_sidebar_cloud: "クラウド"
+   tags_sidebar_list: "リスト"
++  tags_sidebar_list_cloud: "List cloud"
+   tags_sidebar_none: "なし"
+   tags_sidebar_simple_cloud: "シンプルなクラウド"
+   tags_sort_by_count: "伯爵"
+diff -ruN ./additional_tags-main/config/locales/ko.yml ./additional_tags-main_sky_patch/config/locales/ko.yml
+--- ./additional_tags-main/config/locales/ko.yml	2024-09-25 05:10:29
++++ ./additional_tags-main_sky_patch/config/locales/ko.yml	2024-10-08 15:12:09
+@@ -39,6 +39,7 @@
+   tags_order_by_name: "이름"
+   tags_sidebar_cloud: "구름"
+   tags_sidebar_list: "명부"
++  tags_sidebar_list_cloud: "List cloud"
+   tags_sidebar_none: "없음"
+   tags_sidebar_simple_cloud: "단순 클라우드"
+   tags_sort_by_count: "카운트"
+diff -ruN ./additional_tags-main/config/locales/pl.yml ./additional_tags-main_sky_patch/config/locales/pl.yml
+--- ./additional_tags-main/config/locales/pl.yml	2024-09-25 05:10:29
++++ ./additional_tags-main_sky_patch/config/locales/pl.yml	2024-10-08 15:12:09
+@@ -39,6 +39,7 @@
+   tags_order_by_name: "Nazwa"
+   tags_sidebar_cloud: "Cloud"
+   tags_sidebar_list: "Lista"
++  tags_sidebar_list_cloud: "List cloud"
+   tags_sidebar_none: "Brak"
+   tags_sidebar_simple_cloud: "Simple cloud"
+   tags_sort_by_count: "Hrabia"
+diff -ruN ./additional_tags-main/config/locales/pt-BR.yml ./additional_tags-main_sky_patch/config/locales/pt-BR.yml
+--- ./additional_tags-main/config/locales/pt-BR.yml	2024-09-25 05:10:29
++++ ./additional_tags-main_sky_patch/config/locales/pt-BR.yml	2024-10-08 15:04:20
+@@ -39,6 +39,7 @@
+   tags_order_by_name: "Nome"
+   tags_sidebar_cloud: "Cloud"
+   tags_sidebar_list: "Lista"
++  tags_sidebar_list_cloud: "List cloud"
+   tags_sidebar_none: "Nenhum"
+   tags_sidebar_simple_cloud: "Simple cloud"
+   tags_sort_by_count: "Conde"
+diff -ruN ./additional_tags-main/config/locales/ru.yml ./additional_tags-main_sky_patch/config/locales/ru.yml
+--- ./additional_tags-main/config/locales/ru.yml	2024-09-25 05:10:29
++++ ./additional_tags-main_sky_patch/config/locales/ru.yml	2024-10-08 15:12:04
+@@ -39,6 +39,7 @@
+   tags_order_by_name: "Имя"
+   tags_sidebar_cloud: "Облако"
+   tags_sidebar_list: "Список"
++  tags_sidebar_list_cloud: "List cloud"
+   tags_sidebar_none: "Нет"
+   tags_sidebar_simple_cloud: "Простое облако"
+   tags_sort_by_count: "Количеству"
