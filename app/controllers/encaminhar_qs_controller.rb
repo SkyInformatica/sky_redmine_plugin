@@ -17,8 +17,7 @@ class EncaminharQsController < ApplicationController
       copied_to_qs_issue = related_issues.map { |relation| Issue.find_by(id: relation.issue_to_id) }
         .find { |issue| qs_projects.include?(issue.project.name) }
 
-      tarefa_qs_removida = false
-      # Se existir uma cópia e seu status for "Nova"
+      # Se existir uma cópia da tarefa para o QS
       if copied_to_qs_issue
         # A tarefa já foi encaminhada para QS
         flash[:warning] = "A tarefa já foi encaminhada para o QS em  #{view_context.link_to "#{copied_to_qs_issue.tracker.name} ##{copied_to_qs_issue.id}", issue_path(copied_to_qs_issue)} e está com status #{copied_to_qs_issue.status.name}." unless is_batch_call
@@ -29,7 +28,17 @@ class EncaminharQsController < ApplicationController
 
       new_issue = criar_nova_tarefa
 
-      flash[:notice] = 'Tarefa #{view_context.link_to "#{new_issue.tracker.name} ##{new_issue.id}", issue_path(new_issue)} foi criada no projeto #{view_context.link_to new_issue.project.name, project_path(new_issue.project)} na sprint #{view_context.link_to new_issue.fixed_version.name, version_path(new_issue.fixed_version)} com tempo estimado de XX' unless is_batch_call
+      if custom_field = IssueCustomField.find_by(name: "Responsável pelo teste")
+        @issue.custom_field_values = { custom_field.id => "QS" }
+      end
+
+      if custom_field = IssueCustomField.find_by(name: "Teste QS")
+        @issue.custom_field_values = { custom_field.id => "Nova" }
+      end
+
+      @issue.save
+
+      flash[:notice] = "Tarefa #{view_context.link_to "#{new_issue.tracker.name} ##{new_issue.id}", issue_path(new_issue)} foi criada no projeto #{view_context.link_to new_issue.project.name, project_path(new_issue.project)} na sprint #{view_context.link_to new_issue.fixed_version.name, version_path(new_issue.fixed_version)} com tempo estimado de XX" unless is_batch_call
       @processed_issues << "[OK] #{view_context.link_to "#{@issue.tracker.name} ##{@issue.id}", issue_path(@issue)} - #{@issue.subject} - encaminhar para QS em #{view_context.link_to "#{new_issue.tracker.name} ##{new_issue.id}", issue_path(new_issue)} "
     else
       flash[:warning] = "Somente pode encaminhar para o QS só pode ser criado se a tarefa estiver nos projetos das equipes de desenvolvimento com status 'Resolvida'." unless is_batch_call
@@ -80,7 +89,7 @@ class EncaminharQsController < ApplicationController
     new_issue.assigned_to_id = nil
     new_issue.start_date = nil
     new_issue.done_ratio = 0
-    new_issue.estimated_hours = 1
+    new_issue.estimated_hours = 1 # estimar o tempo baseado na metrica do 50% do tempo do desenvolvimento com minimo de 1 hora
 
     # Mantém a tag original da tarefa
     new_issue.tag_list = @issue.tag_list
@@ -89,7 +98,7 @@ class EncaminharQsController < ApplicationController
     tag_name = @issue.project.name.sub("Equipe ", "").upcase + "_TESTAR"
     new_issue.tag_list.add(tag_name)
 
-    ["Tarefa não planejada IMEDIATA", "Tarefa antecipada na sprint", "Responsável pelo teste", "Teste no desenvolvimento", "Teste QS", "Versão estável"].each do |field_name|
+    ["Tarefa não planejada IMEDIATA", "Tarefa antecipada na sprint", "Versão estável"].each do |field_name|
       if custom_field = IssueCustomField.find_by(name: field_name)
         new_issue.custom_field_values = { custom_field.id => nil }
       end
