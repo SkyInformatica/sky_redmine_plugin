@@ -37,3 +37,29 @@
                           retorno_testes_lote_path(ids: @issue_ids, origem: "QS"),
                           remote: true,
                           class: "icon icon-copy" %></li>
+
+
+
+<% all_tasks_valid_qs = false %> 
+<% all_tasks_valid_devel = false %>
+<% if @issue_ids.present? %>     
+     <% all_tasks_valid_devel = @issues.all? do |issue| %>
+       <% issue.project.present? && issue.status.present? &&
+            !["Notarial - QS", "Registral - QS"].include?(issue.project.name) &&
+            issue.status.name == "Resolvida" %>
+     <% end %>   
+<% else %>
+   <% if @issue.present? %>     
+     <% all_tasks_valid_devel = !["Notarial - QS", "Registral - QS"].include?(@issue.project.name) && (@issue.status.name == "Resolvida") %>  
+   <% end %>
+<% end %>
+<% if all_tasks_valid_devel %>
+   <li><%= context_menu_link "Encaminhar para QS",
+                             encaminhar_qs_lote_path(ids: @issue_ids),
+                             remote: true,
+                             class: "icon icon-copy" %></li>
+<% end %>
+<li><%= context_menu_link "Encaminhar para QS_",
+                          encaminhar_qs_lote_path(ids: @issue_ids),
+                          remote: true,
+                          class: "icon icon-copy" %></li>
