@@ -24,19 +24,14 @@
    <li><%= context_menu_link "Criar Retorno de Testes",
                              retorno_testes_lote_path(ids: @issue_ids, origem: "QS"),
                              remote: true,
-                             class: "icon icon-copy" %></li>
-   
-<% elsif all_tasks_valid_devel %>
-   <% Rails.logger.info ">>> context_menu criar retorno de testes" %>
+                             class: "icon icon-copy" %></li>   
+<% elsif all_tasks_valid_devel %>   
    <li><%= context_menu_link "Criar Retorno de Testes",
                              retorno_testes_lote_path(ids: @issue_ids, origem: "DEVEL"),
                              remote: true,
                              class: "icon icon-copy" %></li>                                 
 <% end %>
-<li><%= context_menu_link "Criar Retorno de Testes_",
-                          retorno_testes_lote_path(ids: @issue_ids, origem: "QS"),
-                          remote: true,
-                          class: "icon icon-copy" %></li>
+
 
 
 
@@ -59,7 +54,23 @@
                              remote: true,
                              class: "icon icon-copy" %></li>
 <% end %>
-<li><%= context_menu_link "Encaminhar para QS_",
-                          encaminhar_qs_lote_path(ids: @issue_ids),
-                          remote: true,
-                          class: "icon icon-copy" %></li>
+
+
+<% all_tasks_valid = false %>
+<% if @issue_ids.present? %>     
+     <% all_tasks_valid = @issues.all? do |issue| %>
+       <% issue.status.present? &&
+            ["Nova", "Em andamento", "Interrompida"].include?(issue.status.name) %>
+     <% end %>   
+<% else %>
+   <% if @issue.present? %>     
+     <% all_tasks_valid = ["Nova", "Em andamento", "Interrompida"].include?(issue.status.name) %>
+   <% end %>
+<% end %>
+<% all_tasks_valid = false %>
+<% if all_tasks_valid %>
+   <li><%= context_menu_link "Continua na proxima sprint",
+                             continua_proxima_sprint_lote_path(ids: @issue_ids),
+                             remote: true,
+                             class: "icon icon-copy" %></li>
+<% end %>
