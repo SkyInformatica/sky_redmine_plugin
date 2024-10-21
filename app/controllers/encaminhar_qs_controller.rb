@@ -112,7 +112,7 @@ class EncaminharQsController < ApplicationController
     new_issue.assigned_to_id = nil
     new_issue.start_date = nil
     new_issue.done_ratio = 0
-    new_issue.estimated_hours = [1, (tempo_gasto_total *0.34).floor].max
+    new_issue.estimated_hours = [1, (obter_tempo_gasto * 0.34).ceil].max
 
     # Mantém a tag original da tarefa
     new_issue.tag_list = @issue.tag_list
