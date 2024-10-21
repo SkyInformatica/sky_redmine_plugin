@@ -115,6 +115,16 @@ class EncaminharQsController < ApplicationController
     new_issue.done_ratio = 0
     new_issue.estimated_hours = [1, (tempo_gasto_total * 0.34).ceil].max
 
+    # se é um retorno de testes verifica se a origem foi um retorno de testes do desenvolvimento
+    # neste caso a tarefa de qs deve ser do tipo da tarefa original, ou seja, defeitou ou funcionalidade
+    # se foi um retorno de testes que veio do QS entao mantem como retorno de testes e nao altera o tipo
+    if @issue.tracker.name == "Retorno de testes"
+      original_issue = encontrar_tarefa_original_funcionalidade_defeito(@issue)
+      if original_issue && ["Funcionalidade", "Defeito"].include?(original_issue.tracker.name)
+        new_issue.tracker = original_issue.tracker
+      end
+    end
+
     # Mantém a tag original da tarefa
     new_issue.tag_list = @issue.tag_list
 
@@ -140,39 +150,28 @@ class EncaminharQsController < ApplicationController
     new_issue
   end
 
-  def localizar_tarefa_origem_copia_outro_projeto(issue)
+  def encontrar_tarefa_original_funcionalidade_defeito(issue)
+    Rails.logger.info ">>> encontrar_tarefa_original_funcionalidade_defeito"
     current_issue = issue
-    current_project_id = issue.project_id
-    original_issue = nil
 
-    # Procura na lista de relações da tarefa para encontrar a origem
+    # procura a tarefa anterior do mesmo projeto até que seja uma funcionalidade ou defeito
+    # se nao encontrar retornar nil
     loop do
-
-      # Verifica se o projeto da tarefa atual é diferente do projeto original
-      if current_issue.project_id != current_project_id
-        original_issue = current_issue
-        break
-      end
-
-      # Verifica as relações da tarefa para encontrar a tarefa original
       related_issues = IssueRelation.where(issue_to_id: current_issue.id, relation_type: "copied_to")
+      break if related_issues.empty?
 
-      if related_issues.any?
-        related_issue = Issue.find_by(id: related_issues.first.issue_from_id)
-        current_issue = related_issue
-      else
-        break
+      related_issue = Issue.find_by(id: related_issues.issue_from_id)
+      Rails.logger.info ">>> related_issue.project.name #{related_issue.project.name}, related_issue.tracker.name #{related_issue.tracker.name}"
+
+      break if related_issue.project_id != issue.project_id
+
+      if ["Funcionalidade", "Defeito"].include?(related_issue.tracker.name)
+        return related_issue
       end
+
+      current_issue = related_issue
     end
 
-    original_issue
-  end
-
-  def atualizar_status_tarefa(issue, novo_status_descricao)
-    novo_status = IssueStatus.find_by(name: novo_status_descricao)
-    if novo_status
-      issue.status = novo_status
-      issue.save
-    end
+    nil
   end
 end
