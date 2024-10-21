@@ -25,7 +25,7 @@ class EncaminharQsController < ApplicationController
         return
       end
 
-      new_issue = criar_nova_tarefa_qs(obter_tempo_gasto)
+      new_issue = criar_nova_tarefa_qs
 
       if custom_field = IssueCustomField.find_by(name: "Teste QS")
         @issue.custom_field_values = { custom_field.id => "Nova" }
@@ -108,11 +108,12 @@ class EncaminharQsController < ApplicationController
 
     qs_project = Project.find_by(name: qs_project)
 
+    tempo_gasto_total = obter_tempo_gasto
     new_issue = @issue.copy(project: qs_project)
     new_issue.assigned_to_id = nil
     new_issue.start_date = nil
     new_issue.done_ratio = 0
-    new_issue.estimated_hours = [1, (obter_tempo_gasto * 0.34).ceil].max
+    new_issue.estimated_hours = [1, (tempo_gasto_total * 0.34).ceil].max
 
     # Mantém a tag original da tarefa
     new_issue.tag_list = @issue.tag_list
