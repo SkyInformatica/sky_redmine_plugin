@@ -158,7 +158,7 @@ class EncaminharQsController < ApplicationController
     # se nao encontrar retornar nil
     loop do
       related_issues = IssueRelation.find_by(issue_to_id: current_issue.id, relation_type: "copied_to")
-      break if related_issues.empty?
+      break unless related_issues
 
       related_issue = Issue.find_by(id: related_issues.issue_from_id)
       Rails.logger.info ">>> related_issue.project.name #{related_issue.project.name}, related_issue.tracker.name #{related_issue.tracker.name}"
