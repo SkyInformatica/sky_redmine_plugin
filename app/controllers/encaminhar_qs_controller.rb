@@ -157,7 +157,7 @@ class EncaminharQsController < ApplicationController
     # procura a tarefa anterior do mesmo projeto até que seja uma funcionalidade ou defeito
     # se nao encontrar retornar nil
     loop do
-      related_issues = IssueRelation.where(issue_to_id: current_issue.id, relation_type: "copied_to")
+      related_issues = IssueRelation.find_by(issue_to_id: current_issue.id, relation_type: "copied_to")
       break if related_issues.empty?
 
       related_issue = Issue.find_by(id: related_issues.issue_from_id)
