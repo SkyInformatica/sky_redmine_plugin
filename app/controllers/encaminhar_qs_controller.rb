@@ -7,7 +7,6 @@ class EncaminharQsController < ApplicationController
     Rails.logger.info ">>> encaminhar_qs #{@issue.id}"
     qs_projects = ["Notarial - QS", "Registral - QS"]
     resolvida_status = IssueStatus.find_by(name: "Resolvida")
-    nova_status = IssueStatus.find_by(name: "Nova")
 
     # Check if the issue is not in QS projects and its status is "Resolvida"
     if (!qs_projects.include?(@issue.project.name)) && (@issue.status == resolvida_status)
@@ -26,11 +25,7 @@ class EncaminharQsController < ApplicationController
         return
       end
 
-      new_issue = criar_nova_tarefa
-
-      if custom_field = IssueCustomField.find_by(name: "Responsável pelo teste")
-        @issue.custom_field_values = { custom_field.id => "QS" }
-      end
+      new_issue = criar_nova_tarefa_qs(obter_tempo_gasto)
 
       if custom_field = IssueCustomField.find_by(name: "Teste QS")
         @issue.custom_field_values = { custom_field.id => "Nova" }
@@ -67,13 +62,41 @@ class EncaminharQsController < ApplicationController
     end
   end
 
+  def obter_tempo_gasto
+    Rails.logger.info ">>> obter_tempo_gasto"
+
+    tempo_total = 0
+    tarefa_atual = @issue
+    loop do
+      # Adiciona o tempo gasto da tarefa atual
+      tempo_total += tarefa_atual.time_entries.sum(&:hours)
+      Rails.logger.info ">>> tempo_total #{tempo_total}"
+
+      # Procura a tarefa anterior de onde esta foi copiada
+      relacao = IssueRelation.find_by(issue_to_id: tarefa_atual.id, relation_type: "copied_to")
+
+      # Se não houver mais tarefas anteriores, sai do loop
+      break unless relacao
+
+      tarefa_anterior = Issue.find_by(id: relacao.issue_from_id)
+
+      # Se a tarefa anterior não for do mesmo projeto, sai do loop
+      break if tarefa_anterior.project_id != @issue.project_id
+
+      # Atualiza a tarefa atual para a próxima iteração
+      tarefa_atual = tarefa_anterior
+    end
+
+    tempo_total
+  end
+
   private
 
   def inicializar
     @processed_issues = []
   end
 
-  def criar_nova_tarefa
+  def criar_nova_tarefa_qs
     registral_projects = ["Equipe Civil", "Equipe TED", "Equipe Imoveis"]
     notarial_projects = ["Equipe Notar", "Equipe Protesto", "Equipe Financeiro"]
 
@@ -89,7 +112,7 @@ class EncaminharQsController < ApplicationController
     new_issue.assigned_to_id = nil
     new_issue.start_date = nil
     new_issue.done_ratio = 0
-    new_issue.estimated_hours = 1 # estimar o tempo baseado na metrica do 50% do tempo do desenvolvimento com minimo de 1 hora
+    new_issue.estimated_hours = [1, (tempo_gasto_total *0.34).floor].max
 
     # Mantém a tag original da tarefa
     new_issue.tag_list = @issue.tag_list
