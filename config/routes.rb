@@ -7,6 +7,7 @@ post "retorno_testes_devel/:id", to: "retorno_testes#retorno_testes_devel", as: 
 get "retorno_testes_lote", to: "retorno_testes#retorno_testes_lote", as: "retorno_testes_lote"
 
 # encaminhar QS
+post "encaminhar_qs/:id", to: "encaminhar_qs#encaminhar_qs", as: "encaminhar_qs"
 get "encaminhar_qs_lote", to: "encaminhar_qs#encaminhar_qs_lote", as: "encaminhar_qs_lote"
 
 #continua proxima sprint
