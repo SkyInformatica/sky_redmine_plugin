@@ -1,4 +1,4 @@
-### **Criar tarefa de retorno de testes**
+# **Criar tarefa de retorno de testes**
 
 É possivel criar tarefa de retorno de testes tanto para tarefas do **desenvolvimento** quanto para tarefas do **QS**, conforme seguintes condicoes
 
@@ -36,7 +36,7 @@ Abaixo pode-se ver o fluxograma da execução das ações executadas
 
 ![fluxograma-criar-retorno-testes-devel](fluxograma-criar-retorno-testes-devel.png)
 
-# **Fluxogram da criação do retorno de testes para tarefas do QS**
+## **Fluxogram da criação do retorno de testes para tarefas do QS**
 
 Ao clicar no link, o Redmine criará uma nova tarefa a partir de uma cópia, ajustando-a e realizando as seguintes ações.
 
