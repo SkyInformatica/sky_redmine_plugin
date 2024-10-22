@@ -9,7 +9,7 @@ A criação da tarefa de retorno de testes é feito pelo **link na visualizaçã
 
 **Link na visualização da tarefa**
 
-![criar-retorno-testes](criar-retorno-testes.png)
+![criar_retorno_testes](criar_retorno_testes.png)
 
 **Menu de contexto na lista de tarefas**
 
