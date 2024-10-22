@@ -24,7 +24,7 @@ O encaminhamento para o QS pode ser feito pelo **link na visualização da taref
     - Versão estável
   - Definir a sprint para "Tarefas para testar" (caso existir)
   - Definir tempo estimado para 1/3 do tempo do desenvolvimento com no mínimo 1 hora
-  - Definir a tag a "xxx_TESTAR"
+  - Definir a tag a "\_TESTAR"
   - Definir o tipo da tarefa para Defeito ou Funcionalidade, conforme a tarefa original do desenvolvimento (se a tarefa for um retorno de testes originada do proprio desenvolvimento)
 - Atualizar o campo "Teste QS" da tarefa do desenvolvimento para "Nova"
 
