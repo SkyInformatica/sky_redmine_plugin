@@ -146,7 +146,7 @@ class RetornoTestesController < ApplicationController
     new_issue.tag_list = [] # Definindo a lista de tags como vazia
     #end
 
-    ["Tarefa não planejada IMEDIATA", "Tarefa antecipada na sprint", "Responsável pelo teste", "Teste no desenvolvimento", "Teste QS", "Versão estável", "Versão teste"].each do |field_name|
+    ["Tarefa não planejada IMEDIATA", "Tarefa antecipada na sprint", "Teste no desenvolvimento", "Teste QS", "Versão estável", "Versão teste"].each do |field_name|
       if custom_field = IssueCustomField.find_by(name: field_name)
         new_issue.custom_field_values = { custom_field.id => nil }
       end

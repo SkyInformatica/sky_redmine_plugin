@@ -21,15 +21,17 @@ A criação da tarefa de retorno de testes é feito pelo **link na visualizaçã
   - Limpar os campos da nova tarefa que foi criada
     - Atribuído para
     - Data de inicio
+    - Percentual concluido
     - Tags
     - Tarefa não planejada IMEDIATA
     - Tarefa antecipada na sprint
-    - Responsável pelo teste
     - Teste no desenvolvimento
     - Teste QS
     - Versão estável
+    - Versao teste
   - Definir a sprint para "Aptas para desenvolvimento" (caso existir)
   - Definir tempo estimado para 1 hora
+  - Definir a descricao da tarefa concatenando o titulo "retorno de testes do desenvolvimento" no inicio da descrição para que seja completado pelo desenvolvedor.
 - Atualizar o status da tarefa de desenvolvimento para "Fechada \- cont retorno testes"
 
 Abaixo pode-se ver o fluxograma da execução das ações executadas
@@ -38,21 +40,21 @@ Abaixo pode-se ver o fluxograma da execução das ações executadas
 
 ## **Fluxogram da criação do retorno de testes para tarefas do QS**
 
-Ao clicar no link, o Redmine criará uma nova tarefa a partir de uma cópia, ajustando-a e realizando as seguintes ações.
-
 - Criar uma nova tarefa copiando a tarefa de QS com o tipo "Retorno de testes" para o projeto de desenvolvimento que originou a tarefa do QS
   - Limpar os campos da nova tarefa que foi criada
     - Atribuído para
     - Data de inicio
+    - Percentual concluido
     - Tags
     - Tarefa não planejada IMEDIATA
     - Tarefa antecipada na sprint
-    - Responsável pelo teste
     - Teste no desenvolvimento
     - Teste QS
     - Versão estável
+    - Versão teste
   - Definir a sprint para "Aptas para desenvolvimento" (caso existir)
   - Definir tempo estimado para 1 hora
+  - Definir a descricao da tarefa concatenando o "retorno de testes do QS" no inicio da descrição
 - Atualizar o status da tarefa de desenvolvimento (que originou a tarefa do QS) para "Fechada \- cont retorno testes"
 - Atualizar o status da tarefa de QS para "Teste NOK \- Fechada"
 - Limpar as tags da tarefa de testes
