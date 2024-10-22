@@ -1,10 +1,10 @@
 ## **Criar tarefa de retorno de testes para tarefas do desenvolvimento**
 
-Quando a tarefa de desenvolvimento estiver com o status "Resolvido", é possível criar uma tarefa de retorno de testes clicando no link "Criar tarefa de retorno de testes para essa tarefa de desenvolvimento", conforme exemplo abaixo.
+Quando a tarefa de desenvolvimento estiver com o status "Resolvido", é possível criar uma tarefa de retorno de testes clicando no link "Criar retorno de testes" na visualização da tarefa.
 
 ![redmine-criar-retorno-testes-devel](redmine-criar-retorno-testes-devel.png)
 
-Ao clicar no link, o Redmine criará uma nova tarefa a partir de uma cópia, realizando os ajustes necessários conforme a documentação [Fluxograma do processo de testes](https://docs.google.com/document/d/1H_ADkIaIxo5wy2QCW3bFRrw7l23HpUkaPUXaeZMbJCY/edit) e executando as seguintes ações.
+Ao clicar no link, o Redmine criará uma nova tarefa a partir de uma cópia, realizando os ajustes e executando as seguintes ações.
 
 - Criar um nova tarefa copiando a tarefa de desenvolvimento com o tipo "Retorno de testes"
   - Limpar os campos da nova tarefa que foi criada

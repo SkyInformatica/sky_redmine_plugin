@@ -2,7 +2,6 @@
 
 Este plugin é exclusivo para a organização da gestão de tarefas de desenvolvimento e QS gerenciadas pelo Redmine, conforme definido pela Sky Informática.
 
-
 # Como instalar o plugin
 
 - Fazer download da ultima versão disponivel em [https://github.com/maglancd/sky-redmine-plugin/releases](https://github.com/maglancd/sky-redmine-plugin/releases)
@@ -15,6 +14,5 @@ bundle exec rake redmine:plugins:migrate RAILS_ENV=production
 
 # Funcionalidades
 
-- [Criar tarefa de retorno de testes para tarefas do QS](docs/criar-retorno-testes-qs.md)
-- [Criar tarefa de retorno de testes para tarefas do desenvolvimento](docs/criar-retorno-testes-devel.md)
-- [Criar tarefas de retorno de testes em lote](docs/criar-retorno-testes-lote.md)
+- [Criar retorno de testes](docs/retorno_testes/criar_retorno_testes.md)
+- [Encaminhar para o QS](docs/encaminhar_qs/encaminhar_qs.md)
