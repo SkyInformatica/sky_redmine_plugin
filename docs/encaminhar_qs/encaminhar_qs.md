@@ -1,6 +1,6 @@
 # **Encaminhar para o QS**
 
-É possivel encaminhar uma tarefa do desenvolvimento tarefa para o QS se ela estiver com o status "Resolvido"
+É possivel encaminhar uma tarefa do desenvolvimento tarefa para o QS se ela estiver com o status "Resolvida"
 
 O encaminhamento para o QS pode ser feito pelo **link na visualização da tarefa** ou em lote através do **menu de contexto** com o clique do botão direito sobre a lista de tarefas, conforme imagem abaixo
 
