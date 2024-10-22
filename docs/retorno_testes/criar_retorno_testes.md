@@ -1,21 +1,21 @@
-## **Criar tarefa de retorno de testes**
+### **Criar tarefa de retorno de testes**
 
 É possivel criar tarefa de retorno de testes tanto para tarefas do **desenvolvimento** quanto para tarefas do **QS**, conforme seguintes condicoes
 
-**Tarefas do desenvolvimento**: Quando estiver com o status "Resolvido"
-**Tarefas do QS**: Quando estiver com status "Teste NOK"
+- **Tarefas do desenvolvimento**: Quando estiver com o status "Resolvido"
+- **Tarefas do QS**: Quando estiver com status "Teste NOK"
 
 A criação da tarefa de retorno de testes é feito pelo **link na visualização da tarefa** ou em lote através do **menu de contexto** com o clique do botão direito sobre a lista de tarefas, conforme imagem abaixo
 
-**Link na visualização da tarefa**
+## **Link na visualização da tarefa**
 
 ![criar_retorno_testes](criar_retorno_testes.png)
 
-**Menu de contexto na lista de tarefas**
+## **Menu de contexto na lista de tarefas**
 
 ![criar-retorno-testes-lote](criar-retorno-testes-lote.png)
 
-# **Fluxograma da criação do retorno de testes para tarefas do desenvolvimento**
+## **Fluxograma da criação do retorno de testes para tarefas do desenvolvimento**
 
 - Criar um nova tarefa copiando a tarefa de desenvolvimento com o tipo "Retorno de testes"
   - Limpar os campos da nova tarefa que foi criada
