@@ -7,6 +7,15 @@ class ContinuaProximaSprintController < ApplicationController
     Rails.logger.info ">>> continua_proxima_sprint #{@issue.id}"
     continua_proxima_sprint_status = ["Nova", "Em andamento", "Interrompida"]
 
+    current_sprint_name = @issue.fixed_version&.name # Usa o safe navigation operator para evitar erro se fixed_version for nil
+    unless current_sprint_name && current_sprint_name.match?(/^\d{4}-\d{1,2} \(\d{2}\/\d{2} a \d{2}\/\d{2}\)$/)
+      # Se o formato da sprint não corresponder, não permite a criação da continua na proxima sprint
+      flash[:warning] = "A tarefa não pertence a uma sprint de desenvolvimento e não pode ter uma continuidade na próxima sprint." unless is_batch_call
+      @processed_issues << "[NOK] #{view_context.link_to "#{@issue.tracker.name} ##{@issue.id}", issue_path(@issue)} - #{@issue.subject} - tarefa não pertence a uma sprint de desenvolvimento"
+      redirect_to issue_path(@issue) unless is_batch_call
+      return
+    end
+
     # Check if the issue is not in QS projects and its status is "Resolvida"
     if (continua_proxima_sprint_status.include?(@issue.status.name))
 
