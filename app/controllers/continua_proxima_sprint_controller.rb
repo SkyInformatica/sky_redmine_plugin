@@ -83,6 +83,18 @@ class ContinuaProximaSprintController < ApplicationController
       end
     end
 
+    # Modificando o título da nova tarefa
+    original_title = @issue.subject
+    if original_title.match?(/\(\d+\)$/)
+      # Se já existe um número entre parênteses no fim do título
+      current_copy_number = original_title.match(/\d+/)[0].to_i
+      new_copy_number = current_copy_number + 1
+      new_issue.subject = original_title.sub(/\(\d+\)$/, "(#{new_copy_number})")
+    else
+      # Se não existe, adicionar (2) ao título original
+      new_issue.subject = "#{original_title} (2)"
+    end
+
     # Extraindo o ano e número da sprint atual da variável @issue
     current_sprint_name = @issue.fixed_version.name  # Exemplo: "2024-18 (26/08 a 06/09)"
     year, sprint_number = current_sprint_name.match(/(\d{4})-(\d+)/).captures.map(&:to_i)
