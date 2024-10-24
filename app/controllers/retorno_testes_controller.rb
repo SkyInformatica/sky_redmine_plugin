@@ -37,7 +37,15 @@ class RetornoTestesController < ApplicationController
       end
 
       new_issue = criar_nova_tarefa(@issue.project.id)
-      atualizar_status_tarefa(@issue, "Fechada - cont retorno testes")
+
+      if fechada_cont_retorno_testes_status = IssueStatus.find_by(name: "Fechada - cont retorno testes")
+        @issue.status = fechada_cont_retorno_testes_status
+      end
+      if custom_field = IssueCustomField.find_by(name: "Teste no desenvolvimento")
+        @issue.custom_field_values = { custom_field.id => "Teste NOK" }
+      end
+
+      @issue.save
 
       flash[:notice] = "Tarefa #{view_context.link_to "#{new_issue.tracker.name} ##{new_issue.id}", issue_path(new_issue)} foi criada no projeto #{view_context.link_to new_issue.project.name, project_path(new_issue.project)} na sprint #{view_context.link_to new_issue.fixed_version.name, version_path(new_issue.fixed_version)} com tempo estimado de 1.0h<br>" \
       "Ajuste a descrição da tarefa com o resultado dos testes e orientacoes o que deve ser corrigido".html_safe unless is_batch_call
@@ -69,7 +77,9 @@ class RetornoTestesController < ApplicationController
         new_issue = criar_nova_tarefa(original_issue.project.id)
 
         atualizar_status_tarefa(original_issue, "Fechada - cont retorno testes")
-        atualizar_status_tarefa(@issue, "Teste NOK - Fechada")
+        if testenok_status = IssueStatus.find_by(name: "Teste NOK - Fechada")
+          @issue.status = testenok_status
+        end
 
         #limpar tags da tarefa de QS
         @issue.tag_list = []

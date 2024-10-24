@@ -1,6 +1,6 @@
 (function() {
   var message = '<%= raw "<b>Resultado do processamento conforme listado abaixo</b><br><br>#{@processed_issues.join("<br>")}" %>';
-  var dialogHtml = '<div id="dialog-message" title="Encaminhar QS">' + message + '</div>';
+  var dialogHtml = '<div id="dialog-message" title="Continua na proxima sprint">' + message + '</div>';
   
   $(dialogHtml).dialog({
     modal: true,
