@@ -163,7 +163,7 @@ class RetornoTestesController < ApplicationController
     end
 
     sprint = Version.find_by(name: "Aptas para desenvolvimento", project_id: project_id)
-    if sprint.nil?
+    if sprint
       # Caso a versão não exista, cria uma nova versão
       sprint = Version.new(name: "Aptas para desenvolvimento", project_id: project_id)
       sprint.save
