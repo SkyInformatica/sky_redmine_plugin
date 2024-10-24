@@ -102,13 +102,12 @@ class ContinuaProximaSprintController < ApplicationController
 
     # Se não encontrar a nova sprint, usar a versão padrão "Aptas para desenvolvimento"
     sprint ||= Version.find_by(name: "Aptas para desenvolvimento", project_id: @issue.project.id)
-    if sprint
+    if sprint.nil?
       # Caso a versão não exista, cria uma nova versão
       sprint = Version.new(name: "Aptas para desenvolvimento", project_id: @issue.project.id)
       sprint.save
     end
-
-    # Associar à nova tarefa
+    # Associar a sprint para a nova tarefa
     new_issue.fixed_version = sprint
 
     new_issue.save
