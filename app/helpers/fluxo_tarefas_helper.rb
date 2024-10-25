@@ -38,7 +38,8 @@ module FluxoTarefasHelper
 
   def formatar_linha_tarefa(tarefa, numero_sequencial)
     horas_gastas = format("%.2f", tarefa.spent_hours.to_f)
-    "| #{numero_sequencial}. #{tarefa.project.name} | ###{tarefa.id} | #{tarefa.status.name} | #{tarefa.start_date} | version##{tarefa.fixed_version_id} | #{horas_gastas}h |"
+    data_inicio = tarefa.start_date.present? ? tarefa.start_date : "<data inicio>"
+    "| #{numero_sequencial}. #{tarefa.project.name} | ###{tarefa.id} | #{tarefa.status.name} | #{data_inicio} | version##{tarefa.fixed_version_id} | #{horas_gastas}h |"
   end
 
   def gerar_texto_fluxo(tarefas)
