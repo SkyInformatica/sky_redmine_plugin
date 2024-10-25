@@ -147,11 +147,11 @@ class RetornoTestesController < ApplicationController
       if custom_field = IssueCustomField.find_by(name: "Resultado Teste NOK")
         resultado_teste_nok_value = @issue.custom_field_value(custom_field.id)
         if resultado_teste_nok_value && !resultado_teste_nok_value.empty?
-          new_issue.description = "*[RETORNO DE TESTES DO QS]*\n\n#{resultado_teste_nok_value}\n\n---\n\n##{new_issue.description}"
+          new_issue.description = "*[RETORNO DE TESTES DO QS]*\n\n#{resultado_teste_nok_value}\n\n---\n\n#{new_issue.description}"
         end
       end
     elsif (@origem_retorno_teste == "DEVEL")
-      new_issue.description = "*[RETORNO DE TESTES DO DESENVOLVIMENTO]*\n\n---\n\n##{new_issue.description}"
+      new_issue.description = "*[RETORNO DE TESTES DO DESENVOLVIMENTO]*\n\n---\n\n#{new_issue.description}"
     end
 
     # Definindo os sufixos a serem removidos

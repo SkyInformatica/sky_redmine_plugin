@@ -33,6 +33,7 @@ A criação da tarefa de retorno de testes é feito pelo **link na visualizaçã
   - Definir tempo estimado para 1 hora
   - Definir a descricao da tarefa concatenando o titulo "retorno de testes do desenvolvimento" no inicio da descrição para que seja completado pelo desenvolvedor.
 - Atualizar o status da tarefa de desenvolvimento para "Fechada \- cont retorno testes"
+- Atualizar o campo "Teste no desenvolvimento" como "Teste NOK"
 
 Abaixo pode-se ver o fluxograma da execução das ações executadas
 
