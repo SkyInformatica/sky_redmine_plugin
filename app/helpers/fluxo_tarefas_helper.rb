@@ -55,17 +55,21 @@ module FluxoTarefasHelper
   def atualizar_campo_fluxo(tarefas, texto_fluxo)
     Rails.logger.info ">>> atualizar_campo_fluxo"
     if campo_fluxo = CustomField.find_by(name: "Fluxo das tarefas")
+      Rails.logger.debug "Iniciando atualização do fluxo para #{tarefas.length} tarefas"
       ActiveRecord::Base.transaction do
         tarefas.each do |tarefa|
           tentativas = 0
           max_tentativas = 3
 
           begin
+            Rails.logger.debug "Tentando atualizar a tarefa #{tarefa.id} "
             # Recarrega a tarefa para ter a versão mais atual
             tarefa.reload
             tarefa.custom_field_values = { campo_fluxo.id => texto_fluxo }
 
-            unless tarefa.save(validate: false)
+            if tarefa.save(validate: false)
+              Rails.logger.debug "Tarefa #{tarefa.id} atualizada com sucesso"
+            else
               Rails.logger.error "Erro ao salvar tarefa #{tarefa.id}: #{tarefa.errors.full_messages.join(", ")}"
             end
           rescue ActiveRecord::StaleObjectError => e
