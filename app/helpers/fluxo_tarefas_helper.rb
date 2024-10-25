@@ -14,19 +14,24 @@ module FluxoTarefasHelper
 
   def buscar_tarefas_relacionadas(tarefa)
     tarefas = []
+    visitadas = Set.new
     tarefa_atual = tarefa
 
-    # Busca tarefas anteriores
-    while tarefa_atual.copied_from
-      tarefa_atual = tarefa_atual.copied_from
-      tarefas.unshift(tarefa_atual)
+    # Busca tarefas anteriores (indo para trás na cadeia)
+    while true
+      break if visitadas.include?(tarefa_atual.id)
+      visitadas.add(tarefa_atual.id)
+
+      relacao = IssueRelation.find_by(issue_to_id: tarefa_atual.id, relation_type: "copied_to")
+      break unless relacao
+
+      tarefa_anterior = Issue.find(relacao.issue_from_id)
+      tarefas.unshift(tarefa_anterior)
+      tarefa_atual = tarefa_anterior
     end
 
-    # Adiciona a tarefa atual
+    # Adiciona a tarefa atual (que será a última da cadeia)
     tarefas << tarefa
-
-    # Busca tarefas posteriores
-    tarefas += Issue.where(copied_from_id: tarefa.id)
 
     tarefas
   end
