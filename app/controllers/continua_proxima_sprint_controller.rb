@@ -5,7 +5,7 @@ class ContinuaProximaSprintController < ApplicationController
 
   def continua_proxima_sprint(is_batch_call = false)
     Rails.logger.info ">>> continua_proxima_sprint #{@issue.id}"
-    continua_proxima_sprint_status = ["Nova", "Em andamento", "Interrompida"]
+    nova_emandamento_interrompida_status = ["Nova", "Em andamento", "Interrompida"]
 
     current_sprint_name = @issue.fixed_version&.name # Usa o safe navigation operator para evitar erro se fixed_version for nil
     unless current_sprint_name && current_sprint_name.match?(/^\d{4}-\d{1,2} \(\d{2}\/\d{2} a \d{2}\/\d{2}\)$/)
@@ -17,7 +17,7 @@ class ContinuaProximaSprintController < ApplicationController
     end
 
     # Check if the issue is not in QS projects and its status is "Resolvida"
-    if (continua_proxima_sprint_status.include?(@issue.status.name))
+    if (nova_emandamento_interrompida_status.include?(@issue.status.name))
 
       # Verificar se já existe uma cópia da tarefa de continuidade na proxima sprint
       related_issues = IssueRelation.where(issue_from_id: @issue.id, relation_type: "copied_to")
@@ -33,7 +33,11 @@ class ContinuaProximaSprintController < ApplicationController
       end
 
       new_issue = criar_nova_tarefa
-      atualizar_status_tarefa(@issue, "Continua proxima sprint")
+      if continua_proxima_sprint_status = IssueStatus.find_by(name: "Continua proxima sprint")
+        @issue.status = continua_proxima_sprint_status
+      end
+      @issue.tag_list = []
+      @issue.save
 
       flash[:notice] = "Tarefa de continuidade #{view_context.link_to "#{new_issue.tracker.name} ##{new_issue.id}", issue_path(new_issue)} foi criada na sprint #{view_context.link_to new_issue.fixed_version.name, version_path(new_issue.fixed_version)}" unless is_batch_call
       @processed_issues << "[OK] #{view_context.link_to "#{@issue.tracker.name} ##{@issue.id}", issue_path(@issue)} - #{@issue.subject} - continua em #{view_context.link_to "#{new_issue.tracker.name} ##{new_issue.id}", issue_path(new_issue)} na sprint #{view_context.link_to new_issue.fixed_version.name, version_path(new_issue.fixed_version)}"

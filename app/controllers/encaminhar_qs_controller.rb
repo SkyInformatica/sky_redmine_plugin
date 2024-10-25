@@ -129,7 +129,9 @@ class EncaminharQsController < ApplicationController
     new_issue.tag_list = @issue.tag_list
 
     # Adiciona a nova tag
-    tag_name = @issue.project.name.sub("Equipe ", "").upcase + "_TESTAR"
+    if sistema_custom_field = IssueCustomField.find_by(name: "Sistema")
+      tag_name = sistema_custom_field.value.upcase + "_TESTAR"
+    end
     new_issue.tag_list.add(tag_name)
 
     ["Tarefa não planejada IMEDIATA", "Tarefa antecipada na sprint", "Versão estável"].each do |field_name|
