@@ -38,38 +38,64 @@ module FluxoTarefasHelper
 
   def formatar_linha_tarefa(tarefa, numero_sequencial)
     horas_gastas = format("%.2f", tarefa.spent_hours.to_f)
-    data_inicio = tarefa.start_date.present? ? tarefa.start_date : "<data inicio>"
+    data_inicio = tarefa.start_date || "<data inicio>"
     "| #{numero_sequencial}. #{tarefa.project.name} | ###{tarefa.id} | #{tarefa.status.name} | #{data_inicio} | version##{tarefa.fixed_version_id} | #{horas_gastas}h |"
   end
 
   def gerar_texto_fluxo(tarefas)
-    linhas = []
+    secoes = []
     secao_atual = nil
+    secao_tarefas = []
     numero_sequencial = 1
 
     tarefas.each do |tarefa|
       projeto_nome = tarefa.project.name
 
       # Determinar a seção da tarefa
-      if ["Notarial - QS", "Registral - QS"].include?(projeto_nome)
-        secao = "QS"
-      else
-        secao = "Desenvolvimento"
-      end
+      secao = if ["Notarial - QS", "Registral - QS"].include?(projeto_nome)
+          "QS"
+        else
+          "Desenvolvimento"
+        end
 
-      # Verificar se mudou de seção
       if secao != secao_atual
-        # Adicionar quebra de linha em branco e título da nova seção
-        linhas << "" unless secao_atual.nil?
-        linhas << "**#{secao}**"
+        # Salvar a seção anterior
+        unless secao_atual.nil?
+          secoes << { nome: secao_atual, tarefas: secao_tarefas }
+        end
+        # Iniciar nova seção
         secao_atual = secao
+        secao_tarefas = []
       end
 
-      # Adicionar a linha formatada da tarefa
-      linha = formatar_linha_tarefa(tarefa, numero_sequencial)
-      linhas << linha
-      numero_sequencial += 1
+      # Adicionar a tarefa à seção atual
+      secao_tarefas << tarefa
     end
+
+    # Adicionar a última seção
+    secoes << { nome: secao_atual, tarefas: secao_tarefas } unless secao_tarefas.empty?
+
+    # Gerar o texto final
+    linhas = []
+    secoes.each do |secao|
+      # Calcular tempo total gasto na seção
+      total_tempo = secao[:tarefas].sum { |t| t.spent_hours.to_f }
+      total_tempo_formatado = format("%.2f", total_tempo)
+
+      # Adicionar cabeçalho da seção com tempo total
+      linhas << ""
+      linhas << "**#{secao[:nome]}**  (tempo gasto total #{total_tempo_formatado}h)"
+
+      # Adicionar as tarefas
+      secao[:tarefas].each do |tarefa|
+        linha = formatar_linha_tarefa(tarefa, numero_sequencial)
+        linhas << linha
+        numero_sequencial += 1
+      end
+    end
+
+    # Remover a primeira linha vazia, se existir
+    linhas.shift if linhas.first == ""
 
     linhas.join("\n")
   end
