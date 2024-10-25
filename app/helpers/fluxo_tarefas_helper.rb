@@ -53,13 +53,10 @@ module FluxoTarefasHelper
   end
 
   def atualizar_campo_fluxo(tarefas, texto_fluxo)
-    campo_fluxo = CustomField.find_by(name: "Fluxo das tarefas")
-
-    tarefas.each do |tarefa|
-      custom_value = tarefa.custom_field_values.find { |cv| cv.custom_field_id == campo_fluxo.id }
-      if custom_value
-        custom_value.value = texto_fluxo
-        custom_value.save
+    if campo_fluxo = CustomField.find_by(name: "Fluxo das tarefas")
+      tarefas.each do |tarefa|
+        tarefa.custom_field_values = { campo_fluxo.id => texto_fluxo }
+        tarefa.save(validate: false)
       end
     end
   end
