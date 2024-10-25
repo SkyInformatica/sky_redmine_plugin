@@ -4,7 +4,7 @@ module FluxoTarefasHelper
     tarefas_relacionadas = buscar_tarefas_relacionadas(tarefa_atual)
 
     # Gera o texto do fluxo para todas as tarefas
-    texto_fluxo = gerar_texto_fluxo(tarefas_relacionadas, tarefa_atual)
+    texto_fluxo = gerar_texto_fluxo(tarefas_relacionadas)
 
     # Atualiza o campo personalizado em todas as tarefas
     atualizar_campo_fluxo(tarefas_relacionadas, texto_fluxo)
@@ -36,19 +36,13 @@ module FluxoTarefasHelper
     tarefas
   end
 
-  def formatar_linha_tarefa(tarefa, numero_sequencial, tarefa_atual)
-    id_formatado = if tarefa.id == tarefa_atual.id
-        "*###{tarefa.id}*"
-      else
-        "###{tarefa.id}"
-      end
-
-    "| #{numero_sequencial}. #{tarefa.project.name} | #{id_formatado} | #{tarefa.status.name} | #{tarefa.start_date} | version##{tarefa.fixed_version_id} | #{tarefa.spent_hours}h |"
+  def formatar_linha_tarefa(tarefa, numero_sequencial)
+    "| #{numero_sequencial}. #{tarefa.project.name} | ###{tarefa.id} | #{tarefa.status.name} | #{tarefa.start_date} | version##{tarefa.fixed_version_id} | #{tarefa.spent_hours}h |"
   end
 
-  def gerar_texto_fluxo(tarefas, tarefa_atual)
+  def gerar_texto_fluxo(tarefas)
     tarefas.each_with_index.map do |tarefa, index|
-      formatar_linha_tarefa(tarefa, index + 1, tarefa_atual)
+      formatar_linha_tarefa(tarefa, index + 1)
     end.join("\n")
   end
 
