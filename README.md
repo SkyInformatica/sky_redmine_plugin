@@ -16,3 +16,4 @@ bundle exec rake redmine:plugins:migrate RAILS_ENV=production
 
 - [Criar retorno de testes](docs/retorno_testes/criar_retorno_testes.md)
 - [Encaminhar para o QS](docs/encaminhar_qs/encaminhar_qs.md)
+- [Continua na próxima sprint](docs/continua_proxima_sprint/continua_proxima_sprint.md)

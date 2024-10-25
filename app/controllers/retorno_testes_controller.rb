@@ -162,6 +162,18 @@ class RetornoTestesController < ApplicationController
       end
     end
 
+    # Modificando o título da nova tarefa
+    original_title = @issue.subject
+    if original_title.match?(/\(\d+\)$/)
+      # Se já existe um número entre parênteses no fim do título adiciona +1
+      current_copy_number = original_title.match(/\d+/)[0].to_i
+      new_copy_number = current_copy_number + 1
+      new_issue.subject = original_title.sub(/\(\d+\)$/, "(#{new_copy_number})")
+    else
+      # Se não existe, adicionar (2) ao título original
+      new_issue.subject = "#{original_title} (2)"
+    end
+
     sprint = Version.find_by(name: "Aptas para desenvolvimento", project_id: project_id)
     if sprint.nil?
       # Caso a versão não exista, cria uma nova versão

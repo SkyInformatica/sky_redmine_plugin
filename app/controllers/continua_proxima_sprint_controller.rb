@@ -33,7 +33,6 @@ class ContinuaProximaSprintController < ApplicationController
       end
 
       new_issue = criar_nova_tarefa
-
       atualizar_status_tarefa(@issue, "Continua proxima sprint")
 
       flash[:notice] = "Tarefa de continuidade #{view_context.link_to "#{new_issue.tracker.name} ##{new_issue.id}", issue_path(new_issue)} foi criada na sprint #{view_context.link_to new_issue.fixed_version.name, version_path(new_issue.fixed_version)}" unless is_batch_call
@@ -86,7 +85,7 @@ class ContinuaProximaSprintController < ApplicationController
     # Modificando o título da nova tarefa
     original_title = @issue.subject
     if original_title.match?(/\(\d+\)$/)
-      # Se já existe um número entre parênteses no fim do título
+      # Se já existe um número entre parênteses no fim do título adiciona +1
       current_copy_number = original_title.match(/\d+/)[0].to_i
       new_copy_number = current_copy_number + 1
       new_issue.subject = original_title.sub(/\(\d+\)$/, "(#{new_copy_number})")
