@@ -55,22 +55,37 @@ module FluxoTarefasHelper
   def atualizar_campo_fluxo(tarefas, texto_fluxo)
     Rails.logger.info ">>> atualizar_campo_fluxo"
     if campo_fluxo = CustomField.find_by(name: "Fluxo das tarefas")
-      Rails.logger.info "Iniciando atualização do fluxo para #{tarefas.length} tarefas"
+      ActiveRecord::Base.transaction do
+        tarefas.each do |tarefa|
+          tentativas = 0
+          max_tentativas = 3
 
-      tarefas.each do |tarefa|
-        Rails.logger.debug "Atualizando fluxo da tarefa #{tarefa.id}"
-        tarefa.custom_field_values = { campo_fluxo.id => texto_fluxo }
+          begin
+            # Recarrega a tarefa para ter a versão mais atual
+            tarefa.reload
+            tarefa.custom_field_values = { campo_fluxo.id => texto_fluxo }
 
-        if tarefa.save(validate: false)
-          Rails.logger.info "Tarefa #{tarefa.id} atualizada com sucesso"
-        else
-          Rails.logger.info "Erro ao salvar tarefa #{tarefa.id}: #{tarefa.errors.full_messages.join(", ")}"
+            unless tarefa.save(validate: false)
+              Rails.logger.error "Erro ao salvar tarefa #{tarefa.id}: #{tarefa.errors.full_messages.join(", ")}"
+            end
+          rescue ActiveRecord::StaleObjectError => e
+            tentativas += 1
+            if tentativas < max_tentativas
+              Rails.logger.info "Tentativa #{tentativas} de atualizar tarefa #{tarefa.id}"
+              sleep(0.5 * tentativas) # Aguarda um tempo crescente entre tentativas
+              retry
+            else
+              Rails.logger.error "Erro após #{max_tentativas} tentativas na tarefa #{tarefa.id}: #{e.message}"
+              raise e
+            end
+          rescue => e
+            Rails.logger.error "Erro ao atualizar fluxo da tarefa #{tarefa.id}: #{e.message}"
+            raise e
+          end
         end
-      rescue => e
-        Rails.logger.info "Erro ao atualizar fluxo da tarefa #{tarefa.id}: #{e.message}"
       end
     else
-      Rails.logger.info "Campo personalizado 'Fluxo das tarefas' não encontrado"
+      Rails.logger.error "Campo personalizado 'Fluxo das tarefas' não encontrado"
     end
   end
 end
