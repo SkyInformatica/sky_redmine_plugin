@@ -45,6 +45,8 @@ class RetornoTestesController < ApplicationController
         @issue.custom_field_values = { custom_field.id => "Teste NOK" }
       end
 
+      #limpar tags da tarefa
+      @issue.tag_list = []
       @issue.save
 
       flash[:notice] = "Tarefa #{view_context.link_to "#{new_issue.tracker.name} ##{new_issue.id}", issue_path(new_issue)} foi criada no projeto #{view_context.link_to new_issue.project.name, project_path(new_issue.project)} na sprint #{view_context.link_to new_issue.fixed_version.name, version_path(new_issue.fixed_version)} com tempo estimado de 1.0h<br>" \
@@ -152,9 +154,14 @@ class RetornoTestesController < ApplicationController
       new_issue.description = "*[RETORNO DE TESTES DO DESENVOLVIMENTO]*\n\n---\n\n##{new_issue.description}"
     end
 
-    #if @new_issue.respond_to?(:tag_list)
-    new_issue.tag_list = [] # Definindo a lista de tags como vazia
-    #end
+    # Definindo os sufixos a serem removidos
+    sufixos_para_remover = ["_TESTAR", "_PRONTO", "_REVER", "_REUNIAO", "_RETESTAR"]
+
+    # Filtrando as tags da nova tarefa
+    new_issue.tag_list = @issue.tag_list
+    new_issue.tag_list = new_issue.tag_list.reject do |tag|
+      sufixos_para_remover.any? { |sufixo| tag.end_with?(sufixo) }
+    end
 
     ["Tarefa não planejada IMEDIATA", "Tarefa antecipada na sprint", "Teste no desenvolvimento", "Teste QS", "Versão estável", "Versão teste"].each do |field_name|
       if custom_field = IssueCustomField.find_by(name: field_name)
