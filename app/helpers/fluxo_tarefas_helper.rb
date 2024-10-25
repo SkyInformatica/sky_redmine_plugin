@@ -38,13 +38,39 @@ module FluxoTarefasHelper
 
   def formatar_linha_tarefa(tarefa, numero_sequencial)
     horas_gastas = format("%.2f", tarefa.spent_hours.to_f)
-    "| #{numero_sequencial}. #{tarefa.project.name} | ###{tarefa.id} | #{tarefa.status.name} | #{tarefa.start_date} | version##{tarefa.fixed_version_id} | #{horas_gastas}h |"
+    "| #{numero_sequencial}. #{tarefa.project.name} | ##{tarefa.id} | #{tarefa.status.name} | #{tarefa.start_date} | version##{tarefa.fixed_version_id} | #{horas_gastas}h |"
   end
 
   def gerar_texto_fluxo(tarefas)
-    tarefas.each_with_index.map do |tarefa, index|
-      formatar_linha_tarefa(tarefa, index + 1)
-    end.join("\n")
+    linhas = []
+    secao_atual = nil
+    numero_sequencial = 1
+
+    tarefas.each do |tarefa|
+      projeto_nome = tarefa.project.name
+
+      # Determinar a seção da tarefa
+      if ["Notarial - QS", "Registral - QS"].include?(projeto_nome)
+        secao = "QS"
+      else
+        secao = "Desenvolvimento"
+      end
+
+      # Verificar se mudou de seção
+      if secao != secao_atual
+        # Adicionar quebra de linha em branco e título da nova seção
+        linhas << "" unless secao_atual.nil?
+        linhas << "**#{secao}**"
+        secao_atual = secao
+      end
+
+      # Adicionar a linha formatada da tarefa
+      linha = formatar_linha_tarefa(tarefa, numero_sequencial)
+      linhas << linha
+      numero_sequencial += 1
+    end
+
+    linhas.join("\n")
   end
 
   def atualizar_campo_fluxo(tarefas, texto_fluxo)
