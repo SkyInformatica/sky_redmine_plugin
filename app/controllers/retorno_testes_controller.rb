@@ -50,7 +50,7 @@ class RetornoTestesController < ApplicationController
       @issue.save
 
       flash[:notice] = "Tarefa #{view_context.link_to "#{new_issue.tracker.name} ##{new_issue.id}", issue_path(new_issue)} foi criada no projeto #{view_context.link_to new_issue.project.name, project_path(new_issue.project)} na sprint #{view_context.link_to new_issue.fixed_version.name, version_path(new_issue.fixed_version)} com tempo estimado de 1.0h<br>" \
-      "Ajuste a descrição da tarefa com o resultado dos testes e orientacoes o que deve ser corrigido".html_safe unless is_batch_call
+      "Ajuste a descrição da tarefa com o resultado dos testes e orientacoes o que deve ser corrigido #{view_context.link_to "clicando aqui", edit_issue_path(new_issue)}".html_safe unless is_batch_call
       flash[:info] = "Essa tarefa teve seu status ajustado para <strong><em>#{@issue.status.name}</em></strong>" unless is_batch_call
       if tarefa_qs_removida
         flash[:info] = flash[:info] + "<br>A tarefa já havia sido encaminhada para o QS e ainda estava com status Nova, portanto foi removida do backlog do QS".html_safe unless is_batch_call
