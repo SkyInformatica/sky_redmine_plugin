@@ -25,13 +25,15 @@ class EncaminharQsController < ApplicationController
         return
       end
 
-      new_issue = criar_nova_tarefa_qs
+      new_issue = criar_nova_tarefa
 
       if custom_field = IssueCustomField.find_by(name: "Teste QS")
         @issue.custom_field_values = { custom_field.id => "Nova" }
       end
 
       @issue.save
+
+      atualizar_fluxo_tarefas(new_issue)
 
       flash[:notice] = "Tarefa #{view_context.link_to "#{new_issue.tracker.name} ##{new_issue.id}", issue_path(new_issue)} foi criada no projeto #{view_context.link_to new_issue.project.name, project_path(new_issue.project)} na sprint #{view_context.link_to new_issue.fixed_version.name, version_path(new_issue.fixed_version)} com tempo estimado de #{new_issue.estimated_hours}" unless is_batch_call
       @processed_issues << "[OK] #{view_context.link_to "#{@issue.tracker.name} ##{@issue.id}", issue_path(@issue)} - #{@issue.subject} - encaminhar para QS em #{view_context.link_to "#{new_issue.tracker.name} ##{new_issue.id}", issue_path(new_issue)} "
@@ -96,7 +98,7 @@ class EncaminharQsController < ApplicationController
     @processed_issues = []
   end
 
-  def criar_nova_tarefa_qs
+  def criar_nova_tarefa
     registral_projects = ["Equipe Civil", "Equipe TED", "Equipe Imoveis"]
     notarial_projects = ["Equipe Notar", "Equipe Protesto", "Equipe Financeiro"]
 
