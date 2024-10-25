@@ -151,7 +151,7 @@ class RetornoTestesController < ApplicationController
         end
       end
     elsif (@origem_retorno_teste == "DEVEL")
-      new_issue.description = "*[RETORNO DE TESTES DO DESENVOLVIMENTO]*\n\n---\n\n#{new_issue.description}"
+      new_issue.description = "*[RETORNO DE TESTES DO DESENVOLVIMENTO]*\n\n\n\n---\n\n#{new_issue.description}"
     end
 
     # Definindo os sufixos a serem removidos
