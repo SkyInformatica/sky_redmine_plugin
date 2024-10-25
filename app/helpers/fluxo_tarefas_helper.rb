@@ -53,10 +53,19 @@ module FluxoTarefasHelper
       tarefas.each do |tarefa|
         begin
           Rails.logger.info "Tentando atualizar a tarefa #{tarefa.id} "
+
           custom_value = tarefa.custom_value_for(campo_fluxo)
           if custom_value
             # Atualiza diretamente a coluna sem passar por validações ou callbacks
-            custom_value.update_columns(value: texto_fluxo)
+
+            # Cria uma cópia do texto_fluxo_base para não alterar o original
+            texto_fluxo_personalizado = texto_fluxo.dup
+
+            # Coloca o ID da tarefa atual em negrito no texto_fluxo_personalizado
+            id_tarefa = tarefa.id.to_s
+            texto_fluxo_personalizado.gsub!("###{id_tarefa}", "*###{id_tarefa}*")
+
+            custom_value.update_columns(value: texto_fluxo_personalizado)
             Rails.logger.info "Tarefa #{tarefa.id} atualizada com sucesso"
           else
             Rails.logger.info "Tarefa #{tarefa.id} não possui o campo personalizado 'Fluxo das tarefas'"
