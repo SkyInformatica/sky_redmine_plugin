@@ -53,11 +53,24 @@ module FluxoTarefasHelper
   end
 
   def atualizar_campo_fluxo(tarefas, texto_fluxo)
+    Rails.logger.info ">>> atualizar_campo_fluxo"
     if campo_fluxo = CustomField.find_by(name: "Fluxo das tarefas")
+      Rails.logger.info "Iniciando atualização do fluxo para #{tarefas.length} tarefas"
+
       tarefas.each do |tarefa|
+        Rails.logger.debug "Atualizando fluxo da tarefa #{tarefa.id}"
         tarefa.custom_field_values = { campo_fluxo.id => texto_fluxo }
-        tarefa.save(validate: false)
+
+        if tarefa.save(validate: false)
+          Rails.logger.info "Tarefa #{tarefa.id} atualizada com sucesso"
+        else
+          Rails.logger.info "Erro ao salvar tarefa #{tarefa.id}: #{tarefa.errors.full_messages.join(", ")}"
+        end
+      rescue => e
+        Rails.logger.info "Erro ao atualizar fluxo da tarefa #{tarefa.id}: #{e.message}"
       end
+    else
+      Rails.logger.info "Campo personalizado 'Fluxo das tarefas' não encontrado"
     end
   end
 end
