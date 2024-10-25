@@ -1,8 +1,8 @@
 class EncaminharQsController < ApplicationController
+  include FluxoTarefasHelper
   before_action :inicializar
   before_action :find_issue, only: [:encaminhar_qs]
   before_action :find_issues, only: [:encaminhar_qs_lote]
-  helper :fluxo_tarefas
 
   def encaminhar_qs(is_batch_call = false)
     Rails.logger.info ">>> encaminhar_qs #{@issue.id}"
