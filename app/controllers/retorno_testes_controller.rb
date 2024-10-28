@@ -50,6 +50,8 @@ class RetornoTestesController < ApplicationController
       @issue.tag_list = []
       @issue.save
 
+      atualizar_fluxo_tarefas(new_issue)
+
       flash[:notice] = "Tarefa #{view_context.link_to "#{new_issue.tracker.name} ##{new_issue.id}", issue_path(new_issue)} foi criada no projeto #{view_context.link_to new_issue.project.name, project_path(new_issue.project)} na sprint #{view_context.link_to new_issue.fixed_version.name, version_path(new_issue.fixed_version)} com tempo estimado de 1.0h<br>" \
       "Ajuste a descrição da tarefa com o resultado dos testes e orientacoes o que deve ser corrigido #{view_context.link_to "clicando aqui", edit_issue_path(new_issue)}".html_safe unless is_batch_call
       flash[:info] = "Essa tarefa teve seu status ajustado para <strong><em>#{@issue.status.name}</em></strong>" unless is_batch_call
@@ -87,6 +89,8 @@ class RetornoTestesController < ApplicationController
         #limpar tags da tarefa de QS
         @issue.tag_list = []
         @issue.save
+
+        atualizar_fluxo_tarefas(new_issue)
 
         flash[:notice] = "Tarefa #{view_context.link_to "#{new_issue.tracker.name} ##{new_issue.id}", issue_path(new_issue)} foi criada no projeto #{view_context.link_to original_issue.project.name, project_path(original_issue.project)} na sprint #{view_context.link_to new_issue.fixed_version.name, version_path(new_issue.fixed_version)} com tempo estimado de 1.0h" unless is_batch_call
         flash[:info] = "Tarefa do desenvolvimento #{view_context.link_to "#{original_issue.tracker.name} ##{original_issue.id}", issue_path(original_issue)} foi ajustada o status para <strong><em>#{original_issue.status.name}</em></strong><br>" \

@@ -40,6 +40,8 @@ class ContinuaProximaSprintController < ApplicationController
       @issue.tag_list = []
       @issue.save
 
+      atualizar_fluxo_tarefas(new_issue)
+
       flash[:notice] = "Tarefa de continuidade #{view_context.link_to "#{new_issue.tracker.name} ##{new_issue.id}", issue_path(new_issue)} foi criada na sprint #{view_context.link_to new_issue.fixed_version.name, version_path(new_issue.fixed_version)}" unless is_batch_call
       @processed_issues << "[OK] #{view_context.link_to "#{@issue.tracker.name} ##{@issue.id}", issue_path(@issue)} - #{@issue.subject} - continua em #{view_context.link_to "#{new_issue.tracker.name} ##{new_issue.id}", issue_path(new_issue)} na sprint #{view_context.link_to new_issue.fixed_version.name, version_path(new_issue.fixed_version)}"
     else
