@@ -101,7 +101,7 @@ class EncaminharQsController < ApplicationController
   end
 
   def criar_nova_tarefa
-    registral_projects = ["Equipe Civil", "Equipe TED", "Equipe Imoveis"]
+    registral_projects = ["Equipe Civil", "Equipe TED", "Equipe Imóveis"]
     notarial_projects = ["Equipe Notar", "Equipe Protesto", "Equipe Financeiro"]
 
     if registral_projects.include?(@issue.project.name)
