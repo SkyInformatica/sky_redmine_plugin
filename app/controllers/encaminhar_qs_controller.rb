@@ -113,7 +113,7 @@ class EncaminharQsController < ApplicationController
 
     tempo_gasto_total = obter_tempo_gasto
     new_issue = @issue.copy(project: qs_project)
-    limpar_campos_nova_tarefa(new_issue, TipoCriarNovaTarefa::ENCAMINHAR_QS)
+    limpar_campos_nova_tarefa(new_issue, CriarTarefasHelper::TipoCriarNovaTarefa::ENCAMINHAR_QS)
     new_issue.estimated_hours = [1, (tempo_gasto_total * 0.34).ceil].max
 
     # se é um retorno de testes verifica se a origem foi um retorno de testes do desenvolvimento

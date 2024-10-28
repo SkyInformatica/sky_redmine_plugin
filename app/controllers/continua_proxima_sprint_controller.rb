@@ -77,7 +77,7 @@ class ContinuaProximaSprintController < ApplicationController
 
   def criar_nova_tarefa
     new_issue = @issue.copy
-    limpar_campos_nova_tarefa(new_issue, TipoCriarNovaTarefa::CONTINUA_PROXIMA_SPRINT)
+    limpar_campos_nova_tarefa(new_issue, CriarTarefasHelper::TipoCriarNovaTarefa::CONTINUA_PROXIMA_SPRINT)
     new_issue.subject = definir_titulo_tarefa_incrementando_numero_copia(@issue.subject)
     new_issue.fixed_version = obter_proxima_sprint
 

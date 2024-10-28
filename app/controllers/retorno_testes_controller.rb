@@ -138,7 +138,7 @@ class RetornoTestesController < ApplicationController
     Rails.logger.info ">>> criar_nova_tarefa"
     new_issue = @issue.copy(project_id: project_id)
     new_issue.tracker = Tracker.find_by_name("Retorno de testes")
-    limpar_campos_nova_tarefa(new_issue, TipoCriarNovaTarefa::RETORNO_TESTES)
+    limpar_campos_nova_tarefa(new_issue, CriarTarefasHelper::TipoCriarNovaTarefa::RETORNO_TESTES)
     new_issue.estimated_hours = 1
 
     # Concatenando o valor do campo "Resultado Teste NOK" à descrição
