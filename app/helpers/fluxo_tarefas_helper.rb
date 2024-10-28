@@ -33,6 +33,22 @@ module FluxoTarefasHelper
     # Adiciona a tarefa atual (que será a última da cadeia)
     tarefas << tarefa
 
+    visitadas.clear  # Limpa as visitadas para a próxima busca
+
+    # Busca tarefas posteriores (indo para frente na cadeia)
+    tarefa_atual = tarefa
+    while true
+      break if visitadas.include?(tarefa_atual.id)
+      visitadas.add(tarefa_atual.id)
+
+      relacao = IssueRelation.find_by(issue_from_id: tarefa_atual.id, relation_type: "copied_to")
+      break unless relacao
+
+      tarefa_posterior = Issue.find(relacao.issue_to_id)
+      tarefas << tarefa_posterior
+      tarefa_atual = tarefa_posterior
+    end
+
     tarefas
   end
 
