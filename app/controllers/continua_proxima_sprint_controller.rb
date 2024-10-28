@@ -1,4 +1,5 @@
 class ContinuaProximaSprintController < ApplicationController
+  include FluxoTarefasHelper
   include CriarTarefasHelper
   before_action :inicializar
   before_action :find_issue, only: [:continua_proxima_sprint]
