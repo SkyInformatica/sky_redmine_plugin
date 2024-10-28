@@ -1,4 +1,5 @@
 class RetornoTestesController < ApplicationController
+  include CriarTarefasHelper
   before_action :inicializar
   before_action :find_issue, only: [:retorno_testes_devel, :retorno_testes_qs]
   before_action :find_issues, only: [:retorno_testes_lote]
@@ -137,9 +138,7 @@ class RetornoTestesController < ApplicationController
     Rails.logger.info ">>> criar_nova_tarefa"
     new_issue = @issue.copy(project_id: project_id)
     new_issue.tracker = Tracker.find_by_name("Retorno de testes")
-    new_issue.assigned_to_id = nil
-    new_issue.start_date = nil
-    new_issue.done_ratio = 0
+    limpar_campos_nova_tarefa(new_issue, TipoCriarNovaTarefa::RETORNO_TESTES)
     new_issue.estimated_hours = 1
 
     # Concatenando o valor do campo "Resultado Teste NOK" à descrição
@@ -154,32 +153,7 @@ class RetornoTestesController < ApplicationController
       new_issue.description = "*[RETORNO DE TESTES DO DESENVOLVIMENTO]*\n\n\n\n---\n\n#{new_issue.description}"
     end
 
-    # Definindo os sufixos a serem removidos
-    sufixos_para_remover = ["_TESTAR", "_PRONTO", "_REVER", "_REUNIAO", "_RETESTAR"]
-
-    # Filtrando as tags da nova tarefa
-    new_issue.tag_list = @issue.tag_list
-    new_issue.tag_list = new_issue.tag_list.reject do |tag|
-      sufixos_para_remover.any? { |sufixo| tag.end_with?(sufixo) }
-    end
-
-    ["Tarefa não planejada IMEDIATA", "Tarefa antecipada na sprint", "Teste no desenvolvimento", "Teste QS", "Versão estável", "Versão teste"].each do |field_name|
-      if custom_field = IssueCustomField.find_by(name: field_name)
-        new_issue.custom_field_values = { custom_field.id => nil }
-      end
-    end
-
-    # Modificando o título da nova tarefa
-    original_title = @issue.subject
-    if original_title.match?(/\(\d+\)$/)
-      # Se já existe um número entre parênteses no fim do título adiciona +1
-      current_copy_number = original_title.match(/\d+/)[0].to_i
-      new_copy_number = current_copy_number + 1
-      new_issue.subject = original_title.sub(/\(\d+\)$/, "(#{new_copy_number})")
-    else
-      # Se não existe, adicionar (2) ao título original
-      new_issue.subject = "#{original_title} (2)"
-    end
+    new_issue.subject = definir_titulo_tarefa_incrementando_numero_copia(@issue.subject)
 
     sprint = Version.find_by(name: "Aptas para desenvolvimento", project_id: project_id)
     if sprint.nil?

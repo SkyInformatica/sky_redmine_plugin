@@ -1,4 +1,5 @@
 class ContinuaProximaSprintController < ApplicationController
+  include CriarTarefasHelper
   before_action :inicializar
   before_action :find_issue, only: [:continua_proxima_sprint]
   before_action :find_issues, only: [:continua_proxima_sprint_lote]
@@ -76,28 +77,23 @@ class ContinuaProximaSprintController < ApplicationController
 
   def criar_nova_tarefa
     new_issue = @issue.copy
-    new_issue.assigned_to_id = nil
-    new_issue.start_date = nil
-    new_issue.done_ratio = 0
+    limpar_campos_nova_tarefa(new_issue, TipoCriarNovaTarefa::CONTINUA_PROXIMA_SPRINT)
+    new_issue.subject = definir_titulo_tarefa_incrementando_numero_copia(@issue.subject)
+    new_issue.fixed_version = obter_proxima_sprint
 
-    ["Tarefa não planejada IMEDIATA", "Tarefa antecipada na sprint", "Teste no desenvolvimento", "Teste QS", "Versão estável", "Versão teste"].each do |field_name|
-      if custom_field = IssueCustomField.find_by(name: field_name)
-        new_issue.custom_field_values = { custom_field.id => nil }
-      end
+    new_issue.save
+    new_issue
+  end
+
+  def atualizar_status_tarefa(issue, novo_status_descricao)
+    novo_status = IssueStatus.find_by(name: novo_status_descricao)
+    if novo_status
+      issue.status = novo_status
+      issue.save
     end
+  end
 
-    # Modificando o título da nova tarefa
-    original_title = @issue.subject
-    if original_title.match?(/\(\d+\)$/)
-      # Se já existe um número entre parênteses no fim do título adiciona +1
-      current_copy_number = original_title.match(/\d+/)[0].to_i
-      new_copy_number = current_copy_number + 1
-      new_issue.subject = original_title.sub(/\(\d+\)$/, "(#{new_copy_number})")
-    else
-      # Se não existe, adicionar (2) ao título original
-      new_issue.subject = "#{original_title} (2)"
-    end
-
+  def obter_proxima_sprint
     # Extraindo o ano e número da sprint atual da variável @issue
     current_sprint_name = @issue.fixed_version.name  # Exemplo: "2024-18 (26/08 a 06/09)"
     year, sprint_number = current_sprint_name.match(/(\d{4})-(\d+)/).captures.map(&:to_i)
@@ -122,18 +118,7 @@ class ContinuaProximaSprintController < ApplicationController
       sprint = Version.new(name: "Aptas para desenvolvimento", project_id: @issue.project.id)
       sprint.save
     end
-    # Associar a sprint para a nova tarefa
-    new_issue.fixed_version = sprint
-
-    new_issue.save
-    new_issue
-  end
-
-  def atualizar_status_tarefa(issue, novo_status_descricao)
-    novo_status = IssueStatus.find_by(name: novo_status_descricao)
-    if novo_status
-      issue.status = novo_status
-      issue.save
-    end
+    # retornar sprint
+    sprint
   end
 end

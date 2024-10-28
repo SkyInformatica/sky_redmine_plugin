@@ -113,9 +113,7 @@ class EncaminharQsController < ApplicationController
 
     tempo_gasto_total = obter_tempo_gasto
     new_issue = @issue.copy(project: qs_project)
-    new_issue.assigned_to_id = nil
-    new_issue.start_date = nil
-    new_issue.done_ratio = 0
+    limpar_campos_nova_tarefa(new_issue, TipoCriarNovaTarefa::ENCAMINHAR_QS)
     new_issue.estimated_hours = [1, (tempo_gasto_total * 0.34).ceil].max
 
     # se é um retorno de testes verifica se a origem foi um retorno de testes do desenvolvimento
@@ -128,23 +126,22 @@ class EncaminharQsController < ApplicationController
       end
     end
 
-    # Mantém a tag original da tarefa
-    new_issue.tag_list = @issue.tag_list
-
-    # Adiciona a nova tag
+    # definir tag _TESTAR
+    sistema_value = ""
+    tag_name = ""
+    # Adiciona a nova tag, se for sistema LIVROCAIXA usa o campo sistema, senao o nome da equipe do projeto
     if sistema_custom_field = IssueCustomField.find_by(name: "Sistema")
       sistema_value = new_issue.custom_field_value(sistema_custom_field.id)
       if sistema_value
-        tag_name = sistema_value.upcase.gsub(" ", "") + "_TESTAR"
+        sistema_value = sistema_value.upcase.gsub(" ", "")
+        tag_name = sistema_custom_field + "_TESTAR"
       end
     end
-
-    new_issue.tag_list.add(tag_name)
-
-    ["Tarefa não planejada IMEDIATA", "Tarefa antecipada na sprint", "Versão estável"].each do |field_name|
-      if custom_field = IssueCustomField.find_by(name: field_name)
-        new_issue.custom_field_values = { custom_field.id => nil }
-      end
+    if (sistema_value != "LIVROCAIXA")
+      tag_name = @issue.project.name.sub("Equipe ", "").upcase + "_TESTAR"
+    end
+    if tag_name
+      new_issue.tag_list.add(tag_name)
     end
 
     sprint = Version.find_by(name: "Tarefas para testar", project: qs_project)
