@@ -1,5 +1,6 @@
 class EncaminharQsController < ApplicationController
   include FluxoTarefasHelper
+  include CriarTarefasHelper
   before_action :inicializar
   before_action :find_issue, only: [:encaminhar_qs]
   before_action :find_issues, only: [:encaminhar_qs_lote]
