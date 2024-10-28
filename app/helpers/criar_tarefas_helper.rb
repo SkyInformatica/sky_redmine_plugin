@@ -29,7 +29,7 @@ module CriarTarefasHelper
     issue.tag_list = []
 
     if (tipo == TipoCriarNovaTarefa::ENCAMINHAR_QS)
-      ["Tarefa não planejada IMEDIATA", "Tarefa antecipada na sprint", "Teste QS", "Versão estável"].each do |field_name|
+      ["Tarefa não planejada IMEDIATA", "Tarefa antecipada na sprint", "Teste QS"].each do |field_name|
         if custom_field = IssueCustomField.find_by(name: field_name)
           issue.custom_field_values = { custom_field.id => nil }
         end
