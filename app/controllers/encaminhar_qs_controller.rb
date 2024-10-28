@@ -135,7 +135,7 @@ class EncaminharQsController < ApplicationController
       sistema_value = new_issue.custom_field_value(sistema_custom_field.id)
       if sistema_value
         sistema_value = sistema_value.upcase.gsub(" ", "")
-        tag_name = sistema_custom_field + "_TESTAR"
+        tag_name = sistema_value + "_TESTAR"
       end
     end
     if (sistema_value != "LIVROCAIXA")
