@@ -42,4 +42,23 @@ module CriarTarefasHelper
       end
     end
   end
+
+  def remover_acentos(str)
+    mapa_acentos = {
+      "á" => "a", "à" => "a", "ã" => "a", "â" => "a", "ä" => "a",
+      "é" => "e", "è" => "e", "ê" => "e", "ë" => "e",
+      "í" => "i", "ì" => "i", "î" => "i", "ï" => "i",
+      "ó" => "o", "ò" => "o", "õ" => "o", "ô" => "o", "ö" => "o",
+      "ú" => "u", "ù" => "u", "û" => "u", "ü" => "u",
+      "ç" => "c", "ñ" => "n",
+    }
+
+    mapa_maiusculo = mapa_acentos.map { |k, v| [k.upcase, v.upcase] }.to_h
+
+    (mapa_acentos.merge(mapa_maiusculo)).each do |caracter_com_acento, caracter_sem_acento|
+      str = str.gsub(caracter_com_acento, caracter_sem_acento)
+    end
+
+    str
+  end
 end

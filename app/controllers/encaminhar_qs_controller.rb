@@ -139,7 +139,7 @@ class EncaminharQsController < ApplicationController
       end
     end
     if (sistema_value != "LIVROCAIXA")
-      tag_name = @issue.project.name.sub("Equipe ", "").upcase + "_TESTAR"
+      tag_name = remover_acentos(@issue.project.name.sub("Equipe ", "")).upcase + "_TESTAR"
     end
     if tag_name
       new_issue.tag_list.add(tag_name)
