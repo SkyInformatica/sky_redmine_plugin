@@ -17,3 +17,7 @@ O plugin controlará o fluxo das tarefas e realizará ações automatizadas conf
 ## Atualizar o status da tarefa de QS na tarefa de desenvolvimento
 
 - Atualizar o campo "Teste QS" na tarefa de desenvolvimento conforme a mudança de status da tarefa correspondente do QS
+
+## Atualizacao do fluxo da tarefas
+
+- Sempre que houver atualizacao no fluxo das tarefas atraves da atualização do status e/ou cópias de continuidade para retorno de testes, encaminhar para QS ou continuar na proxima sprint o fluxo das tarefas será atualizado em todas as tarefas relacionadas.
