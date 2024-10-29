@@ -56,7 +56,7 @@ module SkyRedminePlugin
       def fechar_tarefa_qs(issue, new_status_name)
         if new_status_name == SkyRedminePlugin::Constants::IssueStatus::FECHADA
           # Localizar uma cópia da tarefa nos projetos QS
-          copied_to_qs_issue = localizar_tarefa_copiada_qs(@issue)
+          copied_to_qs_issue = localizar_tarefa_copiada_qs(issue)
 
           # Se existir uma cópia e seu status for "Teste OK"
           if copied_to_qs_issue
