@@ -10,6 +10,43 @@ module FluxoTarefasHelper
     atualizar_campo_fluxo(tarefas_relacionadas, texto_fluxo)
   end
 
+  def localizar_tarefa_origem_desenvolvimento(issue)
+    current_issue = issue
+    current_project_id = issue.project_id
+    original_issue = nil
+
+    # Procura na lista de relações da tarefa para encontrar a origem
+    loop do
+
+      # Verifica se o projeto da tarefa atual é diferente do projeto original
+      if current_issue.project_id != current_project_id
+        original_issue = current_issue
+        break
+      end
+
+      # Verifica as relações da tarefa para encontrar a tarefa original
+      related_issues = IssueRelation.where(issue_to_id: current_issue.id, relation_type: "copied_to")
+
+      if related_issues.any?
+        related_issue = Issue.find_by(id: related_issues.first.issue_from_id)
+        current_issue = related_issue
+      else
+        break
+      end
+    end
+
+    original_issue
+  end
+
+  def localizar_tarefa_copiada_qs(issue)
+    # Verificar se já existe uma cópia da tarefa nos projetos QS
+    related_issues = IssueRelation.where(issue_from_id: issue.id, relation_type: "copied_to")
+    copied_to_qs_issue = related_issues.map { |relation| Issue.find_by(id: relation.issue_to_id) }
+      .find { |issue| SkyRedminePlugin::Constants::Projects::QS_PROJECTS.include?(issue.project.name) }
+
+    copied_to_qs_issue
+  end
+
   private
 
   def buscar_tarefas_relacionadas(tarefa)

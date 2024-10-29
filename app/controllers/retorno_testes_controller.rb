@@ -18,9 +18,7 @@ class RetornoTestesController < ApplicationController
     if (!SkyRedminePlugin::Constants::Projects::QS_PROJECTS.include?(@issue.project.name)) && (@issue.status == resolvida_status)
 
       # Verificar se já existe uma cópia da tarefa nos projetos QS
-      related_issues = IssueRelation.where(issue_from_id: @issue.id, relation_type: "copied_to")
-      copied_to_qs_issue = related_issues.map { |relation| Issue.find_by(id: relation.issue_to_id) }
-        .find { |issue| SkyRedminePlugin::Constants::Projects::QS_PROJECTS.include?(issue.project.name) }
+      copied_to_qs_issue = localizar_tarefa_copiada_qs(@issue)
 
       tarefa_qs_removida = false
       # Se existir uma cópia e seu status for "Nova"
@@ -78,12 +76,12 @@ class RetornoTestesController < ApplicationController
     if (SkyRedminePlugin::Constants::Projects::QS_PROJECTS.include?(@issue.project.name) && (@issue.status == nok_status))
 
       # localizar a tarefa de origem do desenvolvimento
-      original_issue = localizar_tarefa_origem_copia_outro_projeto(@issue)
+      devel_issue = localizar_tarefa_origem_desenvolvimento(@issue)
 
-      if original_issue
-        new_issue = criar_nova_tarefa(original_issue.project.id)
+      if devel_issue
+        new_issue = criar_nova_tarefa(devel_issue.project.id)
 
-        atualizar_status_tarefa(original_issue, SkyRedminePlugin::Constants::IssueStatus::FECHADA_CONTINUA_RETORNO_TESTES)
+        atualizar_status_tarefa(devel_issue, SkyRedminePlugin::Constants::IssueStatus::FECHADA_CONTINUA_RETORNO_TESTES)
         if testenok_status = IssueStatus.find_by(name: SkyRedminePlugin::Constants::IssueStatus::TESTE_NOK_FECHADA)
           @issue.status = testenok_status
         end
@@ -94,8 +92,8 @@ class RetornoTestesController < ApplicationController
 
         atualizar_fluxo_tarefas(new_issue)
 
-        flash[:notice] = "Tarefa #{view_context.link_to "#{new_issue.tracker.name} ##{new_issue.id}", issue_path(new_issue)} foi criada no projeto #{view_context.link_to original_issue.project.name, project_path(original_issue.project)} na sprint #{view_context.link_to new_issue.fixed_version.name, version_path(new_issue.fixed_version)} com tempo estimado de 1.0h" unless is_batch_call
-        flash[:info] = "Tarefa do desenvolvimento #{view_context.link_to "#{original_issue.tracker.name} ##{original_issue.id}", issue_path(original_issue)} foi ajustada o status para <strong><em>#{original_issue.status.name}</em></strong><br>" \
+        flash[:notice] = "Tarefa #{view_context.link_to "#{new_issue.tracker.name} ##{new_issue.id}", issue_path(new_issue)} foi criada no projeto #{view_context.link_to devel_issue.project.name, project_path(devel_issue.project)} na sprint #{view_context.link_to new_issue.fixed_version.name, version_path(new_issue.fixed_version)} com tempo estimado de 1.0h" unless is_batch_call
+        flash[:info] = "Tarefa do desenvolvimento #{view_context.link_to "#{devel_issue.tracker.name} ##{devel_issue.id}", issue_path(devel_issue)} foi ajustada o status para <strong><em>#{devel_issue.status.name}</em></strong><br>" \
         "Essa tarefa de testes foi fechada e ajustado seu status para <strong><em>#{@issue.status.name}</em></strong>".html_safe unless is_batch_call
 
         @processed_issues << "#{view_context.link_to "#{@issue.tracker.name} ##{@issue.id}", issue_path(@issue)} - #{@issue.subject} - retorno de testes criado em #{view_context.link_to "#{new_issue.tracker.name} ##{new_issue.id}", issue_path(new_issue)} "
@@ -171,34 +169,6 @@ class RetornoTestesController < ApplicationController
 
     new_issue.save
     new_issue
-  end
-
-  def localizar_tarefa_origem_copia_outro_projeto(issue)
-    current_issue = issue
-    current_project_id = issue.project_id
-    original_issue = nil
-
-    # Procura na lista de relações da tarefa para encontrar a origem
-    loop do
-
-      # Verifica se o projeto da tarefa atual é diferente do projeto original
-      if current_issue.project_id != current_project_id
-        original_issue = current_issue
-        break
-      end
-
-      # Verifica as relações da tarefa para encontrar a tarefa original
-      related_issues = IssueRelation.where(issue_to_id: current_issue.id, relation_type: "copied_to")
-
-      if related_issues.any?
-        related_issue = Issue.find_by(id: related_issues.first.issue_from_id)
-        current_issue = related_issue
-      else
-        break
-      end
-    end
-
-    original_issue
   end
 
   def atualizar_status_tarefa(issue, novo_status_descricao)

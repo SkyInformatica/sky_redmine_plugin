@@ -18,13 +18,16 @@ module SkyRedminePlugin
           Rails.logger.info ">>> controller_issues_edit_after_save"
 
           # Chama a atualização da data de início se necessário
-          verificar_atualizar_data_inicio(issue, new_status_name)
+          atualizar_data_inicio(issue, new_status_name)
 
           # Atualiza a tag da tarefa com base no status
-          verificar_atualizar_tag(issue, new_status_name)
+          atualizar_tag_tarefas_qs(issue, new_status_name)
 
           # Fechar a tarefa de testes
-          verificar_fechar_tarefa_testes(issue, new_status_name)
+          fechar_tarefa_qs(issue, new_status_name)
+
+          # Atualizar status tarefa QS na tarefa de desenvolvimento
+          atualizar_status_tarefa_qs_tarefa_devel(issue, new_status_name)
 
           # Atualizar o fluxo das tarefas
           verificar_atualizar_fluxo_tarefas(issue, new_status_name)
@@ -37,13 +40,23 @@ module SkyRedminePlugin
 
       private
 
+      def atualizar_status_tarefa_qs_tarefa_devel(issue, new_status_name)
+        if SkyRedminePlugin::Constants::Projects::QS_PROJECTS.include?(issue.project.name)
+          devel_issue = localizar_tarefa_origem_desenvolvimento(issue)
+          if devel_issue
+            if custom_field = IssueCustomField.find_by(name: SkyRedminePlugin::Constants::CustomFields::TESTE_QS)
+              devel_issue.custom_field_values = { custom_field.id => new_status_name }
+            end
+            devel_issue.save
+          end
+        end
+      end
+
       # Metodo para fechar a tarefa de testes
-      def verificar_fechar_tarefa_testes(issue, new_status_name)
+      def fechar_tarefa_qs(issue, new_status_name)
         if new_status_name == SkyRedminePlugin::Constants::IssueStatus::FECHADA
           # Localizar uma cópia da tarefa nos projetos QS
-          related_issues = IssueRelation.where(issue_from_id: issue.id, relation_type: "copied_to")
-          copied_to_qs_issue = related_issues.map { |relation| Issue.find_by(id: relation.issue_to_id) }
-            .find { |issue| SkyRedminePlugin::Constants::Projects::QS_PROJECTS.include?(issue.project.name) }
+          copied_to_qs_issue = localizar_tarefa_copiada_qs(@issue)
 
           # Se existir uma cópia e seu status for "Teste OK"
           if copied_to_qs_issue
@@ -64,7 +77,7 @@ module SkyRedminePlugin
       end
 
       # Método para atualizar a data de início da tarefa
-      def verificar_atualizar_data_inicio(issue, new_status_name)
+      def atualizar_data_inicio(issue, new_status_name)
         # Verifica se o novo status é 'Em Andamento' e a data de início está vazia
         if new_status_name == SkyRedminePlugin::Constants::IssueStatus::EM_ANDAMENTO && issue.start_date.nil?
           issue.start_date = Date.today
@@ -73,7 +86,7 @@ module SkyRedminePlugin
       end
 
       # Método para atualizar a tag da tarefa com base no status
-      def verificar_atualizar_tag(issue, new_status_name)
+      def atualizar_tag_tarefas_qs(issue, new_status_name)
         # Verifica se o novo status é 'Teste NOK' ou 'Teste OK'
         nova_tag_sufixo = case new_status_name
           when SkyRedminePlugin::Constants::IssueStatus::TESTE_NOK

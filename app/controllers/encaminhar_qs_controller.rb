@@ -13,9 +13,7 @@ class EncaminharQsController < ApplicationController
     if (!SkyRedminePlugin::Constants::Projects::QS_PROJECTS.include?(@issue.project.name)) && (@issue.status == resolvida_status)
 
       # Verificar se já existe uma cópia da tarefa nos projetos QS
-      related_issues = IssueRelation.where(issue_from_id: @issue.id, relation_type: "copied_to")
-      copied_to_qs_issue = related_issues.map { |relation| Issue.find_by(id: relation.issue_to_id) }
-        .find { |issue| SkyRedminePlugin::Constants::Projects::QS_PROJECTS.include?(issue.project.name) }
+      copied_to_qs_issue = localizar_tarefa_copiada_qs(@issue)
 
       # Se existir uma cópia da tarefa para o QS
       if copied_to_qs_issue
