@@ -5,6 +5,7 @@ module SkyRedminePlugin
       include FluxoTarefasHelper
 
       def controller_issues_edit_after_save(context = {})
+        Rails.logger.info ">>> controller_issues_edit_after_save"
         issue = context[:issue]
         journal = context[:journal]
 
@@ -13,7 +14,8 @@ module SkyRedminePlugin
           # Obtém os IDs dos status antigo e novo
           status_detail = journal.details.find { |detail| detail.prop_key == "status_id" }
 
-          new_status_name = IssueStatus.find_by(id: status_detail.value)
+          new_status_name = IssueStatus.find_by(id: status_detail.value).name
+          Rails.logger.info ">>> controller_issues_edit_after_save"
 
           # Chama a atualização da data de início se necessário
           atualizar_data_inicio(issue, new_status_name)
