@@ -15,7 +15,6 @@ module SkyRedminePlugin
           status_detail = journal.details.find { |detail| detail.prop_key == "status_id" }
 
           new_status_name = IssueStatus.find_by(id: status_detail.value).name
-          Rails.logger.info ">>> controller_issues_edit_after_save"
 
           # Chama a atualização da data de início se necessário
           atualizar_data_inicio(issue, new_status_name)
@@ -41,13 +40,17 @@ module SkyRedminePlugin
       private
 
       def atualizar_status_tarefa_qs_tarefa_devel(issue, new_status_name)
+        Rails.logger.info ">>> controller_issues_edit_after_save"
         if SkyRedminePlugin::Constants::Projects::QS_PROJECTS.include?(issue.project.name)
+          Rails.logger.info ">>> tarefa projeto #{issue.project.name} atualizando status para #{new_status_name}"
           devel_issue = localizar_tarefa_origem_desenvolvimento(issue)
           if devel_issue
+            Rails.logger.info ">>> tarefa devel associada é #{devel_issue.id}"
             if custom_field = IssueCustomField.find_by(name: SkyRedminePlugin::Constants::CustomFields::TESTE_QS)
+              Rails.logger.info ">>> atualizando campo Teste QS da tarefa #{devel_issue.id} para #{new_status_name}"
               devel_issue.custom_field_values = { custom_field.id => new_status_name }
+              devel_issue.save
             end
-            devel_issue.save
           end
         end
       end
