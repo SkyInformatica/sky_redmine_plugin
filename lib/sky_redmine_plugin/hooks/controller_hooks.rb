@@ -18,13 +18,13 @@ module SkyRedminePlugin
           Rails.logger.info ">>> controller_issues_edit_after_save"
 
           # Chama a atualização da data de início se necessário
-          atualizar_data_inicio(issue, new_status_name)
+          verificar_atualizar_data_inicio(issue, new_status_name)
 
           # Atualiza a tag da tarefa com base no status
-          atualizar_tag(issue, new_status_name)
+          verificar_atualizar_tag(issue, new_status_name)
 
           # Atualizar o fluxo das tarefas
-          atualizar_fluxo_tarefas(issue, new_status_name)
+          verificar_atualizar_fluxo_tarefas(issue, new_status_name)
         end
       end
 
@@ -35,14 +35,14 @@ module SkyRedminePlugin
       private
 
       # Metodo para atualizar o fluxo das tarefas relacionadas
-      def atualizar_fluxo_tarefas(issue, new_status_name)
+      def verificar_atualizar_fluxo_tarefas(issue, new_status_name)
         if [SkyRedminePlugin::Constants::IssueStatus::RESOLVIDA, SkyRedminePlugin::Constants::IssueStatus::FECHADA, SkyRedminePlugin::Constants::IssueStatus::TESTE_OK, SkyRedminePlugin::Constants::IssueStatus::TESTE_NOK].include?(new_status_name)
-          atualizar_fluxo_tarefas(issue)
+          verificar_atualizar_fluxo_tarefas(issue)
         end
       end
 
       # Método para atualizar a data de início da tarefa
-      def atualizar_data_inicio(issue, new_status_name)
+      def verificar_atualizar_data_inicio(issue, new_status_name)
         # Verifica se o novo status é 'Em Andamento' e a data de início está vazia
         if new_status_name == SkyRedminePlugin::Constants::IssueStatus::EM_ANDAMENTO && issue.start_date.nil?
           issue.start_date = Date.today
@@ -51,7 +51,7 @@ module SkyRedminePlugin
       end
 
       # Método para atualizar a tag da tarefa com base no status
-      def atualizar_tag(issue, new_status_name)
+      def verificar_atualizar_tag(issue, new_status_name)
         # Verifica se o novo status é 'Teste NOK' ou 'Teste OK'
         nova_tag_sufixo = case new_status_name
           when SkyRedminePlugin::Constants::IssueStatus::TESTE_NOK
