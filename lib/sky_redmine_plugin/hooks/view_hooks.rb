@@ -1,3 +1,4 @@
+# ./lib/sky_redmine_plugin/hoogs/view_hooks.rb
 module SkyRedminePlugin
   module Hooks
     class ViewHooks < Redmine::Hook::ViewListener
