@@ -14,6 +14,11 @@ module SkyRedminePlugin
           issue.save(validate: false)
         end
       end
+
+      def controller_additionals_change_status_after_save(context = {})
+        Rails.logger.info ">>> controller_additionals_change_status_after_save"
+        controller_issues_edit_after_save(context)
+      end
     end
   end
 end
