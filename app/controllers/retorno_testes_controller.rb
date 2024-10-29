@@ -9,8 +9,8 @@ class RetornoTestesController < ApplicationController
     Rails.logger.info ">>> retorno_testes_devel #{@issue.id}"
     @origem_retorno_teste = "DEVEL"
     qs_projects = ["Notarial - QS", "Registral - QS"]
-    resolvida_status = IssueStatus.find_by(name: "Resolvida")
-    nova_status = IssueStatus.find_by(name: "Nova")
+    resolvida_status = IssueStatus.find_by(name: SkyRedminePlugin::Constants::IssueStatus::RESOLVIDA)
+    nova_status = IssueStatus.find_by(name: SkyRedminePlugin::Constants::IssueStatus::NOVA)
 
     # Check if the issue is not in QS projects and its status is "Resolvida"
     if (!qs_projects.include?(@issue.project.name)) && (@issue.status == resolvida_status)
@@ -40,11 +40,11 @@ class RetornoTestesController < ApplicationController
 
       new_issue = criar_nova_tarefa(@issue.project.id)
 
-      if fechada_cont_retorno_testes_status = IssueStatus.find_by(name: "Fechada - cont retorno testes")
+      if fechada_cont_retorno_testes_status = IssueStatus.find_by(name: SkyRedminePlugin::Constants::IssueStatus::FECHADA_CONTINUA_RETORNO_TESTES)
         @issue.status = fechada_cont_retorno_testes_status
       end
       if custom_field = IssueCustomField.find_by(name: "Teste no desenvolvimento")
-        @issue.custom_field_values = { custom_field.id => "Teste NOK" }
+        @issue.custom_field_values = { custom_field.id => SkyRedminePlugin::Constants::IssueStatus::TESTE_NOK }
       end
 
       #limpar tags da tarefa
@@ -82,8 +82,8 @@ class RetornoTestesController < ApplicationController
       if original_issue
         new_issue = criar_nova_tarefa(original_issue.project.id)
 
-        atualizar_status_tarefa(original_issue, "Fechada - cont retorno testes")
-        if testenok_status = IssueStatus.find_by(name: "Teste NOK - Fechada")
+        atualizar_status_tarefa(original_issue, SkyRedminePlugin::Constants::IssueStatus::FECHADA_CONTINUA_RETORNO_TESTES)
+        if testenok_status = IssueStatus.find_by(name: SkyRedminePlugin::Constants::IssueStatus::TESTE_NOK_FECHADA)
           @issue.status = testenok_status
         end
 
@@ -160,10 +160,10 @@ class RetornoTestesController < ApplicationController
 
     new_issue.subject = definir_titulo_tarefa_incrementando_numero_copia(@issue.subject)
 
-    sprint = Version.find_by(name: "Aptas para desenvolvimento", project_id: project_id)
+    sprint = Version.find_by(name: SkyRedminePlugin::Constants::Sprints::APTAS_PARA_DESENVOLVIMENTO, project_id: project_id)
     if sprint.nil?
       # Caso a versão não exista, cria uma nova versão
-      sprint = Version.new(name: "Aptas para desenvolvimento", project_id: project_id)
+      sprint = Version.new(name: SkyRedminePlugin::Constants::Sprints::APTAS_PARA_DESENVOLVIMENTO, project_id: project_id)
       sprint.save
     end
     new_issue.fixed_version = sprint

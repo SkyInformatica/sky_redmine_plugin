@@ -8,7 +8,7 @@ class EncaminharQsController < ApplicationController
   def encaminhar_qs(is_batch_call = false)
     Rails.logger.info ">>> encaminhar_qs #{@issue.id}"
     qs_projects = ["Notarial - QS", "Registral - QS"]
-    resolvida_status = IssueStatus.find_by(name: "Resolvida")
+    resolvida_status = IssueStatus.find_by(name: SkyRedminePlugin::Constants::IssueStatus::RESOLVIDA)
 
     # Check if the issue is not in QS projects and its status is "Resolvida"
     if (!qs_projects.include?(@issue.project.name)) && (@issue.status == resolvida_status)
@@ -30,7 +30,7 @@ class EncaminharQsController < ApplicationController
       new_issue = criar_nova_tarefa
 
       if custom_field = IssueCustomField.find_by(name: "Teste QS")
-        @issue.custom_field_values = { custom_field.id => "Nova" }
+        @issue.custom_field_values = { custom_field.id => SkyRedminePlugin::Constants::IssueStatus::NOVA }
       end
 
       @issue.save
@@ -145,10 +145,10 @@ class EncaminharQsController < ApplicationController
       new_issue.tag_list.add(tag_name)
     end
 
-    sprint = Version.find_by(name: "Tarefas para testar", project: qs_project)
+    sprint = Version.find_by(name: SkyRedminePlugin::Constants::Sprints::TAREFAS_PARA_TESTAR, project: qs_project)
     if sprint.nil?
       # Caso a versão não exista, cria uma nova versão
-      sprint = Version.new(name: "Tarefas para testar", project: qs_project)
+      sprint = Version.new(name: SkyRedminePlugin::Constants::Sprints::TAREFAS_PARA_TESTAR, project: qs_project)
       sprint.save
     end
     new_issue.fixed_version = sprint

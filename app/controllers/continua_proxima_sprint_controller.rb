@@ -115,10 +115,10 @@ class ContinuaProximaSprintController < ApplicationController
     end
 
     # Se não encontrar a nova sprint, usar a versão padrão "Aptas para desenvolvimento"
-    sprint ||= Version.find_by(name: "Aptas para desenvolvimento", project_id: @issue.project.id)
+    sprint ||= Version.find_by(name: SkyRedminePlugin::Constants::Sprints::APTAS_PARA_DESENVOLVIMENTO, project_id: @issue.project.id)
     if sprint.nil?
       # Caso a versão não exista, cria uma nova versão
-      sprint = Version.new(name: "Aptas para desenvolvimento", project_id: @issue.project.id)
+      sprint = Version.new(name: SkyRedminePlugin::Constants::Sprints::APTAS_PARA_DESENVOLVIMENTO, project_id: @issue.project.id)
       sprint.save
     end
     # retornar sprint
