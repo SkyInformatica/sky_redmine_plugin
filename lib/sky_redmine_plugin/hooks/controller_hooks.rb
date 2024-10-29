@@ -2,6 +2,7 @@ module SkyRedminePlugin
   module Hooks
     class ControllerHooks < Redmine::Hook::Listener
       include CriarTarefasHelper
+      include FluxoTarefasHelper
 
       def controller_issues_edit_after_save(context = {})
         issue = context[:issue]
@@ -19,6 +20,9 @@ module SkyRedminePlugin
 
           # Atualiza a tag da tarefa com base no status
           atualizar_tag(issue, new_status_name)
+
+          # Atualizar o fluxo das tarefas
+          atualizar_fluxo_tarefas(issue, new_status_name)
         end
       end
 
@@ -27,6 +31,13 @@ module SkyRedminePlugin
       end
 
       private
+
+      # Metodo para atualizar o fluxo das tarefas relacionadas
+      def atualizar_fluxo_tarefas(issue, new_status_name)
+        if [SkyRedminePlugin::Constants::IssueStatus::RESOLVIDA, SkyRedminePlugin::Constants::IssueStatus::FECHADA, SkyRedminePlugin::Constants::IssueStatus::TESTE_OK, SkyRedminePlugin::Constants::IssueStatus::TESTE_NOK].include?(new_status_name)
+          atualizar_fluxo_tarefas(issue)
+        end
+      end
 
       # Método para atualizar a data de início da tarefa
       def atualizar_data_inicio(issue, new_status_name)
