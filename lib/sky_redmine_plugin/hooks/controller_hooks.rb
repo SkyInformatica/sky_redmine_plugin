@@ -7,7 +7,7 @@ module SkyRedminePlugin
         journal = context[:journal]
 
         # Verifica se o status mudou para 'Em Andamento' e a data de início não está definida
-        if issue.status.name == "Em Andamento" && issue.start_date.nil?
+        if issue.status.name == SkyRedminePlugin::Constants::IssueStatus::EM_ANDAMENTO && issue.start_date.nil?
           Rails.logger.info ">>> definindo a data de inicio da tarefa #{issue.id}"
           issue.init_journal(User.current, "Data de início atualizada automaticamente.")
           issue.start_date = Date.today
