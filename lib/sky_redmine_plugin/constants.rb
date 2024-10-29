@@ -9,6 +9,7 @@ module SkyRedminePlugin
       CONTINUA_PROXIMA_SPRINT = "Continua proxima sprint"
       RESOLVIDA = "Resolvida"
       FECHADA_CONTINUA_RETORNO_TESTES = "Fechada - cont retorno testes"
+      TESTE_OK = "Teste OK"
       TESTE_NOK = "Teste NOK"
       TESTE_NOK_FECHADA = "Teste NOK - Fechada"
     end
