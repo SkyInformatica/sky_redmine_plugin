@@ -25,6 +25,9 @@ module SkyRedminePlugin
 
           # Atualizar o fluxo das tarefas
           verificar_atualizar_fluxo_tarefas(issue, new_status_name)
+
+          # Fechar a tarefa de testes
+          verificar_fechar_tarefa_testes(issue, new_status_name)
         end
       end
 
@@ -33,6 +36,25 @@ module SkyRedminePlugin
       end
 
       private
+
+      # Metodo para fechar a tarefa de testes
+      def verificar_fechar_tarefa_testes(issue, new_status_name)
+        if new_status_name == SkyRedminePlugin::Constants::IssueStatus::FECHADA
+          # Localizar uma cópia da tarefa nos projetos QS
+          related_issues = IssueRelation.where(issue_from_id: @issue.id, relation_type: "copied_to")
+          copied_to_qs_issue = related_issues.map { |relation| Issue.find_by(id: relation.issue_to_id) }
+            .find { |issue| SkyRedminePlugin::Constants::Projects::QS_PROJECTS.include?(issue.project.name) }
+
+          # Se existir uma cópia e seu status for "Teste OK"
+          if copied_to_qs_issue
+            if copied_to_qs_issue.status == IssueStatus.find_by(name: SkyRedminePlugin::Constants::IssueStatus::TESTE_OK)
+              copied_to_qs_issue.status = IssueStatus.find_by(name: SkyRedminePlugin::Constants::IssueStatus::TESTE_OK_FECHADA)
+              copied_to_qs_issue.tag_list = []
+              copied_to_qs_issue.save(validate: false)
+            end
+          end
+        end
+      end
 
       # Metodo para atualizar o fluxo das tarefas relacionadas
       def verificar_atualizar_fluxo_tarefas(issue, new_status_name)

@@ -12,6 +12,7 @@ module SkyRedminePlugin
       FECHADA_CONTINUA_RETORNO_TESTES = "Fechada - cont retorno testes"
       TESTE_OK = "Teste OK"
       TESTE_NOK = "Teste NOK"
+      TESTE_OK_FECHADA = "Teste OK - Fechada"
       TESTE_NOK_FECHADA = "Teste NOK - Fechada"
     end
 
