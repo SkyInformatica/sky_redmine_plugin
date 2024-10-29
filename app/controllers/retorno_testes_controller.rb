@@ -74,14 +74,22 @@ class RetornoTestesController < ApplicationController
 
     # Verificar se a tarefa pertence aos projetos permitidos e se o status é "Teste NOK"
     if (SkyRedminePlugin::Constants::Projects::QS_PROJECTS.include?(@issue.project.name) && (@issue.status == nok_status))
-
       # localizar a tarefa de origem do desenvolvimento
       devel_issue = localizar_tarefa_origem_desenvolvimento(@issue)
 
       if devel_issue
         new_issue = criar_nova_tarefa(devel_issue.project.id)
 
-        atualizar_status_tarefa(devel_issue, SkyRedminePlugin::Constants::IssueStatus::FECHADA_CONTINUA_RETORNO_TESTES)
+        # atualizar o status da tarefa de devel para fechada continua retorno de testes e o campo Teste QS para Teste NOK - Fechada
+        if fechada_continua_retorno_testes_status = IssueStatus.find_by(name: SkyRedminePlugin::Constants::IssueStatus::FECHADA_CONTINUA_RETORNO_TESTES)
+          devel_issue.status = fechada_continua_retorno_testes_status
+          if custom_field = IssueCustomField.find_by(name: SkyRedminePlugin::Constants::CustomFields::TESTE_QS)
+            devel_issue.custom_field_values = { custom_field.id => SkyRedminePlugin::Constants::IssueStatus::TESTE_NOK_FECHADA }
+          end
+          devel_issue.save
+        end
+
+        # ataulizar o status da tarefa de QS para Teste NOK - Fechada
         if testenok_status = IssueStatus.find_by(name: SkyRedminePlugin::Constants::IssueStatus::TESTE_NOK_FECHADA)
           @issue.status = testenok_status
         end
@@ -169,13 +177,5 @@ class RetornoTestesController < ApplicationController
 
     new_issue.save
     new_issue
-  end
-
-  def atualizar_status_tarefa(issue, novo_status_descricao)
-    novo_status = IssueStatus.find_by(name: novo_status_descricao)
-    if novo_status
-      issue.status = novo_status
-      issue.save
-    end
   end
 end

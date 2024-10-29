@@ -22,12 +22,9 @@ class ContinuaProximaSprintController < ApplicationController
     if (nova_emandamento_interrompida_status.include?(@issue.status.name))
 
       # Verificar se já existe uma cópia da tarefa de continuidade na proxima sprint
-      related_issues = IssueRelation.where(issue_from_id: @issue.id, relation_type: "copied_to")
-      copied_to_issue = related_issues.map { |relation| Issue.find_by(id: relation.issue_to_id) }
-        .find { |issue| @issue.project.name == issue.project.name }
-
+      copied_to_issue = localizar_tarefa_continuidade(@issue)
       if copied_to_issue
-        # A tarefa já foi encaminhada para QS
+        # A tarefa já possui uma copia de continuidade
         flash[:warning] = "A tarefa já possui continuidade em  #{view_context.link_to "#{copied_to_issue.tracker.name} ##{copied_to_issue.id}", issue_path(copied_to_issue)} e está com status #{copied_to_issue.status.name}." unless is_batch_call
         @processed_issues << "[NOK] #{view_context.link_to "#{@issue.tracker.name} ##{@issue.id}", issue_path(@issue)} - #{@issue.subject} - tarefa já possui continuidade em  #{view_context.link_to "#{copied_to_issue.tracker.name} ##{copied_to_issue.id}", issue_path(copied_to_issue)} e está com status #{copied_to_issue.status.name}"
         redirect_to issue_path(@issue) unless is_batch_call
@@ -40,6 +37,19 @@ class ContinuaProximaSprintController < ApplicationController
       end
       @issue.tag_list = []
       @issue.save
+
+      # atualizar o campo Teste QS da tarefa de devel para Nova se a tarefa que está gerando continua na proxima sprint é do QS
+      if SkyRedminePlugin::Constants::Projects::QS_PROJECTS.include?(@issue.project.name)
+        # localizar a tarefa de origem do desenvolvimento
+        devel_issue = localizar_tarefa_origem_desenvolvimento(@issue)
+
+        if devel_issue
+          if custom_field = IssueCustomField.find_by(name: SkyRedminePlugin::Constants::CustomFields::TESTE_QS)
+            devel_issue.custom_field_values = { custom_field.id => SkyRedminePlugin::Constants::IssueStatus::NOVA }
+            devel_issue.save(validate: false)
+          end
+        end
+      end
 
       atualizar_fluxo_tarefas(new_issue)
 

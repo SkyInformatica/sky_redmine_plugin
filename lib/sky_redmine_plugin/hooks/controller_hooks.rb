@@ -64,6 +64,11 @@ module SkyRedminePlugin
               copied_to_qs_issue.status = IssueStatus.find_by(name: SkyRedminePlugin::Constants::IssueStatus::TESTE_OK_FECHADA)
               copied_to_qs_issue.tag_list = []
               copied_to_qs_issue.save(validate: false)
+
+              if custom_field = IssueCustomField.find_by(name: SkyRedminePlugin::Constants::CustomFields::TESTE_QS)
+                issue.custom_field_values = { custom_field.id => SkyRedminePlugin::Constants::IssueStatus::TESTE_OK_FECHADA }
+                issue.save(validate: false)
+              end
             end
           end
         end
