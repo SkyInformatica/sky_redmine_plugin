@@ -50,6 +50,9 @@ module SkyRedminePlugin
       TESTAR = "_TESTAR"
       PRONTO = "_PRONTO"
       REVER = "_REVER"
+      REUNIAO = "_REUNIAO"
+      RETESTAR = "_RETESTAR"
+      TODAS_TAGS_AUTOMATIZADAS = [TESTAR, PRONTO, REVER, REUNIAO, RETESTAR]
     end
   end
 end

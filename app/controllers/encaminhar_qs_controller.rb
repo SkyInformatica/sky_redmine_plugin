@@ -122,7 +122,7 @@ class EncaminharQsController < ApplicationController
       end
     end
 
-    new_issue.tags << Tag.find_or_create_by(name: obter_nome_tag(@issue, SkyRedminePlugin::Constants::Tags::TESTAR))
+    new_issue.tag_list.add(obter_nome_tag(@issue, SkyRedminePlugin::Constants::Tags::TESTAR))
 
     sprint = Version.find_by(name: SkyRedminePlugin::Constants::Sprints::TAREFAS_PARA_TESTAR, project: qs_project)
     if sprint.nil?

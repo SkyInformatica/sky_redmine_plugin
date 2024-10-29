@@ -29,10 +29,8 @@ module SkyRedminePlugin
 
       # Método para atualizar a tag da tarefa com base no status
       def atualizar_tag(issue)
-        status = issue.status.name
-
         # Verifica se o status é 'Teste NOK' ou 'Teste OK'
-        nova_tag_sufixo = case status
+        nova_tag_sufixo = case issue.status.name
           when SkyRedminePlugin::Constants::IssueStatus::TESTE_NOK
             SkyRedminePlugin::Constants::Tags::REVER
           when SkyRedminePlugin::Constants::IssueStatus::TESTE_OK
@@ -41,16 +39,12 @@ module SkyRedminePlugin
             return # Se não for nenhum dos status, não faz nada
           end
 
-        nova_tag = obter_nome_tag(issue, nova_tag_sufixo)
-
-        tags = issue.tags.map(&:name)
-        tag_atual = tags.find { |tag| tag.end_with?(SkyRedminePlugin::Constants::Tags::TESTAR) }
-
-        if tag_atual
-          issue.tags.delete(Tag.find_by(name: tag_atual))
+        # removendo as tags de controle automatizado para deixar somente a tag REVER ou PRONTO
+        issue.tag_list = issue.tag_list.reject do |tag|
+          SkyRedminePlugin::Constants::Tags::TODAS_TAGS_AUTOMATIZADAS.any? { |sufixo| tag.end_with?(sufixo) }
         end
 
-        issue.tags << Tag.find_or_create_by(name: nova_tag)
+        issue.tag_list.add(obter_nome_tag(issue, nova_tag_sufixo))
         issue.save(validate: false)
       end
     end
