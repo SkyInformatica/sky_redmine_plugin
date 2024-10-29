@@ -7,16 +7,15 @@ class EncaminharQsController < ApplicationController
 
   def encaminhar_qs(is_batch_call = false)
     Rails.logger.info ">>> encaminhar_qs #{@issue.id}"
-    qs_projects = ["Notarial - QS", "Registral - QS"]
     resolvida_status = IssueStatus.find_by(name: SkyRedminePlugin::Constants::IssueStatus::RESOLVIDA)
 
     # Check if the issue is not in QS projects and its status is "Resolvida"
-    if (!qs_projects.include?(@issue.project.name)) && (@issue.status == resolvida_status)
+    if (!SkyRedminePlugin::Constants::Projects::QS_PROJECTS.include?(@issue.project.name)) && (@issue.status == resolvida_status)
 
       # Verificar se já existe uma cópia da tarefa nos projetos QS
       related_issues = IssueRelation.where(issue_from_id: @issue.id, relation_type: "copied_to")
       copied_to_qs_issue = related_issues.map { |relation| Issue.find_by(id: relation.issue_to_id) }
-        .find { |issue| qs_projects.include?(issue.project.name) }
+        .find { |issue| SkyRedminePlugin::Constants::Projects::QS_PROJECTS.include?(issue.project.name) }
 
       # Se existir uma cópia da tarefa para o QS
       if copied_to_qs_issue
@@ -29,7 +28,7 @@ class EncaminharQsController < ApplicationController
 
       new_issue = criar_nova_tarefa
 
-      if custom_field = IssueCustomField.find_by(name: "Teste QS")
+      if custom_field = IssueCustomField.find_by(name: SkyRedminePlugin::Constants::CustomFields::TESTE_QS)
         @issue.custom_field_values = { custom_field.id => SkyRedminePlugin::Constants::IssueStatus::NOVA }
       end
 
@@ -101,15 +100,11 @@ class EncaminharQsController < ApplicationController
   end
 
   def criar_nova_tarefa
-    registral_projects = ["Equipe Civil", "Equipe TED", "Equipe Imóveis"]
-    notarial_projects = ["Equipe Notar", "Equipe Protesto", "Equipe Financeiro"]
-
-    if registral_projects.include?(@issue.project.name)
-      qs_project = "Registral - QS"
-    elsif notarial_projects.include?(@issue.project.name)
-      qs_project = "Notarial - QS"
+    if SkyRedminePlugin::Constants::Projects::REGISTRAL_PROJECTS.include?(@issue.project.name)
+      qs_project = SkyRedminePlugin::Constants::Projects::REGISTRAL_QS
+    elsif SkyRedminePlugin::Constants::Projects::NOTARIAL_PROJECTS.include?(@issue.project.name)
+      qs_project = SkyRedminePlugin::Constants::Projects::NOTARIAL_QS
     end
-
     qs_project = Project.find_by(name: qs_project)
 
     tempo_gasto_total = obter_tempo_gasto
@@ -120,9 +115,9 @@ class EncaminharQsController < ApplicationController
     # se é um retorno de testes verifica se a origem foi um retorno de testes do desenvolvimento
     # neste caso a tarefa de qs deve ser do tipo da tarefa original, ou seja, defeitou ou funcionalidade
     # se foi um retorno de testes que veio do QS entao mantem como retorno de testes e nao altera o tipo
-    if @issue.tracker.name == "Retorno de testes"
+    if @issue.tracker.name == SkyRedminePlugin::Constants::Trackers::RETORNO_TESTES
       original_issue = encontrar_tarefa_original_funcionalidade_defeito(@issue)
-      if original_issue && ["Funcionalidade", "Defeito"].include?(original_issue.tracker.name)
+      if original_issue && [SkyRedminePlugin::Constants::Trackers::FUNCIONALIDADE, SkyRedminePlugin::Constants::Trackers::DEFEITO].include?(original_issue.tracker.name)
         new_issue.tracker = original_issue.tracker
       end
     end
@@ -131,7 +126,7 @@ class EncaminharQsController < ApplicationController
     sistema_value = ""
     tag_name = ""
     # Adiciona a nova tag, se for sistema LIVROCAIXA usa o campo sistema, senao o nome da equipe do projeto
-    if sistema_custom_field = IssueCustomField.find_by(name: "Sistema")
+    if sistema_custom_field = IssueCustomField.find_by(name: SkyRedminePlugin::Constants::CustomFields::SISTEMA)
       sistema_value = new_issue.custom_field_value(sistema_custom_field.id)
       if sistema_value
         sistema_value = sistema_value.upcase.gsub(" ", "")
@@ -172,7 +167,7 @@ class EncaminharQsController < ApplicationController
 
       break if related_issue.project_id != issue.project_id
 
-      if ["Funcionalidade", "Defeito"].include?(related_issue.tracker.name)
+      if [SkyRedminePlugin::Constants::Trackers::FUNCIONALIDADE, SkyRedminePlugin::Constants::Trackers::DEFEITO].include?(related_issue.tracker.name)
         return related_issue
       end
 

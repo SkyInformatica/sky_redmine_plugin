@@ -5,20 +5,22 @@ class RetornoTestesController < ApplicationController
   before_action :find_issue, only: [:retorno_testes_devel, :retorno_testes_qs]
   before_action :find_issues, only: [:retorno_testes_lote]
 
+  ORIGEM_RETORNO_TESTE_DEVEL = "DEVEL"
+  ORIGEM_RETORNO_TESTE_QS = "QS"
+
   def retorno_testes_devel(is_batch_call = false)
     Rails.logger.info ">>> retorno_testes_devel #{@issue.id}"
-    @origem_retorno_teste = "DEVEL"
-    qs_projects = ["Notarial - QS", "Registral - QS"]
+    @origem_retorno_teste = ORIGEM_RETORNO_TESTE_DEVEL
     resolvida_status = IssueStatus.find_by(name: SkyRedminePlugin::Constants::IssueStatus::RESOLVIDA)
     nova_status = IssueStatus.find_by(name: SkyRedminePlugin::Constants::IssueStatus::NOVA)
 
     # Check if the issue is not in QS projects and its status is "Resolvida"
-    if (!qs_projects.include?(@issue.project.name)) && (@issue.status == resolvida_status)
+    if (!SkyRedminePlugin::Constants::Projects::QS_PROJECTS.include?(@issue.project.name)) && (@issue.status == resolvida_status)
 
       # Verificar se já existe uma cópia da tarefa nos projetos QS
       related_issues = IssueRelation.where(issue_from_id: @issue.id, relation_type: "copied_to")
       copied_to_qs_issue = related_issues.map { |relation| Issue.find_by(id: relation.issue_to_id) }
-        .find { |issue| qs_projects.include?(issue.project.name) }
+        .find { |issue| SkyRedminePlugin::Constants::Projects::QS_PROJECTS.include?(issue.project.name) }
 
       tarefa_qs_removida = false
       # Se existir uma cópia e seu status for "Nova"
@@ -43,7 +45,7 @@ class RetornoTestesController < ApplicationController
       if fechada_cont_retorno_testes_status = IssueStatus.find_by(name: SkyRedminePlugin::Constants::IssueStatus::FECHADA_CONTINUA_RETORNO_TESTES)
         @issue.status = fechada_cont_retorno_testes_status
       end
-      if custom_field = IssueCustomField.find_by(name: "Teste no desenvolvimento")
+      if custom_field = IssueCustomField.find_by(name: SkyRedminePlugin::Constants::CustomFields::TESTE_NO_DESENVOLVIMENTO)
         @issue.custom_field_values = { custom_field.id => SkyRedminePlugin::Constants::IssueStatus::TESTE_NOK }
       end
 
@@ -69,12 +71,11 @@ class RetornoTestesController < ApplicationController
 
   def retorno_testes_qs(is_batch_call = false)
     Rails.logger.info ">>> retorno_testes_qs #{@issue.id}"
-    @origem_retorno_teste = "QS"
-    qs_projects = ["Notarial - QS", "Registral - QS"]
-    nok_status = IssueStatus.find_by(name: "Teste NOK")
+    @origem_retorno_teste = ORIGEM_RETORNO_TESTE_QS
+    nok_status = IssueStatus.find_by(name: SkyRedminePlugin::Constants::IssueStatus::TESTE_NOK)
 
     # Verificar se a tarefa pertence aos projetos permitidos e se o status é "Teste NOK"
-    if (qs_projects.include?(@issue.project.name) && (@issue.status == nok_status))
+    if (SkyRedminePlugin::Constants::Projects::QS_PROJECTS.include?(@issue.project.name) && (@issue.status == nok_status))
 
       # localizar a tarefa de origem do desenvolvimento
       original_issue = localizar_tarefa_origem_copia_outro_projeto(@issue)
@@ -121,9 +122,9 @@ class RetornoTestesController < ApplicationController
       # os metodos retorno_testes_qs e retorno_testes_devel usam @issue para referencia a tarefa que deve ser copiada
       # o @issue eh definido pelo find_issue (Redmine) quando eh um processamento individual de uma tarefa
       @issue = issue
-      if (@origem_retorno_teste == "QS")
+      if (@origem_retorno_teste == ORIGEM_RETORNO_TESTE_QS)
         retorno_testes_qs(true)
-      elsif (@origem_retorno_teste == "DEVEL")
+      elsif (@origem_retorno_teste == ORIGEM_RETORNO_TESTE_DEVEL)
         retorno_testes_devel(true)
       end
     end
@@ -142,19 +143,19 @@ class RetornoTestesController < ApplicationController
   def criar_nova_tarefa(project_id)
     Rails.logger.info ">>> criar_nova_tarefa"
     new_issue = @issue.copy(project_id: project_id)
-    new_issue.tracker = Tracker.find_by_name("Retorno de testes")
+    new_issue.tracker = Tracker.find_by_name(SkyRedminePlugin::Constants::Trackers::RETORNO_TESTES)
     limpar_campos_nova_tarefa(new_issue, CriarTarefasHelper::TipoCriarNovaTarefa::RETORNO_TESTES)
     new_issue.estimated_hours = 1
 
     # Concatenando o valor do campo "Resultado Teste NOK" à descrição
-    if (@origem_retorno_teste == "QS")
-      if custom_field = IssueCustomField.find_by(name: "Resultado Teste NOK")
+    if (@origem_retorno_teste == ORIGEM_RETORNO_TESTE_QS)
+      if custom_field = IssueCustomField.find_by(name: SkyRedminePlugin::Constants::CustomFields::RESULTADO_TESTE_NOK)
         resultado_teste_nok_value = @issue.custom_field_value(custom_field.id)
         if resultado_teste_nok_value && !resultado_teste_nok_value.empty?
           new_issue.description = "*[RETORNO DE TESTES DO QS]*\n\n#{resultado_teste_nok_value}\n\n---\n\n#{new_issue.description}"
         end
       end
-    elsif (@origem_retorno_teste == "DEVEL")
+    elsif (@origem_retorno_teste == ORIGEM_RETORNO_TESTE_DEVEL)
       new_issue.description = "*[RETORNO DE TESTES DO DESENVOLVIMENTO]*\n\n\n\n---\n\n#{new_issue.description}"
     end
 
