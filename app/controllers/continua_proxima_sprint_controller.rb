@@ -7,7 +7,7 @@ class ContinuaProximaSprintController < ApplicationController
 
   def continua_proxima_sprint(is_batch_call = false)
     Rails.logger.info ">>> continua_proxima_sprint #{@issue.id}"
-    nova_emandamento_interrompida_status = ["Nova", "Em andamento", "Interrompida"]
+    nova_emandamento_interrompida_status = [SkyRedminePlugin::Constants::IssueStatus::NOVA, SkyRedminePlugin::Constants::IssueStatus::EM_ANDAMENTO, SkyRedminePlugin::Constants::IssueStatus::INTERROMPIDA]
 
     current_sprint_name = @issue.fixed_version&.name # Usa o safe navigation operator para evitar erro se fixed_version for nil
     unless current_sprint_name && current_sprint_name.match?(/^\d{4}-\d{1,2} \(\d{2}\/\d{2} a \d{2}\/\d{2}\)$/)
@@ -35,7 +35,7 @@ class ContinuaProximaSprintController < ApplicationController
       end
 
       new_issue = criar_nova_tarefa
-      if continua_proxima_sprint_status = IssueStatus.find_by(name: "Continua proxima sprint")
+      if continua_proxima_sprint_status = IssueStatus.find_by(name: SkyRedminePlugin::Constants::IssueStatus::CONTINUA_PROXIMA_SPRINT)
         @issue.status = continua_proxima_sprint_status
       end
       @issue.tag_list = []
