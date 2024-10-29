@@ -11,11 +11,11 @@ module SkyRedminePlugin
           Rails.logger.info ">>> definindo a data de inicio da tarefa #{issue.id}"
           # Adiciona uma nota ao journal existente
           if journal
-            journal.notes = (journal.notes || "") + "\nData de início definida pelo SkyRedminePlugin."
+            journal.notes = (journal.notes || "") + "\nData de início definida pelo SkyRedminePlugin (journal)"
             journal.save
           else
             # Se não houver um journal, inicializa um novo
-            issue.init_journal(User.current, "Data de início definida pelo SkyRedminePlugin.")
+            issue.init_journal(User.current, "Data de início definida pelo SkyRedminePlugin (init_journal)")
           end
           issue.start_date = Date.today
           issue.save(validate: false)
