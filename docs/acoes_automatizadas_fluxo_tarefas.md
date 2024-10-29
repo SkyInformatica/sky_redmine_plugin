@@ -13,3 +13,7 @@ O plugin controlará o fluxo das tarefas e realizará ações automatizadas conf
 ## Fechar a tarefa de Teste OK e remover as tags
 
 - Fechar a tarefa do QS como "Teste OK - Fechada" e remover suas tags sempre que uma tarefa de desenvolvimento for "Fechada" e a correspondente do QS estiver com "Teste OK".
+
+## Atualizar o status da tarefa de QS na tarefa de desenvolvimento
+
+- Atualizar o campo "Teste QS" na tarefa de desenvolvimento conforme a mudança de status da tarefa correspondente do QS
