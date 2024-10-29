@@ -75,7 +75,15 @@ module SkyRedminePlugin
 
       # Metodo para atualizar o fluxo das tarefas relacionadas
       def verificar_atualizar_fluxo_tarefas(issue, new_status_name)
-        if [SkyRedminePlugin::Constants::IssueStatus::RESOLVIDA, SkyRedminePlugin::Constants::IssueStatus::FECHADA, SkyRedminePlugin::Constants::IssueStatus::TESTE_OK, SkyRedminePlugin::Constants::IssueStatus::TESTE_NOK].include?(new_status_name)
+        if [SkyRedminePlugin::Constants::IssueStatus::RESOLVIDA,
+            SkyRedminePlugin::Constants::IssueStatus::FECHADA,
+            SkyRedminePlugin::Constants::IssueStatus::FECHADA_CONTINUA_RETORNO_TESTES,
+            SkyRedminePlugin::Constants::IssueStatus::CONTINUA_PROXIMA_SPRINT,
+            SkyRedminePlugin::Constants::IssueStatus::TESTE_OK,
+            SkyRedminePlugin::Constants::IssueStatus::TESTE_NOK,
+            SkyRedminePlugin::Constants::IssueStatus::TESTE_OK_FECHADA,
+            SkyRedminePlugin::Constants::IssueStatus::TESTE_NOK_FECHADA,
+            SkyRedminePlugin::Constants::IssueStatus::CANCELADA].include?(new_status_name)
           atualizar_fluxo_tarefas(issue)
         end
       end
