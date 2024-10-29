@@ -39,12 +39,36 @@ module SkyRedminePlugin
             return # Se não for nenhum dos status, não faz nada
           end
 
-        # removendo as tags de controle automatizado para deixar somente a tag REVER ou PRONTO
+        # Obtém a lista de sufixos automatizados
+        sufixos_automatizados = SkyRedminePlugin::Constants::Tags::TODAS_TAGS_AUTOMATIZADAS
+
+        # Inicializa a variável para armazenar o prefixo
+        prefixo = nil
+
+        # Procura por tags que terminem com os sufixos automatizados e obtém o prefixo
         issue.tag_list = issue.tag_list.reject do |tag|
-          SkyRedminePlugin::Constants::Tags::TODAS_TAGS_AUTOMATIZADAS.any? { |sufixo| tag.end_with?(sufixo) }
+          sufixo_encontrado = sufixos_automatizados.find { |sufixo| tag.end_with?(sufixo) }
+          if sufixo_encontrado
+            # Extrai o prefixo (parte antes do sufixo)
+            prefixo = tag[0...-sufixo_encontrado.length]
+            true # Remove a tag
+          else
+            false # Mantém a tag
+          end
         end
 
-        issue.tag_list.add(obter_nome_tag(issue, nova_tag_sufixo))
+        # Se não foi encontrado um prefixo
+        if prefixo.nil?
+          return # Neste caso, não adicionaremos uma nova tag
+        end
+
+        # Constrói a nova tag com o mesmo prefixo e o novo sufixo
+        nova_tag = "#{prefixo}#{nova_tag_sufixo}"
+
+        # Adiciona a nova tag ao issue
+        issue.tag_list.add(nova_tag)
+
+        # Salva o issue sem validações
         issue.save(validate: false)
       end
     end

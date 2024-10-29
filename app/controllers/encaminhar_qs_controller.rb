@@ -112,6 +112,7 @@ class EncaminharQsController < ApplicationController
     limpar_campos_nova_tarefa(new_issue, CriarTarefasHelper::TipoCriarNovaTarefa::ENCAMINHAR_QS)
     new_issue.estimated_hours = [1, (tempo_gasto_total * 0.34).ceil].max
 
+    sufixo_tag = SkyRedminePlugin::Constants::Tags::TESTAR
     # se é um retorno de testes verifica se a origem foi um retorno de testes do desenvolvimento
     # neste caso a tarefa de qs deve ser do tipo da tarefa original, ou seja, defeitou ou funcionalidade
     # se foi um retorno de testes que veio do QS entao mantem como retorno de testes e nao altera o tipo
@@ -119,10 +120,12 @@ class EncaminharQsController < ApplicationController
       original_issue = encontrar_tarefa_original_funcionalidade_defeito(@issue)
       if original_issue && [SkyRedminePlugin::Constants::Trackers::FUNCIONALIDADE, SkyRedminePlugin::Constants::Trackers::DEFEITO].include?(original_issue.tracker.name)
         new_issue.tracker = original_issue.tracker
+      else
+        sufixo_tag = SkyRedminePlugin::Constants::Tags::RETESTAR
       end
     end
 
-    new_issue.tag_list.add(obter_nome_tag(@issue, SkyRedminePlugin::Constants::Tags::TESTAR))
+    new_issue.tag_list.add(obter_nome_tag(@issue, sufixo_tag))
 
     sprint = Version.find_by(name: SkyRedminePlugin::Constants::Sprints::TAREFAS_PARA_TESTAR, project: qs_project)
     if sprint.nil?
