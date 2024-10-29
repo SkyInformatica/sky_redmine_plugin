@@ -1,15 +1,15 @@
 # Ações automatizadas no gestão do fluxo das tarefas
 
-O plugin irá controlar o fluxo das tarefas e realizar ações automatizadas conforme a troca de situação das tarefas conforme segue
+O plugin controlará o fluxo das tarefas e realizará ações automatizadas conforme a mudança de situação delas.
 
 ## Atualizar tags das tarefas de testes para \_PRONTO e \_REVER
 
-- Sempre que uma tarefa do projeto de QS estiver com Teste OK ou Teste NOK a tag será definir para \_PRONTO e \_REVER, respectivamente
+- Quando uma tarefa do projeto de QS for marcada como "Teste OK" ou "Teste NOK", sua tag será ajustada para \_PRONTO e \_REVER, respectivamente.
 
 ## Definir data de inicio da tarefa
 
-- Definir a data de inicio sempre que uma tarefa for colocada "Em andamento" e data de inicio ainda não estiver definida
+- Definir a data de início sempre que uma tarefa for marcada como "Em andamento" e ainda não tiver uma data definida.
 
 ## Fechar a tarefa de Teste OK e remover as tags
 
-- Fechar a tarefa do QS para "Teste OK - Fechada" e remover suas tags sempre que uma tarefa de desenvolvimento for "Fechada" e a tarefa do QS correspondente estiver com "Teste OK"
+- Fechar a tarefa do QS como "Teste OK - Fechada" e remover suas tags sempre que uma tarefa de desenvolvimento for "Fechada" e a correspondente do QS estiver com "Teste OK".
