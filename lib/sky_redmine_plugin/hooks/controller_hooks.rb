@@ -23,11 +23,11 @@ module SkyRedminePlugin
           # Atualiza a tag da tarefa com base no status
           verificar_atualizar_tag(issue, new_status_name)
 
-          # Atualizar o fluxo das tarefas
-          verificar_atualizar_fluxo_tarefas(issue, new_status_name)
-
           # Fechar a tarefa de testes
           verificar_fechar_tarefa_testes(issue, new_status_name)
+
+          # Atualizar o fluxo das tarefas
+          verificar_atualizar_fluxo_tarefas(issue, new_status_name)
         end
       end
 
