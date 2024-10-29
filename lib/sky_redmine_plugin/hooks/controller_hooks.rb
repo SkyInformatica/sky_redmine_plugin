@@ -5,12 +5,21 @@ module SkyRedminePlugin
 
       def controller_issues_edit_after_save(context = {})
         issue = context[:issue]
+        journal = context[:journal]
 
-        # Atualiza a data de início, se necessário
-        atualizar_data_inicio(issue)
+        # Verifica se o status foi alterado
+        if journal && journal.details.any? { |detail| detail.prop_key == "status_id" }
+          # Obtém os IDs dos status antigo e novo
+          status_detail = journal.details.find { |detail| detail.prop_key == "status_id" }
 
-        # Atualiza a tag da tarefa com base no status
-        atualizar_tag(issue)
+          new_status_name = IssueStatus.find_by(id: status_detail.value)
+
+          # Chama a atualização da data de início se necessário
+          atualizar_data_inicio(issue, new_status_name)
+
+          # Atualiza a tag da tarefa com base no status
+          atualizar_tag(issue, new_status_name)
+        end
       end
 
       def controller_additionals_change_status_after_save(context = {})
@@ -20,17 +29,18 @@ module SkyRedminePlugin
       private
 
       # Método para atualizar a data de início da tarefa
-      def atualizar_data_inicio(issue)
-        if issue.status.name == SkyRedminePlugin::Constants::IssueStatus::EM_ANDAMENTO && issue.start_date.nil?
+      def atualizar_data_inicio(issue, new_status_name)
+        # Verifica se o novo status é 'Em Andamento' e a data de início está vazia
+        if new_status_name == SkyRedminePlugin::Constants::IssueStatus::EM_ANDAMENTO && issue.start_date.nil?
           issue.start_date = Date.today
           issue.save(validate: false)
         end
       end
 
       # Método para atualizar a tag da tarefa com base no status
-      def atualizar_tag(issue)
-        # Verifica se o status é 'Teste NOK' ou 'Teste OK'
-        nova_tag_sufixo = case issue.status.name
+      def atualizar_tag(issue, new_status_name)
+        # Verifica se o novo status é 'Teste NOK' ou 'Teste OK'
+        nova_tag_sufixo = case new_status_name
           when SkyRedminePlugin::Constants::IssueStatus::TESTE_NOK
             SkyRedminePlugin::Constants::Tags::REVER
           when SkyRedminePlugin::Constants::IssueStatus::TESTE_OK
@@ -58,9 +68,7 @@ module SkyRedminePlugin
         end
 
         # Se não foi encontrado um prefixo
-        if prefixo.nil?
-          return # Neste caso, não adicionaremos uma nova tag
-        end
+        return if prefixo.nil?
 
         # Constrói a nova tag com o mesmo prefixo e o novo sufixo
         nova_tag = "#{prefixo}#{nova_tag_sufixo}"
