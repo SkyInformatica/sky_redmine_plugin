@@ -122,23 +122,7 @@ class EncaminharQsController < ApplicationController
       end
     end
 
-    # definir tag _TESTAR
-    sistema_value = ""
-    tag_name = ""
-    # Adiciona a nova tag, se for sistema LIVROCAIXA usa o campo sistema, senao o nome da equipe do projeto
-    if sistema_custom_field = IssueCustomField.find_by(name: SkyRedminePlugin::Constants::CustomFields::SISTEMA)
-      sistema_value = new_issue.custom_field_value(sistema_custom_field.id)
-      if sistema_value
-        sistema_value = sistema_value.upcase.gsub(" ", "")
-        tag_name = sistema_value + "_TESTAR"
-      end
-    end
-    if (sistema_value != "LIVROCAIXA")
-      tag_name = remover_acentos(@issue.project.name.sub("Equipe ", "")).upcase + "_TESTAR"
-    end
-    if tag_name
-      new_issue.tag_list.add(tag_name)
-    end
+    new_issue.tags << Tag.find_or_create_by(name: obter_nome_tag(@issue, SkyRedminePlugin::Constants::Tags::TESTAR))
 
     sprint = Version.find_by(name: SkyRedminePlugin::Constants::Sprints::TAREFAS_PARA_TESTAR, project: qs_project)
     if sprint.nil?

@@ -1,6 +1,8 @@
 module SkyRedminePlugin
   module Hooks
     class ControllerHooks < Redmine::Hook::Listener
+      include CriarTarefasHelper
+
       def controller_issues_edit_after_save(context = {})
         issue = context[:issue]
 
@@ -32,30 +34,23 @@ module SkyRedminePlugin
         # Verifica se o status é 'Teste NOK' ou 'Teste OK'
         nova_tag_sufixo = case status
           when SkyRedminePlugin::Constants::IssueStatus::TESTE_NOK
-            "_REVER"
+            SkyRedminePlugin::Constants::Tags::REVER
           when SkyRedminePlugin::Constants::IssueStatus::TESTE_OK
-            "_PRONTO"
+            SkyRedminePlugin::Constants::Tags::PRONTO
           else
             return # Se não for nenhum dos status, não faz nada
           end
 
-        # Obtém as tags atuais da tarefa
+        nova_tag = obter_nome_tag(issue, nova_tag_sufixo)
+
         tags = issue.tags.map(&:name)
+        tag_atual = tags.find { |tag| tag.end_with?(SkyRedminePlugin::Constants::Tags::TESTAR) }
 
-        # Encontra a tag que termina com '_TESTAR'
-        tag_atual = tags.find { |tag| tag.end_with?("_TESTAR") }
+        if tag_atual
+          issue.tags.delete(Tag.find_by(name: tag_atual))
+        end
 
-        # Se não encontrar a tag, não faz nada
-        return unless tag_atual
-
-        # Substitui o sufixo '_TESTAR' pela nova tag
-        nova_tag = tag_atual.sub("_TESTAR", nova_tag_sufixo)
-
-        # Remove a tag antiga e adiciona a nova
-        issue.tags.delete(Tag.find_by(name: tag_atual))
         issue.tags << Tag.find_or_create_by(name: nova_tag)
-
-        # Salva a tarefa sem validações
         issue.save(validate: false)
       end
     end

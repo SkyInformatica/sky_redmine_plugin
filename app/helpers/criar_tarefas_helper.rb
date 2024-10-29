@@ -6,7 +6,6 @@ module CriarTarefasHelper
   end
 
   def definir_titulo_tarefa_incrementando_numero_copia(titulo)
-
     # Modificando o título da nova tarefa para adicionar o numero da tarefa
     novo_titulo = titulo
     if titulo.match?(/\(\d+\)$/)
@@ -60,5 +59,29 @@ module CriarTarefasHelper
     end
 
     str
+  end
+
+  def obter_nome_tag(issue, tag)
+    # Lógica para definir o prefixo da nova tag
+    sistema_value = ""
+    tag_prefix = ""
+
+    # Obtém o campo personalizado 'SISTEMA'
+    if sistema_custom_field = IssueCustomField.find_by(name: SkyRedminePlugin::Constants::CustomFields::SISTEMA)
+      sistema_value = issue.custom_field_value(sistema_custom_field.id)
+      if sistema_value.present?
+        sistema_value = sistema_value.upcase.gsub(" ", "")
+        tag_prefix = sistema_value
+      end
+    end
+
+    # Se o sistema não for 'LIVROCAIXA', usa o nome da equipe do projeto
+    if sistema_value != "LIVROCAIXA"
+      tag_prefix = remover_acentos(issue.project.name.sub("Equipe ", "")).upcase
+    end
+
+    # Monta o nome da nova tag
+    nova_tag = "#{tag_prefix}#{tag}"
+    nova_tag
   end
 end

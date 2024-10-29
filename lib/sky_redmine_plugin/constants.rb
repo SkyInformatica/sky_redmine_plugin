@@ -45,5 +45,11 @@ module SkyRedminePlugin
       TESTE_NO_DESENVOLVIMENTO = "Teste no desenvolvimento"
       RESULTADO_TESTE_NOK = "Resultado Teste NOK"
     end
+
+    module Tags
+      TESTAR = "_TESTAR"
+      PRONTO = "_PRONTO"
+      REVER = "_REVER"
+    end
   end
 end
