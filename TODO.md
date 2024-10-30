@@ -1,0 +1,2 @@
+- continua na proxima sprint na tarefa de teste está removendo a tag na tarefa nova da continuidade
+- evento after_save na funcao de fechar a tarefa do QS quando fecha a tarefa devel falta fazer a localizacao da copia até a ultima tarefa porque pode ter continuna na proxima sprint na tarefa do QS

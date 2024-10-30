@@ -108,6 +108,7 @@ class EncaminharQsController < ApplicationController
     tempo_gasto_total = obter_tempo_gasto
     new_issue = @issue.copy(project: qs_project)
     limpar_campos_nova_tarefa(new_issue, CriarTarefasHelper::TipoCriarNovaTarefa::ENCAMINHAR_QS)
+    new_issue.tag_list = []
     new_issue.estimated_hours = [1, (tempo_gasto_total * 0.34).ceil].max
 
     sufixo_tag = SkyRedminePlugin::Constants::Tags::TESTAR

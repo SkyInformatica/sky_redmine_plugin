@@ -25,7 +25,6 @@ module CriarTarefasHelper
     issue.assigned_to_id = nil
     issue.start_date = nil
     issue.done_ratio = 0
-    issue.tag_list = []
 
     if (tipo == TipoCriarNovaTarefa::ENCAMINHAR_QS)
       ["Tarefa não planejada IMEDIATA", "Tarefa antecipada na sprint", "Teste QS"].each do |field_name|

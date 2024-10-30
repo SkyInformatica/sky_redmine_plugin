@@ -149,8 +149,9 @@ class RetornoTestesController < ApplicationController
   def criar_nova_tarefa(project_id)
     Rails.logger.info ">>> criar_nova_tarefa"
     new_issue = @issue.copy(project_id: project_id)
-    new_issue.tracker = Tracker.find_by_name(SkyRedminePlugin::Constants::Trackers::RETORNO_TESTES)
     limpar_campos_nova_tarefa(new_issue, CriarTarefasHelper::TipoCriarNovaTarefa::RETORNO_TESTES)
+    new_issue.tracker = Tracker.find_by_name(SkyRedminePlugin::Constants::Trackers::RETORNO_TESTES)
+    new_issue.tag_list = []
     new_issue.estimated_hours = 1
 
     # Concatenando o valor do campo "Resultado Teste NOK" à descrição
