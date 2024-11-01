@@ -1,13 +1,19 @@
 module FluxoTarefasHelper
-  def atualizar_fluxo_tarefas(tarefa_atual)
+  def atualizar_fluxo_tarefas(issue)
     # Busca todas as tarefas relacionadas em ordem
-    tarefas_relacionadas = buscar_tarefas_relacionadas(tarefa_atual)
+    tarefas_relacionadas = obter_lista_tarefas_relacionadas(issue)
 
     # Gera o texto do fluxo para todas as tarefas
     texto_fluxo = gerar_texto_fluxo(tarefas_relacionadas)
 
     # Atualiza o campo personalizado em todas as tarefas
     atualizar_campo_fluxo(tarefas_relacionadas, texto_fluxo)
+  end
+
+  def render_fluxo_tarefas_html(issue)
+    tarefas_relacionadas = obter_lista_tarefas_relacionadas(tarefa_atual)
+    texto_fluxo = gerar_texto_fluxo_html(tarefas_relacionadas)
+    texto_fluxo.html_safe  # Permite renderizar HTML seguro na visualização
   end
 
   def localizar_tarefa_origem_desenvolvimento(issue)
@@ -82,7 +88,7 @@ module FluxoTarefasHelper
 
   private
 
-  def buscar_tarefas_relacionadas(tarefa)
+  def obter_lista_tarefas_relacionadas(tarefa)
     tarefas = []
     visitadas = Set.new
     tarefa_atual = tarefa
@@ -138,7 +144,7 @@ module FluxoTarefasHelper
       projeto_nome = tarefa.project.name
 
       # Determinar a seção da tarefa
-      secao = if ["Notarial - QS", "Registral - QS"].include?(projeto_nome)
+      secao = if SkyRedminePlugin::Constants::Projects::QS_PROJECTS.include?(projeto_nome)
           "QS"
         else
           "Desenvolvimento"
@@ -184,6 +190,81 @@ module FluxoTarefasHelper
     linhas.shift if linhas.first == ""
 
     linhas.join("\n")
+  end
+
+  def gerar_texto_fluxo_html(tarefas)
+    secoes = []
+    secao_atual = nil
+    secao_tarefas = []
+    numero_sequencial = 1
+
+    tarefas.each do |tarefa|
+      projeto_nome = tarefa.project.name
+
+      # Determinar a seção da tarefa
+      secao = if SkyRedminePlugin::Constants::Projects::QS_PROJECTS.include?(projeto_nome)
+          "QS"
+        else
+          "Desenvolvimento"
+        end
+
+      if secao != secao_atual
+        # Salvar a seção anterior
+        unless secao_atual.nil?
+          secoes << { nome: secao_atual, tarefas: secao_tarefas }
+        end
+        # Iniciar nova seção
+        secao_atual = secao
+        secao_tarefas = []
+      end
+
+      # Adicionar a tarefa à seção atual
+      secao_tarefas << tarefa
+    end
+
+    # Adicionar a última seção
+    secoes << { nome: secao_atual, tarefas: secao_tarefas } unless secao_tarefas.empty?
+
+    # Gerar o texto final
+    linhas = []
+    secoes.each do |secao|
+      # Calcular tempo total gasto na seção
+      total_tempo = secao[:tarefas].sum { |t| t.spent_hours.to_f }
+      total_tempo_formatado = format("%.2f", total_tempo)
+
+      # Adicionar cabeçalho da seção com tempo total
+      linhas << "<h3>#{secao[:nome]} (Tempo gasto total: #{total_tempo_formatado}h)</h3>"
+      linhas << "<table>"
+      linhas << "<tr><th>Nº</th><th>Projeto</th><th>ID</th><th>Status</th><th>Data de Início</th><th>Versão</th><th>Horas Gastas</th></tr>"
+
+      # Adicionar as tarefas
+      secao[:tarefas].each do |tarefa|
+        linha = formatar_linha_tarefa_html(tarefa, numero_sequencial)
+        linhas << linha
+        numero_sequencial += 1
+      end
+
+      linhas << "</table>"
+    end
+
+    linhas.join("\n")
+  end
+
+  def formatar_linha_tarefa_html(tarefa, numero_sequencial)
+    horas_gastas = format("%.2f", tarefa.spent_hours.to_f)
+    data_inicio = tarefa.start_date || "-"
+    version_name = tarefa.fixed_version ? tarefa.fixed_version.name : "-"
+    link_tarefa = view_context.link_to("##{tarefa.id}", issue_path(tarefa))
+
+    "<tr>  
+      <td>#{numero_sequencial}</td>  
+      <td>#{tarefa.project.name}</td>  
+      <td>#{link_tarefa}</td>  
+      <td>#{tarefa.status.name}</td>  
+      <td>#{data_inicio}</td>  
+      <td>#{version_name}</td>  
+      <td>#{horas_gastas}h</td>  
+    </tr>"
   end
 
   def atualizar_campo_fluxo(tarefas, texto_fluxo)
