@@ -170,8 +170,7 @@ module FluxoTarefasHelper
                 border: 1px solid #dddddd;  
                 text-align: left;  
                 padding: 4px;  
-                word-wrap: break-word; /* Quebra palavras longas */
-                font-size: 13px; /* Diminuir o tamanho da fonte em um ponto */ 
+                word-wrap: break-word; /* Quebra palavras longas */                
               }        
                 .tabela-fluxo-tarefas th:nth-child(1),  
                 .tabela-fluxo-tarefas td:nth-child(1) {  
