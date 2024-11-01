@@ -235,7 +235,7 @@ module FluxoTarefasHelper
 
       # Adicionar cabeçalho da seção com tempo total
       linhas << "<b>#{secao[:nome]} (Tempo gasto total: #{total_tempo_formatado}h)</b>"
-      linhas << "<table>"
+      linhas << "<table border='1' cellspacing='0' cellpadding='5'>"
       linhas << "<tr><th>Nº</th><th>Projeto</th><th>ID</th><th>Status</th><th>Data de Início</th><th>Versão</th><th>Horas Gastas</th></tr>"
 
       # Adicionar as tarefas
@@ -255,7 +255,7 @@ module FluxoTarefasHelper
     horas_gastas = format("%.2f", tarefa.spent_hours.to_f)
     data_inicio = tarefa.start_date || "-"
     version_name = tarefa.fixed_version ? tarefa.fixed_version.name : "-"
-    link_tarefa = view_context.link_to("##{tarefa.id}", view_context.issue_path(tarefa))
+    link_tarefa = link_to("##{tarefa.id}", issue_path(tarefa))
 
     "<tr>  
       <td>#{numero_sequencial}</td>  
