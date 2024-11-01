@@ -241,7 +241,7 @@ module FluxoTarefasHelper
               .tabela-fluxo-tarefas td {  
                 border: 1px solid #dddddd;  
                 text-align: left;  
-                padding: 8px;  
+                padding: 4px;  
               }                
             </style>"
     secoes.each do |secao|
