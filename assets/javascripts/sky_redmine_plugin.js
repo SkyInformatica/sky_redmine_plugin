@@ -20,10 +20,10 @@ document.addEventListener('DOMContentLoaded', function () {
             event.preventDefault();
             if (relationsDiv.style.display === 'none') {
                 relationsDiv.style.display = 'block';
-                toggleLink.innerText = 'Ocultar Relações';
+                toggleLink.innerText = 'Ocultar tarefas relacionadas';
             } else {
                 relationsDiv.style.display = 'none';
-                toggleLink.innerText = 'Mostrar Relações';
+                toggleLink.innerText = 'Exibir tarefas relacionadas';
             }
         });
     }
