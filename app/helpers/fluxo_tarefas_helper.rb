@@ -230,6 +230,7 @@ module FluxoTarefasHelper
 
     # Gerar o texto final
     linhas = []
+    linhas << "<div class='description'>"
     linhas << "<hr>"
     linhas << "<b>Fluxo das tarefas<br></b>"
     linhas << "<style>  
@@ -294,6 +295,7 @@ module FluxoTarefasHelper
 
       linhas << "</table>"
     end
+    linhas << "</div>"
 
     linhas.join("\n")
   end
