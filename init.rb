@@ -12,3 +12,12 @@ Redmine::Plugin.register :sky_redmine_plugin do
 end
 
 ActionView::Base.send :include, FluxoTarefasHelper
+
+Redmine::Plugin.register :sky_redmine_plugin do
+  # ... outras configurações do plugin ...
+  assets_directory = File.join(__dir__, "assets")
+  directories = [assets_directory]
+  directories.each do |dir|
+    Redmine::Plugin::registered_plugins[:sky_redmine_plugin].assets_paths << dir
+  end
+end

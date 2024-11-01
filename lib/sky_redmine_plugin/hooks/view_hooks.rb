@@ -5,6 +5,10 @@ module SkyRedminePlugin
       render_on :view_issues_show_details_bottom, partial: "issues/criar_tarefas"
       render_on :view_issues_context_menu_start, partial: "context_menu/criar_tarefas"
       render_on :view_issues_show_description_bottom, partial: "issues/fluxo_tarefas"
+
+      def view_layouts_base_html_head(context = {})
+        javascript_include_tag("sky_redmine_plugin", plugin: "sky_redmine_plugin")
+      end
     end
   end
 end
