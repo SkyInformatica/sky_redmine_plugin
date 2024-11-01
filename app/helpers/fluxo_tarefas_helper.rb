@@ -258,7 +258,7 @@ module FluxoTarefasHelper
 
                 .tabela-fluxo-tarefas th:nth-child(3),  
                 .tabela-fluxo-tarefas td:nth-child(3) {  
-                    width: 12; 
+                    width: 13%; 
                 }  
 
                 .tabela-fluxo-tarefas th:nth-child(4),  
@@ -273,7 +273,7 @@ module FluxoTarefasHelper
 
                 .tabela-fluxo-tarefas th:nth-child(6),  
                 .tabela-fluxo-tarefas td:nth-child(6) {  
-                    width: 5%; 
+                    width: 4%; 
                 }  
             </style>"
     secoes.each do |secao|
