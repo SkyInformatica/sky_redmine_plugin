@@ -1,4 +1,7 @@
 module FluxoTarefasHelper
+  include ApplicationHelper
+  include IssuesHelper
+
   def atualizar_fluxo_tarefas(issue)
     # Busca todas as tarefas relacionadas em ordem
     tarefas_relacionadas = obter_lista_tarefas_relacionadas(issue)
