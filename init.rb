@@ -1,9 +1,9 @@
 require "redmine"
 
-require_dependency "sky_redmine_plugin/hooks/view_hooks"
-require_dependency "sky_redmine_plugin/hooks/controller_hooks"
+require_dependency "lib/hooks/view_hooks"
+require_dependency "lib/hooks/controller_hooks"
 
-require_dependency "sky_redmine_plugin/helpers/fluxo_tarefas_helper"
+require_dependency "app/helpers/fluxo_tarefas_helper"
 
 Redmine::Plugin.register :sky_redmine_plugin do
   name "Sky Redmine plugin"
