@@ -236,7 +236,7 @@ module FluxoTarefasHelper
               .tabela-fluxo-tarefas {  
                 border-collapse: collapse;  
                 table-layout: auto;
-                width: 100%;  
+                margin: 0 auto; /* Centraliza a tabela */                 
               }  
               .tabela-fluxo-tarefas th,  
               .tabela-fluxo-tarefas td {  
@@ -254,7 +254,6 @@ module FluxoTarefasHelper
       # Adicionar cabeçalho da seção com tempo total
       linhas << "<br><b>#{secao[:nome]}</b> (Tempo gasto total: #{total_tempo_formatado}h)"
       linhas << "<table class='tabela-fluxo-tarefas'>"
-      #linhas << "<tr><th>Nº</th><th>Projeto</th><th>ID</th><th>Status</th><th>Data de Início</th><th>Versão</th><th>Horas Gastas</th></tr>"
 
       # Adicionar as tarefas
       secao[:tarefas].each do |tarefa|
@@ -271,7 +270,7 @@ module FluxoTarefasHelper
 
   def formatar_linha_tarefa_html(tarefa, numero_sequencial, tarefa_atual_id)
     horas_gastas = format("%.2f", tarefa.spent_hours.to_f)
-    data_inicio = tarefa.due_date || "<previsao>"
+    data_previsao = tarefa.due_date || "<previsao>"
     version_name = tarefa.fixed_version ? link_to(tarefa.fixed_version.name, version_path(tarefa.fixed_version)) : "-"
     link_tarefa = link_to_issue(tarefa)
 
@@ -280,10 +279,10 @@ module FluxoTarefasHelper
     end
 
     "<tr>        
-      <td>#{numero_sequencial} #{tarefa.project.name}</td>  
-      <td>#{link_tarefa}</td>  
+      <td>#{numero_sequencial} #{tarefa.project.name} - #{link_tarefa}</td>        
       <td>#{tarefa.status.name}</td>  
-      <td>#{data_inicio}</td>  
+      <td>#{tarefa.assigned_to.name}</td>
+      <td>#{data_previsao}</td>  
       <td>#{version_name}</td>  
       <td>#{horas_gastas}h</td>  
     </tr>"
