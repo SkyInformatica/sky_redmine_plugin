@@ -254,7 +254,8 @@ module FluxoTarefasHelper
     horas_gastas = format("%.2f", tarefa.spent_hours.to_f)
     data_inicio = tarefa.start_date || "-"
     version_name = tarefa.fixed_version ? tarefa.fixed_version.name : "-"
-    link_tarefa = view_context.link_to("##{tarefa.id}", issue_path(tarefa))
+    #link_tarefa = view_context.link_to("##{tarefa.id}", view_context.issue_path(tarefa))
+    link_tarefa = "##{tarefa.id}"
 
     "<tr>  
       <td>#{numero_sequencial}</td>  
