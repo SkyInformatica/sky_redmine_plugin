@@ -253,12 +253,12 @@ module FluxoTarefasHelper
 
                 .tabela-fluxo-tarefas th:nth-child(2),  
                 .tabela-fluxo-tarefas td:nth-child(2) {  
-                    width: 18%; 
+                    width: 15%; 
                 }  
 
                 .tabela-fluxo-tarefas th:nth-child(3),  
                 .tabela-fluxo-tarefas td:nth-child(3) {  
-                    width: 10%; 
+                    width: 12; 
                 }  
 
                 .tabela-fluxo-tarefas th:nth-child(4),  
@@ -268,12 +268,12 @@ module FluxoTarefasHelper
 
                 .tabela-fluxo-tarefas th:nth-child(5),  
                 .tabela-fluxo-tarefas td:nth-child(5) {  
-                    width: 14%; 
+                    width: 13%; 
                 }  
 
                 .tabela-fluxo-tarefas th:nth-child(6),  
                 .tabela-fluxo-tarefas td:nth-child(6) {  
-                    width: 3%; 
+                    width: 5%; 
                 }  
             </style>"
     secoes.each do |secao|
