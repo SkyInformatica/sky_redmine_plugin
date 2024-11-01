@@ -11,7 +11,7 @@ module FluxoTarefasHelper
   end
 
   def render_fluxo_tarefas_html(issue)
-    tarefas_relacionadas = obter_lista_tarefas_relacionadas(tarefa_atual)
+    tarefas_relacionadas = obter_lista_tarefas_relacionadas(issue)
     texto_fluxo = gerar_texto_fluxo_html(tarefas_relacionadas)
     texto_fluxo.html_safe  # Permite renderizar HTML seguro na visualização
   end
