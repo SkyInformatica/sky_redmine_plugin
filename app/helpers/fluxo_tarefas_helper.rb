@@ -4,13 +4,13 @@ module FluxoTarefasHelper
 
   def atualizar_fluxo_tarefas(issue)
     # Busca todas as tarefas relacionadas em ordem
-    tarefas_relacionadas = obter_lista_tarefas_relacionadas(issue)
+    #tarefas_relacionadas = obter_lista_tarefas_relacionadas(issue)
 
     # Gera o texto do fluxo para todas as tarefas
-    texto_fluxo = gerar_texto_fluxo(tarefas_relacionadas)
+    #texto_fluxo = gerar_texto_fluxo(tarefas_relacionadas)
 
     # Atualiza o campo personalizado em todas as tarefas
-    atualizar_campo_fluxo(tarefas_relacionadas, texto_fluxo)
+    #atualizar_campo_fluxo(tarefas_relacionadas, texto_fluxo)
   end
 
   def render_fluxo_tarefas_html(issue)
