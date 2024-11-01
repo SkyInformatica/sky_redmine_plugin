@@ -258,7 +258,7 @@ module FluxoTarefasHelper
     link_tarefa = link_to("#{tarefa.tracker.name} ##{tarefa.id} - #{tarefa.subject}", issue_path(tarefa))
 
     if (tarefa.id == tarefa_atual_id)
-      link_tarefa = "<b>#{link_tarfa}</b>"
+      link_tarefa = "<b>#{link_tarefa}</b>"
     end
 
     "<tr>        
