@@ -242,10 +242,7 @@ module FluxoTarefasHelper
                 border: 1px solid #dddddd;  
                 text-align: left;  
                 padding: 8px;  
-              }  
-              .tabela-fluxo-tarefas tr:nth-child(even) {  
-                background-color: #f9f9f9;  
-              }  
+              }                
             </style>"
     secoes.each do |secao|
       # Calcular tempo total gasto na seção
