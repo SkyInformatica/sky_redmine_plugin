@@ -234,7 +234,7 @@ module FluxoTarefasHelper
       total_tempo_formatado = format("%.2f", total_tempo)
 
       # Adicionar cabeçalho da seção com tempo total
-      linhas << "<b>#{secao[:nome]} (Tempo gasto total: #{total_tempo_formatado}h)</b>"
+      linhas << "<br><b>#{secao[:nome]}</b> (Tempo gasto total: #{total_tempo_formatado}h)"
       linhas << "<table border='1' cellspacing='0' cellpadding='5'>"
       #linhas << "<tr><th>Nº</th><th>Projeto</th><th>ID</th><th>Status</th><th>Data de Início</th><th>Versão</th><th>Horas Gastas</th></tr>"
 
@@ -253,7 +253,7 @@ module FluxoTarefasHelper
 
   def formatar_linha_tarefa_html(tarefa, numero_sequencial)
     horas_gastas = format("%.2f", tarefa.spent_hours.to_f)
-    data_inicio = tarefa.start_date || "-"
+    data_inicio = tarefa.start_date || "<dt inicio>"
     version_name = tarefa.fixed_version ? link_to(tarefa.fixed_version.name, version_path(tarefa.fixed_version)) : "-"
     link_tarefa = link_to("#{tarefa.tracker.name} ##{tarefa.id} - #{tarefa.subject}", issue_path(tarefa))
 
