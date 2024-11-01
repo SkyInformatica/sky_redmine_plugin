@@ -230,7 +230,23 @@ module FluxoTarefasHelper
 
     # Gerar o texto final
     linhas = []
+    linhas << "<hr>"
     linhas << "<b>Fluxo das tarefas<br></b>"
+    linhas << "<style>  
+              .tabela-fluxo-tarefas {  
+                border-collapse: collapse;  
+                width: 100%;  
+              }  
+              .tabela-fluxo-tarefas th,  
+              .tabela-fluxo-tarefas td {  
+                border: 1px solid #dddddd;  
+                text-align: left;  
+                padding: 8px;  
+              }  
+              .tabela-fluxo-tarefas tr:nth-child(even) {  
+                background-color: #f9f9f9;  
+              }  
+            </style>"
     secoes.each do |secao|
       # Calcular tempo total gasto na seção
       total_tempo = secao[:tarefas].sum { |t| t.spent_hours.to_f }
@@ -238,7 +254,7 @@ module FluxoTarefasHelper
 
       # Adicionar cabeçalho da seção com tempo total
       linhas << "<br><b>#{secao[:nome]}</b> (Tempo gasto total: #{total_tempo_formatado}h)"
-      linhas << "<table border='1' cellpadding='25'>"
+      linhas << "<table class='tabela-fluxo-tarefas'>"
       #linhas << "<tr><th>Nº</th><th>Projeto</th><th>ID</th><th>Status</th><th>Data de Início</th><th>Versão</th><th>Horas Gastas</th></tr>"
 
       # Adicionar as tarefas
