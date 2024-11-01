@@ -232,7 +232,7 @@ module FluxoTarefasHelper
     linhas = []
     linhas << "<div class='description'>"
     linhas << "<hr>"
-    linhas << "<b>Fluxo das tarefas<br></b>"
+    linhas << "<p><strong>Fluxo das tarefas<strong></b></p>"
     linhas << "<style>  
               .tabela-fluxo-tarefas {  
                 border-collapse: collapse;  
