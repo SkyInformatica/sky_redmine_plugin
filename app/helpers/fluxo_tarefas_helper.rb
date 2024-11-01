@@ -310,7 +310,7 @@ module FluxoTarefasHelper
     link_tarefa = link_to_issue(tarefa)
 
     if (tarefa.id == tarefa_atual_id)
-      link_tarefa = "<b>#{link_tarefa}</b>"
+      link_tarefa = "<strong>#{link_tarefa}</strong>"
     end
 
     "<tr>        
