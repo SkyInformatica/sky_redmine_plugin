@@ -253,7 +253,7 @@ module FluxoTarefasHelper
 
   def formatar_linha_tarefa_html(tarefa, numero_sequencial, tarefa_atual_id)
     horas_gastas = format("%.2f", tarefa.spent_hours.to_f)
-    data_inicio = tarefa.start_date || "dt inicio"
+    data_inicio = tarefa.due_date || "<previsao>"
     version_name = tarefa.fixed_version ? link_to(tarefa.fixed_version.name, version_path(tarefa.fixed_version)) : "-"
     link_tarefa = "#{link_to("#{tarefa.tracker.name} ##{tarefa.id}", issue_path(tarefa))} - #{tarefa.subject}"
 
