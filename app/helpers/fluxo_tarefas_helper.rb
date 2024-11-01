@@ -238,7 +238,7 @@ module FluxoTarefasHelper
 
       # Adicionar cabeçalho da seção com tempo total
       linhas << "<br><b>#{secao[:nome]}</b> (Tempo gasto total: #{total_tempo_formatado}h)"
-      linhas << "<table border='1' cellspacing='5' cellpadding='5'>"
+      linhas << "<table border='1' cellspacing='25' cellpadding='25'>"
       #linhas << "<tr><th>Nº</th><th>Projeto</th><th>ID</th><th>Status</th><th>Data de Início</th><th>Versão</th><th>Horas Gastas</th></tr>"
 
       # Adicionar as tarefas
