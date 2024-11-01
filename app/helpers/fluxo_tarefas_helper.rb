@@ -258,7 +258,7 @@ module FluxoTarefasHelper
     horas_gastas = format("%.2f", tarefa.spent_hours.to_f)
     data_inicio = tarefa.due_date || "<previsao>"
     version_name = tarefa.fixed_version ? link_to(tarefa.fixed_version.name, version_path(tarefa.fixed_version)) : "-"
-    link_tarefa = render_issue_link(tarefa)
+    link_tarefa = link_to_issue(tarefa)
 
     if (tarefa.id == tarefa_atual_id)
       link_tarefa = "<b>#{link_tarefa}</b>"
