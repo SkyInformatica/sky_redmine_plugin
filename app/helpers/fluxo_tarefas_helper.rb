@@ -235,8 +235,9 @@ module FluxoTarefasHelper
     linhas << "<style>  
               .tabela-fluxo-tarefas {  
                 border-collapse: collapse;  
-                table-layout: auto;
-                margin: 0 auto; /* Centraliza a tabela */                 
+                table-layout: fixed; /* Definição importante para controlar as larguras */
+                width: 100%; /* Ocupará toda a largura disponível */  
+                margin: 0 auto; /* Centraliza a tabela */                  
               }  
               .tabela-fluxo-tarefas th,  
               .tabela-fluxo-tarefas td {  
@@ -244,7 +245,36 @@ module FluxoTarefasHelper
                 text-align: left;  
                 padding: 4px;  
                 word-wrap: break-word; /* Quebra palavras longas */
-              }                
+              }        
+                .tabela-fluxo-tarefas th:nth-child(1),  
+                .tabela-fluxo-tarefas td:nth-child(1) {  
+                    width: 30%; 
+                }  
+
+                .tabela-fluxo-tarefas th:nth-child(2),  
+                .tabela-fluxo-tarefas td:nth-child(2) {  
+                    width: 14%; 
+                }  
+
+                .tabela-fluxo-tarefas th:nth-child(3),  
+                .tabela-fluxo-tarefas td:nth-child(3) {  
+                    width: 14%; 
+                }  
+
+                .tabela-fluxo-tarefas th:nth-child(4),  
+                .tabela-fluxo-tarefas td:nth-child(4) {  
+                    width: 14%; 
+                }  
+
+                .tabela-fluxo-tarefas th:nth-child(5),  
+                .tabela-fluxo-tarefas td:nth-child(5) {  
+                    width: 14%; 
+                }  
+
+                .tabela-fluxo-tarefas th:nth-child(6),  
+                .tabela-fluxo-tarefas td:nth-child(6) {  
+                    width: 14%; 
+                }  
             </style>"
     secoes.each do |secao|
       # Calcular tempo total gasto na seção
