@@ -1,5 +1,10 @@
 require "redmine"
 
+require_dependency "sky_redmine_plugin/hooks/view_hooks"
+require_dependency "sky_redmine_plugin/hooks/controller_hooks"
+
+require_dependency "sky_redmine_plugin/helpers/fluxo_tarefas_helper"
+
 Redmine::Plugin.register :sky_redmine_plugin do
   name "Sky Redmine plugin"
   author "Maglan Diemer"
@@ -9,5 +14,4 @@ Redmine::Plugin.register :sky_redmine_plugin do
   version "2024.11.01.1"
 end
 
-require File.dirname(__FILE__) + "/lib/sky_redmine_plugin"
-require File.dirname(__FILE__) + "/app/helpers"
+ActionView::Base.send :include, FluxoTarefasHelper
