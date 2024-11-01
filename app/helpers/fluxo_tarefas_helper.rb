@@ -235,6 +235,7 @@ module FluxoTarefasHelper
     linhas << "<style>  
               .tabela-fluxo-tarefas {  
                 border-collapse: collapse;  
+                table-layout: auto;
                 width: 100%;  
               }  
               .tabela-fluxo-tarefas th,  
@@ -242,6 +243,7 @@ module FluxoTarefasHelper
                 border: 1px solid #dddddd;  
                 text-align: left;  
                 padding: 4px;  
+                word-wrap: break-word; /* Quebra palavras longas */
               }                
             </style>"
     secoes.each do |secao|
