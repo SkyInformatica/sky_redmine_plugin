@@ -302,7 +302,7 @@ module FluxoTarefasHelper
     horas_gastas = format("%.2f", tarefa.spent_hours.to_f)
     data_previsao = tarefa.due_date || "<previsao>"
     #assigned_to_name = tarefa.assigned_to_id.present? ? User.find(tarefa.assigned_to_id).name : "Não atribuído"
-    assigned_to_name = task.assigned_to_id.present? ? link_to(User.find(task.assigned_to_id).name, user_path(task.assigned_to_id)) : "Não atribuído"
+    assigned_to_name = tarefa.assigned_to_id.present? ? link_to(User.find(tarefa.assigned_to_id).name, user_path(tarefa.assigned_to_id)) : "Não atribuído"
     version_name = tarefa.fixed_version ? link_to(tarefa.fixed_version.name, version_path(tarefa.fixed_version)) : "-"
     link_tarefa = link_to_issue(tarefa)
 
