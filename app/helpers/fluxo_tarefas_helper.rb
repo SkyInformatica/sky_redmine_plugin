@@ -263,12 +263,12 @@ module FluxoTarefasHelper
 
                 .tabela-fluxo-tarefas th:nth-child(4),  
                 .tabela-fluxo-tarefas td:nth-child(4) {  
-                    width: 7%; 
+                    width: 6%; 
                 }  
 
                 .tabela-fluxo-tarefas th:nth-child(5),  
                 .tabela-fluxo-tarefas td:nth-child(5) {  
-                    width: 12%; 
+                    width: 13%; 
                 }  
 
                 .tabela-fluxo-tarefas th:nth-child(6),  
