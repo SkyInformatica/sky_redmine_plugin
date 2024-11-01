@@ -12,7 +12,7 @@ module FluxoTarefasHelper
 
   def render_fluxo_tarefas_html(issue)
     tarefas_relacionadas = obter_lista_tarefas_relacionadas(issue)
-    texto_fluxo = gerar_texto_fluxo_html(tarefas_relacionadas)
+    texto_fluxo = gerar_texto_fluxo_html(tarefas_relacionadas, issue.id)
     texto_fluxo.html_safe  # Permite renderizar HTML seguro na visualização
   end
 
@@ -192,7 +192,7 @@ module FluxoTarefasHelper
     linhas.join("\n")
   end
 
-  def gerar_texto_fluxo_html(tarefas)
+  def gerar_texto_fluxo_html(tarefas, tarefa_atual_id)
     secoes = []
     secao_atual = nil
     secao_tarefas = []
@@ -240,7 +240,7 @@ module FluxoTarefasHelper
 
       # Adicionar as tarefas
       secao[:tarefas].each do |tarefa|
-        linha = formatar_linha_tarefa_html(tarefa, numero_sequencial)
+        linha = formatar_linha_tarefa_html(tarefa, numero_sequencial, tarefa_atual_id)
         linhas << linha
         numero_sequencial += 1
       end
@@ -251,11 +251,15 @@ module FluxoTarefasHelper
     linhas.join("\n")
   end
 
-  def formatar_linha_tarefa_html(tarefa, numero_sequencial)
+  def formatar_linha_tarefa_html(tarefa, numero_sequencial, tarefa_atual_id)
     horas_gastas = format("%.2f", tarefa.spent_hours.to_f)
     data_inicio = tarefa.start_date || "<dt inicio>"
     version_name = tarefa.fixed_version ? link_to(tarefa.fixed_version.name, version_path(tarefa.fixed_version)) : "-"
     link_tarefa = link_to("#{tarefa.tracker.name} ##{tarefa.id} - #{tarefa.subject}", issue_path(tarefa))
+
+    if (tarefa.id == tarefa_atual_id)
+      link_tarefa = "<b>#{link_tarfa}</b>"
+    end
 
     "<tr>        
       <td>#{numero_sequencial} #{tarefa.project.name}</td>  
