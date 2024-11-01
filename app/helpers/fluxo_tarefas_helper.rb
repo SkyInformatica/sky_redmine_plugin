@@ -285,7 +285,7 @@ module FluxoTarefasHelper
       # Adicionar cabeçalho da seção com tempo total
       linhas << "<b>#{secao[:nome]}</b> (Tempo gasto total: #{total_tempo_formatado}h)"
       #linhas << "<table class='tabela-fluxo-tarefas'>"
-      linhas << "<table class='list issues odd-even'>"
+      linhas << "<table class='tabela-fluxo-tarefas bordered striped'>"
 
       # Adicionar as tarefas
       secao[:tarefas].each do |tarefa|
