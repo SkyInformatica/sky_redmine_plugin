@@ -1,7 +1,7 @@
 require "redmine"
 
-require_dependency "lib/sky_redmine_plugin/hooks/view_hooks"
-require_dependency "lib/sky_redmine_plugin/hooks/controller_hooks"
+require_dependency "sky_redmine_plugin/hooks/view_hooks"
+require_dependency "sky_redmine_plugin/hooks/controller_hooks"
 
 require_dependency "app/helpers/fluxo_tarefas_helper"
 
