@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', function () {
         var toggleLink = document.createElement('a');
         toggleLink.href = '#';
         toggleLink.id = 'toggle-relations';
-        toggleLink.innerText = 'Mostrar Relações';
+        toggleLink.innerText = 'Exibir tarefas relacionadas';
         toggleLink.style.display = 'block';
         toggleLink.style.marginBottom = '10px';
 
