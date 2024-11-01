@@ -232,7 +232,7 @@ module FluxoTarefasHelper
     linhas = []
     linhas << "<div class='description'>"
     linhas << "<hr>"
-    linhas << "<p><strong>Fluxo das tarefas<strong></b></p>"
+    linhas << "<p><strong>Fluxo das tarefas</strong></b></p>"
     linhas << "<style>  
               .tabela-fluxo-tarefas {  
                 border-collapse: collapse;  
@@ -283,7 +283,7 @@ module FluxoTarefasHelper
       total_tempo_formatado = format("%.2f", total_tempo)
 
       # Adicionar cabeçalho da seção com tempo total
-      linhas << "<br><b>#{secao[:nome]}</b> (Tempo gasto total: #{total_tempo_formatado}h)"
+      linhas << "<b>#{secao[:nome]}</b> (Tempo gasto total: #{total_tempo_formatado}h)"
       linhas << "<table class='tabela-fluxo-tarefas'>"
 
       # Adicionar as tarefas
@@ -294,6 +294,7 @@ module FluxoTarefasHelper
       end
 
       linhas << "</table>"
+      linhas << "<br>"
     end
     linhas << "</div>"
 
