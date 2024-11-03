@@ -19,12 +19,6 @@ Redmine::Plugin.register :sky_redmine_plugin do
 
   # Adicionar permissão para administração
   permission :manage_sky_plugin, { sky_redmine_settings: [:show, :update] }, require: :admin
-
-  # Adicionar menu de administração
-  menu :admin_menu, :sky_redmine_settings,
-       { controller: "sky_redmine_settings", action: "show" },
-       caption: "Sky Redmine Settings",
-       html: { class: "icon icon-settings" }
 end
 
 ActionView::Base.send :include, FluxoTarefasHelper
