@@ -49,7 +49,7 @@ class TestarTarefaController < ApplicationController
         fixed_version_id: issue.fixed_version_id,
       ).pluck(:id),
     )
-    Issue.find_by(relation&.issue_to)
+    Issue.find_by(relation&.issue_to_id)
   end
 
   def encontrar_tarefa_testes(issue)
