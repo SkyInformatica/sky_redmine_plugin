@@ -42,19 +42,17 @@ class TestarTarefaController < ApplicationController
   end
 
   def tarefa_ja_sendo_testada(issue)
-    Rails.logger.info ">>> tarefa_ja_sendo_testada #{issue.id}"
-    relation = issue.relations_from.includes(:issue_to).find do |relation|
+    relations = issue.relations_from.includes(:issue_to)
+
+    relation = relations.find do |relation|
+      related_issue = relation.issue_to
       relation.relation_type == "relates" &&
-      relation.issue_to.tracker_id == teste_tracker_id &&
-      relation.issue_to.fixed_version_id == issue.fixed_version_id
+      related_issue.present? &&
+      related_issue.tracker_id == teste_tracker_id &&
+      related_issue.fixed_version_id == issue.fixed_version_id
     end
-    Rails.logger.info ">>> relation #{relation}"
-    if relation
-      Rails.logger.info ">>> relation existe #{relation.issue_to_id}"
-      Issue.find_by(id: relation.issue_to_id)
-    else
-      nil
-    end
+
+    relation&.issue_to
   end
 
   def encontrar_tarefa_testes(issue)
