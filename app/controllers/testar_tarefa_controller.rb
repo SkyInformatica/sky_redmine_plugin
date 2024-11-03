@@ -62,8 +62,7 @@ class TestarTarefaController < ApplicationController
       related_issue = relation.other_issue(issue)
       relation.relation_type == "relates" &&
       related_issue.present? &&
-      related_issue.tracker_id == teste_tracker_id &&
-      related_issue.fixed_version_id == issue.fixed_version_id
+      related_issue.tracker_id == teste_tracker_id
     end
 
     relation&.other_issue(issue)
