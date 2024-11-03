@@ -240,7 +240,7 @@ module FluxoTarefasHelper
     end
 
     "<tr>        
-      <td class='subject'>#{numero_sequencial} #{tarefa.project.name} - #{link_tarefa}</td>        
+      <td class='subject'>#{numero_sequencial}. #{tarefa.project.name} - #{link_tarefa}</td>        
       <td class='status'>#{tarefa.status.name}</td>  
       <td class='assigned_to'>#{assigned_to_name}</td>
       <td class='start_date'>#{data_inicio}</td>  
