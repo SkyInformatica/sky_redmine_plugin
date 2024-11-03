@@ -23,8 +23,6 @@ class TestarTarefaController < ApplicationController
 
     unless tarefa_testes
       # Se não existir uma tarefa de testes para o usuário atual, cria uma nova
-      Rails.logger.info ">>> criando tarefa de testes para usuario logado #{User.current.id}"
-
       tarefa_testes = Issue.new(
         project_id: @issue.project_id,
         author_id: User.current.id,
@@ -34,10 +32,8 @@ class TestarTarefaController < ApplicationController
         subject: "Tarefas de testes - #{User.current.name}",
       )
 
-      Rails.logger.info ">>> criado a tarefa #{tarefa_testes.id}"
-
       if tarefa_testes.save
-        flash[:notice] = "Nova tarefa de testes criada: #{view_context.link_to "#{tarefa_testes.tracker.name} ##{tarefa_testes.id} - #{tarefa_testes.subject}", issue_path(tarefa_testes)}."
+        flash[:info] = "Não existia uma tarefa de testes para #{User.current.name}. Foi criada a tarefa #{view_context.link_to "#{tarefa_testes.tracker.name} ##{tarefa_testes.id} - #{tarefa_testes.subject}", issue_path(tarefa_testes)}."
       else
         # Registrar erros de validação
         Rails.logger.error "Erro ao salvar tarefa_testes: #{tarefa_testes.errors.full_messages.join(", ")}"
@@ -53,7 +49,7 @@ class TestarTarefaController < ApplicationController
       relation_type: "relates",
     )
 
-    flash[:notice] ||= "A tarefa foi colocada em teste e relacionada com #{view_context.link_to "#{tarefa_testes.tracker.name} ##{tarefa_testes.id} - #{tarefa_testes.subject}", issue_path(tarefa_testes)}."
+    flash[:notice] = "A tarefa pode ser testada e está relacionada com #{view_context.link_to "#{tarefa_testes.tracker.name} ##{tarefa_testes.id} - #{tarefa_testes.subject}", issue_path(tarefa_testes)}."
     redirect_to issue_path(@issue)
   end
 
