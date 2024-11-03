@@ -4,11 +4,14 @@ document.addEventListener('DOMContentLoaded', function () {
         // Esconde a seção de relações  
         relationsDiv.style.display = 'none';
 
+        var showText = 'Ocultar tarefas relacionadas';
+        var hideText = 'Exibir tarefas relacionadas';
+
         // Cria o link para expandir/colapsar  
         var toggleLink = document.createElement('a');
         toggleLink.href = '#';
         toggleLink.id = 'toggle-relations';
-        toggleLink.innerText = 'Exibir tarefas relacionadas';
+        toggleLink.innerText = showText;
         toggleLink.style.display = 'block';
         toggleLink.style.marginBottom = '10px';
 
@@ -20,10 +23,10 @@ document.addEventListener('DOMContentLoaded', function () {
             event.preventDefault();
             if (relationsDiv.style.display === 'none') {
                 relationsDiv.style.display = 'block';
-                toggleLink.innerText = 'Ocultar tarefas relacionadas';
+                toggleLink.innerText = hideText;
             } else {
                 relationsDiv.style.display = 'none';
-                toggleLink.innerText = 'Exibir tarefas relacionadas';
+                toggleLink.innerText = showText;
             }
         });
     }
