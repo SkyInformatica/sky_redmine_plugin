@@ -39,7 +39,7 @@ class TestarTarefaController < ApplicationController
     issue.relations_from.exists?(
       relation_type: "relates",
       issue_to_id: Issue.where(
-        tracker_id: SkyRedminePlugin::Constants::Trackers::TESTES,
+        tracker_id: SkyRedminePlugin::Constants::Trackers::TESTE,
         fixed_version_id: issue.fixed_version_id,
       ).pluck(:id),
     )
@@ -47,7 +47,7 @@ class TestarTarefaController < ApplicationController
 
   def encontrar_tarefa_testes(issue)
     Issue.find_by(
-      tracker_id: SkyRedminePlugin::Constants::Trackers::TESTES,
+      tracker_id: SkyRedminePlugin::Constants::Trackers::TESTE,
       assigned_to_id: issue.assigned_to_id,
       fixed_version_id: issue.fixed_version_id,
     )
