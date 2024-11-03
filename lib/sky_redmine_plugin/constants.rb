@@ -40,6 +40,7 @@ module SkyRedminePlugin
       RETORNO_TESTES = "Retorno de testes"
       DEFEITO = "Defeito"
       FUNCIONALIDADE = "Funcionalidade"
+      TESTES = "Testes"
     end
 
     module CustomFields

@@ -10,6 +10,9 @@ get "retorno_testes_lote", to: "retorno_testes#retorno_testes_lote", as: "retorn
 post "encaminhar_qs/:id", to: "encaminhar_qs#encaminhar_qs", as: "encaminhar_qs"
 get "encaminhar_qs_lote", to: "encaminhar_qs#encaminhar_qs_lote", as: "encaminhar_qs_lote"
 
+# testar tarefa
+post "testar_tarefa/:id", to: "testar_tarefa#testar_tarefa", as: "testar_tarefa"
+
 #continua proxima sprint
 post "continua_proxima_sprint/:id", to: "continua_proxima_sprint#continua_proxima_sprint", as: "continua_proxima_sprint"
 get "continua_proxima_sprint_lote", to: "continua_proxima_sprint#continua_proxima_sprint_lote", as: "continua_proxima_sprint_lote"

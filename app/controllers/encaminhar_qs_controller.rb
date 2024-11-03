@@ -7,10 +7,9 @@ class EncaminharQsController < ApplicationController
 
   def encaminhar_qs(is_batch_call = false)
     Rails.logger.info ">>> encaminhar_qs #{@issue.id}"
-    resolvida_status = IssueStatus.find_by(name: SkyRedminePlugin::Constants::IssueStatus::RESOLVIDA)
 
     # Check if the issue is not in QS projects and its status is "Resolvida"
-    if (!SkyRedminePlugin::Constants::Projects::QS_PROJECTS.include?(@issue.project.name)) && (@issue.status == resolvida_status)
+    if (!SkyRedminePlugin::Constants::Projects::QS_PROJECTS.include?(@issue.project.name)) && (@issue.status.name == SkyRedminePlugin::Constants::IssueStatus::RESOLVIDA)
 
       # Verificar se já existe uma cópia da tarefa nos projetos QS
       copied_to_qs_issue = localizar_tarefa_copiada_qs(@issue)
@@ -32,10 +31,10 @@ class EncaminharQsController < ApplicationController
 
       @issue.save
 
-      flash[:notice] = "Tarefa #{view_context.link_to "#{new_issue.tracker.name} ##{new_issue.id}", issue_path(new_issue)} foi criada no projeto #{view_context.link_to new_issue.project.name, project_path(new_issue.project)} na sprint #{view_context.link_to new_issue.fixed_version.name, version_path(new_issue.fixed_version)} com tempo estimado de #{new_issue.estimated_hours}" unless is_batch_call
+      flash[:notice] = "Tarefa #{view_context.link_to "#{new_issue.tracker.name} ##{new_issue.id}", issue_path(new_issue)} foi encaminhada para o QS no projeto #{view_context.link_to new_issue.project.name, project_path(new_issue.project)} na sprint #{view_context.link_to new_issue.fixed_version.name, version_path(new_issue.fixed_version)} com tempo estimado de #{new_issue.estimated_hours}" unless is_batch_call
       @processed_issues << "[OK] #{view_context.link_to "#{@issue.tracker.name} ##{@issue.id}", issue_path(@issue)} - #{@issue.subject} - encaminhar para QS em #{view_context.link_to "#{new_issue.tracker.name} ##{new_issue.id}", issue_path(new_issue)} "
     else
-      flash[:warning] = "Somente pode encaminhar para o QS só pode ser criado se a tarefa estiver nos projetos das equipes de desenvolvimento com status 'Resolvida'." unless is_batch_call
+      flash[:warning] = "Somente pode encaminhar para o QS tarefas do desenvolvimento com status 'Resolvida'." unless is_batch_call
     end
 
     redirect_to issue_path(@issue) unless is_batch_call
@@ -137,7 +136,6 @@ class EncaminharQsController < ApplicationController
   end
 
   def encontrar_tarefa_original_funcionalidade_defeito(issue)
-    Rails.logger.info ">>> encontrar_tarefa_original_funcionalidade_defeito"
     current_issue = issue
 
     # procura a tarefa anterior do mesmo projeto até que seja uma funcionalidade ou defeito
@@ -147,7 +145,6 @@ class EncaminharQsController < ApplicationController
       break unless related_issues
 
       related_issue = Issue.find_by(id: related_issues.issue_from_id)
-      Rails.logger.info ">>> related_issue.project.name #{related_issue.project.name}, related_issue.tracker.name #{related_issue.tracker.name}"
 
       break if related_issue.project_id != issue.project_id
 

@@ -11,11 +11,9 @@ class RetornoTestesController < ApplicationController
   def retorno_testes_devel(is_batch_call = false)
     Rails.logger.info ">>> retorno_testes_devel #{@issue.id}"
     @origem_retorno_teste = ORIGEM_RETORNO_TESTE_DEVEL
-    resolvida_status = IssueStatus.find_by(name: SkyRedminePlugin::Constants::IssueStatus::RESOLVIDA)
-    nova_status = IssueStatus.find_by(name: SkyRedminePlugin::Constants::IssueStatus::NOVA)
 
     # Check if the issue is not in QS projects and its status is "Resolvida"
-    if (!SkyRedminePlugin::Constants::Projects::QS_PROJECTS.include?(@issue.project.name)) && (@issue.status == resolvida_status)
+    if (!SkyRedminePlugin::Constants::Projects::QS_PROJECTS.include?(@issue.project.name)) && (@issue.status.name == SkyRedminePlugin::Constants::IssueStatus::RESOLVIDA)
 
       # Verificar se já existe uma cópia da tarefa nos projetos QS
       copied_to_qs_issue = localizar_tarefa_copiada_qs(@issue)
@@ -23,7 +21,7 @@ class RetornoTestesController < ApplicationController
       tarefa_qs_removida = false
       # Se existir uma cópia e seu status for "Nova"
       if copied_to_qs_issue
-        if copied_to_qs_issue.status == nova_status
+        if copied_to_qs_issue.status.name == SkyRedminePlugin::Constants::IssueStatus::NOVA
           # Remover a cópia
           tarefa_qs_removida = true
           copied_to_qs_issue.destroy
@@ -59,7 +57,7 @@ class RetornoTestesController < ApplicationController
       end
       @processed_issues << "[OK] #{view_context.link_to "#{@issue.tracker.name} ##{@issue.id}", issue_path(@issue)} - #{@issue.subject} - retorno de testes criado em #{view_context.link_to "#{new_issue.tracker.name} ##{new_issue.id}", issue_path(new_issue)} "
     else
-      flash[:warning] = "O retorno de testes só pode ser criado se a tarefa estiver nos projetos das equipes de desenvolvimento com status 'Resolvida'." unless is_batch_call
+      flash[:warning] = "O retorno de testes só pode ser criado para tarefas de desenvolvimento com status 'Resolvida'." unless is_batch_call
     end
 
     redirect_to issue_path(@issue) unless is_batch_call
@@ -68,10 +66,9 @@ class RetornoTestesController < ApplicationController
   def retorno_testes_qs(is_batch_call = false)
     Rails.logger.info ">>> retorno_testes_qs #{@issue.id}"
     @origem_retorno_teste = ORIGEM_RETORNO_TESTE_QS
-    nok_status = IssueStatus.find_by(name: SkyRedminePlugin::Constants::IssueStatus::TESTE_NOK)
 
     # Verificar se a tarefa pertence aos projetos permitidos e se o status é "Teste NOK"
-    if (SkyRedminePlugin::Constants::Projects::QS_PROJECTS.include?(@issue.project.name) && (@issue.status == nok_status))
+    if (SkyRedminePlugin::Constants::Projects::QS_PROJECTS.include?(@issue.project.name) && (@issue.status.name == SkyRedminePlugin::Constants::IssueStatus::TESTE_NOK))
       # localizar a tarefa de origem do desenvolvimento
       devel_issue = localizar_tarefa_origem_desenvolvimento(@issue)
 
@@ -105,7 +102,7 @@ class RetornoTestesController < ApplicationController
         flash[:warning] = "Não foi possível encontrar o projeto de origem (desenvolvimento) para criar o retorno de testes." unless is_batch_call
       end
     else
-      flash[:warning] = "O retorno de testes só pode ser criado se a tarefa de testes estiver nos projetos 'Notarial - QS' ou 'Registral - QS' com status 'Teste NOK'." unless is_batch_call
+      flash[:warning] = "O retorno de testes só pode ser criado para tarefas do QS com status 'Teste NOK'." unless is_batch_call
     end
 
     redirect_to issue_path(@issue) unless is_batch_call
