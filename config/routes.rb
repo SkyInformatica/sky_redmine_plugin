@@ -1,6 +1,3 @@
-# Plugin's routes
-# See: http://guides.rubyonrails.org/routing.html
-
 # retorno de testes
 post "retorno_testes_qs/:id", to: "retorno_testes#retorno_testes_qs", as: "retorno_testes_qs"
 post "retorno_testes_devel/:id", to: "retorno_testes#retorno_testes_devel", as: "retorno_testes_devel"
@@ -17,5 +14,6 @@ post "testar_tarefa/:id", to: "testar_tarefa#testar_tarefa", as: "testar_tarefa"
 post "continua_proxima_sprint/:id", to: "continua_proxima_sprint#continua_proxima_sprint", as: "continua_proxima_sprint"
 get "continua_proxima_sprint_lote", to: "continua_proxima_sprint#continua_proxima_sprint_lote", as: "continua_proxima_sprint_lote"
 
-# continua na proxima sprint
-#get "continua_na_proxima_sprint_lote", to: "continua_na_proxima_sprint#continua_na_proxima_sprint_lote", as: "continua_na_proxima_sprint_lote"
+# configurações do plugin
+get "sky_redmine_settings", to: "sky_redmine_settings#show", as: "sky_redmine_settings"
+post "sky_redmine_settings", to: "sky_redmine_settings#update", as: "update_sky_redmine_settings"
