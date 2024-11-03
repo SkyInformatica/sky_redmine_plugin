@@ -13,7 +13,7 @@ class TestarTarefaController < ApplicationController
     tarefa_testes_existente = tarefa_ja_sendo_testada(@issue)
 
     if tarefa_testes_existente
-      flash[:warning] = "A tarefa já está sendo testada na tarefa de testes #{view_context.link_to "##{tarefa_testes_existente.id}", issue_path(tarefa_testes_existente)}."
+      flash[:warning] = "A tarefa já está sendo testada por #{view_context.link_to "#{tarefa_testes_existente.tracker.name} ##{tarefa_testes_existente.id} - #{tarefa_testes_existente.subject}", issue_path(tarefa_testes_existente)}."
       redirect_to issue_path(@issue) and return
     end
 
@@ -27,7 +27,7 @@ class TestarTarefaController < ApplicationController
         issue_to: tarefa_testes,
         relation_type: "relates",
       )
-      flash[:notice] = "A tarefa foi colocada em teste e relacionada com a tarefa de testes #{view_context.link_to "##{tarefa_testes.id}", issue_path(tarefa_testes)}."
+      flash[:notice] = "A tarefa foi colocada em teste e relacionada com #{view_context.link_to "#{tarefa_testes_existente.tracker.name} ##{tarefa_testes_existente.id} - #{tarefa_testes_existente.subject}", issue_path(tarefa_testes_existente)}."
     else
       flash[:warning] = "Não foi encontrada uma tarefa de testes na sprint para fazer a relação."
     end
