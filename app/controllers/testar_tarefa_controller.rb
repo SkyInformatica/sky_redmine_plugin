@@ -23,19 +23,24 @@ class TestarTarefaController < ApplicationController
 
     unless tarefa_testes
       # Se não existir uma tarefa de testes para o usuário atual, cria uma nova
+      Rails.logger.info ">>> criando tarefa de testes para usuario logado #{User.current.id}"
 
       tarefa_testes = Issue.new(
-        project_id: @issue.project_id,
+        project_id: @issue.project_id, # Adicionado project_id
         tracker_id: teste_tracker_id,
         assigned_to_id: User.current.id,
         fixed_version_id: @issue.fixed_version_id,
         subject: "Tarefas de testes - #{User.current.name}",
       )
 
+      Rails.logger.info ">>> criado a tarefa #{tarefa_testes.id}"
+
       if tarefa_testes.save
         flash[:notice] = "Nova tarefa de testes criada: #{view_context.link_to "#{tarefa_testes.tracker.name} ##{tarefa_testes.id} - #{tarefa_testes.subject}", issue_path(tarefa_testes)}."
       else
-        flash[:error] = "Não foi possível criar uma nova tarefa de testes."
+        # Registrar erros de validação
+        Rails.logger.error "Erro ao salvar tarefa_testes: #{tarefa_testes.errors.full_messages.join(", ")}"
+        flash[:error] = "Não foi possível criar uma nova tarefa de testes: #{tarefa_testes.errors.full_messages.join(", ")}."
         redirect_to issue_path(@issue) and return
       end
     end
