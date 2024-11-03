@@ -1,4 +1,4 @@
-require "bundler"
+#require "bundler"
 require "redmine"
 require File.join(File.dirname(__FILE__), "lib", "sky_redmine_plugin")
 require_dependency File.join(File.dirname(__FILE__), "app", "helpers", "fluxo_tarefas_helper")
