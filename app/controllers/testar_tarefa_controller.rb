@@ -28,7 +28,7 @@ class TestarTarefaController < ApplicationController
         issue_to: tarefa_testes,
         relation_type: "relates",
       )
-      flash[:notice] = "A tarefa foi colocada em teste e relacionada com #{view_context.link_to "#{tarefa_testes.tracker.name} ##{tarefa_testes.id} - #{tarefa_testes.subject}", issue_path(tarefa_testes_existente)}."
+      flash[:notice] = "A tarefa foi colocada em teste e relacionada com #{view_context.link_to "#{tarefa_testes.tracker.name} ##{tarefa_testes.id} - #{tarefa_testes.subject}", issue_path(tarefa_testes)}."
     else
       flash[:warning] = "Não foi encontrada uma tarefa de testes na sprint para fazer a relação."
     end
