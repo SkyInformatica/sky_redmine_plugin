@@ -8,7 +8,22 @@ Redmine::Plugin.register :sky_redmine_plugin do
   description "Disponibiliza facilitadores para gerir a fluxo de tarefas entre Devel e QS."
   url "https://github.com/SkyInformatica/sky_redmine_plugin"
   author_url "mailto:maglan.diemer@skyinformatica.com.br"
-  version "2024.11.01.1"
+  version "2024.11.03.1"
+
+  # Adicionar configurações do plugin
+  settings default: {
+    "ultima_execucao" => nil,
+    "tarefas_processadas" => 0,
+    "hora_execucao" => "18:00",
+  }, partial: "settings/sky_redmine_settings"
+
+  # Adicionar permissão para administração
+  permission :manage_sky_plugin, { sky_redmine: [:settings] }, require: :admin
+
+  # Adicionar menu de administração
+  menu :admin_menu, :sky_redmine_settings,
+       { controller: "sky_redmine_settings", action: "show" },
+       caption: "Sky Redmine Settings"
 end
 
 ActionView::Base.send :include, FluxoTarefasHelper
