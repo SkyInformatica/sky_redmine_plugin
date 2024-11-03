@@ -41,6 +41,7 @@ module SkyRedminePlugin
       DEFEITO = "Defeito"
       FUNCIONALIDADE = "Funcionalidade"
       TESTE = "Teste"
+      TESTE_ID = 9
     end
 
     module CustomFields

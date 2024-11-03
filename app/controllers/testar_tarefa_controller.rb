@@ -9,9 +9,11 @@ class TestarTarefaController < ApplicationController
       redirect_to issue_path(@issue) and return
     end
 
-    # Verifica se a tarefa já está sendo testada
-    if tarefa_ja_sendo_testada?(@issue)
-      flash[:warning] = "A tarefa já está sendo testada."
+    # Verifica se a tarefa já está sendo testada e obtém a tarefa de testes relacionada
+    tarefa_testes_existente = tarefa_ja_sendo_testada(@issue)
+
+    if tarefa_testes_existente
+      flash[:warning] = "A tarefa já está sendo testada na tarefa de testes #{view_context.link_to "##{tarefa_testes_existente.id}", issue_path(tarefa_testes_existente)}."
       redirect_to issue_path(@issue) and return
     end
 
@@ -35,19 +37,20 @@ class TestarTarefaController < ApplicationController
 
   private
 
-  def tarefa_ja_sendo_testada?(issue)
-    issue.relations_from.exists?(
+  def tarefa_ja_sendo_testada(issue)
+    relation = issue.relations_from.find_by(
       relation_type: "relates",
       issue_to_id: Issue.where(
-        tracker_id: SkyRedminePlugin::Constants::Trackers::TESTE,
+        tracker_id: SkyRedminePlugin::Constants::Trackers::TESTE_ID,
         fixed_version_id: issue.fixed_version_id,
       ).pluck(:id),
     )
+    relation&.issue_to
   end
 
   def encontrar_tarefa_testes(issue)
     Issue.find_by(
-      tracker_id: SkyRedminePlugin::Constants::Trackers::TESTE,
+      tracker_id: SkyRedminePlugin::Constants::Trackers::TESTE_ID,
       assigned_to_id: issue.assigned_to_id,
       fixed_version_id: issue.fixed_version_id,
     )
