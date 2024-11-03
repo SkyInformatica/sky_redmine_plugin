@@ -14,11 +14,11 @@ end
 
 ActionView::Base.send :include, FluxoTarefasHelper
 
-plugin_root = File.dirname(__FILE__)
-Gem::Specification.each do |spec|
-  if File.fnmatch("#{plugin_root}*", spec.full_gem_path)
-    Bundler.rubygems.activate_spec(spec)
-  end
-end
+#plugin_root = File.dirname(__FILE__)
+#Gem::Specification.each do |spec|
+#  if File.fnmatch("#{plugin_root}*", spec.full_gem_path)
+##    Bundler.rubygems.activate_spec(spec)
+#  end
+#end
 
-Bundler.require(:default)
+#Bundler.require(:default)
