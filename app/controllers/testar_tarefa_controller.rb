@@ -26,7 +26,8 @@ class TestarTarefaController < ApplicationController
       Rails.logger.info ">>> criando tarefa de testes para usuario logado #{User.current.id}"
 
       tarefa_testes = Issue.new(
-        project_id: @issue.project_id, # Adicionado project_id
+        project_id: @issue.project_id,
+        author_id: User.current.id,
         tracker_id: teste_tracker_id,
         assigned_to_id: User.current.id,
         fixed_version_id: @issue.fixed_version_id,
