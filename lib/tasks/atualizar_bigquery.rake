@@ -1,6 +1,5 @@
 
-=begin 
-require "google/cloud/bigquery"
+=begin require "google/cloud/bigquery"
 
 namespace :bigquery do
   desc "Atualiza o banco de dados Google BigQuery com as tarefas atualizadas"
@@ -37,4 +36,5 @@ namespace :bigquery do
     Setting.sky_redmine_plugin["ultima_execucao"] = Time.now.to_s
   end
 end
+
  =end
