@@ -1,3 +1,5 @@
+
+=begin 
 require "google/cloud/bigquery"
 
 namespace :bigquery do
@@ -35,3 +37,4 @@ namespace :bigquery do
     Setting.sky_redmine_plugin["ultima_execucao"] = Time.now.to_s
   end
 end
+ =end
