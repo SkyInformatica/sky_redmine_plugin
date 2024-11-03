@@ -19,20 +19,33 @@ class TestarTarefaController < ApplicationController
     end
 
     # Encontra a tarefa de testes correspondente
-    tarefa_testes = encontrar_tarefa_testes(@issue)
+    tarefa_testes = encontrar_tarefa_testes_usuario_logado(@issue)
 
-    if tarefa_testes
-      # Cria a relação entre a tarefa atual e a tarefa de testes
-      IssueRelation.create!(
-        issue_from: @issue,
-        issue_to: tarefa_testes,
-        relation_type: "relates",
+    unless tarefa_testes
+      # Se não existir uma tarefa de testes para o usuário atual, cria uma nova
+      tarefa_testes = Issue.new(
+        tracker_id: teste_tracker_id,
+        assigned_to_id: User.current.id,
+        fixed_version_id: @issue.fixed_version_id,
+        subject: "Tarefas de testes - #{User.current.name}",
       )
-      flash[:notice] = "A tarefa foi colocada em teste e relacionada com #{view_context.link_to "#{tarefa_testes.tracker.name} ##{tarefa_testes.id} - #{tarefa_testes.subject}", issue_path(tarefa_testes)}."
-    else
-      flash[:warning] = "Não foi encontrada uma tarefa de testes na sprint para fazer a relação."
+
+      if tarefa_testes.save
+        flash[:notice] = "Nova tarefa de testes criada: #{view_context.link_to "#{tarefa_testes.tracker.name} ##{tarefa_testes.id} - #{tarefa_testes.subject}", issue_path(tarefa_testes)}."
+      else
+        flash[:error] = "Não foi possível criar uma nova tarefa de testes."
+        redirect_to issue_path(@issue) and return
+      end
     end
 
+    # Cria a relação entre a issue atual e a tarefa de testes encontrada ou criada
+    IssueRelation.create(
+      issue_from: @issue,
+      issue_to: tarefa_testes,
+      relation_type: "relates",
+    )
+
+    flash[:notice] ||= "A tarefa foi colocada em teste e relacionada com #{view_context.link_to "#{tarefa_testes.tracker.name} ##{tarefa_testes.id} - #{tarefa_testes.subject}", issue_path(tarefa_testes)}."
     redirect_to issue_path(@issue)
   end
 
@@ -56,10 +69,10 @@ class TestarTarefaController < ApplicationController
     relation&.other_issue(issue)
   end
 
-  def encontrar_tarefa_testes(issue)
+  def encontrar_tarefa_testes_usuario_logado(issue)
     Issue.find_by(
       tracker_id: teste_tracker_id,
-      assigned_to_id: issue.assigned_to_id,
+      assigned_to_id: User.current.id,
       fixed_version_id: issue.fixed_version_id,
     )
   end
