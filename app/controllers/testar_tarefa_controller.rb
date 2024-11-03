@@ -42,11 +42,20 @@ class TestarTarefaController < ApplicationController
   end
 
   def tarefa_ja_sendo_testada(issue)
-    issue.relations_from.includes(:issue_to).find do |relation|
+    relations = issue.relations_from.includes(:issue_to)
+
+    relation = relations.find do |relation|
+      related_issue = relation.issue_to
       relation.relation_type == "relates" &&
-      relation.issue_to.tracker_id == teste_tracker_id &&
-      relation.issue_to.fixed_version_id == issue.fixed_version_id
-    end&.issue_to
+      related_issue.tracker_id == teste_tracker_id &&
+      related_issue.fixed_version_id == issue.fixed_version_id
+    end
+
+    if relation
+      Issue.find(relation.issue_to_id)
+    else
+      nil
+    end
   end
 
   def encontrar_tarefa_testes(issue)
