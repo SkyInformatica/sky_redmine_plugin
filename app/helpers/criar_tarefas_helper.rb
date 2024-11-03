@@ -8,14 +8,19 @@ module CriarTarefasHelper
   def definir_titulo_tarefa_incrementando_numero_copia(titulo)
     # Modificando o título da nova tarefa para adicionar o numero da tarefa
     novo_titulo = titulo
-    if titulo.match?(/\(\d+\)$/)
+    if titulo.match?(/\[\d+\]$/)
       # Se já existe um número entre parênteses no fim do título adiciona +1
       current_copy_number = titulo.match(/\d+/)[0].to_i
       new_copy_number = current_copy_number + 1
-      novo_titulo = titulo.sub(/\(\d+\)$/, "(#{new_copy_number})")
+      novo_titulo = titulo.sub(/\[\d+\]$/, "[#{new_copy_number}]")
+    elsif titulo.match?(/\(\d+\)$/)
+      # Se já existe um número entre parênteses no fim do título adiciona +1
+      current_copy_number = titulo.match(/\d+/)[0].to_i
+      new_copy_number = current_copy_number + 1
+      novo_titulo = titulo.sub(/\(\d+\)$/, "[#{new_copy_number}]")
     else
-      # Se não existe, adicionar (2) ao título original
-      novo_titulo = "#{titulo} (2)"
+      # Se não existe, adicionar [2] ao título original
+      novo_titulo = "#{titulo} [2]"
     end
 
     novo_titulo
