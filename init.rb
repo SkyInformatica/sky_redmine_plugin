@@ -1,4 +1,3 @@
-#require "bundler"
 require "redmine"
 require File.join(File.dirname(__FILE__), "lib", "sky_redmine_plugin")
 require_dependency File.join(File.dirname(__FILE__), "app", "helpers", "fluxo_tarefas_helper")
@@ -13,12 +12,3 @@ Redmine::Plugin.register :sky_redmine_plugin do
 end
 
 ActionView::Base.send :include, FluxoTarefasHelper
-
-#plugin_root = File.dirname(__FILE__)
-#Gem::Specification.each do |spec|
-#  if File.fnmatch("#{plugin_root}*", spec.full_gem_path)
-##    Bundler.rubygems.activate_spec(spec)
-#  end
-#end
-
-#Bundler.require(:default)
