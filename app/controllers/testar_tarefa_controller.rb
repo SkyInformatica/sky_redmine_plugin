@@ -3,8 +3,8 @@ class TestarTarefaController < ApplicationController
 
   def testar_tarefa
     # Verifica se a tarefa não pertence aos projetos QS e está com status 'Resolvida'
-    unless SkyRedminePlugin::Constants::Projects::QS_PROJECTS.include?(@issue.project.name) &&
-           @issue.status.name == SkyRedminePlugin::Constants::IssueStatus::RESOLVIDA
+    unless ((!SkyRedminePlugin::Constants::Projects::QS_PROJECTS.include?(@issue.project.name)) &&
+            (@issue.status.name == SkyRedminePlugin::Constants::IssueStatus::RESOLVIDA))
       flash[:warning] = "A tarefa deve estar nos projetos de desenvolvimento e com status 'Resolvida' para ser colocada em teste."
       redirect_to issue_path(@issue) and return
     end
