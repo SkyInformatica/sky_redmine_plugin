@@ -4,6 +4,10 @@
               method: :post,
               class: "icon icon-copy" %>
 <% elsif (@issue.status.name == "Resolvida") && !["Notarial - QS", "Registral - QS"].include?(@issue.project.name) %>
+  <%= link_to "Testar tarefa",
+              testar_tarefa_path(:id => @issue.id),
+              method: :post,
+              class: "icon icon-copy" %>
   <%= link_to "Criar retorno de testes",
               retorno_testes_devel_path(:id => @issue.id),
               method: :post,
@@ -11,11 +15,7 @@
   <%= link_to "Encaminhar para QS",
               encaminhar_qs_path(:id => @issue.id),
               method: :post,
-              class: "icon icon-copy" %>
-  <%= link_to "Testar tarefa",
-              testar_tarefa_path(:id => @issue.id),
-              method: :post,
-              class: "icon icon-copy" %>            
+              class: "icon icon-copy" %>              
 <% end %>
 <% if ["Nova", "Em andamento", "Interrompida"].include?(@issue.status.name) %>
   <%= link_to "Continua na próxima sprint",
