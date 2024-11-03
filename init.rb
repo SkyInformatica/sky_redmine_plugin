@@ -1,3 +1,9 @@
+begin
+  require "whenever"
+rescue LoadError
+  Rails.logger.error "Whenever gem não está instalada. Por favor, adicione 'gem \"whenever\"' ao Gemfile e execute 'bundle install'"
+end
+
 require "redmine"
 require File.join(File.dirname(__FILE__), "lib", "sky_redmine_plugin")
 require_dependency File.join(File.dirname(__FILE__), "app", "helpers", "fluxo_tarefas_helper")
@@ -15,6 +21,7 @@ Redmine::Plugin.register :sky_redmine_plugin do
     "ultima_execucao" => nil,
     "tarefas_processadas" => 0,
     "hora_execucao" => "18:00",
+    "atualizacao_automatica" => false,  # nova configuração
   }, partial: "settings/sky_redmine_settings"
 
   # Adicionar permissão para administração

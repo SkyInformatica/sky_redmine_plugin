@@ -1,10 +1,18 @@
 <%= form_tag({ controller: "sky_redmine_settings", action: "update" }, method: :post) do %>  
   <div class="box tabular settings">  
     <p>  
-      <label>Horário de Execução</label>  
-      <%= text_field_tag "settings[hora_execucao]", @settings["hora_execucao"], size: 10 %>  
-      <em class="info">Formato: HH:MM (exemplo: 18:00)</em>  
+      <label>Atualização Automática</label>  
+      <%= check_box_tag "settings[atualizacao_automatica]", "1", @settings["atualizacao_automatica"] == "1" %>  
+      <em class="info">Habilitar atualização diária dos indicadores</em>  
     </p>  
+
+    <div id="hora_execucao_container" style="<%= @settings["atualizacao_automatica"] != "1" ? "display: none;" : "" %>">  
+      <p>  
+        <label>Horário de Execução</label>  
+        <%= text_field_tag "settings[hora_execucao]", @settings["hora_execucao"], size: 10 %>  
+        <em class="info">Formato: HH:MM (exemplo: 18:00)</em>  
+      </p>  
+    </div>  
 
     <fieldset class="box">  
       <legend>Status do Processamento</legend>  
@@ -20,4 +28,16 @@
   </div>  
 
   <%= submit_tag l(:button_save) %>  
+<% end %>  
+
+<%= javascript_tag do %>  
+  $(document).ready(function() {  
+    $('#settings_atualizacao_automatica').change(function() {  
+      if($(this).is(':checked')) {  
+        $('#hora_execucao_container').show();  
+      } else {  
+        $('#hora_execucao_container').hide();  
+      }  
+    });  
+  });  
 <% end %>
