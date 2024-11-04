@@ -1,4 +1,4 @@
-class SkyRedmineSettingsController < ApplicationController
+=begin class SkyRedmineSettingsController < ApplicationController
   layout "admin"
   before_action :require_admin
 
@@ -68,3 +68,4 @@ class SkyRedmineSettingsController < ApplicationController
     end
   end
 end
+ =end

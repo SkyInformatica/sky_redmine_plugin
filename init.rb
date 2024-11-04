@@ -1,8 +1,8 @@
-begin
-  require "whenever"
-rescue LoadError
-  Rails.logger.error "Whenever gem não está instalada. Por favor, adicione 'gem \"whenever\"' ao Gemfile e execute 'bundle install'"
-end
+#begin
+#  require "whenever"
+#rescue LoadError
+#  Rails.logger.error "Whenever gem não está instalada. Por favor, adicione 'gem \"whenever\"' ao Gemfile e execute 'bundle install'"
+#end
 
 require "redmine"
 require File.join(File.dirname(__FILE__), "lib", "sky_redmine_plugin")
