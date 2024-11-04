@@ -4,8 +4,8 @@ document.addEventListener('DOMContentLoaded', function () {
         // Esconde a seção de relações  
         relationsDiv.style.display = 'none';
 
-        var showText = 'Ocultar tarefas relacionadas';
-        var hideText = 'Exibir tarefas relacionadas';
+        var hideText = 'Ocultar tarefas relacionadas';
+        var showText = 'Exibir tarefas relacionadas';
 
         // Cria o link para expandir/colapsar  
         var toggleLink = document.createElement('a');
