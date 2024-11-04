@@ -4,8 +4,10 @@ module FluxoTarefasHelper
 
   def render_fluxo_tarefas_html(issue)
     tarefas_relacionadas = obter_lista_tarefas_relacionadas(issue)
-    texto_fluxo = gerar_texto_fluxo_html(tarefas_relacionadas, issue.id)
-    texto_fluxo.html_safe  # Permite renderizar HTML seguro na visualização
+    if (tarefas_relacionadas.length > 1)
+      texto_fluxo = gerar_texto_fluxo_html(tarefas_relacionadas, issue.id)
+      texto_fluxo.html_safe  # Permite renderizar HTML seguro na visualização
+    end
   end
 
   def localizar_tarefa_origem_desenvolvimento(issue)

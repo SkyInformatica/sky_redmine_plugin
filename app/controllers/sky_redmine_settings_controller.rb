@@ -1,4 +1,4 @@
-=begin class SkyRedmineSettingsController < ApplicationController
+class SkyRedmineSettingsController < ApplicationController
   layout "admin"
   before_action :require_admin
 
@@ -18,13 +18,13 @@
 
     if old_auto_update != new_auto_update
       if new_auto_update
-        update_crontab
+        #update_crontab
       else
-        clear_crontab
+        #clear_crontab
       end
     elsif new_auto_update && old_settings["hora_execucao"] != settings["hora_execucao"]
       # Se só o horário mudou e está ativo, atualiza o crontab
-      update_crontab
+      #update_crontab
     end
 
     flash[:notice] = l(:notice_successful_update)
@@ -68,4 +68,3 @@
     end
   end
 end
- =end
