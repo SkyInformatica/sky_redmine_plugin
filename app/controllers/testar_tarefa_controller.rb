@@ -22,24 +22,9 @@ class TestarTarefaController < ApplicationController
     tarefa_testes = encontrar_tarefa_testes_usuario_logado(@issue)
 
     unless tarefa_testes
-      # Se não existir uma tarefa de testes para o usuário atual, cria uma nova
-      tarefa_testes = Issue.new(
-        project_id: @issue.project_id,
-        author_id: User.current.id,
-        tracker_id: teste_tracker_id,
-        assigned_to_id: User.current.id,
-        fixed_version_id: @issue.fixed_version_id,
-        subject: "Tarefas de testes - #{User.current.name}",
-      )
-
-      if tarefa_testes.save
-        flash[:info] = "Não existia uma tarefa de testes para #{User.current.name}. Foi criada a tarefa #{view_context.link_to "#{tarefa_testes.tracker.name} ##{tarefa_testes.id} - #{tarefa_testes.subject}", issue_path(tarefa_testes)}."
-      else
-        # Registrar erros de validação
-        Rails.logger.error "Erro ao salvar tarefa_testes: #{tarefa_testes.errors.full_messages.join(", ")}"
-        flash[:error] = "Não foi possível criar uma nova tarefa de testes: #{tarefa_testes.errors.full_messages.join(", ")}."
-        redirect_to issue_path(@issue) and return
-      end
+      # Se não encontrar a tarefa de testes dá um aviso
+      flash[:warning] = "Não foi localizada sua tarefa de testes em uma sprint atual de desenvolvimento."
+      redirect_to issue_path(@issue) and return
     end
 
     # Cria a relação entre a issue atual e a tarefa de testes encontrada ou criada
@@ -49,7 +34,7 @@ class TestarTarefaController < ApplicationController
       relation_type: "relates",
     )
 
-    flash[:notice] = "A tarefa pode ser testada e está relacionada com #{view_context.link_to "#{tarefa_testes.tracker.name} ##{tarefa_testes.id} - #{tarefa_testes.subject}", issue_path(tarefa_testes)}."
+    flash[:notice] = "A tarefa pode ser testada e está relacionada com #{view_context.link_to "#{tarefa_testes.tracker.name} ##{tarefa_testes.id} - #{tarefa_testes.subject}", issue_path(tarefa_testes)} da sprint #{view_context.link_to tarefa_testes.fixed_version.name, version_path(tarefa_testes.fixed_version)}"
     redirect_to issue_path(@issue)
   end
 
@@ -73,10 +58,41 @@ class TestarTarefaController < ApplicationController
   end
 
   def encontrar_tarefa_testes_usuario_logado(issue)
+    sprint_atual = encontrar_sprint_atual(issue.project)
+    return nil unless sprint_atual
+
     Issue.find_by(
       tracker_id: teste_tracker_id,
       assigned_to_id: User.current.id,
-      fixed_version_id: issue.fixed_version_id,
+      fixed_version_id: sprint_atual.id,
     )
+  end
+
+  def encontrar_sprint_atual(project)
+    hoje = Date.current
+
+    # Busca todas as versões (sprints) do projeto
+    project.versions.find do |version|
+      next unless version.name.match?(/^\d{4}-\d{2}\s+\(\d{2}\/\d{2}\s+a\s+\d{2}\/\d{2}\)$/)
+
+      # Extrai as datas do nome da sprint
+      if version.name =~ /(\d{4})-\d{2}\s+\((\d{2})\/(\d{2})\s+a\s+(\d{2})\/(\d{2})\)/
+        ano = $1.to_i
+        mes_inicio = $3.to_i
+        dia_inicio = $2.to_i
+        mes_fim = $5.to_i
+        dia_fim = $4.to_i
+
+        # Ajusta o ano para o mês final se necessário
+        ano_fim = ano
+        ano_fim += 1 if mes_fim < mes_inicio # Se o mês final for menor que o inicial, é porque virou o ano
+
+        data_inicio = Date.new(ano, mes_inicio, dia_inicio)
+        data_fim = Date.new(ano_fim, mes_fim, dia_fim)
+
+        # Verifica se a data atual está dentro do período da sprint
+        hoje >= data_inicio && hoje <= data_fim
+      end
+    end
   end
 end
