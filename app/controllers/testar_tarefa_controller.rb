@@ -61,11 +61,29 @@ class TestarTarefaController < ApplicationController
     sprint_atual = encontrar_sprint_atual(issue.project)
     return nil unless sprint_atual
 
-    Issue.find_by(
+    tarefa_testes = Issue.find_by(
       tracker_id: teste_tracker_id,
       assigned_to_id: User.current.id,
       fixed_version_id: sprint_atual.id,
     )
+    unless tarefa_testes
+      tarefa_testes = Issue.new(
+        project_id: @issue.project_id,
+        author_id: User.current.id,
+        tracker_id: teste_tracker_id,
+        assigned_to_id: User.current.id,
+        fixed_version_id: sprint_atual.id,
+        subject: "Tarefas de testes - #{User.current.name}",
+      )
+
+      if tarefa_testes.save
+        flash[:info] = "Não existia uma tarefa de testes para #{User.current.name}. Foi criada a tarefa #{view_context.link_to "#{tarefa_testes.tracker.name} ##{tarefa_testes.id} - #{tarefa_testes.subject}", issue_path(tarefa_testes)} na sprint #{view_context.link_to tarefa_testes.fixed_version.name, version_path(tarefa_testes.fixed_version)}."
+      else
+        flash[:error] = "Não foi possível criar uma nova tarefa de testes na sprint #{view_context.link_to "#{sprint_atual.name}", version_path(sprint_atual)}: #{tarefa_testes.errors.full_messages.join(", ")}."
+        return nil
+      end
+    end
+    tarefa_testes
   end
 
   def encontrar_sprint_atual(project)
