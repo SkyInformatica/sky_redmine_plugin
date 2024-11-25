@@ -82,6 +82,9 @@ class RetornoTestesController < ApplicationController
             devel_issue.custom_field_values = { custom_field.id => SkyRedminePlugin::Constants::IssueStatus::TESTE_NOK_FECHADA }
           end
           devel_issue.save
+
+          journal = Journal.new(:journalized => devel_issue, :user => User.current, :notes => "Realizado pela automação do plugin SkyRedmine")
+          journal.save
         end
 
         # ataulizar o status da tarefa de QS para Teste NOK - Fechada
@@ -92,6 +95,8 @@ class RetornoTestesController < ApplicationController
         #limpar tags da tarefa de QS
         @issue.tag_list = []
         @issue.save
+        journal = Journal.new(:journalized => @issue, :user => User.current, :notes => "Realizado pela automação do plugin SkyRedmine")
+        journal.save
 
         flash[:notice] = "Tarefa #{view_context.link_to "#{new_issue.tracker.name} ##{new_issue.id}", issue_path(new_issue)} foi criada no projeto #{view_context.link_to devel_issue.project.name, project_path(devel_issue.project)} na sprint #{view_context.link_to new_issue.fixed_version.name, version_path(new_issue.fixed_version)} com tempo estimado de 1.0h" unless is_batch_call
         flash[:info] = "Tarefa do desenvolvimento #{view_context.link_to "#{devel_issue.tracker.name} ##{devel_issue.id}", issue_path(devel_issue)} foi ajustada o status para <strong><em>#{devel_issue.status.name}</em></strong><br>" \
