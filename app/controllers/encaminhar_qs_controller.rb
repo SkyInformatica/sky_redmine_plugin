@@ -24,11 +24,10 @@ class EncaminharQsController < ApplicationController
       end
 
       new_issue = criar_nova_tarefa
-
+      @issue.init_journal(User.current, "[SkyRedminePlugin] Tarefa encaminhada para QS")
       if custom_field = IssueCustomField.find_by(name: SkyRedminePlugin::Constants::CustomFields::TESTE_QS)
         @issue.custom_field_values = { custom_field.id => SkyRedminePlugin::Constants::IssueStatus::NOVA }
       end
-
       @issue.save
 
       flash[:notice] = "Tarefa #{view_context.link_to "#{new_issue.tracker.name} ##{new_issue.id}", issue_path(new_issue)} foi encaminhada para o QS no projeto #{view_context.link_to new_issue.project.name, project_path(new_issue.project)} na sprint #{view_context.link_to new_issue.fixed_version.name, version_path(new_issue.fixed_version)} com tempo estimado de #{new_issue.estimated_hours}" unless is_batch_call
