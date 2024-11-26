@@ -49,7 +49,7 @@ class RetornoTestesController < ApplicationController
       end
 
       new_issue = criar_nova_tarefa(@issue.project.id)
-      @issue.init_journal(User.current, "[SkyRedminePlugin] Criado retorno de testes do desenvolvimento")
+      @issue.init_journal(User.current, "[SkyRedminePlugin] Encaminhado retorno de testes do desenvolvimento")
       if fechada_cont_retorno_testes_status = IssueStatus.find_by(name: SkyRedminePlugin::Constants::IssueStatus::FECHADA_CONTINUA_RETORNO_TESTES)
         @issue.status = fechada_cont_retorno_testes_status
       end
@@ -102,7 +102,7 @@ class RetornoTestesController < ApplicationController
 
         # atualizar o status da tarefa de devel para fechada continua retorno de testes e o campo Teste QS para Teste NOK - Fechada
         if fechada_continua_retorno_testes_status = IssueStatus.find_by(name: SkyRedminePlugin::Constants::IssueStatus::FECHADA_CONTINUA_RETORNO_TESTES)
-          devel_issue.init_journal(User.current, "[SkyRedminePlugin] Criado retorno de testes do QS")
+          devel_issue.init_journal(User.current, "[SkyRedminePlugin] Encaminhado retorno de testes do QS")
           devel_issue.status = fechada_continua_retorno_testes_status
           if custom_field = IssueCustomField.find_by(name: SkyRedminePlugin::Constants::CustomFields::TESTE_QS)
             devel_issue.custom_field_values = { custom_field.id => SkyRedminePlugin::Constants::IssueStatus::TESTE_NOK_FECHADA }
@@ -110,7 +110,7 @@ class RetornoTestesController < ApplicationController
           devel_issue.save
         end
 
-        @issue.init_journal(User.current, "[SkyRedminePlugin] Criado retorno de testes do QS")
+        @issue.init_journal(User.current, "[SkyRedminePlugin] Encaminhado retorno de testes do QS")
         # ataulizar o status da tarefa de QS para Teste NOK - Fechada
         if testenok_status = IssueStatus.find_by(name: SkyRedminePlugin::Constants::IssueStatus::TESTE_NOK_FECHADA)
           @issue.status = testenok_status

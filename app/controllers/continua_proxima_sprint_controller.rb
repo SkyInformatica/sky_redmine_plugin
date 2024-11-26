@@ -32,7 +32,7 @@ class ContinuaProximaSprintController < ApplicationController
       end
 
       new_issue = criar_nova_tarefa
-      @issue.init_journal(User.current, "[SkyRedminePlugin] Tarefa continua na proxima sprint")
+      @issue.init_journal(User.current, "[SkyRedminePlugin] Continua na proxima sprint")
       if continua_proxima_sprint_status = IssueStatus.find_by(name: SkyRedminePlugin::Constants::IssueStatus::CONTINUA_PROXIMA_SPRINT)
         @issue.status = continua_proxima_sprint_status
       end

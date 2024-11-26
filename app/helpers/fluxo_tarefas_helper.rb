@@ -84,7 +84,7 @@ module FluxoTarefasHelper
     # verificar se há uma copia de continuidade da tarefa
     related_issues = IssueRelation.where(issue_from_id: @issue.id, relation_type: "copied_to")
     copied_to_issue = related_issues.map { |relation| Issue.find_by(id: relation.issue_to_id) }
-      .find { |issue| @issue.tracker.name == SkyRedminePlugin::Constants::Trackers::RETORNO_TESTES }
+      .find { |issue| issue.tracker.name == SkyRedminePlugin::Constants::Trackers::RETORNO_TESTES }
 
     copied_to_issue
   end
