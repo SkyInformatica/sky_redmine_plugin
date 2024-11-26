@@ -14,7 +14,7 @@ Redmine::Plugin.register :sky_redmine_plugin do
   description "Disponibiliza facilitadores para gerir a fluxo de tarefas entre Devel e QS."
   url "https://github.com/SkyInformatica/sky_redmine_plugin"
   author_url "mailto:maglan.diemer@skyinformatica.com.br"
-  version "2024.11.04.1"
+  version "2024.11.26.1"
 
   # Adicionar configurações do plugin
   settings default: {
