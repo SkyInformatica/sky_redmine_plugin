@@ -5,6 +5,7 @@ module SkyRedminePlugin
 
     included do
       def issue_history_tabs
+        Rails.logger.info ">>>> SkyRedminePlugin: Chamando issue_history_tabs"
         # Chama o método original para obter as abas existentes
         tabs = super
 
