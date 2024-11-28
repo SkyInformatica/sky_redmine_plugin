@@ -3,6 +3,10 @@ Rails.logger.info "SkyRedminePlugin: Carregando IssueHelperPatch"
 
 module SkyRedminePlugin
   module IssueHelperPatch
+    def self.prepended(base)
+      Rails.logger.info "SkyRedminePlugin: IssueHelperPatch foi corretamente prepended ao IssuesHelper"
+    end
+
     def issue_history_tabs
       Rails.logger.info "SkyRedminePlugin: Chamando issue_history_tabs com prepend"
       tabs = super
