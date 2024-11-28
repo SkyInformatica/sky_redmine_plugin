@@ -30,4 +30,9 @@ Redmine::Plugin.register :sky_redmine_plugin do
   permission :manage_sky_plugin, { sky_redmine_settings: [:show, :update] }, require: :admin
 end
 
+Rails.configuration.to_prepare do
+  Rails.logger.info "SkyRedminePlugin: Usando include para IssueHelperPatch"
+  IssuesHelper.include SkyRedminePlugin::IssueHelperPatch
+end
+
 ActionView::Base.send :include, FluxoTarefasHelper
