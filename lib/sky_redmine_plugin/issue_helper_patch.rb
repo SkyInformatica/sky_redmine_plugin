@@ -7,6 +7,7 @@ module SkyRedminePlugin
         alias_method :original_issue_history_tabs, :issue_history_tabs
 
         def issue_history_tabs
+          Rails.logger.info ">>>> SkyRedminePlugin: Método issue_history_tabs patchado com sucesso."
           tabs = original_issue_history_tabs
           tabs << {
             name: "fluxo_tarefas",
