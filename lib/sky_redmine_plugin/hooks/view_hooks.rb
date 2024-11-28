@@ -6,7 +6,7 @@ module SkyRedminePlugin
       render_on :view_issues_context_menu_start, partial: "context_menu/criar_tarefas"
       #render_on :view_issues_show_description_bottom, partial: "issues/fluxo_tarefas"
       # Adiciona a aba personalizada na visualização da tarefa
-      def helper_issues_show_tabs(context = {})
+      def helper_issues_show_detail_after_setting(context = {})
         context[:tabs] << {
           name: "fluxo_tarefas",
           partial: "issues/fluxo_tarefas",
