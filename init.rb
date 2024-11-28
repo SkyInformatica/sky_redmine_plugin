@@ -7,7 +7,7 @@
 require "redmine"
 require File.join(File.dirname(__FILE__), "lib", "sky_redmine_plugin")
 require_dependency File.join(File.dirname(__FILE__), "app", "helpers", "fluxo_tarefas_helper")
-require_dependency File.join(File.dirname(__FILE__), "lib", "issue_helper_patch")
+require_dependency File.join(File.dirname(__FILE__), "lib", "sky_redmine_plugin", "issue_helper_patch")
 
 Redmine::Plugin.register :sky_redmine_plugin do
   name "Sky Redmine plugin"
