@@ -6,8 +6,8 @@
 
 require "redmine"
 require File.join(File.dirname(__FILE__), "lib", "sky_redmine_plugin")
+require File.join(File.dirname(__FILE__), "lib", "sky_redmine_plugin", "issue_helper_patch")
 require_dependency File.join(File.dirname(__FILE__), "app", "helpers", "fluxo_tarefas_helper")
-require_dependency File.join(File.dirname(__FILE__), "lib", "sky_redmine_plugin", "issue_helper_patch")
 
 Redmine::Plugin.register :sky_redmine_plugin do
   name "Sky Redmine plugin"
@@ -27,12 +27,6 @@ Redmine::Plugin.register :sky_redmine_plugin do
 
   # Adicionar permissão para administração
   permission :manage_sky_plugin, { sky_redmine_settings: [:show, :update] }, require: :admin
-end
-
-Rails.configuration.to_prepare do
-  unless IssuesHelper.included_modules.include?(SkyRedminePlugin::IssueHelperPatch)
-    IssuesHelper.send(:include, SkyRedminePlugin::IssueHelperPatch)
-  end
 end
 
 ActionView::Base.send :include, FluxoTarefasHelper

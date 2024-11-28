@@ -1,26 +1,28 @@
 # lib/sky_redmine_plugin/issue_helper_patch.rb
 module SkyRedminePlugin
   module IssueHelperPatch
-    def self.included(base)
-      base.send(:include, InstanceMethods)
-      base.class_eval do
-        alias_method :original_issue_history_tabs, :issue_history_tabs
+    extend ActiveSupport::Concern
 
-        def issue_history_tabs
-          Rails.logger.info ">>>> SkyRedminePlugin: Método issue_history_tabs patchado com sucesso."
-          tabs = original_issue_history_tabs
-          tabs << {
-            name: "fluxo_tarefas",
-            partial: "issues/tabs/fluxo_tarefas",
-            label: "Fluxo das tarefas",
-          }
-          tabs
-        end
+    included do
+      def issue_history_tabs
+        # Chama o método original para obter as abas existentes
+        tabs = super
+
+        # Adiciona a nova aba ao array de abas
+        tabs << {
+          name: "fluxo_tarefas",
+          partial: "issues/tabs/fluxo_tarefas",
+          label: "Fluxo das tarefas",
+          locals: { issue: @issue },
+        }
+
+        tabs
       end
     end
-
-    module InstanceMethods
-      # Métodos auxiliares, se necessário
-    end
   end
+end
+
+# Aplica o patch ao IssuesHelper
+Rails.application.config.to_prepare do
+  IssuesHelper.include SkyRedminePlugin::IssueHelperPatch
 end
