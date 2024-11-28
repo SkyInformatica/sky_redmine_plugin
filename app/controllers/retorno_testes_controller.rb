@@ -98,7 +98,8 @@ class RetornoTestesController < ApplicationController
       devel_issue = localizar_tarefa_origem_desenvolvimento(@issue)
 
       if devel_issue
-        new_issue = criar_nova_tarefa(devel_issue.project.id)
+        # Criar nova tarefa com a categoria da tarefa de desenvolvimento
+        new_issue = criar_nova_tarefa(devel_issue.project.id, devel_issue.category_id)
 
         # atualizar o status da tarefa de devel para fechada continua retorno de testes e o campo Teste QS para Teste NOK - Fechada
         if fechada_continua_retorno_testes_status = IssueStatus.find_by(name: SkyRedminePlugin::Constants::IssueStatus::FECHADA_CONTINUA_RETORNO_TESTES)
@@ -166,13 +167,16 @@ class RetornoTestesController < ApplicationController
     @processed_issues = []
   end
 
-  def criar_nova_tarefa(project_id)
+  def criar_nova_tarefa(project_id, category_id = nil)
     Rails.logger.info ">>> criar_nova_tarefa"
     new_issue = @issue.copy(project_id: project_id)
     limpar_campos_nova_tarefa(new_issue, CriarTarefasHelper::TipoCriarNovaTarefa::RETORNO_TESTES)
     new_issue.tracker = Tracker.find_by_name(SkyRedminePlugin::Constants::Trackers::RETORNO_TESTES)
     new_issue.tag_list = []
     new_issue.estimated_hours = 1
+
+    # Atribuir a categoria, se fornecida
+    new_issue.category_id = category_id if category_id
 
     # Concatenando o valor do campo "Resultado Teste NOK" à descrição
     if (@origem_retorno_teste == ORIGEM_RETORNO_TESTE_QS)
