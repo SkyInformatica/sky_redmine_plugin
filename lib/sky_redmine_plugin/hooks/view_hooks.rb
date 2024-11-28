@@ -5,7 +5,16 @@ module SkyRedminePlugin
       render_on :view_issues_show_details_bottom, partial: "issues/criar_tarefas"
       render_on :view_issues_context_menu_start, partial: "context_menu/criar_tarefas"
       #render_on :view_issues_show_description_bottom, partial: "issues/fluxo_tarefas"
-      render_on :view_issues_show_details_bottom, partial: "issues/fluxo_tarefas_tab"
+      # Adiciona a aba personalizada na visualização da tarefa
+      def helper_issues_show_tabs(context = {})
+        if User.current.allowed_to?(:view_issues, context[:project])
+          context[:tabs] << {
+            name: "fluxo_tarefas",
+            partial: "issues/fluxo_tarefas",
+            label: :label_fluxo_tarefas,
+          }
+        end
+      end
 
       def view_layouts_base_html_head(context = {})
         javascript_include_tag("ocultar_tarefas_relacionadas", plugin: "sky_redmine_plugin")
