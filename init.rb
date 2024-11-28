@@ -32,7 +32,7 @@ end
 # Adicionar logs para verificar a execução
 Rails.logger.info "SkyRedminePlugin: Antes do bloco to_prepare"
 
-Rails.application.config.to_prepare do
+Rails.configuration.to_prepare do
   begin
     Rails.logger.info "SkyRedminePlugin: Dentro do bloco to_prepare"
     require_dependency "issues_helper"
