@@ -29,10 +29,15 @@ Redmine::Plugin.register :sky_redmine_plugin do
   permission :manage_sky_plugin, { sky_redmine_settings: [:show, :update] }, require: :admin
 end
 
-Rails.configuration.to_prepare do
-  Rails.logger.info "SkyRedminePlugin: Usando prepend para IssueHelperPatch"
+# Adicionar logs para verificar a execução
+Rails.logger.info "SkyRedminePlugin: Antes do bloco to_prepare"
+
+Rails.application.config.to_prepare do
+  Rails.logger.info "SkyRedminePlugin: Dentro do bloco to_prepare"
   require_dependency "issues_helper"
   IssuesHelper.prepend SkyRedminePlugin::IssueHelperPatch
 end
+
+Rails.logger.info "SkyRedminePlugin: Depois do bloco to_prepare"
 
 ActionView::Base.send :include, FluxoTarefasHelper
