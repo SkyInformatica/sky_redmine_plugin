@@ -3,6 +3,7 @@
 #rescue LoadError
 #  Rails.logger.error "Whenever gem não está instalada. Por favor, adicione 'gem \"whenever\"' ao Gemfile e execute 'bundle install'"
 #end
+Rails.logger.info "SkyRedminePlugin: init.rb carregado"
 
 require "redmine"
 require File.join(File.dirname(__FILE__), "lib", "sky_redmine_plugin")
