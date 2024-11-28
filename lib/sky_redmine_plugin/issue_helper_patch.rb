@@ -1,4 +1,6 @@
 # lib/sky_redmine_plugin/issue_helper_patch.rb
+Rails.logger.info "SkyRedminePlugin: Carregando IssueHelperPatch"
+
 module SkyRedminePlugin
   module IssueHelperPatch
     def issue_history_tabs
@@ -13,14 +15,4 @@ module SkyRedminePlugin
       tabs
     end
   end
-end
-
-Rails.application.config.to_prepare do
-  Rails.logger.info "SkyRedminePlugin: Usando prepend para IssueHelperPatch"
-  IssuesHelper.prepend SkyRedminePlugin::IssueHelperPatch
-end
-
-Rails.configuration.to_prepare do
-  Rails.logger.info "SkyRedminePlugin: Usando include para IssueHelperPatch"
-  IssuesHelper.include SkyRedminePlugin::IssueHelperPatch
 end

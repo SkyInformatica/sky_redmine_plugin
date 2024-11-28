@@ -6,9 +6,9 @@
 Rails.logger.info "SkyRedminePlugin: init.rb carregado"
 
 require "redmine"
-require File.join(File.dirname(__FILE__), "lib", "sky_redmine_plugin")
-require_dependency File.join(File.dirname(__FILE__), "app", "helpers", "fluxo_tarefas_helper")
-require_dependency File.join(File.dirname(__FILE__), "lib", "sky_redmine_plugin", "issue_helper_patch")
+require_relative "lib/sky_redmine_plugin"
+require_relative "app/helpers/fluxo_tarefas_helper"
+require_relative "lib/sky_redmine_plugin/issue_helper_patch"
 
 Redmine::Plugin.register :sky_redmine_plugin do
   name "Sky Redmine plugin"
@@ -31,8 +31,9 @@ Redmine::Plugin.register :sky_redmine_plugin do
 end
 
 Rails.configuration.to_prepare do
-  Rails.logger.info "SkyRedminePlugin: Usando include para IssueHelperPatch"
-  IssuesHelper.include SkyRedminePlugin::IssueHelperPatch
+  Rails.logger.info "SkyRedminePlugin: Usando prepend para IssueHelperPatch"
+  require_dependency "issues_helper"
+  IssuesHelper.prepend SkyRedminePlugin::IssueHelperPatch
 end
 
 ActionView::Base.send :include, FluxoTarefasHelper

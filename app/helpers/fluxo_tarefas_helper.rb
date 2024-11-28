@@ -1,3 +1,5 @@
+Rails.logger.info "SkyRedminePlugin: Carregando FluxoTarefasHelper"
+
 module FluxoTarefasHelper
   include ApplicationHelper
   include IssuesHelper
