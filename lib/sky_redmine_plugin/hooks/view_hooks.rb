@@ -10,7 +10,7 @@ module SkyRedminePlugin
         context[:tabs] << {
           name: "fluxo_tarefas",
           partial: "issues/fluxo_tarefas",
-          label: :label_fluxo_tarefas,
+          label: "Fluxo das tarefas",
         }
       end
 
