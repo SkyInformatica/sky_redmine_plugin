@@ -6,7 +6,6 @@
 Rails.logger.info "SkyRedminePlugin: init.rb carregado"
 
 require "redmine"
-require_relative "lib/sky_redmine_plugin"
 require_relative "app/helpers/fluxo_tarefas_helper"
 require_relative "lib/sky_redmine_plugin/issue_helper_patch"
 
