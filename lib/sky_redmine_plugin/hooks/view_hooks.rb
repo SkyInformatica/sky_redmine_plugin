@@ -8,7 +8,8 @@ module SkyRedminePlugin
       render_on :view_issues_show_tabs, partial: "issues/fluxo_tarefas_tab"
 
       def view_layouts_base_html_head(context = {})
-        javascript_include_tag("ocultar_tarefas_relacionadas", plugin: "sky_redmine_plugin")
+        javascript_include_tag("ocultar_tarefas_relacionadas", plugin: "sky_redmine_plugin") +
+        javascript_include_tag("fluxo_tarefas_tab", plugin: "sky_redmine_plugin")
       end
     end
   end
