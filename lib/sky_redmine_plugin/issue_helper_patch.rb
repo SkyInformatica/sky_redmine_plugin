@@ -19,3 +19,8 @@ Rails.application.config.to_prepare do
   Rails.logger.info "SkyRedminePlugin: Usando prepend para IssueHelperPatch"
   IssuesHelper.prepend SkyRedminePlugin::IssueHelperPatch
 end
+
+Rails.configuration.to_prepare do
+  Rails.logger.info "SkyRedminePlugin: Usando include para IssueHelperPatch"
+  IssuesHelper.include SkyRedminePlugin::IssueHelperPatch
+end
