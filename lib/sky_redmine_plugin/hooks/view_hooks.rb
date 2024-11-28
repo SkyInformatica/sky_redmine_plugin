@@ -4,18 +4,11 @@ module SkyRedminePlugin
     class ViewHooks < Redmine::Hook::ViewListener
       render_on :view_issues_show_details_bottom, partial: "issues/criar_tarefas"
       render_on :view_issues_context_menu_start, partial: "context_menu/criar_tarefas"
-      render_on :view_issues_show_description_bottom, partial: "issues/fluxo_tarefas"
-
-      def view_issues_show_details_bottom(context = {})
-        context[:controller].send(:render_to_string, {
-          partial: "issues/fluxo_tarefas_tab",
-          locals: context,
-        })
-      end
+      #render_on :view_issues_show_description_bottom, partial: "issues/fluxo_tarefas"
+      render_on :view_issues_show_details_bottom, partial: "issues/fluxo_tarefas_tab"
 
       def view_layouts_base_html_head(context = {})
-        javascript_include_tag("ocultar_tarefas_relacionadas", plugin: "sky_redmine_plugin") +
-        javascript_include_tag("fluxo_tarefas_tab", plugin: "sky_redmine_plugin")
+        javascript_include_tag("ocultar_tarefas_relacionadas", plugin: "sky_redmine_plugin")
       end
     end
   end
