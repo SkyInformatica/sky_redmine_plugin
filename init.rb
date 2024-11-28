@@ -33,9 +33,14 @@ end
 Rails.logger.info "SkyRedminePlugin: Antes do bloco to_prepare"
 
 Rails.application.config.to_prepare do
-  Rails.logger.info "SkyRedminePlugin: Dentro do bloco to_prepare"
-  require_dependency "issues_helper"
-  IssuesHelper.prepend SkyRedminePlugin::IssueHelperPatch
+  begin
+    Rails.logger.info "SkyRedminePlugin: Dentro do bloco to_prepare"
+    require_dependency "issues_helper"
+    IssuesHelper.prepend SkyRedminePlugin::IssueHelperPatch
+  rescue StandardError => e
+    Rails.logger.error "SkyRedminePlugin: Erro no bloco to_prepare - #{e.message}"
+    Rails.logger.error e.backtrace.join("\n")
+  end
 end
 
 Rails.logger.info "SkyRedminePlugin: Depois do bloco to_prepare"
