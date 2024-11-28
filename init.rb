@@ -30,7 +30,9 @@ Redmine::Plugin.register :sky_redmine_plugin do
 end
 
 Rails.configuration.to_prepare do
-  IssuesHelper.send(:include, SkyRedminePlugin::IssueHelperPatch)
+  unless IssuesHelper.included_modules.include?(SkyRedminePlugin::IssueHelperPatch)
+    IssuesHelper.send(:include, SkyRedminePlugin::IssueHelperPatch)
+  end
 end
 
 ActionView::Base.send :include, FluxoTarefasHelper
