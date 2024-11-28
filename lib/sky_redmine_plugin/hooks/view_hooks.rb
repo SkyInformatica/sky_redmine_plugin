@@ -7,13 +7,11 @@ module SkyRedminePlugin
       #render_on :view_issues_show_description_bottom, partial: "issues/fluxo_tarefas"
       # Adiciona a aba personalizada na visualização da tarefa
       def helper_issues_show_tabs(context = {})
-        if User.current.allowed_to?(:view_issues, context[:project])
-          context[:tabs] << {
-            name: "fluxo_tarefas",
-            partial: "issues/fluxo_tarefas",
-            label: :label_fluxo_tarefas,
-          }
-        end
+        context[:tabs] << {
+          name: "fluxo_tarefas",
+          partial: "issues/fluxo_tarefas",
+          label: :label_fluxo_tarefas,
+        }
       end
 
       def view_layouts_base_html_head(context = {})
