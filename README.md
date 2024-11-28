@@ -18,3 +18,14 @@ bundle exec rake redmine:plugins:migrate RAILS_ENV=production
 - [Encaminhar para o QS](docs/encaminhar_qs/encaminhar_qs.md)
 - [Continua na próxima sprint](docs/continua_proxima_sprint/continua_proxima_sprint.md)
 - [Ações automatizadas na gestão do fluxo das tarefas](docs/acoes_automatizadas_fluxo_tarefas.md)
+
+# O que há de novo?
+
+## 2024.11.28.1
+
+- Manter a categoria original da tarefa de desenvolvimento quando se cria uma nova tarefa de retorno de testes do QS.
+
+## 2024.11.26.1
+
+- Funcionalidade para registrar histórico das alterações nas tarefas pelas automações das cópias das tarefas para retorno de testes, encaminhar para o QS e continua na proxima sprint
+- Controle para impedir de criar mais de uma vez o retorno de testes em tarefas do QS.
