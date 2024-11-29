@@ -11,6 +11,14 @@ module SkyRedminePlugin
         locals: { issue: @issue },
       }
 
+      # Adiciona a aba "Subtarefas"
+      tabs << {
+        name: "subtarefas",
+        partial: "issues/tabs/subtarefas",
+        label: :label_subtarefas,
+      #locals: { issue: @issue },
+      }
+
       # Adiciona a aba "Tarefas Relacionadas"
       tabs << {
         name: "tarefas_relacionadas",
