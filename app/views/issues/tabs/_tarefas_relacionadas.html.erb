@@ -1,23 +1,2 @@
 <% # plugins/sky_redmine_plugin/app/views/issues/tabs/_tarefas_relacionadas.html.erb %>  
-
-<strong>Antes do partial</strong>  
-
-<% # Definir @project %>  
-<% @project ||= @issue.project %>  
-
-<% # Definir @relations %>  
-<% @relations = @issue.relations.select { |r| r.other_issue(@issue).visible? } %>  
-
-<% # Exibir o número de relações encontradas %>  
-<p>Número de relações: <%= @relations.count %></p>  
-
-<% # Listar as relações %>  
-<ul>  
-  <% @relations.each do |relation| %>  
-    <li><%= relation.other_issue(@issue).subject %></li>  
-  <% end %>  
-</ul>  
-
 <%= render partial: "issues/relations" %>  
-
-<strong>Após o partial</strong>  
