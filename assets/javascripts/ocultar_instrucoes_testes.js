@@ -6,32 +6,40 @@ document.addEventListener('DOMContentLoaded', function () {
         var hideText = 'Ocultar instruções para teste';
         var showText = 'Exibir instruções para teste';
 
-        // Cria o link para expandir/colapsar  
+        // Criar o link para expandir/colapsar  
         var toggleLink = document.createElement('a');
         toggleLink.href = '#';
         toggleLink.id = 'toggle-instrucoes-testes';
         toggleLink.innerText = hideText;
-        toggleLink.style.display = 'block';
-        toggleLink.style.marginBottom = '10px';
 
-        // Cria a linha divisória <hr>
-        var hrElement = document.createElement('hr');
-        hrElement.style.marginBottom = '10px'; // Adiciona um espaçamento opcional
+        // Criar o elemento <span> com a classe 'contextual' e inserir o toggleLink dentro dele  
+        var contextualSpan = document.createElement('span');
+        contextualSpan.className = 'contextual';
+        contextualSpan.appendChild(toggleLink);
 
-        // Insere o <hr> antes do toggleLink
-        instrucoesTestesDiv.parentNode.insertBefore(hrElement, instrucoesTestesDiv);
+        // Selecionar o título  
+        var tituloElement = instrucoesTestesDiv.querySelector('p strong span');
+        var tituloContainer = document.createElement('div');
+        tituloContainer.style.display = 'flex';
+        tituloContainer.style.justifyContent = 'space-between';
+        tituloContainer.style.alignItems = 'center';
 
-        // Insere o link antes do div
-        instrucoesTestesDiv.parentNode.insertBefore(toggleLink, instrucoesTestesDiv);
+        // Mover o título para o contêiner  
+        tituloContainer.appendChild(tituloElement.parentNode.parentNode); // Captura o <p> que contém o título  
+        tituloContainer.appendChild(contextualSpan);
 
-        // Adiciona o evento de clique ao link  
+        // Inserir o contêiner antes do conteúdo  
+        var conteudoDiv = instrucoesTestesDiv.querySelector('.value');
+        instrucoesTestesDiv.insertBefore(tituloContainer, conteudoDiv);
+
+        // Adicionar o evento de clique ao link  
         toggleLink.addEventListener('click', function (event) {
             event.preventDefault();
-            if (instrucoesTestesDiv.style.display === 'none') {
-                instrucoesTestesDiv.style.display = 'block';
+            if (conteudoDiv.style.display === 'none') {
+                conteudoDiv.style.display = 'block';
                 toggleLink.innerText = hideText;
             } else {
-                instrucoesTestesDiv.style.display = 'none';
+                conteudoDiv.style.display = 'none';
                 toggleLink.innerText = showText;
             }
         });
