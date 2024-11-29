@@ -2,7 +2,7 @@ document.addEventListener('DOMContentLoaded', function () {
     var relationsDiv = document.getElementById('relations');
     if (relationsDiv) {
         // Remover a div 'relations'  
-        relationsDiv.remove();
+        relationsDiv.style.display = 'none';
 
         // Remover o <hr> imediatamente antes da div 'relations'  
         var previousElement = relationsDiv.previousElementSibling;
