@@ -10,6 +10,15 @@ module SkyRedminePlugin
         label: :label_fluxo_tarefas,
         locals: { issue: @issue },
       }
+
+      # Adiciona a aba "Tarefas Relacionadas"
+      tabs << {
+        name: "tarefas_relacionadas",
+        partial: "issues/tabs/tarefas_relacionadas",
+        label: :label_tarefas_relacionadas,
+        locals: { issue: @issue },
+      }
+
       tabs
     end
   end
