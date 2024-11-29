@@ -3,7 +3,6 @@
 #rescue LoadError
 #  Rails.logger.error "Whenever gem não está instalada. Por favor, adicione 'gem \"whenever\"' ao Gemfile e execute 'bundle install'"
 #end
-Rails.logger.info "SkyRedminePlugin: init.rb carregado"
 
 require "redmine"
 require_relative "app/helpers/fluxo_tarefas_helper"
@@ -29,18 +28,9 @@ Redmine::Plugin.register :sky_redmine_plugin do
   permission :manage_sky_plugin, { sky_redmine_settings: [:show, :update] }, require: :admin
 end
 
-# Adicionar logs para verificar a execução
-Rails.logger.info "SkyRedminePlugin: Antes do bloco to_prepare"
-
 begin
   require_dependency "issues_helper"
   IssuesHelper.prepend SkyRedminePlugin::IssueHelperPatch
-  Rails.logger.info "SkyRedminePlugin: IssueHelperPatch aplicado com sucesso"
-rescue => e
-  Rails.logger.error "SkyRedminePlugin: Erro ao aplicar IssueHelperPatch - #{e.message}"
-  Rails.logger.error e.backtrace.join("\n")
 end
-
-Rails.logger.info "SkyRedminePlugin: Depois do bloco to_prepare"
 
 ActionView::Base.send :include, FluxoTarefasHelper
