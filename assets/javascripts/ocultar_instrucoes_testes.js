@@ -3,8 +3,8 @@ document.addEventListener('DOMContentLoaded', function () {
     if (instrucoesTestesDiv) {
         instrucoesTestesDiv.style.display = 'block';
 
-        var hideText = 'Ocultar instruções para teste';
-        var showText = 'Exibir instruções para teste';
+        var hideText = 'Ocultar';
+        var showText = 'Exibir';
 
         // Criar o link para expandir/colapsar  
         var toggleLink = document.createElement('a');
