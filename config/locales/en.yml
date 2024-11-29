@@ -1,5 +1,5 @@
 # English strings go here for Rails i18n
 en:
-  label_fluxo_tarefas: "Fluxo de Tarefas"
+  label_fluxo_tarefas: "Fluxo das tarefas"
   label_tarefas_relacionadas: "Tarefas relacionadas"
   label_subtarefas: "Subtarefas"
