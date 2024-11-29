@@ -1,6 +1,6 @@
 <% # plugins/sky_redmine_plugin/app/views/issues/tabs/_tarefas_relacionadas.html.erb %>  
 
-<strong>Teste</strong>  
+<strong>Antes do partial</strong>  
 
 <% # Definir @issue se não estiver definido %>  
 <% @issue ||= issue %>  
@@ -12,3 +12,5 @@
 <% @relations = @issue.relations.select { |r| r.other_issue(@issue).visible? } %>  
 
 <%= render partial: "relations" %>
+
+<strong>Apos o partial</strong>  
