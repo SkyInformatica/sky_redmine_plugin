@@ -24,7 +24,7 @@ bundle exec rake redmine:plugins:migrate RAILS_ENV=production
 ## 2024.11.29.1
 
 - Implementado novas abas para exibir o Fluxo das tarefas, Subtarefas e Tarefas relacionadas
-- Criado hyperlink para ocultar as instruções para testes
+- Criado hyperlink para ocultar as Instruções para testes, Resultado teste ok e Resultado teste NOK
 
 ## 2024.11.28.1
 
