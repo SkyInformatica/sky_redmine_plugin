@@ -5,6 +5,9 @@ document.addEventListener('DOMContentLoaded', function () {
             selector: '.text_cf.cf_43.attribute'
         },
         {
+            selector: '.text_cf.cf_59.attribute'
+        }
+        {
             selector: '.text_cf.cf_60.attribute'
         }
     ];
