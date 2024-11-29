@@ -18,7 +18,7 @@ module SkyRedminePlugin
       tabs << {
         name: "fluxo_tarefas",
         partial: "issues/tabs/fluxo_tarefas",
-        label: "Fluxo das tarefas",
+        label: :label_fluxo_tarefas,
         locals: { issue: @issue },
       }
       tabs
