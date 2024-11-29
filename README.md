@@ -21,6 +21,11 @@ bundle exec rake redmine:plugins:migrate RAILS_ENV=production
 
 # O que há de novo?
 
+## 2024.11.29.1
+
+- Implementado novas abas para exibir o Fluxo das tarefas, Subtarefas e Tarefas relacionadas
+- Criado hyperlink para ocultar as instruções para testes
+
 ## 2024.11.28.1
 
 - Manter a categoria original da tarefa de desenvolvimento quando se cria uma nova tarefa de retorno de testes do QS.
