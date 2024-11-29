@@ -2,12 +2,23 @@
 
 <strong>Antes do partial</strong>  
 
+<% # Verificar se @issue está definido %>  
+<% unless @issue %>  
+  <% Rails.logger.info "DEBUG: @issue não está definido no contexto" %>  
+<% else %>  
+  <% Rails.logger.info "DEBUG: @issue está definido: #{@issue.inspect}" %>  
+<% end %>  
+
 <% # Definir @project %>  
 <% @project ||= @issue.project %>  
+
+<% Rails.logger.info "DEBUG: @project: #{@project.inspect}" %>  
 
 <% # Definir @relations %>  
 <% @relations = @issue.relations.select { |r| r.other_issue(@issue).visible? } %>  
 
-<%= render partial: "relations" %>
+<% Rails.logger.info "DEBUG: @relations: #{@relations.inspect}" %>  
 
-<strong>Apos o partial</strong>  
+<%= render partial: "relations" %>  
+
+<strong>Após o partial</strong>
