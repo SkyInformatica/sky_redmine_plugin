@@ -1,4 +1,14 @@
 <% # plugins/sky_redmine_plugin/app/views/issues/tabs/_tarefas_relacionadas.html.erb %>  
-<p>
-<strong>Teste</strong>
+
+<strong>Teste</strong>  
+
+<% # Definir @issue se não estiver definido %>  
+<% @issue ||= issue %>  
+
+<% # Definir @project %>  
+<% @project ||= @issue.project %>  
+
+<% # Definir @relations %>  
+<% @relations = @issue.relations.select { |r| r.other_issue(@issue).visible? } %>  
+
 <%= render partial: "relations" %>
