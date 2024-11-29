@@ -9,8 +9,8 @@ document.addEventListener('DOMContentLoaded', function () {
             // Cria o novo link  
             var scrollToTabsLink = document.createElement('a');
             scrollToTabsLink.href = '#history';
-            scrollToTabsLink.innerText = 'Ir para as Abas';
-            scrollToTabsLink.title = 'Ir para as Abas';
+            scrollToTabsLink.innerText = 'Ir para as abas';
+            scrollToTabsLink.title = 'Ir para as abas';
 
             // Adiciona um separador "|"  
             var separator = document.createTextNode(' | ');
