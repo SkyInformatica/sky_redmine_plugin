@@ -1,10 +1,10 @@
 document.addEventListener('DOMContentLoaded', function () {
-    var relationsDiv = document.querySelector('.text_cf.cf_43.attribute');
-    if (relationsDiv) {
-        relationsDiv.style.display = 'none';
+    var instrucoesTestesDiv = document.querySelector('.text_cf.cf_43.attribute');
+    if (instrucoesTestesDiv) {
+        instrucoesTestesDiv.style.display = 'none';
 
-        var hideText = 'Ocultar instrucoes para teste';
-        var showText = 'Exibir instrucoes para teste';
+        var hideText = 'Ocultar instruções para teste';
+        var showText = 'Exibir instruções para teste';
 
         // Cria o link para expandir/colapsar  
         var toggleLink = document.createElement('a');
@@ -14,17 +14,24 @@ document.addEventListener('DOMContentLoaded', function () {
         toggleLink.style.display = 'block';
         toggleLink.style.marginBottom = '10px';
 
-        // Insere o link antes da seção de relações  
-        relationsDiv.parentNode.insertBefore(toggleLink, relationsDiv);
+        // Cria a linha divisória <hr>
+        var hrElement = document.createElement('hr');
+        hrElement.style.marginBottom = '10px'; // Adiciona um espaçamento opcional
+
+        // Insere o <hr> antes do toggleLink
+        instrucoesTestesDiv.parentNode.insertBefore(hrElement, instrucoesTestesDiv);
+
+        // Insere o link antes do div
+        instrucoesTestesDiv.parentNode.insertBefore(toggleLink, instrucoesTestesDiv);
 
         // Adiciona o evento de clique ao link  
         toggleLink.addEventListener('click', function (event) {
             event.preventDefault();
-            if (relationsDiv.style.display === 'none') {
-                relationsDiv.style.display = 'block';
+            if (instrucoesTestesDiv.style.display === 'none') {
+                instrucoesTestesDiv.style.display = 'block';
                 toggleLink.innerText = hideText;
             } else {
-                relationsDiv.style.display = 'none';
+                instrucoesTestesDiv.style.display = 'none';
                 toggleLink.innerText = showText;
             }
         });
