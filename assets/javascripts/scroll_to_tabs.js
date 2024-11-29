@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', function () {
         if (tabsElement) {
             // Cria o novo link  
             var scrollToTabsLink = document.createElement('a');
-            scrollToTabsLink.href = '#tabs';
+            scrollToTabsLink.href = '#history';
             scrollToTabsLink.innerText = 'Ir para as Abas';
             scrollToTabsLink.title = 'Ir para as Abas';
 
