@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', function () {
-    var relationsDiv = document.getElementById('issue_tree');
+    var relationsDiv = document.getElementById('relations');
     if (relationsDiv) {
         // Remover a div 'relations'  
         relationsDiv.remove();
