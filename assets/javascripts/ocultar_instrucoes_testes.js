@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', function () {
     var instrucoesTestesDiv = document.querySelector('.text_cf.cf_43.attribute');
     if (instrucoesTestesDiv) {
-        instrucoesTestesDiv.style.display = 'none';
+        instrucoesTestesDiv.style.display = 'block';
 
         var hideText = 'Ocultar instruções para teste';
         var showText = 'Exibir instruções para teste';
@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', function () {
         var toggleLink = document.createElement('a');
         toggleLink.href = '#';
         toggleLink.id = 'toggle-instrucoes-testes';
-        toggleLink.innerText = showText;
+        toggleLink.innerText = hideText;
         toggleLink.style.display = 'block';
         toggleLink.style.marginBottom = '10px';
 
