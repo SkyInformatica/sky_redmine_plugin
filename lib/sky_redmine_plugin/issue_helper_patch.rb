@@ -16,7 +16,7 @@ module SkyRedminePlugin
         name: "tarefas_relacionadas",
         partial: "issues/tabs/tarefas_relacionadas",
         label: :label_tarefas_relacionadas,
-        locals: { issue: @issue },
+      #locals: { issue: @issue },
       }
 
       tabs
