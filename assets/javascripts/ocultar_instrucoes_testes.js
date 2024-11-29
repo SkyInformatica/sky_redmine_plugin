@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', function () {
-    var relationsDiv = document.getElementById('text_cf cf_43 attribute');
+    var relationsDiv = document.querySelector('.text_cf.cf_43.attribute');
     if (relationsDiv) {
         relationsDiv.style.display = 'none';
 
