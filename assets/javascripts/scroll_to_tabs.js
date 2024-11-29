@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     if (nextPrevLinks) {
         // Verifica se o elemento das abas existe  
-        var tabsElement = document.getElementById('tabs');
+        var tabsElement = document.getElementById('history');
         if (tabsElement) {
             // Cria o novo link  
             var scrollToTabsLink = document.createElement('a');
