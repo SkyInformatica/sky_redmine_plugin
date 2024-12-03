@@ -31,7 +31,6 @@ document.addEventListener('DOMContentLoaded', function () {
                     // Criar o elemento <span> com a classe 'contextual' e inserir o link dentro dele  
                     var contextualSpan = document.createElement('span');
                     contextualSpan.className = 'contextual';
-                    contextualSpan.style.marginLeft = '10px'; // Opcional: adicionar margem para separação  
                     contextualSpan.appendChild(scrollToTabsLink);
 
                     // Criar um contêiner flex para alinhar o título e o link  
