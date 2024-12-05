@@ -2,8 +2,8 @@
 module SkyRedminePlugin
   module IssueHelperPatch
     def issue_history_tabs
-      Rails.logger.info "SkyRedminePlugin: Chamando issue_history_tabs personalizado"
       tabs = super
+      # Adiciona a aba "Fluxo das tarefas" como primeira aba
       tabs.unshift({
         name: "fluxo_tarefas",
         partial: "issues/tabs/fluxo_tarefas",
@@ -12,18 +12,18 @@ module SkyRedminePlugin
       })
 
       # Adiciona a aba "Subtarefas"
-      #tabs << {
-      #  name: "subtarefas",
-      #  partial: "issues/tabs/subtarefas",
-      #  label: :label_subtarefas,
-      #}
+      tabs << {
+        name: "subtarefas",
+        partial: "issues/tabs/subtarefas",
+        label: :label_subtarefas,
+      }
 
       # Adiciona a aba "Tarefas Relacionadas"
-      #tabs << {
-      #  name: "tarefas_relacionadas",
-      #  partial: "issues/tabs/tarefas_relacionadas",
-      #  label: :label_tarefas_relacionadas,
-      #}
+      tabs << {
+        name: "tarefas_relacionadas",
+        partial: "issues/tabs/tarefas_relacionadas",
+        label: :label_tarefas_relacionadas,
+      }
 
       tabs
     end

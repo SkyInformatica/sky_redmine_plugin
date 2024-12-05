@@ -1,33 +1,20 @@
 document.addEventListener('DOMContentLoaded', function () {
     var relationsDiv = document.getElementById('relations');
-    if (relationsDiv) {
-        // Esconde a seção de relações  
-        relationsDiv.style.display = 'none';
+    var tabContentDiv = document.querySelector('#tab-content-tarefas_relacionadas');
 
-        var hideText = 'Ocultar tarefas relacionadas';
-        var showText = 'Exibir tarefas relacionadas';
+    if (relationsDiv && tabContentDiv) {
+        // Move a div 'relations' para dentro do conteúdo da aba  
+        tabContentDiv.appendChild(relationsDiv);
 
-        // Cria o link para expandir/colapsar  
-        var toggleLink = document.createElement('a');
-        toggleLink.href = '#';
-        toggleLink.id = 'toggle-relations';
-        toggleLink.innerText = showText;
-        toggleLink.style.display = 'block';
-        toggleLink.style.marginBottom = '10px';
-
-        // Insere o link antes da seção de relações  
-        relationsDiv.parentNode.insertBefore(toggleLink, relationsDiv);
-
-        // Adiciona o evento de clique ao link  
-        toggleLink.addEventListener('click', function (event) {
-            event.preventDefault();
-            if (relationsDiv.style.display === 'none') {
-                relationsDiv.style.display = 'block';
-                toggleLink.innerText = hideText;
-            } else {
-                relationsDiv.style.display = 'none';
-                toggleLink.innerText = showText;
-            }
+        // Remove o título e o <hr> que ficavam antes da div 'relations'  
+        var previousElements = [];
+        var element = relationsDiv.previousElementSibling;
+        while (element && (element.tagName === 'P' || element.tagName === 'HR' || element.tagName === 'BR')) {
+            previousElements.push(element);
+            element = element.previousElementSibling;
+        }
+        previousElements.forEach(function (el) {
+            el.parentNode.removeChild(el);
         });
     }
 });
