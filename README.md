@@ -21,6 +21,11 @@ bundle exec rake redmine:plugins:migrate RAILS_ENV=production
 
 # O que há de novo?
 
+## 2024.12.05.1
+
+- Ajuste para a aba "Fluxo das tarefas" sempre ser a primeira aba
+- Ajuste da aba "Tarefas relacionadas" para funcionar o link de adicionar relacionamento novo.
+
 ## 2024.11.29.1
 
 - Implementado novas abas para exibir o Fluxo das tarefas, Subtarefas e Tarefas relacionadas
