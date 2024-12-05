@@ -3,8 +3,7 @@ document.addEventListener('DOMContentLoaded', function () {
     var tabContentDiv = document.querySelector('#tab-content-subtarefas');
 
     if (relationsDiv && tabContentDiv) {
-        // Move a div 'relations' para dentro do conteúdo da aba  
-        tabContentDiv.appendChild(relationsDiv);
+
 
         // Remover o <hr> imediatamente antes da div 'relations'  
         var previousElement = relationsDiv.previousElementSibling;
@@ -16,5 +15,8 @@ document.addEventListener('DOMContentLoaded', function () {
         if (previousElement && previousElement.tagName === 'HR') {
             previousElement.remove();
         }
+
+        // Move a div 'relations' para dentro do conteúdo da aba  
+        tabContentDiv.appendChild(relationsDiv);
     }
 });
