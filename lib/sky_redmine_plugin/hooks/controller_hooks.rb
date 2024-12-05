@@ -3,6 +3,7 @@ module SkyRedminePlugin
     class ControllerHooks < Redmine::Hook::Listener
       include CriarTarefasHelper
       include FluxoTarefasHelper
+      include TarefasRelacionadasHelper
 
       def controller_issues_edit_after_save(context = {})
         Rails.logger.info ">>> controller_issues_edit_after_save"

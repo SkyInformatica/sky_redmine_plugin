@@ -1,5 +1,5 @@
 class RetornoTestesController < ApplicationController
-  include FluxoTarefasHelper
+  include TarefasRelacionadasHelper
   include CriarTarefasHelper
   before_action :inicializar
   before_action :find_issue, only: [:retorno_testes_devel, :retorno_testes_qs]
