@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', function () {
-    var relationsDiv = document.getElementById('issue-tree');
+    var relationsDiv = document.getElementById('issue_tree');
     var tabContentDiv = document.querySelector('#tab-content-subtarefas');
 
     if (relationsDiv && tabContentDiv) {
