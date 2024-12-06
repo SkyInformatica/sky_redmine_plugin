@@ -172,17 +172,6 @@ module FluxoTarefasHelper
       linhas << "<b>#{secao[:nome]}</b> (Tempo gasto total: #{total_tempo_formatado}h)"
       #linhas << "<table class='tabela-fluxo-tarefas'>"
       linhas << "<table class='tabela-fluxo-tarefas'>"
-      linhas << "<tr>  
-        <th>Título</th>  
-        <th>Situação</th>  
-        <th>Atribuído Para</th>  
-        <th>Data Criação</th>  
-        <th>Data Em Andamento</th>  
-        <th>Data Resolvida/Teste</th>  
-        <th>Data Fechada</th>  
-        <th>Versão</th>  
-        <th>Tempo Gasto</th>  
-      </tr>"
 
       # Adicionar as tarefas
       secao[:tarefas].each do |tarefa|
