@@ -172,6 +172,17 @@ module FluxoTarefasHelper
       linhas << "<b>#{secao[:nome]}</b> (Tempo gasto total: #{total_tempo_formatado}h)"
       #linhas << "<table class='tabela-fluxo-tarefas'>"
       linhas << "<table class='tabela-fluxo-tarefas'>"
+      linhas << "<tr>  
+        <th>Título</th>  
+        <th>Situação</th>  
+        <th>Atribuído Para</th>  
+        <th>Data Criação</th>  
+        <th>Data Em Andamento</th>  
+        <th>Data Resolvida/Teste</th>  
+        <th>Data Fechada</th>  
+        <th>Versão</th>  
+        <th>Tempo Gasto</th>  
+      </tr>"
 
       # Adicionar as tarefas
       secao[:tarefas].each do |tarefa|
@@ -225,14 +236,22 @@ module FluxoTarefasHelper
         SkyRedminePlugin::Constants::IssueStatus::TESTE_OK,
         SkyRedminePlugin::Constants::IssueStatus::TESTE_NOK,
       ]
+
       status_fechada = [
         SkyRedminePlugin::Constants::IssueStatus::TESTE_OK_FECHADA,
         SkyRedminePlugin::Constants::IssueStatus::TESTE_NOK_FECHADA,
+        SkyRedminePlugin::Constants::IssueStatus::CONTINUA_PROXIMA_SPRINT,
+        SkyRedminePlugin::Constants::IssueStatus::FECHADA_CONTINUA_RETORNO_TESTES,
       ]
     else
       # Tarefas de Desenvolvimento
       status_resolvida = [SkyRedminePlugin::Constants::IssueStatus::RESOLVIDA]
-      status_fechada = [SkyRedminePlugin::Constants::IssueStatus::FECHADA]
+
+      status_fechada = [
+        SkyRedminePlugin::Constants::IssueStatus::FECHADA,
+        SkyRedminePlugin::Constants::IssueStatus::CONTINUA_PROXIMA_SPRINT,
+        SkyRedminePlugin::Constants::IssueStatus::FECHADA_CONTINUA_RETORNO_TESTES,
+      ]
     end
 
     # Obter a data que mudou para "Resolvida" ou "Teste OK"/"Teste NOK"
