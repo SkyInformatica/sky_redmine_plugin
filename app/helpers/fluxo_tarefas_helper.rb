@@ -154,12 +154,12 @@ module FluxoTarefasHelper
         
         .tabela-fluxo-tarefas th:nth-child(8),  
         .tabela-fluxo-tarefas td:nth-child(8) {  
-          width: 13%;   
+          width: 11%;   
         }  
       
         .tabela-fluxo-tarefas th:nth-child(9),  
         .tabela-fluxo-tarefas td:nth-child(9) {  
-          width: 4%;   
+          width: 6%;   
         }  
       </style>"
 
