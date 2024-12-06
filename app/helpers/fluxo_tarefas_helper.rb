@@ -128,7 +128,7 @@ module FluxoTarefasHelper
 
           .tabela-fluxo-tarefas th:nth-child(3),  
           .tabela-fluxo-tarefas td:nth-child(3) {  
-            width: 12%;   
+            width: 10%;   
           }  
 
           .tabela-fluxo-tarefas th:nth-child(4),  
@@ -138,7 +138,7 @@ module FluxoTarefasHelper
 
           .tabela-fluxo-tarefas th:nth-child(5),  
           .tabela-fluxo-tarefas td:nth-child(5) {  
-            width: 8%; /* Data Em Andamento */  
+            width: 10%; /* Data Em Andamento */  
           }  
 
           .tabela-fluxo-tarefas th:nth-child(6),  
