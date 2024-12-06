@@ -129,27 +129,27 @@ module FluxoTarefasHelper
       
         .tabela-fluxo-tarefas th:nth-child(3),  
         .tabela-fluxo-tarefas td:nth-child(3) {  
-          width: 10%;   
+          width: 14%;   
         }  
       
         .tabela-fluxo-tarefas th:nth-child(4),  
         .tabela-fluxo-tarefas td:nth-child(4) {  
-          width: 9%; /* Data de Criação */  
+          width: 8%; /* Data de Criação */  
         }  
       
         .tabela-fluxo-tarefas th:nth-child(5),  
         .tabela-fluxo-tarefas td:nth-child(5) {  
-          width: 9%; /* Data Em Andamento */  
+          width: 8%; /* Data Em Andamento */  
         }  
       
         .tabela-fluxo-tarefas th:nth-child(6),  
         .tabela-fluxo-tarefas td:nth-child(6) {  
-          width: 9%; /* Data Resolvida/Teste */  
+          width: 8%; /* Data Resolvida/Teste */  
         }  
       
         .tabela-fluxo-tarefas th:nth-child(7),  
         .tabela-fluxo-tarefas td:nth-child(7) {  
-          width: 9%; /* Data Fechada */  
+          width: 8%; /* Data Fechada */  
         }  
         
         .tabela-fluxo-tarefas th:nth-child(8),  
