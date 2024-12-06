@@ -103,64 +103,65 @@ module FluxoTarefasHelper
     linhas << "<p><strong>Fluxo das tarefas</strong></b></p>"
 
     linhas << "<style>  
-          .tabela-fluxo-tarefas {  
-            border-collapse: collapse;  
-            table-layout: fixed; /* Definição importante para controlar as larguras */  
-            width: 100%; /* Ocupará toda a largura disponível */  
-            margin: 0 auto; /* Centraliza a tabela */                  
-          }  
-          .tabela-fluxo-tarefas th,  
-          .tabela-fluxo-tarefas td {  
-            border: 1px solid #dddddd;  
-            text-align: left;  
-            padding: 4px;  
-            word-wrap: break-word; /* Quebra palavras longas */                
-          }        
-          .tabela-fluxo-tarefas th:nth-child(1),  
-          .tabela-fluxo-tarefas td:nth-child(1) {  
-            width: 50%;   
-          }  
-
-          .tabela-fluxo-tarefas th:nth-child(2),  
-          .tabela-fluxo-tarefas td:nth-child(2) {  
-            width: 15%;   
-          }  
-
-          .tabela-fluxo-tarefas th:nth-child(3),  
-          .tabela-fluxo-tarefas td:nth-child(3) {  
-            width: 10%;   
-          }  
-
-          .tabela-fluxo-tarefas th:nth-child(4),  
-          .tabela-fluxo-tarefas td:nth-child(4) {  
-            width: 10%; /* Data de Criação */  
-          }  
-
-          .tabela-fluxo-tarefas th:nth-child(5),  
-          .tabela-fluxo-tarefas td:nth-child(5) {  
-            width: 10%; /* Data Em Andamento */  
-          }  
-
-          .tabela-fluxo-tarefas th:nth-child(6),  
-          .tabela-fluxo-tarefas td:nth-child(6) {  
-            width: 10%; /* Data Resolvida/Teste */  
-          }  
-
-          .tabela-fluxo-tarefas th:nth-child(7),  
-          .tabela-fluxo-tarefas td:nth-child(7) {  
-            width: 10%; /* Data Fechada */  
-          }  
-          
-          .tabela-fluxo-tarefas th:nth-child(8),  
-          .tabela-fluxo-tarefas td:nth-child(8) {  
-            width: 13%;   
-          }  
-
-          .tabela-fluxo-tarefas th:nth-child(9),  
-          .tabela-fluxo-tarefas td:nth-child(9) {  
-            width: 4%;   
-          }  
-        </style>"
+        .tabela-fluxo-tarefas {  
+          border-collapse: collapse;  
+          table-layout: fixed; /* Definição importante para controlar as larguras */  
+          width: 100%; /* Ocupará toda a largura disponível */  
+          margin: 0 auto; /* Centraliza a tabela */  
+        }  
+        .tabela-fluxo-tarefas th,  
+        .tabela-fluxo-tarefas td {  
+          border: 1px solid #dddddd;  
+          text-align: left;  
+          padding: 4px;  
+          word-wrap: break-word; /* Quebra palavras longas */  
+          font-size: 12px; /* Tamanho da fonte ajustado */  
+        }        
+        .tabela-fluxo-tarefas th:nth-child(1),  
+        .tabela-fluxo-tarefas td:nth-child(1) {  
+          width: 50%;   
+        }  
+      
+        .tabela-fluxo-tarefas th:nth-child(2),  
+        .tabela-fluxo-tarefas td:nth-child(2) {  
+          width: 15%;   
+        }  
+      
+        .tabela-fluxo-tarefas th:nth-child(3),  
+        .tabela-fluxo-tarefas td:nth-child(3) {  
+          width: 10%;   
+        }  
+      
+        .tabela-fluxo-tarefas th:nth-child(4),  
+        .tabela-fluxo-tarefas td:nth-child(4) {  
+          width: 10%; /* Data de Criação */  
+        }  
+      
+        .tabela-fluxo-tarefas th:nth-child(5),  
+        .tabela-fluxo-tarefas td:nth-child(5) {  
+          width: 10%; /* Data Em Andamento */  
+        }  
+      
+        .tabela-fluxo-tarefas th:nth-child(6),  
+        .tabela-fluxo-tarefas td:nth-child(6) {  
+          width: 10%; /* Data Resolvida/Teste */  
+        }  
+      
+        .tabela-fluxo-tarefas th:nth-child(7),  
+        .tabela-fluxo-tarefas td:nth-child(7) {  
+          width: 10%; /* Data Fechada */  
+        }  
+        
+        .tabela-fluxo-tarefas th:nth-child(8),  
+        .tabela-fluxo-tarefas td:nth-child(8) {  
+          width: 13%;   
+        }  
+      
+        .tabela-fluxo-tarefas th:nth-child(9),  
+        .tabela-fluxo-tarefas td:nth-child(9) {  
+          width: 4%;   
+        }  
+      </style>"
 
     secoes.each do |secao|
       # Calcular tempo total gasto na seção
