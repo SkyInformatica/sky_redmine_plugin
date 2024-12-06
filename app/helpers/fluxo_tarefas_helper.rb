@@ -134,27 +134,27 @@ module FluxoTarefasHelper
       
         .tabela-fluxo-tarefas th:nth-child(4),  
         .tabela-fluxo-tarefas td:nth-child(4) {  
-          width: 10%; /* Data de Criação */  
+          width: 9%; /* Data de Criação */  
         }  
       
         .tabela-fluxo-tarefas th:nth-child(5),  
         .tabela-fluxo-tarefas td:nth-child(5) {  
-          width: 10%; /* Data Em Andamento */  
+          width: 9%; /* Data Em Andamento */  
         }  
       
         .tabela-fluxo-tarefas th:nth-child(6),  
         .tabela-fluxo-tarefas td:nth-child(6) {  
-          width: 10%; /* Data Resolvida/Teste */  
+          width: 9%; /* Data Resolvida/Teste */  
         }  
       
         .tabela-fluxo-tarefas th:nth-child(7),  
         .tabela-fluxo-tarefas td:nth-child(7) {  
-          width: 10%; /* Data Fechada */  
+          width: 9%; /* Data Fechada */  
         }  
         
         .tabela-fluxo-tarefas th:nth-child(8),  
         .tabela-fluxo-tarefas td:nth-child(8) {  
-          width: 11%;   
+          width: 15%;   
         }  
       
         .tabela-fluxo-tarefas th:nth-child(9),  
@@ -262,7 +262,7 @@ module FluxoTarefasHelper
     data_fechada = obter_data_mudanca_status(tarefa, status_fechada)
     data_fechada = data_fechada.strftime("%d/%m/%Y") if data_fechada
 
-    assigned_to_name = tarefa.assigned_to_id.present? ? link_to(User.find(tarefa.assigned_to_id).name, user_path(tarefa.assigned_to_id)) : "Não atribuído"
+    assigned_to_name = tarefa.assigned_to_id.present? ? link_to(User.find(tarefa.assigned_to_id).name, user_path(tarefa.assigned_to_id)) : ""
     version_name = tarefa.fixed_version ? link_to(tarefa.fixed_version.name, version_path(tarefa.fixed_version)) : "-"
     link_tarefa = link_to_issue(tarefa)
 
