@@ -175,13 +175,13 @@ module FluxoTarefasHelper
       linhas << "<tr>  
         <th>Título</th>  
         <th>Situação</th>  
-        <th>Atribuído Para</th>  
-        <th>Data Criação</th>  
-        <th>Data Em Andamento</th>  
-        <th>Data Resolvida/Teste</th>  
-        <th>Data Fechada</th>  
+        <th>Atribuído</th>  
+        <th>Criação</th>  
+        <th>Em andamento</th>  
+        <th>Resolvida/Teste</th>  
+        <th>Fechada</th>  
         <th>Versão</th>  
-        <th>Tempo Gasto</th>  
+        <th>Tempo gasto</th>  
       </tr>"
 
       # Adicionar as tarefas
