@@ -21,6 +21,10 @@ bundle exec rake redmine:plugins:migrate RAILS_ENV=production
 
 # O que há de novo?
 
+## 2024.12.06.1
+
+- Criado novas colunas no fluxo das tarefas para data criacao, data em andamento, data resolvida e data fechada.
+
 ## 2024.12.05.1
 
 - Ajuste para a aba "Fluxo das tarefas" sempre ser a primeira aba
