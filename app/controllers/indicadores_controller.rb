@@ -26,22 +26,6 @@ class IndicadoresController < ApplicationController
 
     Rails.logger.info @tarefas_por_tipo
     Rails.logger.info @tarefas_por_status
-
-    @tarefas_por_tipo = {
-      "Bug" => 5,
-      "Feature" => 8,
-      "Suporte" => 3,
-    }
-
-    @tarefas_por_status = {
-      "Novo" => 4,
-      "Em Progresso" => 6,
-      "Resolvido" => 2,
-      "Fechado" => 4,
-    }
-
-    Rails.logger.info @tarefas_por_tipo
-    Rails.logger.info @tarefas_por_status
   end
 
   private
