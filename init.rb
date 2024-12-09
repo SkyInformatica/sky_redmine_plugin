@@ -45,3 +45,10 @@ begin
 end
 
 ActionView::Base.send :include, FluxoTarefasHelper
+
+begin
+  require "chartkick"
+  require "groupdate"
+rescue LoadError => e
+  Rails.logger.error "Erro ao carregar as dependências do plugin: #{e.message}"
+end
