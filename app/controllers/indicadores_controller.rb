@@ -7,6 +7,7 @@ class IndicadoresController < ApplicationController
   helper Chartkick::Helper
 
   def index
+    Rails.logger.info ">>>> index indicadores"
     # Definir a data de início para um mês atrás
     start_date = 1.month.ago
 
@@ -16,6 +17,9 @@ class IndicadoresController < ApplicationController
     # Continuar com seu agrupamento e contagem
     @tarefas_por_tipo = issues.group(:tracker_id).count
     @tarefas_por_status = issues.group(:status_id).count
+
+    Rails.logger.info @tarefas_por_tipo.length
+    Rails.logger.info @tarefas_por_status.length
   end
 
   private
