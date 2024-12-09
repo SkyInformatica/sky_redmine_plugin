@@ -9,7 +9,7 @@ class IndicadoresController < ApplicationController
   def index
     Rails.logger.info ">>>> index indicadores"
     # Definir a data de início para um mês atrás
-    start_date = 1.month.ago
+    start_date = 12.month.ago
 
     # Filtrar as tarefas do projeto criadas no último mês
     issues = @project.issues.where("created_on >= ?", start_date)
