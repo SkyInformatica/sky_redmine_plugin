@@ -1,12 +1,12 @@
 <% content_for :header_tags do %>  
   <%= javascript_include_tag "https://www.gstatic.com/charts/loader.js" %>  
-  <%= javascript_include_tag "chartkick.js" %>  
+  <%= javascript_include_tag "https://cdn.jsdelivr.net/npm/chartkick@5.0.1/dist/chartkick.min.js" %>  
 <% end %>  
 
 <h2><%= l(:label_indicadores) %></h2>  
 
 <h3><%= l(:label_tarefas_por_tipo) %></h3>  
-<%= pie_chart @tarefas_por_tipo %>  
+<%= pie_chart @tarefas_por_tipo, adapter: "google" %>  
 
 <h3><%= l(:label_tarefas_por_status) %></h3>  
 <%= column_chart @tarefas_por_status %>  
