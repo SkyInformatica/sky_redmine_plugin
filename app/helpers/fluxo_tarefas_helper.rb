@@ -155,6 +155,12 @@ module FluxoTarefasHelper
       .tabela-fluxo-tarefas td:nth-child(10) {  
         width: 6%; 
       }  
+      /* estilo para o título da seção */  
+      .titulo-secao {  
+        font-size: 12px;  
+        font-weight: bold;  
+        margin: 10px 0 5px 0;  
+      }  
     </style>"
 
     secoes.each do |secao|
@@ -163,7 +169,7 @@ module FluxoTarefasHelper
       total_tempo_formatado = format("%.2f", total_tempo)
 
       # Adicionar cabeçalho da seção com tempo total
-      linhas << "<b>#{secao[:nome]}</b> (Tempo gasto total: #{total_tempo_formatado}h)"
+      linhas << "<p class='titulo-secao'>#{secao[:nome]} (Tempo gasto total: #{total_tempo_formatado}h)</p>"
       #linhas << "<table class='tabela-fluxo-tarefas'>"
       linhas << "<table class='tabela-fluxo-tarefas'>"
       linhas << "<tr>  
