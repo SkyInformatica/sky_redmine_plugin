@@ -264,16 +264,22 @@ module FluxoTarefasHelper
 
     if revisoes.any?
       links_revisoes = revisoes.map do |revisao|
-        link_to("r#{revisao.revision}", controller: "repositories", action: "revision", id: tarefa.project, rev: revisao.revision)
+        link_to("r#{revisao.revision}", controller: "repositories", action: "revision", id: tarefa.project.id, rev: revisao.revision)
       end.join(", ")
     else
       links_revisoes = "-"
     end
 
+    # obter atribuido para
     assigned_to_name = tarefa.assigned_to_id.present? ? link_to(User.find(tarefa.assigned_to_id).name, user_path(tarefa.assigned_to_id)) : ""
+
+    # obter sprint
     version_name = tarefa.fixed_version ? link_to(tarefa.fixed_version.name, version_path(tarefa.fixed_version)) : "-"
+
+    # obter link para tarefa com sua descricao
     link_tarefa = link_to_issue(tarefa)
 
+    # formatar em negrito se é a tarefa atual na tabela do fluxo das tarefas
     if tarefa.id == tarefa_atual_id
       link_tarefa = "<strong>#{link_tarefa}</strong>"
     end
