@@ -178,7 +178,7 @@ module FluxoTarefasHelper
         <th>Fechada</th>  
         <th>Versão</th>  
         <th>Tempo gasto</th>  
-        <th>Repositório</th>
+        <th>SVN</th>
       </tr>"
 
       # Adicionar as tarefas
