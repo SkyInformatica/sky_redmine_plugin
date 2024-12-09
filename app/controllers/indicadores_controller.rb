@@ -5,14 +5,15 @@ class IndicadoresController < ApplicationController
   menu_item :indicadores
 
   def index
-    # Filtrar as tarefas do projeto atual
-    @tarefas_por_tipo = @project.issues.group(:tracker_id).count.transform_keys do |tracker_id|
-      Tracker.find(tracker_id).name
-    end
+    # Definir a data de início para um mês atrás
+    start_date = 1.month.ago
 
-    @tarefas_por_status = @project.issues.group(:status_id).count.transform_keys do |status_id|
-      IssueStatus.find(status_id).name
-    end
+    # Filtrar as tarefas do projeto criadas no último mês
+    issues = @project.issues.where("created_on >= ?", start_date)
+
+    # Continuar com seu agrupamento e contagem
+    @tarefas_por_tipo = issues.group(:tracker_id).count
+    @tarefas_por_status = issues.group(:status_id).count
   end
 
   private
