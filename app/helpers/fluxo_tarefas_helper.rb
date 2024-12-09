@@ -264,9 +264,7 @@ module FluxoTarefasHelper
 
     if revisoes.any?
       links_revisoes = revisoes.map do |revisao|
-        #link_to("r#{revisao.revision}", controller: "repositories", action: "revision", project_id: tarefa.project.id, rev: revisao.revision)
-        #link_to("r#{revisao.revision}", revision_path(project_id: tarefa.project.identifier, rev: revisao.revision))
-        link_to_revision(revisao, tarefa.project, "r#{revisao.revision}")
+        link_to_revision(revisao, revisao.repository, :text => "r#{revisao.revision}")
       end.join(", ")
     else
       links_revisoes = "-"
