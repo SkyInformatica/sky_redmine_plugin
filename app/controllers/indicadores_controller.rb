@@ -18,6 +18,19 @@ class IndicadoresController < ApplicationController
     @tarefas_por_tipo = issues.group(:tracker_id).count
     @tarefas_por_status = issues.group(:status_id).count
 
+    @tarefas_por_tipo = {
+      "Bug" => 5,
+      "Feature" => 8,
+      "Suporte" => 3,
+    }
+
+    @tarefas_por_status = {
+      "Novo" => 4,
+      "Em Progresso" => 6,
+      "Resolvido" => 2,
+      "Fechado" => 4,
+    }
+
     Rails.logger.info @tarefas_por_tipo
     Rails.logger.info @tarefas_por_status
   end
