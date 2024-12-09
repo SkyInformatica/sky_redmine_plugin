@@ -3,7 +3,6 @@
 #rescue LoadError
 #  Rails.logger.error "Whenever gem não está instalada. Por favor, adicione 'gem \"whenever\"' ao Gemfile e execute 'bundle install'"
 #end
-
 require "redmine"
 require_relative "app/helpers/fluxo_tarefas_helper"
 require_relative "lib/sky_redmine_plugin/issue_helper_patch"
@@ -11,7 +10,7 @@ require_relative "lib/sky_redmine_plugin/issue_helper_patch"
 Redmine::Plugin.register :sky_redmine_plugin do
   name "Sky Redmine plugin"
   author "Maglan Diemer"
-  description "Disponibiliza facilitadores para gerir a fluxo de tarefas entre Devel e QS."
+  description "Disponibiliza facilitadores para gerir o fluxo de tarefas entre Devel e QS."
   url "https://github.com/SkyInformatica/sky_redmine_plugin"
   author_url "mailto:maglan.diemer@skyinformatica.com.br"
   version "2024.12.09.1"
@@ -26,6 +25,17 @@ Redmine::Plugin.register :sky_redmine_plugin do
 
   # Adicionar permissão para administração
   permission :manage_sky_plugin, { sky_redmine_settings: [:show, :update] }, require: :admin
+
+  # Adicionar permissão para visualizar indicadores
+  permission :view_indicadores, { "indicadores" => [:index] }, public: true
+
+  # Adicionar item de menu para os indicadores
+  menu :project_menu,
+       :indicadores,
+       { controller: "indicadores", action: "index" },
+       caption: "Indicadores",
+       after: :activity,
+       param: :project_id
 end
 
 begin

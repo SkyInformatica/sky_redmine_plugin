@@ -2,3 +2,7 @@ pt-BR:
   label_fluxo_tarefas: "Fluxo das tarefas"
   label_tarefas_relacionadas: "Tarefas relacionadas"
   label_subtarefas: "Subtarefas"
+
+  label_indicadores: "Indicadores"
+  label_tarefas_por_tipo: "Tarefas por tipo"
+  label_tarefas_por_status: "Tarefas por situação"
