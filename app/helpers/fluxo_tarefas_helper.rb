@@ -123,27 +123,27 @@ module FluxoTarefasHelper
       }  
       .tabela-fluxo-tarefas th:nth-child(2),  
       .tabela-fluxo-tarefas td:nth-child(2) {  
-        width: 12%;   
+        width: 11%;   
       }  
       .tabela-fluxo-tarefas th:nth-child(3),  
       .tabela-fluxo-tarefas td:nth-child(3) {  
-        width: 10%;   
+        width: 9%;   
       }  
       .tabela-fluxo-tarefas th:nth-child(4),  
       .tabela-fluxo-tarefas td:nth-child(4) {  
-        width: 8%; /* Data de Criação */  
+        width: 8%; 
       }  
       .tabela-fluxo-tarefas th:nth-child(5),  
       .tabela-fluxo-tarefas td:nth-child(5) {  
-        width: 8%; /* Data Em Andamento */  
+        width: 8%; 
       }  
       .tabela-fluxo-tarefas th:nth-child(6),  
       .tabela-fluxo-tarefas td:nth-child(6) {  
-        width: 8%; /* Data Resolvida/Teste */  
+        width: 8%; 
       }  
       .tabela-fluxo-tarefas th:nth-child(7),  
       .tabela-fluxo-tarefas td:nth-child(7) {  
-        width: 8%; /* Data Fechada */  
+        width: 8%; 
       }  
       .tabela-fluxo-tarefas th:nth-child(8),  
       .tabela-fluxo-tarefas td:nth-child(8) {  
@@ -151,11 +151,11 @@ module FluxoTarefasHelper
       }  
       .tabela-fluxo-tarefas th:nth-child(9),  
       .tabela-fluxo-tarefas td:nth-child(9) {  
-        width: 4%;   
+        width: 6%;   
       }  
       .tabela-fluxo-tarefas th:nth-child(10),  
       .tabela-fluxo-tarefas td:nth-child(10) {  
-        width: 6%; /* Nova coluna - Revisão SVN */  
+        width: 6%; 
       }  
     </style>"
 
@@ -173,11 +173,11 @@ module FluxoTarefasHelper
         <th>Situação</th>  
         <th>Atribuído</th>  
         <th>Criação</th>  
-        <th>Em andamento</th>  
-        <th>Resolvida/Teste</th>  
+        <th>Andamento</th>  
+        <th>Resolvida<br>Teste</th>  
         <th>Fechada</th>  
         <th>Versão</th>  
-        <th>Tempo gasto</th>  
+        <th>Gasto</th>  
         <th>SVN</th>
       </tr>"
 
