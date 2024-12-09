@@ -4,6 +4,8 @@ class IndicadoresController < ApplicationController
   before_action :authorize  # Verifica permissões
   menu_item :indicadores
 
+  helper Chartkick::Helper
+
   def index
     # Definir a data de início para um mês atrás
     start_date = 1.month.ago

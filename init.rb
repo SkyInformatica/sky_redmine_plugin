@@ -4,6 +4,8 @@
 #  Rails.logger.error "Whenever gem não está instalada. Por favor, adicione 'gem \"whenever\"' ao Gemfile e execute 'bundle install'"
 #end
 require "redmine"
+require "chartkick"
+require "groupdate"
 require_relative "app/helpers/fluxo_tarefas_helper"
 require_relative "lib/sky_redmine_plugin/issue_helper_patch"
 
@@ -45,10 +47,3 @@ begin
 end
 
 ActionView::Base.send :include, FluxoTarefasHelper
-
-begin
-  require "chartkick"
-  require "groupdate"
-rescue LoadError => e
-  Rails.logger.error "Erro ao carregar as dependências do plugin: #{e.message}"
-end
