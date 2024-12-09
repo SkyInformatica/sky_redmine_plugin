@@ -21,6 +21,6 @@ Rails.application.routes.draw do
     post "sky_redmine_settings", to: "sky_redmine_settings#update", as: "update_sky_redmine_settings"
 
     # indicadores
-    get "indicadores", to: "indicadores#index", as: "indicadores"
+    get "projects/:project_id/indicadores", to: "indicadores#index", as: "project_indicadores"
   end
 end
