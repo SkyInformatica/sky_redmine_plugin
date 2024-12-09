@@ -103,65 +103,61 @@ module FluxoTarefasHelper
     linhas << "<p><strong>Fluxo das tarefas</strong></b></p>"
 
     linhas << "<style>  
-        .tabela-fluxo-tarefas {  
-          border-collapse: collapse;  
-          table-layout: fixed; /* Definição importante para controlar as larguras */  
-          width: 100%; /* Ocupará toda a largura disponível */  
-          margin: 0 auto; /* Centraliza a tabela */  
-        }  
-        .tabela-fluxo-tarefas th,  
-        .tabela-fluxo-tarefas td {  
-          border: 1px solid #dddddd;  
-          text-align: left;  
-          padding: 4px;  
-          word-wrap: break-word; /* Quebra palavras longas */  
-          font-size: 12px; /* Tamanho da fonte ajustado */  
-        }        
-        .tabela-fluxo-tarefas th:nth-child(1),  
-        .tabela-fluxo-tarefas td:nth-child(1) {  
-          width: 50%;   
-        }  
-      
-        .tabela-fluxo-tarefas th:nth-child(2),  
-        .tabela-fluxo-tarefas td:nth-child(2) {  
-          width: 15%;   
-        }  
-      
-        .tabela-fluxo-tarefas th:nth-child(3),  
-        .tabela-fluxo-tarefas td:nth-child(3) {  
-          width: 10%;   
-        }  
-      
-        .tabela-fluxo-tarefas th:nth-child(4),  
-        .tabela-fluxo-tarefas td:nth-child(4) {  
-          width: 8%; /* Data de Criação */  
-        }  
-      
-        .tabela-fluxo-tarefas th:nth-child(5),  
-        .tabela-fluxo-tarefas td:nth-child(5) {  
-          width: 8%; /* Data Em Andamento */  
-        }  
-      
-        .tabela-fluxo-tarefas th:nth-child(6),  
-        .tabela-fluxo-tarefas td:nth-child(6) {  
-          width: 8%; /* Data Resolvida/Teste */  
-        }  
-      
-        .tabela-fluxo-tarefas th:nth-child(7),  
-        .tabela-fluxo-tarefas td:nth-child(7) {  
-          width: 8%; /* Data Fechada */  
-        }  
-        
-        .tabela-fluxo-tarefas th:nth-child(8),  
-        .tabela-fluxo-tarefas td:nth-child(8) {  
-          width: 19%;   
-        }  
-      
-        .tabela-fluxo-tarefas th:nth-child(9),  
-        .tabela-fluxo-tarefas td:nth-child(9) {  
-          width: 6%;   
-        }  
-      </style>"
+      .tabela-fluxo-tarefas {  
+        border-collapse: collapse;  
+        table-layout: fixed; /* Definição importante para controlar as larguras */  
+        width: 100%; /* Ocupará toda a largura disponível */  
+        margin: 0 auto; /* Centraliza a tabela */                  
+      }  
+      .tabela-fluxo-tarefas th,  
+      .tabela-fluxo-tarefas td {  
+        border: 1px solid #dddddd;  
+        text-align: left;  
+        padding: 4px;  
+        word-wrap: break-word; /* Quebra palavras longas */  
+        font-size: 12px; /* Tamanho da fonte ajustado */  
+      }        
+      .tabela-fluxo-tarefas th:nth-child(1),  
+      .tabela-fluxo-tarefas td:nth-child(1) {  
+        width: 50%;   
+      }  
+      .tabela-fluxo-tarefas th:nth-child(2),  
+      .tabela-fluxo-tarefas td:nth-child(2) {  
+        width: 12%;   
+      }  
+      .tabela-fluxo-tarefas th:nth-child(3),  
+      .tabela-fluxo-tarefas td:nth-child(3) {  
+        width: 10%;   
+      }  
+      .tabela-fluxo-tarefas th:nth-child(4),  
+      .tabela-fluxo-tarefas td:nth-child(4) {  
+        width: 8%; /* Data de Criação */  
+      }  
+      .tabela-fluxo-tarefas th:nth-child(5),  
+      .tabela-fluxo-tarefas td:nth-child(5) {  
+        width: 8%; /* Data Em Andamento */  
+      }  
+      .tabela-fluxo-tarefas th:nth-child(6),  
+      .tabela-fluxo-tarefas td:nth-child(6) {  
+        width: 8%; /* Data Resolvida/Teste */  
+      }  
+      .tabela-fluxo-tarefas th:nth-child(7),  
+      .tabela-fluxo-tarefas td:nth-child(7) {  
+        width: 8%; /* Data Fechada */  
+      }  
+      .tabela-fluxo-tarefas th:nth-child(8),  
+      .tabela-fluxo-tarefas td:nth-child(8) {  
+        width: 10%;   
+      }  
+      .tabela-fluxo-tarefas th:nth-child(9),  
+      .tabela-fluxo-tarefas td:nth-child(9) {  
+        width: 4%;   
+      }  
+      .tabela-fluxo-tarefas th:nth-child(10),  
+      .tabela-fluxo-tarefas td:nth-child(10) {  
+        width: 6%; /* Nova coluna - Revisão SVN */  
+      }  
+    </style>"
 
     secoes.each do |secao|
       # Calcular tempo total gasto na seção
@@ -182,6 +178,7 @@ module FluxoTarefasHelper
         <th>Fechada</th>  
         <th>Versão</th>  
         <th>Tempo gasto</th>  
+        <th>Repositório</th>
       </tr>"
 
       # Adicionar as tarefas
@@ -262,6 +259,17 @@ module FluxoTarefasHelper
     data_fechada = obter_data_mudanca_status(tarefa, status_fechada)
     data_fechada = data_fechada.strftime("%d/%m/%Y") if data_fechada
 
+    # Obter as revisões associadas à tarefa
+    revisoes = tarefa.changesets
+
+    if revisoes.any?
+      links_revisoes = revisoes.map do |revisao|
+        link_to("r#{revisao.revision}", controller: "repositories", action: "revision", id: tarefa.project, rev: revisao.revision)
+      end.join(", ")
+    else
+      links_revisoes = "-"
+    end
+
     assigned_to_name = tarefa.assigned_to_id.present? ? link_to(User.find(tarefa.assigned_to_id).name, user_path(tarefa.assigned_to_id)) : ""
     version_name = tarefa.fixed_version ? link_to(tarefa.fixed_version.name, version_path(tarefa.fixed_version)) : "-"
     link_tarefa = link_to_issue(tarefa)
@@ -280,6 +288,7 @@ module FluxoTarefasHelper
       <td class='data_fechada'>#{data_fechada || ""}</td>  
       <td class='version'>#{version_name}</td>  
       <td class='spent_hours'>#{horas_gastas}h</td>  
+      <td class='revisao'>#{links_revisoes}</td>
     </tr>"
   end
 end
