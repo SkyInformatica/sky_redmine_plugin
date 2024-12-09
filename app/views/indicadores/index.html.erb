@@ -1,5 +1,7 @@
-<%= javascript_include_tag "//www.gstatic.com/charts/loader.js" %>  
-<%= javascript_include_tag "chartkick" %> 
+<% content_for :header_tags do %> 
+    <%= javascript_include_tag "//www.gstatic.com/charts/loader.js" %>  
+    <%= javascript_include_tag "chartkick" %> 
+<% end %>  
 
 <h2><%= l(:label_indicadores) %></h2>  
 
