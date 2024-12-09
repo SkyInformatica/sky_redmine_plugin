@@ -2,6 +2,7 @@ class IndicadoresController < ApplicationController
   unloadable
   before_action :find_project
   before_action :authorize  # Verifica permissões
+  menu_item :indicadores
 
   def index
     # Filtrar as tarefas do projeto atual

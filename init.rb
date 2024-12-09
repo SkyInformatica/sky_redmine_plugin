@@ -26,13 +26,15 @@ Redmine::Plugin.register :sky_redmine_plugin do
   # Adicionar permissão para administração
   permission :manage_sky_plugin, { sky_redmine_settings: [:show, :update] }, require: :admin
 
-  # Adicionar permissão para visualizar indicadores
-  permission :view_indicadores, { "indicadores" => [:index] }, public: true
+  # Definindo o módulo do projeto
+  project_module :indicadores_module do
+    permission :view_indicadores, { indicadores: [:index] }, public: true
+  end
 
-  # Adicionar item de menu para os indicadores
+  # Adicionando um item ao menu do projeto
   menu :project_menu,
        :indicadores,
-       { controller: "indicadores", action: "index", project_id: nil },
+       { controller: "indicadores", action: "index" },
        caption: "Indicadores",
        after: :activity,
        param: :project_id

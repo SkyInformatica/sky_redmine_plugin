@@ -20,7 +20,8 @@ Rails.application.routes.draw do
     get "sky_redmine_settings", to: "sky_redmine_settings#show", as: "sky_redmine_settings"
     post "sky_redmine_settings", to: "sky_redmine_settings#update", as: "update_sky_redmine_settings"
 
-    # indicadores
-    get "projects/:project_id/indicadores", to: "indicadores#index", as: "project_indicadores"
+    scope "/projects/:project_id" do
+      get "indicadores", to: "indicadores#index", as: "project_indicadores"
+    end
   end
 end
