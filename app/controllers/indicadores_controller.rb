@@ -1,5 +1,5 @@
 class IndicadoresController < ApplicationController
-  layout "base"
+  unloadable
   before_action :find_project
   before_action :authorize  # Verifica permissões
   menu_item :indicadores

@@ -32,14 +32,6 @@ Redmine::Plugin.register :sky_redmine_plugin do
   end
 
   menu :project_menu, :indicadores, { :controller => "indicadores", :action => "index" }, :caption => "Indicadores"
-
-  # Adicionando um item ao menu do projeto
-  menu :project_menu,
-       :indicadores,
-       { controller: "indicadores", action: "index" },
-       caption: "Indicadores",
-       after: :activity,
-       param: :project_id
 end
 
 begin
