@@ -18,8 +18,8 @@ class IndicadoresController < ApplicationController
     @tarefas_por_tipo = issues.group(:tracker_id).count
     @tarefas_por_status = issues.group(:status_id).count
 
-    Rails.logger.info @tarefas_por_tipo.length
-    Rails.logger.info @tarefas_por_status.length
+    Rails.logger.info @tarefas_por_tipo
+    Rails.logger.info @tarefas_por_status
   end
 
   private
