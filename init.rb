@@ -37,8 +37,7 @@ Redmine::Plugin.register :sky_redmine_plugin do
        :indicadores,
        { controller: "indicadores", action: "index" },
        caption: :label_indicadores,
-       after: :activity,
-       param: :project_id
+       after: :activity
 end
 
 begin

@@ -1,9 +1,7 @@
 class IndicadoresController < ApplicationController
-  unloadable
-  before_action :find_project
-  before_action :authorize  # Verifica permissões
-  menu_item :indicadores
   layout "base"
+  before_action :find_project, :authorize
+  menu_item :indicadores
 
   #helper Chartkick::Helper
 
