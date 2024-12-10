@@ -4,7 +4,7 @@ class IndicadoresController < ApplicationController
   before_action :authorize  # Verifica permissões
   menu_item :indicadores
 
-  helper Chartkick::Helper
+  #helper Chartkick::Helper
 
   def index
     Rails.logger.info ">>>> index indicadores"
