@@ -3,6 +3,7 @@ class IndicadoresController < ApplicationController
   before_action :find_project
   before_action :authorize  # Verifica permissões
   menu_item :indicadores
+  layout "base"
 
   #helper Chartkick::Helper
 
