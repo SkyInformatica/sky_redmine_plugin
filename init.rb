@@ -29,16 +29,16 @@ Redmine::Plugin.register :sky_redmine_plugin do
   permission :manage_sky_plugin, { sky_redmine_settings: [:show, :update] }, require: :admin
 
   # Definindo o módulo do projeto
-  project_module :indicadores do
-    permission :view_indicadores, { indicadores: [:index] }, public: true
-  end
+  #project_module :indicadores do
+  #  permission :view_indicadores, { indicadores: [:index] }, public: true
+  #end
 
-  menu :project_menu,
-       :indicadores,
-       { controller: "indicadores", action: "index" },
-       caption: :label_indicadores,
-       after: :activity,
-       param: :project_id
+  #menu :project_menu,
+  #     :indicadores,
+  #     { controller: "indicadores", action: "index" },
+  #     caption: :label_indicadores,
+  #     after: :activity,
+  #     param: :project_id
 end
 
 begin
