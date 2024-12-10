@@ -33,12 +33,12 @@ Redmine::Plugin.register :sky_redmine_plugin do
   #  permission :view_indicadores, { indicadores: [:index] }, public: true
   #end
 
-  #menu :project_menu,
-  #     :indicadores,
-  #     { controller: "indicadores", action: "index" },
-  #     caption: :label_indicadores,
-  #     after: :activity,
-  #     param: :project_id
+  menu :project_menu,
+       :indicadores,
+       { controller: "indicadores", action: "index" },
+       caption: :label_indicadores,
+       after: :activity,
+       param: :project_id
 end
 
 begin
