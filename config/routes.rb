@@ -17,4 +17,4 @@ get "continua_proxima_sprint_lote", to: "continua_proxima_sprint#continua_proxim
 get "sky_redmine_settings", to: "sky_redmine_settings#show", as: "sky_redmine_settings"
 post "sky_redmine_settings", to: "sky_redmine_settings#update", as: "update_sky_redmine_settings"
 
-match "projects/:id/indicadores", :to => "indicadores#index", :via => "get"
+match "projects/:id/indicadores", to: "indicadores#index", via: "get", as: "indicadores"
