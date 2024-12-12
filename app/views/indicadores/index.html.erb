@@ -3,10 +3,23 @@
   <%= javascript_include_tag "https://cdn.jsdelivr.net/npm/chartkick@5.0.1/dist/chartkick.min.js" %>  
 <% end %>  
 
+<%= form_with url: project_indicadores_path(@project), method: :get, local: true do %>  
+  <div>  
+    <%= label_tag :periodo, "Período:" %>  
+    <%= select_tag :periodo, options_for_select([
+                     ["Todo o período", "all"],
+                     ["Este mês", "current_month"],
+                     ["Último mês", "last_month"],
+                     ["Este ano", "current_year"],
+                   ], selected: params[:periodo]) %>  
+    <%= submit_tag "Filtrar" %>  
+  </div>  
+<% end %>  
+
 <h2><%= l(:label_indicadores) %></h2>  
 
 <h3><%= l(:label_tarefas_por_tipo) %></h3>  
 <%= pie_chart @tarefas_por_tipo, adapter: "google" %>  
 
 <h3><%= l(:label_tarefas_por_status) %></h3>  
-<%= column_chart @tarefas_por_status %>  
+<%= column_chart @tarefas_por_status %>
