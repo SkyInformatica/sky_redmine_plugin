@@ -13,11 +13,6 @@
                      ["Este ano", "current_year"],
                    ], selected: params[:periodo]) %>  
     <%= submit_tag "Filtrar" %>  
-
-    <div>  
-    <%= label_tag :data_filtro, "Filtrar por Data:" %>  
-    <%= select_tag :data_filtro, options_for_select(DateFilter::OPTIONS.keys.map { |key| [l("field_#{key}"), key] }) %>   %>  
-  </div> 
   </div>  
 <% end %>  
 
