@@ -3,6 +3,11 @@ class IndicadoresController < ApplicationController
   before_action :find_project, :authorize
   menu_item :indicadores
 
+  helper :sort
+  include Redmine::SortHelper
+  helper :issues
+  include IssuesHelper
+
   def index
     # Determinar o período com base no parâmetro recebido
     case params[:periodo]
