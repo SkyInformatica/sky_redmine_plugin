@@ -35,6 +35,14 @@ class IndicadoresController < ApplicationController
     @tarefas_por_status = issues.group(:status_id).count.transform_keys do |status_id|
       IssueStatus.find(status_id).name
     end
+
+    # **Buscar os registros da tabela SkyRedmineIndicadores**
+    @indicadores = SkyRedmineIndicadores.all
+
+    # Caso queira filtrar pelo período selecionado
+    if start_date && end_date
+      @indicadores = @indicadores.where(created_at: start_date.beginning_of_day..end_date.end_of_day)
+    end
   end
 
   private
