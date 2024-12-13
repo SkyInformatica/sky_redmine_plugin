@@ -4,7 +4,7 @@
   <%= javascript_include_tag "https://cdn.jsdelivr.net/npm/chartkick@5.0.1/dist/chartkick.min.js" %>  
 <% end %> 
 
-<%= stylesheet_link_tag "graficos", media: "all" %>
+<%= stylesheet_link_tag "graficos", plugin: "sky_redmine_plugin" %>
 
 <%= form_with url: indicadores_path(@project), method: :get, local: true do %>  
   <div>  
