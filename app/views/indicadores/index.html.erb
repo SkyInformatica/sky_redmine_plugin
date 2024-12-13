@@ -2,32 +2,9 @@
   <%= javascript_include_tag "https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js" %>  
   <%= javascript_include_tag "https://www.gstatic.com/charts/loader.js" %> 
   <%= javascript_include_tag "https://cdn.jsdelivr.net/npm/chartkick@5.0.1/dist/chartkick.min.js" %>  
-  <style>  
-    .graficos-container {  
-      display: flex;  
-      flex-wrap: wrap;  
-      justify-content: space-around;  
-      margin-top: 20px;  
-    }  
-
-    .grafico {  
-      flex: 1 1 45%;  
-      max-width: 45%;  
-      margin: 10px;  
-    }  
-
-    .grafico h3 {  
-      text-align: center;  
-    }  
-
-    @media (max-width: 800px) {  
-      .grafico {  
-        flex: 1 1 100%;  
-        max-width: 100%;  
-      }  
-    }  
-  </style>
 <% end %> 
+
+<%= stylesheet_link_tag "graficos", media: "all" %>
 
 <%= form_with url: indicadores_path(@project), method: :get, local: true do %>  
   <div>  
