@@ -5,8 +5,6 @@
   <%= stylesheet_link_tag "graficos", plugin: "sky_redmine_plugin" %>
 <% end %> 
 
-
-
 <%= form_with url: indicadores_path(@project), method: :get, local: true do %>  
   <div>  
     <%= label_tag :periodo, "Período:" %>  
@@ -20,79 +18,43 @@
   </div>  
 <% end %>  
 
-<!-- Adicionar o código de abas -->  
-<div class="tabs">  
-  <ul class="tab-links">  
-    <li class="active"><a href="#tab1">Gráficos</a></li>  
-    <li><a href="#tab2">Listagem de Indicadores</a></li>  
-  </ul>  
+<h2><%= l(:label_indicadores) %></h2>  
 
-  <div class="tab-content">  
-    <div id="tab1" class="tab active">  
-      <!-- Conteúdo dos gráficos -->  
-      <div class="graficos-container">  
-        <div class="grafico">  
-          <h3><%= l(:label_tarefas_por_tipo) %></h3>  
-          <%= pie_chart @tarefas_por_tipo, adapter: "google" %>  
-        </div>  
-
-        <div class="grafico">  
-          <h3><%= l(:label_tarefas_por_status) %></h3>  
-          <%= column_chart @tarefas_por_status %>  
-        </div>  
-      </div>  
-    </div>  
-
-    <div id="tab2" class="tab">  
-      <!-- Conteúdo da tabela -->  
-      <h2>Listagem de Indicadores</h2>  
-      <table class="indicadores-tabela">  
-        <thead>  
-          <tr>  
-            <th>Primeira Tarefa DEVEL ID</th>  
-            <th>Última Tarefa DEVEL ID</th>  
-            <th>Status Última Tarefa DEVEL</th>  
-            <th>Tempo Estimado DEVEL</th>  
-            <th>Tempo Gasto DEVEL</th>  
-            <!-- Adicionar outras colunas conforme necessário -->  
-          </tr>  
-        </thead>  
-        <tbody>  
-          <% @indicadores.each do |indicador| %>  
-            <tr>  
-              <td><%= indicador.primeira_tarefa_devel_id %></td>  
-              <td><%= indicador.ultima_tarefa_devel_id %></td>  
-              <td><%= indicador.status_ultima_tarefa_devel %></td>  
-              <td><%= indicador.tempo_estimado_devel %></td>  
-              <td><%= indicador.tempo_gasto_devel %></td>  
-              <!-- Adicionar outras células conforme necessário -->  
-            </tr>  
-          <% end %>  
-        </tbody>  
-      </table>  
-    </div>  
+<div class="graficos-container">  
+  <div class="grafico">  
+    <h3><%= l(:label_tarefas_por_tipo) %></h3>  
+    <%= pie_chart @tarefas_por_tipo, adapter: "google" %>  
   </div>  
-</div>  
 
-<!-- Adicionar script JavaScript para controlar as abas -->  
-<script>  
-document.addEventListener("DOMContentLoaded", function() {  
-  const tabLinks = document.querySelectorAll(".tab-links a");  
-  const tabContents = document.querySelectorAll(".tab-content > div");  
+  <div class="grafico">  
+    <h3><%= l(:label_tarefas_por_status) %></h3>  
+    <%= column_chart @tarefas_por_status %>  
+  </div>  
+</div> 
 
-  tabLinks.forEach(function(link) {  
-    link.addEventListener("click", function(e) {  
-      e.preventDefault();  
-      const activeTab = this.getAttribute("href");  
-
-      // Remover classes 'active' das abas e conteúdos  
-      document.querySelector(".tab-links li.active").classList.remove("active");  
-      document.querySelector(".tab-content > .active").classList.remove("active");  
-
-      // Adicionar classe 'active' à aba e conteúdo selecionados  
-      this.parentElement.classList.add("active");  
-      document.querySelector(activeTab).classList.add("active");  
-    });  
-  });  
-});  
-</script>  
+<!-- **Adicionar a tabela abaixo dos gráficos** -->
+<h2>Listagem de Indicadores</h2>
+<table class="indicadores-tabela">
+  <thead>
+    <tr>
+      <th>Primeira Tarefa DEVEL ID</th>
+      <th>Última Tarefa DEVEL ID</th>
+      <th>Status Última Tarefa DEVEL</th>
+      <th>Tempo Estimado DEVEL</th>
+      <th>Tempo Gasto DEVEL</th>
+      <!-- Adicionar outras colunas conforme necessário -->
+    </tr>
+  </thead>
+  <tbody>
+    <% @indicadores.each do |indicador| %>
+      <tr>
+        <td><%= indicador.primeira_tarefa_devel_id %></td>
+        <td><%= indicador.ultima_tarefa_devel_id %></td>
+        <td><%= indicador.status_ultima_tarefa_devel %></td>
+        <td><%= indicador.tempo_estimado_devel %></td>
+        <td><%= indicador.tempo_gasto_devel %></td>
+        <!-- Adicionar outras células conforme necessário -->
+      </tr>
+    <% end %>
+  </tbody>
+</table>
