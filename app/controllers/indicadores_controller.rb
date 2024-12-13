@@ -7,7 +7,7 @@ class IndicadoresController < ApplicationController
   include SortHelper
   helper :issues
   include IssuesHelper
-  include Pagination
+  include Redmine::Pagination
 
   def index
     # Determinar o período com base no parâmetro recebido
