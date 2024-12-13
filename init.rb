@@ -8,6 +8,7 @@ require "chartkick"
 require "groupdate"
 require_relative "app/helpers/fluxo_tarefas_helper"
 require_relative "lib/sky_redmine_plugin/issue_helper_patch"
+require_relative "app/models/sky_redmine_indicadores"
 
 Redmine::Plugin.register :sky_redmine_plugin do
   name "Sky Redmine plugin"
