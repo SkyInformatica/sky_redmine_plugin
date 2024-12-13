@@ -7,6 +7,7 @@ class IndicadoresController < ApplicationController
   include SortHelper
   helper :issues
   include IssuesHelper
+  include Pagination
 
   def index
     # Determinar o período com base no parâmetro recebido
@@ -46,11 +47,17 @@ class IndicadoresController < ApplicationController
     sort_update %w(primeira_tarefa_devel_id ultima_tarefa_devel_id status_ultima_tarefa_devel tempo_estimado_devel tempo_gasto_devel)
 
     # Buscar os registros da tabela SkyRedmineIndicadores com paginação e ordenação
-    @indicadores = SkyRedmineIndicadores.order(sort_clause)
+    scope = SkyRedmineIndicadores.order(sort_clause)
     if start_date && end_date
-      @indicadores = @indicadores.where(created_at: start_date.beginning_of_day..end_date.end_of_day)
+      scope = scope.where(created_at: start_date.beginning_of_day..end_date.end_of_day)
     end
-    @indicadores = @indicadores.paginate(page: params[:page], per_page: 25)
+
+    # Paginação usando o Paginator do Redmine
+    @limit = per_page_option
+    @indicadores_count = scope.count
+    @indicadores_pages = Paginator.new(@indicadores_count, @limit, params[:page])
+    @offset = @indicadores_pages.offset
+    @indicadores = scope.limit(@limit).offset(@offset)
   end
 
   private
