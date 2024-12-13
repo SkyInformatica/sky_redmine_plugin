@@ -19,8 +19,14 @@
 
 <h2><%= l(:label_indicadores) %></h2>  
 
-<h3><%= l(:label_tarefas_por_tipo) %></h3>  
-<%= pie_chart @tarefas_por_tipo, adapter: "google" %>  
+<div class="graficos-container">  
+  <div class="grafico">  
+    <h3><%= l(:label_tarefas_por_tipo) %></h3>  
+    <%= pie_chart @tarefas_por_tipo %>  
+  </div>  
 
-<h3><%= l(:label_tarefas_por_status) %></h3>  
-<%= column_chart @tarefas_por_status %>
+  <div class="grafico">  
+    <h3><%= l(:label_tarefas_por_status) %></h3>  
+    <%= column_chart @tarefas_por_status %>  
+  </div>  
+</div> 
