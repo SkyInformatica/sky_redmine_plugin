@@ -36,13 +36,16 @@ class IndicadoresController < ApplicationController
       IssueStatus.find(status_id).name
     end
 
-    # **Buscar os registros da tabela SkyRedmineIndicadores**
-    @indicadores = SkyRedmineIndicadores.all
+    # Adicionar ordenação
+    sort_init "id", "desc"
+    sort_update %w(primeira_tarefa_devel_id ultima_tarefa_devel_id status_ultima_tarefa_devel tempo_estimado_devel tempo_gasto_devel)
 
-    # Caso queira filtrar pelo período selecionado
+    # Buscar os registros da tabela SkyRedmineIndicadores com paginação e ordenação
+    @indicadores = SkyRedmineIndicadores.order(sort_clause)
     if start_date && end_date
       @indicadores = @indicadores.where(created_at: start_date.beginning_of_day..end_date.end_of_day)
     end
+    @indicadores = @indicadores.paginate(page: params[:page], per_page: 25)
   end
 
   private
