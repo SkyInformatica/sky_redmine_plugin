@@ -38,6 +38,9 @@ Redmine::Plugin.register :sky_redmine_plugin do
        { controller: "indicadores", action: "index" },
        caption: :label_indicadores,
        after: :activity
+
+  # Registrar assets
+  register_stylesheet "graficos"
 end
 
 begin
