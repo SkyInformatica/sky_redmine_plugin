@@ -1,3 +1,5 @@
+require "redmine/sort_helper"
+
 class IndicadoresController < ApplicationController
   layout "base"
   before_action :find_project, :authorize
