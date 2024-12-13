@@ -134,6 +134,7 @@ module SkyRedminePlugin
       end
 
       def processar_indicadores(issue)
+        Rails.log.info ">>> inicio processar_indicadores issue.id: #{issue.id}"
         # Obter fluxo de tarefas
         tarefas_relacionadas = obter_lista_tarefas_relacionadas(issue)
 
