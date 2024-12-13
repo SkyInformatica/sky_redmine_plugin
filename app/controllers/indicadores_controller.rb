@@ -1,12 +1,10 @@
-require "redmine/sort_helper"
-
 class IndicadoresController < ApplicationController
   layout "base"
   before_action :find_project, :authorize
   menu_item :indicadores
 
   helper :sort
-  include Redmine::SortHelper
+  include SortHelper
   helper :issues
   include IssuesHelper
 
