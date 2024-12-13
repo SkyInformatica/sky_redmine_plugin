@@ -23,3 +23,48 @@
     max-width: 100%;
   }
 }
+
+.tabs {  
+    width: 100%;  
+    display: inline-block;  
+  }  
+  
+  .tab-links:after {  
+    content: "";  
+    display: table;  
+    clear: both;  
+  }  
+  
+  .tab-links li {  
+    float: left;  
+    margin: 0;  
+    list-style: none;  
+  }  
+  
+  .tab-links a {  
+    padding: 9px 15px;  
+    display: inline-block;  
+    border-radius: 3px 3px 0 0;  
+    background: #7FB5DA;  
+    color: #fff;  
+    text-decoration: none;  
+  }  
+  
+  .tab-links a:hover {  
+    background: #a7cce5;  
+  }  
+  
+  .tab-links .active a {  
+    background: #fff;  
+    color: #4c4c4c;  
+  }  
+  
+  .tab-content > div {  
+    display: none;  
+    padding: 15px;  
+    background: #fff;  
+  }  
+  
+  .tab-content > .active {  
+    display: block;  
+  }  
