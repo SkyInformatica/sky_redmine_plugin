@@ -58,7 +58,7 @@ class IndicadoresController < ApplicationController
     @indicadores_pages = Paginator.new(@indicadores_count, @limit, params[:page])
     @offset = @indicadores_pages.offset
     @indicadores = scope.limit(@limit).offset(@offset)
-    @colunas = SkyIndicadoresRedmine.column_names
+    @colunas = SkyRedmineIndicadores.column_names
   end
 
   private
