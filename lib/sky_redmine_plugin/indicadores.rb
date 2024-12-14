@@ -2,7 +2,7 @@ module SkyRedminePlugin
   class Indicadores
     extend FluxoTarefasHelper
 
-    def processar_indicadores(issue)
+    def self.processar_indicadores(issue)
       Rails.logger.info ">>> inicio processar_indicadores issue.id: #{issue.id}"
       # Obter fluxo de tarefas
       tarefas_relacionadas = obter_lista_tarefas_relacionadas(issue)
@@ -60,13 +60,13 @@ module SkyRedminePlugin
     end
 
     # Método para obter o valor de um campo personalizado
-    def obter_valor_campo_personalizado(issue, field_name)
+    def self.obter_valor_campo_personalizado(issue, field_name)
       custom_field = issue.custom_field_values.detect { |cf| cf.custom_field.name == field_name }
       custom_field ? custom_field.value : nil
     end
 
     # Método existente para obter data de mudança de status
-    def obter_data_mudanca_status(tarefa, status_nomes)
+    def self.obter_data_mudanca_status(tarefa, status_nomes)
       status_ids = IssueStatus.where(name: status_nomes).pluck(:id)
 
       journal = tarefa.journals.joins(:details)
