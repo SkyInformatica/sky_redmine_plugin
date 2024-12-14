@@ -1,6 +1,7 @@
 module SkyRedminePlugin
   class Indicadores
     include TarefasRelacionadasHelper
+    include FluxoTarefasHelper
 
     def self.processar_indicadores(issue)
       Rails.logger.info ">>> inicio processar_indicadores issue.id: #{issue.id}"
