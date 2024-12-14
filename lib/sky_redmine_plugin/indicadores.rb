@@ -1,6 +1,5 @@
 module SkyRedminePlugin
   class Indicadores
-    include TarefasRelacionadasHelper
     include FluxoTarefasHelper
 
     def self.processar_indicadores(issue)
