@@ -1,11 +1,11 @@
 module SkyRedminePlugin
   class Indicadores
-    include FluxoTarefasHelper
+    extend FluxoTarefasHelper
 
     def self.processar_indicadores(issue)
       Rails.logger.info ">>> inicio processar_indicadores issue.id: #{issue.id}"
       # Obter fluxo de tarefas
-      tarefas_relacionadas = FluxoTarefasHelper.obter_lista_tarefas_relacionadas(issue)
+      tarefas_relacionadas = obter_lista_tarefas_relacionadas(issue)
 
       # Separar tarefas DEVEL e QS
       tarefas_devel = tarefas_relacionadas.select { |t| !SkyRedminePlugin::Constants::Projects::QS_PROJECTS.include?(t.project.name) }
