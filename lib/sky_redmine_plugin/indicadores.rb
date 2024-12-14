@@ -1,5 +1,5 @@
 module SkyRedminePlugin
-  module Indicadores
+  class Indicadores
     def processar_indicadores(issue)
       Rails.logger.info ">>> inicio processar_indicadores issue.id: #{issue.id}"
       # Obter fluxo de tarefas
