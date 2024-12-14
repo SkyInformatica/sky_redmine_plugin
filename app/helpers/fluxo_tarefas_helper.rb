@@ -8,8 +8,6 @@ module FluxoTarefasHelper
     texto_fluxo.html_safe  # Permite renderizar HTML seguro na visualização
   end
 
-  private
-
   def obter_lista_tarefas_relacionadas(tarefa)
     tarefas = []
     visitadas = Set.new
@@ -49,6 +47,8 @@ module FluxoTarefasHelper
 
     tarefas
   end
+
+  private
 
   def obter_data_mudanca_status(tarefa, status_nomes)
     status_ids = IssueStatus.where(name: status_nomes).pluck(:id)
