@@ -28,5 +28,5 @@ table.list.issues th {
     white-space: normal;  
     word-wrap: break-word;  
     /* Opcional: ajustar a largura máxima da coluna */  
-    max-width: 150px;  
+    max-width: 200px;  
   }  
