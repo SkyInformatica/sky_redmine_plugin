@@ -1,6 +1,7 @@
 class RetornoTestesController < ApplicationController
   include TarefasRelacionadasHelper
   include CriarTarefasHelper
+  include ControllerHooks
   before_action :inicializar
   before_action :find_issue, only: [:retorno_testes_devel, :retorno_testes_qs]
   before_action :find_issues, only: [:retorno_testes_lote]
