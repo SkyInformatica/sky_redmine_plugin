@@ -34,30 +34,26 @@
 
 <!-- **Adicionar a tabela com estilos do Redmine** -->  
 <h2>Listagem de Indicadores</h2>  
-<table class="list issues">  
-  <thead>  
-    <tr>  
-      <th><%= sort_header_tag "primeira_tarefa_devel_id", caption: "Primeira Tarefa DEVEL ID" %></th>  
-      <th><%= sort_header_tag "ultima_tarefa_devel_id", caption: "Última Tarefa DEVEL ID" %></th>  
-      <th><%= sort_header_tag "status_ultima_tarefa_devel", caption: "Status Última Tarefa DEVEL" %></th>  
-      <th><%= sort_header_tag "tempo_estimado_devel", caption: "Tempo Estimado DEVEL" %></th>  
-      <th><%= sort_header_tag "tempo_gasto_devel", caption: "Tempo Gasto DEVEL" %></th>  
-      <!-- Adicionar outras colunas conforme necessário -->  
-    </tr>  
-  </thead>  
-  <tbody>  
-    <% @indicadores.each do |indicador| %>  
-      <tr class="<%= cycle("odd", "even") %>">  
-        <td><%= link_to "##{indicador.primeira_tarefa_devel_id}", issue_path(indicador.primeira_tarefa_devel_id) %></td>  
-        <td><%= link_to "##{indicador.ultima_tarefa_devel_id}", issue_path(indicador.ultima_tarefa_devel_id) %></td>  
-        <td><%= indicador.status_ultima_tarefa_devel %></td>  
-        <td><%= indicador.tempo_estimado_devel %></td>  
-        <td><%= indicador.tempo_gasto_devel %></td>  
-        <!-- Adicionar outras células conforme necessário -->  
+<div style="overflow-x: auto;">  
+  <table class="list issues">  
+    <thead>  
+      <tr>  
+        <% @colunas.each do |coluna| %>  
+          <th><%= coluna.humanize %></th>  
+        <% end %>  
       </tr>  
-    <% end %>  
-  </tbody>  
-</table>  
+    </thead>  
+    <tbody>  
+      <% @indicadores.each do |indicador| %>  
+        <tr class="<%= cycle("odd", "even") %>">  
+          <% @colunas.each do |coluna| %>  
+            <td><%= indicador.send(coluna) %></td>  
+          <% end %>  
+        </tr>  
+      <% end %>  
+    </tbody>  
+  </table>  
+</div>  
 
 <!-- Controles de paginação -->  
 <%= pagination_links_full(@indicadores_pages, @indicadores_count, per_page_links: per_page_options) %>
