@@ -18,7 +18,7 @@ module SkyRedminePlugin
           new_status_name = IssueStatus.find_by(id: status_detail.value).name
 
           # Processar e atualizar SkyRedmineIndicadores
-          SkyRedmine::Indicadores.processar_indicadores(issue)
+          SkyRedminePlugin::Indicadores.processar_indicadores(issue)
 
           # Chama a atualização da data de início se necessário
           atualizar_data_inicio(issue, new_status_name)
@@ -38,7 +38,7 @@ module SkyRedminePlugin
         issue = context[:issue]
 
         # Processar e atualizar SkyRedmineIndicadores
-        SkyRedmine::Indicadores.processar_indicadores(issue)
+        SkyRedminePlugin::Indicadores.processar_indicadores(issue)
       end
 
       def controller_additionals_change_status_after_save(context = {})
