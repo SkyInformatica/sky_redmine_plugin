@@ -1,6 +1,6 @@
 
 # Carrega o ambiente do Redmine
-require File.expand_path('../../config/environment', __FILE__) # Ajuste o caminho conforme a instalação Redmine  
+require File.expand_path('../../../config/environment', __FILE__) # Ajuste o caminho conforme a instalação Redmine  
 
 
 # Define um método para executar o teste
