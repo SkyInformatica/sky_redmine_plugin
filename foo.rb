@@ -1,5 +1,6 @@
 
 # Carrega o ambiente do Redmine
+ENV['RAILS_ENV'] ||= 'production' # Opcional, defina o ambiente conforme a instalação Redmine
 require File.expand_path('../../../config/environment', __FILE__) # Ajuste o caminho conforme a instalação Redmine  
 
 
