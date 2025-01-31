@@ -1,6 +1,6 @@
 
 # Carrega o ambiente do Redmine
-require File.expand_path('../../config/environment', __FILE__) # Ajuste o caminho conforme a instalação Redmine  
+require File.expand_path('../../../config/environment', __FILE__) # Ajuste o caminho conforme a instalação Redmine  
 
 require_relative "app/helpers/fluxo_tarefas_helper"
 require_relative "lib/sky_redmine_plugin/issue_helper_patch"
