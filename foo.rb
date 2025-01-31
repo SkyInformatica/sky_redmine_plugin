@@ -22,4 +22,4 @@ def foo(issue_id)
 end
 
 # Chame o método de teste junto ao ID da tarefa
-foo(74933)
+foo(75074)
