@@ -5,6 +5,26 @@ module SkyRedminePlugin
       include FluxoTarefasHelper
       include TarefasRelacionadasHelper
 
+      def controller_issues_bulk_edit_before_save(context = {})
+        Rails.logger.info ">>> Entrada no hook de edição em massa"
+        issues = context[:issues]
+        new_status_id = context[:params][:status_id]
+
+        return unless new_status_id.present?
+
+        new_status_name = IssueStatus.find_by(id: new_status_id)&.name
+        return unless new_status_name
+
+        issues.each do |issue|
+          begin
+            # Replica a lógica de processamento individual para cada issue            
+            processar_tarefa(issue, new_status_name)
+          rescue => e
+            Rails.logger.error "Erro ao processar issue #{issue.id}: #{e.message}"
+          end
+        end
+      end
+
       def controller_issues_edit_after_save(context = {})
         Rails.logger.info ">>> controller_issues_edit_after_save"
         issue = context[:issue]
@@ -16,21 +36,7 @@ module SkyRedminePlugin
           status_detail = journal.details.find { |detail| detail.prop_key == "status_id" }
 
           new_status_name = IssueStatus.find_by(id: status_detail.value).name
-
-          # Processar e atualizar SkyRedmineIndicadores
-          SkyRedminePlugin::Indicadores.processar_indicadores(issue)
-
-          # Chama a atualização da data de início se necessário
-          atualizar_data_inicio(issue, new_status_name)
-
-          # Atualiza a tag da tarefa com base no status
-          atualizar_tag_tarefas_qs(issue, new_status_name)
-
-          # Fechar a tarefa de testes
-          fechar_tarefa_qs(issue, new_status_name)
-
-          # Atualizar status tarefa QS na tarefa de desenvolvimento
-          atualizar_status_tarefa_qs_tarefa_devel(issue, new_status_name)
+          processar_tarefa(issue, new_status_name)          
         end
       end
 
@@ -46,6 +52,24 @@ module SkyRedminePlugin
       end
 
       private
+
+      def processar_tarefa(issue, new_status_name)
+      
+        # Processar e atualizar SkyRedmineIndicadores
+        SkyRedminePlugin::Indicadores.processar_indicadores(issue)
+
+        # Chama a atualização da data de início se necessário
+        atualizar_data_inicio(issue, new_status_name)
+
+        # Atualiza a tag da tarefa com base no status
+        atualizar_tag_tarefas_qs(issue, new_status_name)
+
+        # Fechar a tarefa de testes
+        fechar_tarefa_qs(issue, new_status_name)
+
+        # Atualizar status tarefa QS na tarefa de desenvolvimento
+        atualizar_status_tarefa_qs_tarefa_devel(issue, new_status_name)
+      end
 
       def atualizar_status_tarefa_qs_tarefa_devel(issue, new_status_name)
         if SkyRedminePlugin::Constants::Projects::QS_PROJECTS.include?(issue.project.name)
