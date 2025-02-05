@@ -10,7 +10,7 @@ module SkyRedminePlugin
         issues = context[:issues]
         new_status_id = context[:params][:status_id]
 
-        Rails.logger.info ">>> Tarefas: #{issues.map(&:id).join(', ')}"
+        Rails.logger.info ">>> Tarefas: #{issues}"
         Rails.logger.info ">>> Novo status: #{new_status_id}"
 
         return unless new_status_id.present?
