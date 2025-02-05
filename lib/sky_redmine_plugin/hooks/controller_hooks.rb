@@ -11,11 +11,12 @@ module SkyRedminePlugin
         new_status_id = context[:params][:status_id]
 
         Rails.logger.info ">>> Tarefas: #{issues}"
-        Rails.logger.info ">>> Novo status: #{new_status_id}"
+        Rails.logger.info ">>> Novo status id: #{new_status_id}"
 
         return unless new_status_id.present?
 
         new_status_name = IssueStatus.find_by(id: new_status_id)&.name
+        Rails.logger.info ">>> Novo status name: #{new_status_name}"
         return unless new_status_name
 
         issues.each do |issue|
