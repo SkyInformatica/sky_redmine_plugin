@@ -7,26 +7,15 @@ module SkyRedminePlugin
 
       def controller_issues_bulk_edit_before_save(context = {})
         Rails.logger.info ">>> Entrada no hook de edição em massa"
-        issues = context[:issues]
-        new_status_id = context[:params][:status_id]
+        issue = context[:issue]
+        params = context[:params]
+        Rails.logger.info ">>> Issue: #{issue.to_json}"
+        Rails.logger.info ">>> Parâmetros: #{params.to_json}"
 
-        Rails.logger.info ">>> Tarefas: #{issues}"
-        Rails.logger.info ">>> Novo status id: #{new_status_id}"
 
-        return unless new_status_id.present?
-
-        new_status_name = IssueStatus.find_by(id: new_status_id)&.name
-        Rails.logger.info ">>> Novo status name: #{new_status_name}"
-        return unless new_status_name
-
-        issues.each do |issue|
-          begin
-            # Replica a lógica de processamento individual para cada issue            
-            processar_tarefa(issue, new_status_name)
-          rescue => e
-            Rails.logger.error "Erro ao processar issue #{issue.id}: #{e.message}"
-          end
-        end
+        #new_status_name = IssueStatus.find_by(issue.status_id).name  
+        Rails.logger.info ">>> Status: #{issue.status.name}"
+        #processar_tarefa(issue, new_status_name)        
       end
 
       def controller_issues_edit_after_save(context = {})
