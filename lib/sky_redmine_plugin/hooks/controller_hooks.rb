@@ -10,11 +10,16 @@ module SkyRedminePlugin
         issue = context[:issue]
         params = context[:params]
 
+        Rails.logger.info ">>> issue: #{issue.id}"
+
         new_status_id = context[:params][:issue][:status_id]
         return unless new_status_id.present?
         new_status_name = IssueStatus.find_by(id: new_status_id)&.name
         return unless new_status_name
-        processar_tarefa(issue, new_status_name)        
+
+        Rails.logger.info ">>> new_status_name: #{new_status_name}"
+        processar_tarefa(issue, new_status_name)  
+
       end
 
       def controller_issues_edit_after_save(context = {})
