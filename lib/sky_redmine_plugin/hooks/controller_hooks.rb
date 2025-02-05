@@ -10,6 +10,9 @@ module SkyRedminePlugin
         issues = context[:issues]
         new_status_id = context[:params][:status_id]
 
+        Rails.logger.info ">>> Tarefas: #{issues.map(&:id).join(', ')}"
+        Rails.logger.info ">>> Novo status: #{new_status_id}"
+
         return unless new_status_id.present?
 
         new_status_name = IssueStatus.find_by(id: new_status_id)&.name
@@ -54,7 +57,7 @@ module SkyRedminePlugin
       private
 
       def processar_tarefa(issue, new_status_name)
-      
+        Rails.logger.info ">>> processar tarea #{issue.id} com status #{new_status_name}"
         # Processar e atualizar SkyRedmineIndicadores
         SkyRedminePlugin::Indicadores.processar_indicadores(issue)
 
