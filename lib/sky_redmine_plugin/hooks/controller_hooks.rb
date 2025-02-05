@@ -12,6 +12,11 @@ module SkyRedminePlugin
         Rails.logger.info ">>> Issue: #{issue.to_json}"
         Rails.logger.info ">>> Parâmetros: #{params.to_json}"
 
+        new_status_id = context[:params][:issue][:status_id]
+        return unless new_status_id.present?
+        new_status_name = IssueStatus.find_by(id: new_status_id)&.name
+        return unless new_status_name
+        Rails.logger.info ">>> New Status: #{new_status_name}"
 
         #new_status_name = IssueStatus.find_by(issue.status_id).name  
         Rails.logger.info ">>> Status: #{issue.status.name}"
