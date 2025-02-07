@@ -21,6 +21,10 @@ bundle exec rake redmine:plugins:migrate RAILS_ENV=production
 
 # O que há de novo?
 
+## 2025.01.06.1
+
+- Corrigido o problema que não estava executando as acoes automatizadas ao editar tarefas em lote
+
 ## 2024.12.09.1
 
 - Criado nova coluna no fluxo das tarefas para exibir a lista da revisões do SVN associadas a tarefa
