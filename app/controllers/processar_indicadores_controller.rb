@@ -14,4 +14,10 @@ class ProcessarIndicadoresController < ApplicationController
       format.js
     end
   end
+
+  def limpar_indicadores
+    SkyRedmineIndicadores.delete_all
+    flash[:notice] = "Todos os indicadores foram limpos com sucesso."
+    redirect_to plugin_settings_path # Altere para a rota de configuração do plugin
+  end
 end

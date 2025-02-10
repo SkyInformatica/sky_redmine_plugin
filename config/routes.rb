@@ -20,3 +20,4 @@ post "sky_redmine_settings", to: "sky_redmine_settings#update", as: "update_sky_
 match "projects/:id/indicadores", to: "indicadores#index", via: "get", as: "indicadores"
 
 get "processar_indicadores_lote", to: "processar_indicadores#processar_indicadores_lote", as: "processar_indicadores_lote"
+delete "sky_redmine_plugin/limpar_indicadores", to: "processar_indicadores#limpar", as: "limpar_indicadores"

@@ -30,6 +30,8 @@
   <%= submit_tag l(:button_save) %>  
 <% end %>  
 
+<%= button_to "Limpar todos indicadores", limpar_indicadores_path, method: :delete, data: { confirm: "Tem certeza que deseja limpar todos os indicadores armazenados?" }, class: "btn btn-danger" %>
+
 <%= javascript_tag do %>  
   $(document).ready(function() {  
     $('#settings_atualizacao_automatica').change(function() {  
