@@ -3,7 +3,7 @@ module SkyRedminePlugin
   module Hooks
     class ViewHooks < Redmine::Hook::ViewListener
       render_on :view_issues_show_details_bottom, partial: "issues/criar_tarefas"
-      render_on :view_issues_context_menu_start, partial: "context_menu/criar_tarefas"
+      render_on :view_issues_context_menu_start, partial: "context_menu/context_menu"
       #render_on :view_issues_show_description_bottom, partial: "issues/tabs/fluxo_tarefas"
 
       def view_layouts_base_html_head(context = {})
