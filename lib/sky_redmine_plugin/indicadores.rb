@@ -20,10 +20,10 @@ module SkyRedminePlugin
 
         indicador.ultima_tarefa_devel_id = ultima_tarefa_devel.id
         indicador.status_ultima_tarefa_devel = ultima_tarefa_devel.status.name
-        indicador.prioridade_primeira_tarefa_devel = primeira_tarefa_devel.priority.id
-        indicador.sprint_primeira_tarefa_devel_id = primeira_tarefa_devel.fixed_version_id
-        indicador.sprint_ultima_tarefa_devel_id = ultima_tarefa_devel.fixed_version_id
-        indicador.projeto_primeira_tarefa_devel_id = primeira_tarefa_devel.project_id
+        indicador.prioridade_primeira_tarefa_devel = primeira_tarefa_devel.priority.name
+        indicador.projeto_primeira_tarefa_devel = primeira_tarefa_devel.project.name
+        indicador.sprint_primeira_tarefa_devel = primeira_tarefa_devel.fixed_version.present? ? primeira_tarefa_devel.fixed_version.name : nil
+        indicador.sprint_ultima_tarefa_devel = ultima_tarefa_devel.fixed_version.present? ? ultima_tarefa_devel.fixed_version.name : nil
         indicador.tempo_estimado_devel = tarefas_devel.sum { |t| t.estimated_hours.to_f }
         indicador.tempo_gasto_devel = tarefas_devel.sum { |t| t.spent_hours.to_f }
         indicador.origem_primeira_tarefa_devel = obter_valor_campo_personalizado(primeira_tarefa_devel, "Origem")
@@ -42,9 +42,10 @@ module SkyRedminePlugin
 
           indicador.primeira_tarefa_qs_id = primeira_tarefa_qs.id
           indicador.ultima_tarefa_qs_id = ultima_tarefa_qs.id
-          indicador.sprint_primeira_tarefa_qs_id = primeira_tarefa_qs.fixed_version_id
-          indicador.sprint_ultima_tarefa_qs_id = ultima_tarefa_qs.fixed_version_id
-          indicador.projeto_primeira_tarefa_qs_id = primeira_tarefa_qs.project_id
+          indicador.sprint_primeira_tarefa_qs = primeira_tarefa_qs.fixed_version.present? ? primeira_tarefa_qs.fixed_version.name : nil
+          indicador.sprint_ultima_tarefa_qs = ultima_tarefa_qs.fixed_version.present? ? ultima_tarefa_qs.fixed_version.name : nil
+          indicador.projeto_primeira_tarefa_qs = primeira_tarefa_qs.project.name
+
           indicador.tempo_estimado_qs = tarefas_qs.sum { |t| t.estimated_hours.to_f }
           indicador.tempo_gasto_qs = tarefas_qs.sum { |t| t.spent_hours.to_f }
           indicador.status_ultima_tarefa_qs = ultima_tarefa_qs.status.name

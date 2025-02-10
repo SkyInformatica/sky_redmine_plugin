@@ -18,8 +18,7 @@ module SkyRedminePlugin
         return unless new_status_name
 
         Rails.logger.info ">>> new_status_name: #{new_status_name}"
-        processar_tarefa(issue, new_status_name)  
-
+        processar_tarefa(issue, new_status_name)
       end
 
       def controller_issues_edit_after_save(context = {})
@@ -33,7 +32,7 @@ module SkyRedminePlugin
           status_detail = journal.details.find { |detail| detail.prop_key == "status_id" }
 
           new_status_name = IssueStatus.find_by(id: status_detail.value).name
-          processar_tarefa(issue, new_status_name)          
+          processar_tarefa(issue, new_status_name)
         end
       end
 
@@ -83,7 +82,7 @@ module SkyRedminePlugin
       # Metodo para fechar a tarefa de testes
       def fechar_tarefa_qs(issue, new_status_name)
         if new_status_name == SkyRedminePlugin::Constants::IssueStatus::FECHADA
-          # Localizar uma cópia da tarefa nos projetos QS                    
+          # Localizar uma cópia da tarefa nos projetos QS
           copied_to_qs_issue = localizar_tarefa_copiada_qs(issue)
 
           # Se existir uma cópia e seu status for "Teste OK"
