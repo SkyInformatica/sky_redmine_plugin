@@ -5,6 +5,9 @@ class CreateSkyRedmineIndicadores < ActiveRecord::Migration[5.2]
       t.integer :ultima_tarefa_devel_id
       t.string :status_ultima_tarefa_devel
       t.string :prioridade_primeira_tarefa_devel
+      t.string :projeto_primeira_tarefa_devel
+      t.string :sprint_primeira_tarefa_devel
+      t.string :sprint_ultima_tarefa_devel
       t.float :tempo_estimado_devel
       t.float :tempo_gasto_devel
       t.string :origem_primeira_tarefa_devel
@@ -17,6 +20,9 @@ class CreateSkyRedmineIndicadores < ActiveRecord::Migration[5.2]
       t.date :data_fechamento_ultima_tarefa_devel
       t.integer :primeira_tarefa_qs_id
       t.integer :ultima_tarefa_qs_id
+      t.string :sprint_primeira_tarefa_qs
+      t.string :sprint_ultima_tarefa_qs
+      t.string :projeto_primeira_tarefa_qs
       t.float :tempo_estimado_qs
       t.float :tempo_gasto_qs
       t.string :status_ultima_tarefa_qs
