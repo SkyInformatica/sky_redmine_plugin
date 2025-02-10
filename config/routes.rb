@@ -16,8 +16,8 @@ get "continua_proxima_sprint_lote", to: "continua_proxima_sprint#continua_proxim
 # configurações do plugin
 get "sky_redmine_settings", to: "sky_redmine_settings#show", as: "sky_redmine_settings"
 post "sky_redmine_settings", to: "sky_redmine_settings#update", as: "update_sky_redmine_settings"
+delete "limpar_indicadores", to: "processar_indicadores#limpar_indicadores", as: "limpar_indicadores"
 
 match "projects/:id/indicadores", to: "indicadores#index", via: "get", as: "indicadores"
 
 get "processar_indicadores_lote", to: "processar_indicadores#processar_indicadores_lote", as: "processar_indicadores_lote"
-delete "sky_redmine_plugin/limpar_indicadores", to: "processar_indicadores#limpar", as: "limpar_indicadores"
