@@ -1,0 +1,19 @@
+(function() {
+  var message = 'Indicadores processados com sucesso.';
+  var dialogHtml = '<div id="dialog-message" title="Processar indicadores">' + message + '</div>';
+  
+  $(dialogHtml).dialog({
+    modal: true,
+    width: 'auto',
+    maxWidth: 600,
+    buttons: {
+      Ok: function() {
+        $(this).dialog("close");
+        window.location.reload();
+      }
+    }
+  });
+})();
+
+
+

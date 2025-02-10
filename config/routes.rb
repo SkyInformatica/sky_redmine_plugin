@@ -18,3 +18,5 @@ get "sky_redmine_settings", to: "sky_redmine_settings#show", as: "sky_redmine_se
 post "sky_redmine_settings", to: "sky_redmine_settings#update", as: "update_sky_redmine_settings"
 
 match "projects/:id/indicadores", to: "indicadores#index", via: "get", as: "indicadores"
+
+get "processar_indicadores_lote", to: "processar_indicadores#processar_indicadores_lote", as: "processar_indicadores_lote"
