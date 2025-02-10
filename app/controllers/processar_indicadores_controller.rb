@@ -18,6 +18,6 @@ class ProcessarIndicadoresController < ApplicationController
   def limpar_indicadores
     SkyRedmineIndicadores.delete_all
     flash[:notice] = "Todos os indicadores foram limpos com sucesso."
-    redirect_to plugin_settings_path # Altere para a rota de configuração do plugin
+    redirect_to sky_redmine_settings # Altere para a rota de configuração do plugin
   end
 end
