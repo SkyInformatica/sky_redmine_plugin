@@ -26,31 +26,17 @@ class IndicadoresController < ApplicationController
       end_date = nil
     end
 
-    # Filtrar as tarefas com base no período selecionado
-    issues = @project.issues
-    if start_date && end_date
-      issues = issues.where(created_on: start_date..end_date)
-    end
-
-    # Agrupar e contar as tarefas por tipo (tracker)
-    @tarefas_por_tipo = issues.group(:tracker_id).count.transform_keys do |tracker_id|
-      Tracker.find(tracker_id).name
-    end
-
-    # Agrupar e contar as tarefas por status
-    @tarefas_por_status = issues.group(:status_id).count.transform_keys do |status_id|
-      IssueStatus.find(status_id).name
-    end
+    # Buscar as tarefas agrupadas por tipo e status usando os métodos da entidade
+    @tarefas_por_tipo = SkyRedmineIndicadores.tarefas_por_tipo(@project, start_date, end_date)
+    @tarefas_por_status = SkyRedmineIndicadores.tarefas_por_status(@project, start_date, end_date)
 
     # Adicionar ordenação
     sort_init "id", "desc"
     sort_update %w(primeira_tarefa_devel_id ultima_tarefa_devel_id status_ultima_tarefa_devel tempo_estimado_devel tempo_gasto_devel)
 
     # Buscar os registros da tabela SkyRedmineIndicadores com paginação e ordenação
-    scope = SkyRedmineIndicadores.order(sort_clause)
-    if start_date && end_date
-      scope = scope.where(created_at: start_date.beginning_of_day..end_date.end_of_day)
-    end
+    scope = SkyRedmineIndicadores.por_projeto_e_periodo(@project, start_date, end_date)
+    scope = scope.order(sort_clause)
 
     # Paginação usando o Paginator do Redmine
     @limit = per_page_option
