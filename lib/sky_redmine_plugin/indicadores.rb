@@ -19,6 +19,7 @@ module SkyRedminePlugin
         indicador = SkyRedmineIndicadores.find_or_initialize_by(primeira_tarefa_devel_id: primeira_tarefa_devel.id)
 
         indicador.ultima_tarefa_devel_id = ultima_tarefa_devel.id
+        indicador.tipo_primeira_tarefa_devel = primeira_tarefa_devel.tracker.name
         indicador.status_ultima_tarefa_devel = ultima_tarefa_devel.status.name
         indicador.prioridade_primeira_tarefa_devel = primeira_tarefa_devel.priority.name
         indicador.projeto_primeira_tarefa_devel = primeira_tarefa_devel.project.name
@@ -28,12 +29,26 @@ module SkyRedminePlugin
         indicador.tempo_gasto_devel = tarefas_devel.sum { |t| t.spent_hours.to_f }
         indicador.origem_primeira_tarefa_devel = obter_valor_campo_personalizado(primeira_tarefa_devel, "Origem")
         indicador.skynet_primeira_tarefa_devel = obter_valor_campo_personalizado(primeira_tarefa_devel, "Sky.NET")
-        indicador.local_tarefa = tarefas_qs.empty? ? "DEVEL" : "QS"
         indicador.qtd_retorno_testes = tarefas_relacionadas.count { |t| t.tracker.name == SkyRedminePlugin::Constants::Trackers::RETORNO_TESTES }
-        indicador.data_atendimento_primeira_tarefa_devel = obter_valor_campo_personalizado(primeira_tarefa_devel, "Data de Atendimento") || primeira_tarefa_devel.created_on.to_date
+        
+        data_atendimento = obter_valor_campo_personalizado(primeira_tarefa_devel, "Data de Atendimento")
+        indicador.data_atendimento_primeira_tarefa_devel = data_atendimento
+        indicador.data_criacao_ou_atendimento_primeira_tarefa_devel = data_atendimento || primeira_tarefa_devel.created_on.to_date
+        
         indicador.data_andamento_primeira_tarefa_devel = obter_data_mudanca_status(primeira_tarefa_devel, [SkyRedminePlugin::Constants::IssueStatus::EM_ANDAMENTO]) || primeira_tarefa_devel.created_on.to_date
-        indicador.data_resolvida_ultima_tarefa_devel = obter_data_mudanca_status(ultima_tarefa_devel, [SkyRedminePlugin::Constants::IssueStatus::RESOLVIDA])
-        indicador.data_fechamento_ultima_tarefa_devel = obter_data_mudanca_status(ultima_tarefa_devel, [SkyRedminePlugin::Constants::IssueStatus::FECHADA])
+        
+        # Processar datas de resolução e fechamento
+        data_fechamento = obter_data_mudanca_status(ultima_tarefa_devel, [SkyRedminePlugin::Constants::IssueStatus::FECHADA])
+        data_resolucao = obter_data_mudanca_status(ultima_tarefa_devel, [SkyRedminePlugin::Constants::IssueStatus::RESOLVIDA])
+        
+        if data_fechamento.present? && data_resolucao.nil?
+          # Se foi direto para fechada, usar a data de fechamento para ambos
+          indicador.data_resolvida_ultima_tarefa_devel = data_fechamento
+          indicador.data_fechamento_ultima_tarefa_devel = data_fechamento
+        else
+          indicador.data_resolvida_ultima_tarefa_devel = data_resolucao
+          indicador.data_fechamento_ultima_tarefa_devel = data_fechamento
+        end
 
         # Processar dados QS
         unless tarefas_qs.empty?
@@ -52,8 +67,34 @@ module SkyRedminePlugin
           indicador.houve_teste_nok = tarefas_qs.any? { |t| [SkyRedminePlugin::Constants::IssueStatus::TESTE_NOK, SkyRedminePlugin::Constants::IssueStatus::TESTE_NOK_FECHADA].include?(t.status.name) }
           indicador.data_criacao_primeira_tarefa_qs = primeira_tarefa_qs.created_on.to_date
           indicador.data_andamento_primeira_tarefa_qs = obter_data_mudanca_status(primeira_tarefa_qs, [SkyRedminePlugin::Constants::IssueStatus::EM_ANDAMENTO]) || primeira_tarefa_qs.created_on.to_date
-          indicador.data_resolvida_ultima_tarefa_qs = obter_data_mudanca_status(ultima_tarefa_qs, [SkyRedminePlugin::Constants::IssueStatus::RESOLVIDA])
-          indicador.data_fechamento_ultima_tarefa_qs = obter_data_mudanca_status(ultima_tarefa_qs, [SkyRedminePlugin::Constants::IssueStatus::TESTE_OK_FECHADA, SkyRedminePlugin::Constants::IssueStatus::TESTE_NOK_FECHADA])
+          
+          # Processar datas de resolução e fechamento QS
+          data_fechamento_qs = obter_data_mudanca_status(ultima_tarefa_qs, [SkyRedminePlugin::Constants::IssueStatus::TESTE_OK_FECHADA, SkyRedminePlugin::Constants::IssueStatus::TESTE_NOK_FECHADA])
+          data_resolucao_qs = obter_data_mudanca_status(ultima_tarefa_qs, [SkyRedminePlugin::Constants::IssueStatus::RESOLVIDA])
+          
+          if data_fechamento_qs.present? && data_resolucao_qs.nil?
+            # Se foi direto para fechada, usar a data de fechamento para ambos
+            indicador.data_resolvida_ultima_tarefa_qs = data_fechamento_qs
+            indicador.data_fechamento_ultima_tarefa_qs = data_fechamento_qs
+          else
+            indicador.data_resolvida_ultima_tarefa_qs = data_resolucao_qs
+            indicador.data_fechamento_ultima_tarefa_qs = data_fechamento_qs
+          end
+        end
+
+        # Determinar o local atual da tarefa
+        if tarefas_qs.empty?
+          # Se não existe tarefa QS, está no DEVEL
+          indicador.local_tarefa = "DEVEL"
+        else
+          ultima_tarefa_qs = tarefas_qs.last
+          if [SkyRedminePlugin::Constants::IssueStatus::TESTE_OK_FECHADA, SkyRedminePlugin::Constants::IssueStatus::TESTE_NOK_FECHADA].include?(ultima_tarefa_qs.status.name)
+            # Se a última tarefa QS está fechada (TESTE_OK_FECHADA ou TESTE_NOK_FECHADA), voltou para DEVEL
+            indicador.local_tarefa = "DEVEL"
+          else
+            # Se existe tarefa QS e não está fechada, está no QS
+            indicador.local_tarefa = "QS"
+          end
         end
 
         indicador.save(validate: false)

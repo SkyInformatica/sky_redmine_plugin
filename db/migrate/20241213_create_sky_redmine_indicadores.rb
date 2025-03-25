@@ -2,6 +2,7 @@ class CreateSkyRedmineIndicadores < ActiveRecord::Migration[5.2]
   def change
     create_table :sky_redmine_indicadores do |t|
       t.integer :primeira_tarefa_devel_id
+      t.string :tipo_primeira_tarefa_devel
       t.integer :ultima_tarefa_devel_id
       t.string :status_ultima_tarefa_devel
       t.string :prioridade_primeira_tarefa_devel
@@ -15,6 +16,7 @@ class CreateSkyRedmineIndicadores < ActiveRecord::Migration[5.2]
       t.string :local_tarefa
       t.integer :qtd_retorno_testes
       t.date :data_atendimento_primeira_tarefa_devel
+      t.date :data_criacao_ou_atendimento_primeira_tarefa_devel
       t.date :data_andamento_primeira_tarefa_devel
       t.date :data_resolvida_ultima_tarefa_devel
       t.date :data_fechamento_ultima_tarefa_devel
