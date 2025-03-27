@@ -35,8 +35,6 @@ module SkyRedminePlugin
         indicador.data_atendimento_primeira_tarefa_devel = data_atendimento
         indicador.data_criacao_ou_atendimento_primeira_tarefa_devel = data_atendimento || primeira_tarefa_devel.created_on.to_date
         
-        indicador.data_andamento_primeira_tarefa_devel = obter_data_mudanca_status(primeira_tarefa_devel, [SkyRedminePlugin::Constants::IssueStatus::EM_ANDAMENTO]) || primeira_tarefa_devel.created_on.to_date
-        
         # Processar datas de resolução e fechamento
         data_fechamento = obter_data_mudanca_status(ultima_tarefa_devel, [SkyRedminePlugin::Constants::IssueStatus::FECHADA])
         data_resolucao = obter_data_mudanca_status(ultima_tarefa_devel, [SkyRedminePlugin::Constants::IssueStatus::RESOLVIDA])
@@ -49,6 +47,41 @@ module SkyRedminePlugin
           indicador.data_resolvida_ultima_tarefa_devel = data_resolucao
           indicador.data_fechamento_ultima_tarefa_devel = data_fechamento
         end
+
+        # Separar tarefas DEVEL em ciclos de desenvolvimento
+        ciclos_devel = separar_ciclos_devel(tarefas_relacionadas)
+        primeiro_ciclo_devel = ciclos_devel.first
+
+        # Processar data de início em andamento usando apenas o primeiro ciclo
+        data_andamento = nil
+        data_criacao = primeira_tarefa_devel.created_on.to_date
+
+        # Verificar cada tarefa do primeiro ciclo DEVEL na sequência
+        primeiro_ciclo_devel.each_with_index do |tarefa, index|
+          # Procurar por mudança para EM_ANDAMENTO
+          data_andamento = obter_data_mudanca_status(tarefa, [SkyRedminePlugin::Constants::IssueStatus::EM_ANDAMENTO])
+          break if data_andamento.present?
+
+          # Se não encontrou EM_ANDAMENTO, verificar se está CONTINUA_PROXIMA_SPRINT
+          if tarefa.status.name == SkyRedminePlugin::Constants::IssueStatus::CONTINUA_PROXIMA_SPRINT
+            # Se é a última tarefa do ciclo e está CONTINUA_PROXIMA_SPRINT, não encontrou EM_ANDAMENTO
+            break if index == primeiro_ciclo_devel.length - 1
+            # Se não é a última, continua procurando na próxima tarefa
+            next
+          end
+
+          # Se chegou aqui, não está CONTINUA_PROXIMA_SPRINT
+          # Se é a última tarefa do ciclo e foi direto para RESOLVIDA/FECHADA, usar data de criação
+          if index == primeiro_ciclo_devel.length - 1 && 
+             (tarefa.status.name == SkyRedminePlugin::Constants::IssueStatus::RESOLVIDA || 
+              tarefa.status.name == SkyRedminePlugin::Constants::IssueStatus::FECHADA)
+            data_andamento = data_criacao
+          end
+          break
+        end
+
+        # Definir data de andamento
+        indicador.data_andamento_primeira_tarefa_devel = data_andamento
 
         # Processar dados QS
         unless tarefas_qs.empty?
@@ -66,7 +99,40 @@ module SkyRedminePlugin
           indicador.status_ultima_tarefa_qs = ultima_tarefa_qs.status.name
           indicador.houve_teste_nok = tarefas_qs.any? { |t| [SkyRedminePlugin::Constants::IssueStatus::TESTE_NOK, SkyRedminePlugin::Constants::IssueStatus::TESTE_NOK_FECHADA].include?(t.status.name) }
           indicador.data_criacao_primeira_tarefa_qs = primeira_tarefa_qs.created_on.to_date
-          indicador.data_andamento_primeira_tarefa_qs = obter_data_mudanca_status(primeira_tarefa_qs, [SkyRedminePlugin::Constants::IssueStatus::EM_ANDAMENTO]) || primeira_tarefa_qs.created_on.to_date
+          
+          # Separar tarefas QS em ciclos de teste
+          ciclos_qs = separar_ciclos_qs(tarefas_relacionadas)
+          primeiro_ciclo_qs = ciclos_qs.first
+
+          # Processar data de início em andamento QS usando apenas o primeiro ciclo
+          data_andamento_qs = nil
+          data_criacao_qs = primeira_tarefa_qs.created_on.to_date
+
+          # Verificar cada tarefa do primeiro ciclo QS na sequência
+          primeiro_ciclo_qs.each_with_index do |tarefa, index|
+            # Procurar por mudança para EM_ANDAMENTO
+            data_andamento_qs = obter_data_mudanca_status(tarefa, [SkyRedminePlugin::Constants::IssueStatus::EM_ANDAMENTO])
+            break if data_andamento_qs.present?
+
+            # Se não encontrou EM_ANDAMENTO, verificar se está CONTINUA_PROXIMA_SPRINT
+            if tarefa.status.name == SkyRedminePlugin::Constants::IssueStatus::CONTINUA_PROXIMA_SPRINT
+              # Se é a última tarefa do ciclo e está CONTINUA_PROXIMA_SPRINT, não encontrou EM_ANDAMENTO
+              break if index == primeiro_ciclo_qs.length - 1
+              # Se não é a última, continua procurando na próxima tarefa
+              next
+            end
+
+            # Se chegou aqui, não está CONTINUA_PROXIMA_SPRINT
+            # Se é a última tarefa do ciclo e foi direto para TESTE_OK ou TESTE_NOK, usar data de criação
+            if index == primeiro_ciclo_qs.length - 1 && 
+               [SkyRedminePlugin::Constants::IssueStatus::TESTE_OK, SkyRedminePlugin::Constants::IssueStatus::TESTE_NOK].include?(tarefa.status.name)
+              data_andamento_qs = data_criacao_qs
+            end
+            break
+          end
+
+          # Definir data de andamento QS
+          indicador.data_andamento_primeira_tarefa_qs = data_andamento_qs
           
           # Processar datas de resolução e fechamento QS
           data_fechamento_qs = obter_data_mudanca_status(ultima_tarefa_qs, [SkyRedminePlugin::Constants::IssueStatus::TESTE_OK_FECHADA, SkyRedminePlugin::Constants::IssueStatus::TESTE_NOK_FECHADA])
@@ -117,6 +183,50 @@ module SkyRedminePlugin
                       .first
 
       journal&.created_on&.to_date
+    end
+
+    # Método para separar tarefas DEVEL em ciclos de desenvolvimento
+    def self.separar_ciclos_devel(tarefas_relacionadas)
+      ciclos = []
+      ciclo_atual = []
+      
+      tarefas_relacionadas.each do |tarefa|
+        # Se a tarefa é do projeto DEVEL
+        if !SkyRedminePlugin::Constants::Projects::QS_PROJECTS.include?(tarefa.project.name)
+          ciclo_atual << tarefa
+        else
+          # Se encontrou uma tarefa QS, este ciclo DEVEL termina aqui
+          ciclos << ciclo_atual unless ciclo_atual.empty?
+          ciclo_atual = []
+        end
+      end
+      
+      # Adicionar o último ciclo se não estiver vazio
+      ciclos << ciclo_atual unless ciclo_atual.empty?
+      
+      ciclos
+    end
+
+    # Método para separar tarefas QS em ciclos de teste
+    def self.separar_ciclos_qs(tarefas_relacionadas)
+      ciclos = []
+      ciclo_atual = []
+      
+      tarefas_relacionadas.each do |tarefa|
+        # Se a tarefa é do projeto QS
+        if SkyRedminePlugin::Constants::Projects::QS_PROJECTS.include?(tarefa.project.name)
+          ciclo_atual << tarefa
+        else
+          # Se encontrou uma tarefa DEVEL, este ciclo QS termina aqui
+          ciclos << ciclo_atual unless ciclo_atual.empty?
+          ciclo_atual = []
+        end
+      end
+      
+      # Adicionar o último ciclo se não estiver vazio
+      ciclos << ciclo_atual unless ciclo_atual.empty?
+      
+      ciclos
     end
   end
 end
