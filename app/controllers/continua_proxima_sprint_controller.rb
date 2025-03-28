@@ -39,6 +39,8 @@ class ContinuaProximaSprintController < ApplicationController
       @issue.tag_list = []
       @issue.save
 
+      SkyRedminePlugin::Indicadores.processar_indicadores(@issue)
+
       # atualizar o campo Teste QS da tarefa de devel para Nova se a tarefa que está gerando continua na proxima sprint é do QS
       if SkyRedminePlugin::Constants::Projects::QS_PROJECTS.include?(@issue.project.name)
         # localizar a tarefa de origem do desenvolvimento
