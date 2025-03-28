@@ -136,7 +136,7 @@ module SkyRedminePlugin
           
           # Processar datas de resolução e fechamento QS
           data_fechamento_qs = obter_data_mudanca_status(ultima_tarefa_qs, [SkyRedminePlugin::Constants::IssueStatus::TESTE_OK_FECHADA, SkyRedminePlugin::Constants::IssueStatus::TESTE_NOK_FECHADA])
-          data_resolucao_qs = obter_data_mudanca_status(ultima_tarefa_qs, [SkyRedminePlugin::Constants::IssueStatus::RESOLVIDA])
+          data_resolucao_qs = obter_data_mudanca_status(ultima_tarefa_qs, [SkyRedminePlugin::Constants::IssueStatus::TESTE_OK, SkyRedminePlugin::Constants::IssueStatus::TESTE_NOK])
           
           if data_fechamento_qs.present? && data_resolucao_qs.nil?
             # Se foi direto para fechada, usar a data de fechamento para ambos
