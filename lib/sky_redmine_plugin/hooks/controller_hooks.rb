@@ -6,7 +6,7 @@ module SkyRedminePlugin
       include TarefasRelacionadasHelper
 
       def controller_issues_bulk_edit_before_save(context = {})
-        Rails.logger.info ">>> Entrada no hook de edição em massa"
+        Rails.logger.info ">>> controller_issues_bulk_edit_before_save"
         issue = context[:issue]
         params = context[:params]
 
@@ -37,7 +37,9 @@ module SkyRedminePlugin
       end
 
       def controller_issues_new_after_save(context = {})
+        Rails.logger.info ">>> controller_issues_new_after_save"
         issue = context[:issue]
+        Rails.logger.info ">>> issue: #{issue.id}"
 
         # Processar e atualizar SkyRedmineIndicadores
         SkyRedminePlugin::Indicadores.processar_indicadores(issue)
@@ -50,7 +52,7 @@ module SkyRedminePlugin
       private
 
       def processar_tarefa(issue, new_status_name)
-        Rails.logger.info ">>> processar tarea #{issue.id} com status #{new_status_name}"
+        Rails.logger.info ">>> processar tarefa #{issue.id} com status #{new_status_name}"
         # Processar e atualizar SkyRedmineIndicadores
         SkyRedminePlugin::Indicadores.processar_indicadores(issue)
 
