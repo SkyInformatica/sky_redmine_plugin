@@ -43,25 +43,11 @@ module SkyRedminePlugin
         end
         indicador.qtd_retorno_testes = qtd_retorno_testes
         
-        data_atendimento = obter_valor_campo_personalizado(primeira_tarefa_devel, "Data de Atendimento")
-        indicador.data_atendimento_primeira_tarefa_devel = data_atendimento
-        indicador.data_criacao_ou_atendimento_primeira_tarefa_devel = data_atendimento || primeira_tarefa_devel.created_on.to_date
-        
-        # Processar datas de resolução e fechamento        
-        data_resolucao = obter_data_mudanca_status(ultima_tarefa_devel, [SkyRedminePlugin::Constants::IssueStatus::RESOLVIDA])
-        data_fechamento = obter_data_mudanca_status(ultima_tarefa_devel, [SkyRedminePlugin::Constants::IssueStatus::FECHADA])
-        Rails.logger.info ">>> data_resolucao: #{data_resolucao}"
-        Rails.logger.info ">>> data_fechamento: #{data_fechamento}"
-
-        
-        if data_fechamento.present? && data_resolucao.nil?
-          # Se foi direto para fechada, usar a data de fechamento para ambos
-          indicador.data_resolvida_ultima_tarefa_devel = data_fechamento
-          indicador.data_fechamento_ultima_tarefa_devel = data_fechamento
-        else
-          indicador.data_resolvida_ultima_tarefa_devel = data_resolucao
-          indicador.data_fechamento_ultima_tarefa_devel = data_fechamento
-        end
+        # Usar as datas já calculadas pela função obter_lista_tarefas_relacionadas
+        indicador.data_atendimento_primeira_tarefa_devel = primeira_tarefa_devel.data_atendimento
+        indicador.data_criacao_ou_atendimento_primeira_tarefa_devel = primeira_tarefa_devel.data_criacao
+        indicador.data_resolvida_ultima_tarefa_devel = ultima_tarefa_devel.data_resolvida
+        indicador.data_fechamento_ultima_tarefa_devel = ultima_tarefa_devel.data_fechada
 
         # Separar tarefas DEVEL em ciclos de desenvolvimento
         ciclos_devel = separar_ciclos_devel(tarefas_relacionadas)
@@ -69,33 +55,12 @@ module SkyRedminePlugin
 
         # Processar data de início em andamento usando apenas o primeiro ciclo
         data_andamento = nil
-        data_criacao = primeira_tarefa_devel.created_on.to_date
-
-        # Verificar cada tarefa do primeiro ciclo DEVEL na sequência
-        primeiro_ciclo_devel.each_with_index do |tarefa, index|
-          # Procurar por mudança para EM_ANDAMENTO
-          data_andamento = obter_data_mudanca_status(tarefa, [SkyRedminePlugin::Constants::IssueStatus::EM_ANDAMENTO])
-          break if data_andamento.present?
-
-          # Se não encontrou EM_ANDAMENTO, verificar se está CONTINUA_PROXIMA_SPRINT
-          if tarefa.status.name == SkyRedminePlugin::Constants::IssueStatus::CONTINUA_PROXIMA_SPRINT
-            # Se é a última tarefa do ciclo e está CONTINUA_PROXIMA_SPRINT, não encontrou EM_ANDAMENTO
-            break if index == primeiro_ciclo_devel.length - 1
-            # Se não é a última, continua procurando na próxima tarefa
-            next
+        primeiro_ciclo_devel.each do |tarefa|
+          if tarefa.data_em_andamento.present?
+            data_andamento = tarefa.data_em_andamento
+            break
           end
-
-          # Se chegou aqui, não está CONTINUA_PROXIMA_SPRINT
-          # Se é a última tarefa do ciclo e foi direto para RESOLVIDA/FECHADA, usar data de criação
-          if index == primeiro_ciclo_devel.length - 1 && 
-             (tarefa.status.name == SkyRedminePlugin::Constants::IssueStatus::RESOLVIDA || 
-              tarefa.status.name == SkyRedminePlugin::Constants::IssueStatus::FECHADA)
-            data_andamento = data_criacao
-          end
-          break
         end
-
-        # Definir data de andamento
         indicador.data_andamento_primeira_tarefa_devel = data_andamento
 
         # Processar dados QS
@@ -121,46 +86,17 @@ module SkyRedminePlugin
 
           # Processar data de início em andamento QS usando apenas o primeiro ciclo
           data_andamento_qs = nil
-          data_criacao_qs = primeira_tarefa_qs.created_on.to_date
-
-          # Verificar cada tarefa do primeiro ciclo QS na sequência
-          primeiro_ciclo_qs.each_with_index do |tarefa, index|
-            # Procurar por mudança para EM_ANDAMENTO
-            data_andamento_qs = obter_data_mudanca_status(tarefa, [SkyRedminePlugin::Constants::IssueStatus::EM_ANDAMENTO])
-            break if data_andamento_qs.present?
-
-            # Se não encontrou EM_ANDAMENTO, verificar se está CONTINUA_PROXIMA_SPRINT
-            if tarefa.status.name == SkyRedminePlugin::Constants::IssueStatus::CONTINUA_PROXIMA_SPRINT
-              # Se é a última tarefa do ciclo e está CONTINUA_PROXIMA_SPRINT, não encontrou EM_ANDAMENTO
-              break if index == primeiro_ciclo_qs.length - 1
-              # Se não é a última, continua procurando na próxima tarefa
-              next
+          primeiro_ciclo_qs.each do |tarefa|
+            if tarefa.data_em_andamento.present?
+              data_andamento_qs = tarefa.data_em_andamento
+              break
             end
-
-            # Se chegou aqui, não está CONTINUA_PROXIMA_SPRINT
-            # Se é a última tarefa do ciclo e foi direto para TESTE_OK ou TESTE_NOK, usar data de criação
-            if index == primeiro_ciclo_qs.length - 1 && 
-               [SkyRedminePlugin::Constants::IssueStatus::TESTE_OK, SkyRedminePlugin::Constants::IssueStatus::TESTE_NOK].include?(tarefa.status.name)
-              data_andamento_qs = data_criacao_qs
-            end
-            break
           end
-
-          # Definir data de andamento QS
           indicador.data_andamento_primeira_tarefa_qs = data_andamento_qs
           
-          # Processar datas de resolução e fechamento QS
-          data_fechamento_qs = obter_data_mudanca_status(ultima_tarefa_qs, [SkyRedminePlugin::Constants::IssueStatus::TESTE_OK_FECHADA, SkyRedminePlugin::Constants::IssueStatus::TESTE_NOK_FECHADA])
-          data_resolucao_qs = obter_data_mudanca_status(ultima_tarefa_qs, [SkyRedminePlugin::Constants::IssueStatus::TESTE_OK, SkyRedminePlugin::Constants::IssueStatus::TESTE_NOK])
-          
-          if data_fechamento_qs.present? && data_resolucao_qs.nil?
-            # Se foi direto para fechada, usar a data de fechamento para ambos
-            indicador.data_resolvida_ultima_tarefa_qs = data_fechamento_qs
-            indicador.data_fechamento_ultima_tarefa_qs = data_fechamento_qs
-          else
-            indicador.data_resolvida_ultima_tarefa_qs = data_resolucao_qs
-            indicador.data_fechamento_ultima_tarefa_qs = data_fechamento_qs
-          end
+          # Usar as datas já calculadas pela função obter_lista_tarefas_relacionadas
+          indicador.data_resolvida_ultima_tarefa_qs = ultima_tarefa_qs.data_resolvida
+          indicador.data_fechamento_ultima_tarefa_qs = ultima_tarefa_qs.data_fechada
         end
 
         # Determinar o local atual da tarefa

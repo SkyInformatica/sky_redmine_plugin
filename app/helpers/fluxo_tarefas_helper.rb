@@ -117,11 +117,13 @@ module FluxoTarefasHelper
         data_fechada = nil
       end
 
+      tarefa.instance_variable_set(:@data_atendimento, data_atendimento)
       tarefa.instance_variable_set(:@data_criacao, data_criacao)
       tarefa.instance_variable_set(:@data_em_andamento, data_em_andamento)
       tarefa.instance_variable_set(:@data_resolvida, data_resolvida)
       tarefa.instance_variable_set(:@data_fechada, data_fechada)
 
+      tarefa.define_singleton_method(:data_atendimento) { @data_atendimento }
       tarefa.define_singleton_method(:data_criacao) { @data_criacao }
       tarefa.define_singleton_method(:data_em_andamento) { @data_em_andamento }
       tarefa.define_singleton_method(:data_resolvida) { @data_resolvida }
