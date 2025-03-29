@@ -52,6 +52,7 @@ module SkyRedminePlugin
         data_fechamento = obter_data_mudanca_status(ultima_tarefa_devel, [SkyRedminePlugin::Constants::IssueStatus::FECHADA])
         Rails.logger.info ">>> data_resolucao: #{data_resolucao}"
         Rails.logger.info ">>> data_fechamento: #{data_fechamento}"
+
         
         if data_fechamento.present? && data_resolucao.nil?
           # Se foi direto para fechada, usar a data de fechamento para ambos
@@ -187,18 +188,7 @@ module SkyRedminePlugin
       custom_field ? custom_field.value : nil
     end
 
-    # Método existente para obter data de mudança de status
-    def self.obter_data_mudanca_status(tarefa, status_nomes)
-      status_ids = IssueStatus.where(name: status_nomes).pluck(:id)
-
-      journal = tarefa.journals.joins(:details)
-                      .where(journal_details: { property: "attr", prop_key: "status_id", value: status_ids })
-                      .order("created_on ASC")
-                      .first
-
-      journal&.created_on&.to_date
-    end
-
+   
     # Método para separar tarefas DEVEL em ciclos de desenvolvimento
     def self.separar_ciclos_devel(tarefas_relacionadas)
       ciclos = []

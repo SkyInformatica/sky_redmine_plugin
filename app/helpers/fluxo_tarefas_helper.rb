@@ -45,7 +45,51 @@ module FluxoTarefasHelper
       tarefa_atual = tarefa_posterior
     end
 
-    tarefas
+    # Adiciona os atributos de data para cada tarefa
+    tarefas.map do |tarefa|
+      data_criacao = tarefa.created_on
+      data_em_andamento = obter_data_mudanca_status(tarefa, [SkyRedminePlugin::Constants::IssueStatus::EM_ANDAMENTO])
+
+      projeto_nome = tarefa.project.name
+      if SkyRedminePlugin::Constants::Projects::QS_PROJECTS.include?(projeto_nome)
+        # Tarefas do QS
+        status_resolvida = [
+          SkyRedminePlugin::Constants::IssueStatus::TESTE_OK,
+          SkyRedminePlugin::Constants::IssueStatus::TESTE_NOK,
+        ]
+
+        status_fechada = [
+          SkyRedminePlugin::Constants::IssueStatus::TESTE_OK_FECHADA,
+          SkyRedminePlugin::Constants::IssueStatus::TESTE_NOK_FECHADA,
+          SkyRedminePlugin::Constants::IssueStatus::CONTINUA_PROXIMA_SPRINT,
+          SkyRedminePlugin::Constants::IssueStatus::FECHADA_CONTINUA_RETORNO_TESTES,
+        ]
+      else
+        # Tarefas de Desenvolvimento
+        status_resolvida = [SkyRedminePlugin::Constants::IssueStatus::RESOLVIDA]
+
+        status_fechada = [
+          SkyRedminePlugin::Constants::IssueStatus::FECHADA,
+          SkyRedminePlugin::Constants::IssueStatus::CONTINUA_PROXIMA_SPRINT,
+          SkyRedminePlugin::Constants::IssueStatus::FECHADA_CONTINUA_RETORNO_TESTES,
+        ]
+      end
+
+      data_resolvida = obter_data_mudanca_status(tarefa, status_resolvida)
+      data_fechada = obter_data_mudanca_status(tarefa, status_fechada)
+
+      tarefa.instance_variable_set(:@data_criacao, data_criacao)
+      tarefa.instance_variable_set(:@data_em_andamento, data_em_andamento)
+      tarefa.instance_variable_set(:@data_resolvida, data_resolvida)
+      tarefa.instance_variable_set(:@data_fechada, data_fechada)
+
+      tarefa.define_singleton_method(:data_criacao) { @data_criacao }
+      tarefa.define_singleton_method(:data_em_andamento) { @data_em_andamento }
+      tarefa.define_singleton_method(:data_resolvida) { @data_resolvida }
+      tarefa.define_singleton_method(:data_fechada) { @data_fechada }
+
+      tarefa
+    end
   end
 
   private
@@ -200,68 +244,12 @@ module FluxoTarefasHelper
     linhas.join("\n")
   end
 
-  def formatar_linha_tarefa_html_old(tarefa, numero_sequencial, tarefa_atual_id)
-    horas_gastas = format("%.2f", tarefa.spent_hours.to_f)
-    data_inicio = tarefa.start_date.present? ? tarefa.start_date.strftime("%d/%m/%Y") : ""
-    #assigned_to_name = tarefa.assigned_to_id.present? ? User.find(tarefa.assigned_to_id).name : "Não atribuído"
-    assigned_to_name = tarefa.assigned_to_id.present? ? link_to(User.find(tarefa.assigned_to_id).name, user_path(tarefa.assigned_to_id)) : "Não atribuído"
-    version_name = tarefa.fixed_version ? link_to(tarefa.fixed_version.name, version_path(tarefa.fixed_version)) : "-"
-    link_tarefa = link_to_issue(tarefa)
-
-    if (tarefa.id == tarefa_atual_id)
-      link_tarefa = "<strong>#{link_tarefa}</strong>"
-    end
-
-    "<tr>        
-      <td class='subject'>#{numero_sequencial}. #{tarefa.project.name} - #{link_tarefa}</td>        
-      <td class='status'>#{tarefa.status.name}</td>  
-      <td class='assigned_to'>#{assigned_to_name}</td>
-      <td class='start_date'>#{data_inicio}</td>  
-      <td class='version'>#{version_name}</td>  
-      <td class='spent_hours'>#{horas_gastas}h</td>  
-    </tr>"
-  end
-
   def formatar_linha_tarefa_html(tarefa, numero_sequencial, tarefa_atual_id)
     horas_gastas = format("%.2f", tarefa.spent_hours.to_f)
-    data_criacao = tarefa.created_on.strftime("%d/%m/%Y")
-
-    # Obter a data que mudou para "Em andamento"
-    data_em_andamento = obter_data_mudanca_status(tarefa, [SkyRedminePlugin::Constants::IssueStatus::EM_ANDAMENTO])
-    data_em_andamento = data_em_andamento.strftime("%d/%m/%Y") if data_em_andamento
-
-    projeto_nome = tarefa.project.name
-    if SkyRedminePlugin::Constants::Projects::QS_PROJECTS.include?(projeto_nome)
-      # Tarefas do QS
-      status_resolvida = [
-        SkyRedminePlugin::Constants::IssueStatus::TESTE_OK,
-        SkyRedminePlugin::Constants::IssueStatus::TESTE_NOK,
-      ]
-
-      status_fechada = [
-        SkyRedminePlugin::Constants::IssueStatus::TESTE_OK_FECHADA,
-        SkyRedminePlugin::Constants::IssueStatus::TESTE_NOK_FECHADA,
-        SkyRedminePlugin::Constants::IssueStatus::CONTINUA_PROXIMA_SPRINT,
-        SkyRedminePlugin::Constants::IssueStatus::FECHADA_CONTINUA_RETORNO_TESTES,
-      ]
-    else
-      # Tarefas de Desenvolvimento
-      status_resolvida = [SkyRedminePlugin::Constants::IssueStatus::RESOLVIDA]
-
-      status_fechada = [
-        SkyRedminePlugin::Constants::IssueStatus::FECHADA,
-        SkyRedminePlugin::Constants::IssueStatus::CONTINUA_PROXIMA_SPRINT,
-        SkyRedminePlugin::Constants::IssueStatus::FECHADA_CONTINUA_RETORNO_TESTES,
-      ]
-    end
-
-    # Obter a data que mudou para "Resolvida" ou "Teste OK"/"Teste NOK"
-    data_resolvida = obter_data_mudanca_status(tarefa, status_resolvida)
-    data_resolvida = data_resolvida.strftime("%d/%m/%Y") if data_resolvida
-
-    # Obter a data que mudou para "Fechada" ou "Teste OK - Fechada"/"Teste NOK - Fechada"
-    data_fechada = obter_data_mudanca_status(tarefa, status_fechada)
-    data_fechada = data_fechada.strftime("%d/%m/%Y") if data_fechada
+    data_criacao = tarefa.data_criacao.strftime("%d/%m/%Y")
+    data_em_andamento = tarefa.data_em_andamento&.strftime("%d/%m/%Y")
+    data_resolvida = tarefa.data_resolvida&.strftime("%d/%m/%Y")
+    data_fechada = tarefa.data_fechada&.strftime("%d/%m/%Y")
 
     # Obter as revisões associadas à tarefa
     revisoes = tarefa.changesets
