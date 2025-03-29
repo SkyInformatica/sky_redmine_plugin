@@ -254,7 +254,7 @@ module FluxoTarefasHelper
         <th>Título</th>  
         <th>Situação</th>  
         <th>Atribuído</th>  
-        <th>Criada</th>  
+        <th>Criada<br>Atendimento</th>  
         <th>Andamento</th>  
         <th>Resolvida<br>Teste</th>  
         <th>Fechada</th>  
