@@ -2,6 +2,12 @@ module FluxoTarefasHelper
   include ApplicationHelper
   include IssuesHelper
 
+  def obter_valor_campo_personalizado(issue, nome_campo)
+    if custom_field = IssueCustomField.find_by(name: nome_campo)
+      issue.custom_field_value(custom_field.id)
+    end
+  end
+
   def render_fluxo_tarefas_html(issue)
     tarefas_relacionadas = obter_lista_tarefas_relacionadas(issue)
     texto_fluxo = gerar_texto_fluxo_html(tarefas_relacionadas, issue.id)
@@ -47,9 +53,10 @@ module FluxoTarefasHelper
 
     # Adiciona os atributos de data para cada tarefa
     tarefas.map do |tarefa|
-      data_criacao = tarefa.created_on
-      data_em_andamento = obter_data_mudanca_status(tarefa, [SkyRedminePlugin::Constants::IssueStatus::EM_ANDAMENTO])
-
+      # Data de criação pode ser a data de criação ou a data de atendimento
+      data_atendimento = obter_valor_campo_personalizado(tarefa, "Data de Atendimento")
+      data_criacao = data_atendimento.present? ? data_atendimento : tarefa.created_on
+      
       projeto_nome = tarefa.project.name
       if SkyRedminePlugin::Constants::Projects::QS_PROJECTS.include?(projeto_nome)
         # Tarefas do QS
@@ -61,8 +68,7 @@ module FluxoTarefasHelper
         status_fechada = [
           SkyRedminePlugin::Constants::IssueStatus::TESTE_OK_FECHADA,
           SkyRedminePlugin::Constants::IssueStatus::TESTE_NOK_FECHADA,
-          SkyRedminePlugin::Constants::IssueStatus::CONTINUA_PROXIMA_SPRINT,
-          SkyRedminePlugin::Constants::IssueStatus::FECHADA_CONTINUA_RETORNO_TESTES,
+          SkyRedminePlugin::Constants::IssueStatus::CONTINUA_PROXIMA_SPRINT          
         ]
       else
         # Tarefas de Desenvolvimento
@@ -75,8 +81,36 @@ module FluxoTarefasHelper
         ]
       end
 
-      data_resolvida = obter_data_mudanca_status(tarefa, status_resolvida)
-      data_fechada = obter_data_mudanca_status(tarefa, status_fechada)
+      # Obter as datas de resolução e fechamento
+      data_resolucao = obter_data_mudanca_status(tarefa, status_resolvida)
+      data_fechamento = obter_data_mudanca_status(tarefa, status_fechada)
+
+      # Definir data de andamento
+      data_em_andamento = obter_data_mudanca_status(tarefa, [SkyRedminePlugin::Constants::IssueStatus::EM_ANDAMENTO])
+      
+      # Se não encontrou EM_ANDAMENTO, verificar se está em CONTINUA_PROXIMA_SPRINT
+      if data_em_andamento.nil? && tarefa.status.name == SkyRedminePlugin::Constants::IssueStatus::CONTINUA_PROXIMA_SPRINT
+        # Se está em CONTINUA_PROXIMA_SPRINT, mantém data_em_andamento como nil
+        data_em_andamento = nil
+      elsif data_em_andamento.nil? && (data_resolucao.present? || data_fechamento.present?)
+        # Se não encontrou EM_ANDAMENTO mas tem RESOLVIDA ou FECHADA, usa a data de criação
+        data_em_andamento = tarefa.created_on
+      end
+
+      # Definir datas de resolução e fechamento
+      if data_fechamento.present? && data_resolucao.nil?
+        # Se foi direto para fechada, usar a data de fechamento para ambos
+        data_resolvida = data_fechamento
+        data_fechada = data_fechamento
+      else
+        data_resolvida = data_resolucao
+        data_fechada = data_fechamento
+      end
+
+      # Se a tarefa está em CONTINUA_PROXIMA_SPRINT, ela não foi resolvida ainda
+      if tarefa.status.name == SkyRedminePlugin::Constants::IssueStatus::CONTINUA_PROXIMA_SPRINT
+        data_resolvida = nil
+      end
 
       tarefa.instance_variable_set(:@data_criacao, data_criacao)
       tarefa.instance_variable_set(:@data_em_andamento, data_em_andamento)
