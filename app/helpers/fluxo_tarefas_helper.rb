@@ -112,6 +112,11 @@ module FluxoTarefasHelper
         data_resolvida = nil
       end
 
+      # Se a tarefa não está atualmente em um status de fechamento, não considerar a data_fechada
+      unless status_fechada.include?(tarefa.status.name)
+        data_fechada = nil
+      end
+
       tarefa.instance_variable_set(:@data_criacao, data_criacao)
       tarefa.instance_variable_set(:@data_em_andamento, data_em_andamento)
       tarefa.instance_variable_set(:@data_resolvida, data_resolvida)
