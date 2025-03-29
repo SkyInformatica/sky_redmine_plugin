@@ -91,6 +91,7 @@ module SkyRedminePlugin
           # Se existir uma cópia e seu status for "Teste OK"
           if copied_to_qs_issue
             if copied_to_qs_issue.status == IssueStatus.find_by(name: SkyRedminePlugin::Constants::IssueStatus::TESTE_OK)
+              copied_to_qs_issue.init_journal(User.current, "[SkyRedminePlugin] Tarefa devel fechada")
               copied_to_qs_issue.status = IssueStatus.find_by(name: SkyRedminePlugin::Constants::IssueStatus::TESTE_OK_FECHADA)
               copied_to_qs_issue.tag_list = []
               copied_to_qs_issue.save(validate: false)
