@@ -29,7 +29,19 @@ module SkyRedminePlugin
         indicador.tempo_gasto_devel = tarefas_devel.sum { |t| t.spent_hours.to_f }
         indicador.origem_primeira_tarefa_devel = obter_valor_campo_personalizado(primeira_tarefa_devel, "Origem")
         indicador.skynet_primeira_tarefa_devel = obter_valor_campo_personalizado(primeira_tarefa_devel, "Sky.NET")
-        indicador.qtd_retorno_testes = tarefas_relacionadas.count { |t| t.tracker.name == SkyRedminePlugin::Constants::Trackers::RETORNO_TESTES }
+        
+        # Contar retornos de testes baseado no fluxo entre projetos
+        qtd_retorno_testes = 0
+        tarefas_relacionadas.each_with_index do |tarefa, index|
+          next if index == 0 # Pula a primeira tarefa
+          
+          # Se a tarefa atual é DEVEL e a anterior era QS, é um retorno de testes
+          if !SkyRedminePlugin::Constants::Projects::QS_PROJECTS.include?(tarefa.project.name) &&
+             SkyRedminePlugin::Constants::Projects::QS_PROJECTS.include?(tarefas_relacionadas[index-1].project.name)
+            qtd_retorno_testes += 1
+          end
+        end
+        indicador.qtd_retorno_testes = qtd_retorno_testes
         
         data_atendimento = obter_valor_campo_personalizado(primeira_tarefa_devel, "Data de Atendimento")
         indicador.data_atendimento_primeira_tarefa_devel = data_atendimento

@@ -53,9 +53,7 @@ module SkyRedminePlugin
 
       def processar_tarefa(issue, new_status_name)
         Rails.logger.info ">>> processar tarefa #{issue.id} com status #{new_status_name}"
-        # Processar e atualizar SkyRedmineIndicadores
-        SkyRedminePlugin::Indicadores.processar_indicadores(issue)
-
+        
         # Chama a atualização da data de início se necessário
         atualizar_data_inicio(issue, new_status_name)
 
@@ -67,6 +65,9 @@ module SkyRedminePlugin
 
         # Atualizar status tarefa QS na tarefa de desenvolvimento
         atualizar_status_tarefa_qs_tarefa_devel(issue, new_status_name)
+
+        # Processar e atualizar SkyRedmineIndicadores
+        SkyRedminePlugin::Indicadores.processar_indicadores(issue)
       end
 
       def atualizar_status_tarefa_qs_tarefa_devel(issue, new_status_name)
