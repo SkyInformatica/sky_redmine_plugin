@@ -47,9 +47,11 @@ module SkyRedminePlugin
         indicador.data_atendimento_primeira_tarefa_devel = data_atendimento
         indicador.data_criacao_ou_atendimento_primeira_tarefa_devel = data_atendimento || primeira_tarefa_devel.created_on.to_date
         
-        # Processar datas de resolução e fechamento
-        data_fechamento = obter_data_mudanca_status(ultima_tarefa_devel, [SkyRedminePlugin::Constants::IssueStatus::FECHADA])
+        # Processar datas de resolução e fechamento        
         data_resolucao = obter_data_mudanca_status(ultima_tarefa_devel, [SkyRedminePlugin::Constants::IssueStatus::RESOLVIDA])
+        data_fechamento = obter_data_mudanca_status(ultima_tarefa_devel, [SkyRedminePlugin::Constants::IssueStatus::FECHADA])
+        Rails.logger.info ">>> data_resolucao: #{data_resolucao}"
+        Rails.logger.info ">>> data_fechamento: #{data_fechamento}"
         
         if data_fechamento.present? && data_resolucao.nil?
           # Se foi direto para fechada, usar a data de fechamento para ambos
