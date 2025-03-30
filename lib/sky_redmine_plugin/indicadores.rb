@@ -64,6 +64,9 @@ module SkyRedminePlugin
       tarefas_devel = tarefas_relacionadas.select { |t| !SkyRedminePlugin::Constants::Projects::QS_PROJECTS.include?(t.project.name) }
       tarefas_qs = tarefas_relacionadas.select { |t| SkyRedminePlugin::Constants::Projects::QS_PROJECTS.include?(t.project.name) }
 
+      Rails.logger.info ">>> tarefas_devel: #{tarefas_devel.inspect}"
+      Rails.logger.info ">>> tarefas_qs: #{tarefas_qs.inspect}"
+
       # Processar dados DEVEL
       unless tarefas_devel.empty?
         primeira_tarefa_devel = tarefas_devel.first
