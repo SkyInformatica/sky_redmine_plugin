@@ -1,45 +1,8 @@
 module SkyRedminePlugin
-  class Indicadores    
+  module Indicadores    
     include TarefasRelacionadas
 
-    def self.limpar_campos_indicador(indicador)
-      Rails.logger.info ">>> Limpando todos os campos do indicador"
-      # Campos de DEVEL
-      indicador.ultima_tarefa_devel_id = nil
-      indicador.tipo_primeira_tarefa_devel = nil
-      indicador.status_ultima_tarefa_devel = nil
-      indicador.prioridade_primeira_tarefa_devel = nil
-      indicador.projeto_primeira_tarefa_devel = nil
-      indicador.sprint_primeira_tarefa_devel = nil
-      indicador.sprint_ultima_tarefa_devel = nil
-      indicador.tempo_estimado_devel = nil
-      indicador.tempo_gasto_devel = nil
-      indicador.origem_primeira_tarefa_devel = nil
-      indicador.skynet_primeira_tarefa_devel = nil
-      indicador.qtd_retorno_testes = nil
-      indicador.data_criacao_ou_atendimento_primeira_tarefa_devel = nil
-      indicador.data_resolvida_ultima_tarefa_devel = nil
-      indicador.data_fechamento_ultima_tarefa_devel = nil
-      indicador.data_andamento_primeira_tarefa_devel = nil
-
-      # Campos de QS
-      indicador.primeira_tarefa_qs_id = nil
-      indicador.ultima_tarefa_qs_id = nil
-      indicador.sprint_primeira_tarefa_qs = nil
-      indicador.sprint_ultima_tarefa_qs = nil
-      indicador.projeto_primeira_tarefa_qs = nil
-      indicador.tempo_estimado_qs = nil
-      indicador.tempo_gasto_qs = nil
-      indicador.status_ultima_tarefa_qs = nil
-      indicador.houve_teste_nok = nil
-      indicador.data_criacao_primeira_tarefa_qs = nil
-      indicador.data_andamento_primeira_tarefa_qs = nil
-      indicador.data_resolvida_ultima_tarefa_qs = nil
-      indicador.data_fechamento_ultima_tarefa_qs = nil
-
-      # Campo de localização
-      indicador.local_tarefa = nil
-    end
+    
 
     def self.processar_indicadores(issue, is_exclusao = false)
       Rails.logger.info ">>> inicio processar_indicadores issue.id: #{issue.id}, is_exclusao: #{is_exclusao}"
@@ -185,6 +148,45 @@ module SkyRedminePlugin
         Rails.logger.info ">>> indicador.save: #{indicador.inspect}"
         indicador.save(validate: false)
       end
+    end
+
+    def self.limpar_campos_indicador(indicador)
+      Rails.logger.info ">>> Limpando todos os campos do indicador"
+      # Campos de DEVEL
+      indicador.ultima_tarefa_devel_id = nil
+      indicador.tipo_primeira_tarefa_devel = nil
+      indicador.status_ultima_tarefa_devel = nil
+      indicador.prioridade_primeira_tarefa_devel = nil
+      indicador.projeto_primeira_tarefa_devel = nil
+      indicador.sprint_primeira_tarefa_devel = nil
+      indicador.sprint_ultima_tarefa_devel = nil
+      indicador.tempo_estimado_devel = nil
+      indicador.tempo_gasto_devel = nil
+      indicador.origem_primeira_tarefa_devel = nil
+      indicador.skynet_primeira_tarefa_devel = nil
+      indicador.qtd_retorno_testes = nil
+      indicador.data_criacao_ou_atendimento_primeira_tarefa_devel = nil
+      indicador.data_resolvida_ultima_tarefa_devel = nil
+      indicador.data_fechamento_ultima_tarefa_devel = nil
+      indicador.data_andamento_primeira_tarefa_devel = nil
+
+      # Campos de QS
+      indicador.primeira_tarefa_qs_id = nil
+      indicador.ultima_tarefa_qs_id = nil
+      indicador.sprint_primeira_tarefa_qs = nil
+      indicador.sprint_ultima_tarefa_qs = nil
+      indicador.projeto_primeira_tarefa_qs = nil
+      indicador.tempo_estimado_qs = nil
+      indicador.tempo_gasto_qs = nil
+      indicador.status_ultima_tarefa_qs = nil
+      indicador.houve_teste_nok = nil
+      indicador.data_criacao_primeira_tarefa_qs = nil
+      indicador.data_andamento_primeira_tarefa_qs = nil
+      indicador.data_resolvida_ultima_tarefa_qs = nil
+      indicador.data_fechamento_ultima_tarefa_qs = nil
+
+      # Campo de localização
+      indicador.local_tarefa = nil
     end
 
     # Método para separar tarefas DEVEL em ciclos de desenvolvimento
