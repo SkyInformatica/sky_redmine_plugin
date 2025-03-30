@@ -7,7 +7,8 @@ require "redmine"
 require "chartkick"
 require "groupdate"
 require_relative "app/helpers/fluxo_tarefas_helper"
-require_relative "lib/sky_redmine_plugin/patches/issue_helper_patch"
+#require_relative "lib/sky_redmine_plugin/patches/issue_helper_patch"
+require_relative "lib/sky_redmine_plugin/issue_helper_patch"
 require_relative "app/models/sky_redmine_indicadores"
 require_relative "lib/sky_redmine_plugin/hooks/model_hook"
 
@@ -42,12 +43,21 @@ Redmine::Plugin.register :sky_redmine_plugin do
        after: :activity
 end
 
+#begin
+#  require_dependency "issues_helper_patch"
+#  IssuesHelperPatch.prepend SkyRedminePlugin::Patches::IssueHelperPatch
+#rescue LoadError => e
+#  Rails.logger.error "Erro ao carregar IssueHelperPatch: #{e.message}"
+#end
+
+
 begin
-  require_dependency "issues_helper_patch"
-  IssuesHelperPatch.prepend SkyRedminePlugin::Patches::IssueHelperPatch
+  require_dependency "issues_helper"
+  IssuesHelper.prepend SkyRedminePlugin::IssueHelperPatch
 rescue LoadError => e
   Rails.logger.error "Erro ao carregar IssueHelperPatch: #{e.message}"
 end
+
 
 ActionView::Base.send :include, FluxoTarefasHelper
 
