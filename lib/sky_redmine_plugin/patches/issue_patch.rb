@@ -10,6 +10,7 @@ module SkyRedminePlugin
       private
 
       def processar_exclusao_indicador
+        Rails.logger.info ">>> processando exclusão da tarefa #{id}"
         SkyRedminePlugin::Indicadores.processar_indicadores(self, true)
       end
     end
