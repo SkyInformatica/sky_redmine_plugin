@@ -2,6 +2,48 @@ module SkyRedminePlugin
   class Indicadores
     extend FluxoTarefasHelper
 
+    def self.limpar_campos_indicador(indicador)
+      Rails.logger.info ">>> Limpando todos os campos do indicador"
+      # Campos de identificação
+      indicador.primeira_tarefa_devel_id = nil
+      indicador.ultima_tarefa_devel_id = nil
+      indicador.primeira_tarefa_qs_id = nil
+      indicador.ultima_tarefa_qs_id = nil
+
+      # Campos de DEVEL
+      indicador.tipo_primeira_tarefa_devel = nil
+      indicador.status_ultima_tarefa_devel = nil
+      indicador.prioridade_primeira_tarefa_devel = nil
+      indicador.projeto_primeira_tarefa_devel = nil
+      indicador.sprint_primeira_tarefa_devel = nil
+      indicador.sprint_ultima_tarefa_devel = nil
+      indicador.tempo_estimado_devel = nil
+      indicador.tempo_gasto_devel = nil
+      indicador.origem_primeira_tarefa_devel = nil
+      indicador.skynet_primeira_tarefa_devel = nil
+      indicador.qtd_retorno_testes = nil
+      indicador.data_criacao_ou_atendimento_primeira_tarefa_devel = nil
+      indicador.data_resolvida_ultima_tarefa_devel = nil
+      indicador.data_fechamento_ultima_tarefa_devel = nil
+      indicador.data_andamento_primeira_tarefa_devel = nil
+
+      # Campos de QS
+      indicador.sprint_primeira_tarefa_qs = nil
+      indicador.sprint_ultima_tarefa_qs = nil
+      indicador.projeto_primeira_tarefa_qs = nil
+      indicador.tempo_estimado_qs = nil
+      indicador.tempo_gasto_qs = nil
+      indicador.status_ultima_tarefa_qs = nil
+      indicador.houve_teste_nok = nil
+      indicador.data_criacao_primeira_tarefa_qs = nil
+      indicador.data_andamento_primeira_tarefa_qs = nil
+      indicador.data_resolvida_ultima_tarefa_qs = nil
+      indicador.data_fechamento_ultima_tarefa_qs = nil
+
+      # Campo de localização
+      indicador.local_tarefa = nil
+    end
+
     def self.processar_indicadores(issue, is_exclusao = false)
       Rails.logger.info ">>> inicio processar_indicadores issue.id: #{issue.id}, is_exclusao: #{is_exclusao}"
       
@@ -27,7 +69,11 @@ module SkyRedminePlugin
         primeira_tarefa_devel = tarefas_devel.first
         ultima_tarefa_devel = tarefas_devel.last
 
+        # Encontrar ou inicializar o indicador
         indicador = SkyRedmineIndicadores.find_or_initialize_by(primeira_tarefa_devel_id: primeira_tarefa_devel.id)
+
+        # Limpar todos os campos antes de processar
+        limpar_campos_indicador(indicador)
 
         indicador.ultima_tarefa_devel_id = ultima_tarefa_devel.id
         indicador.tipo_primeira_tarefa_devel = primeira_tarefa_devel.tracker.name
@@ -55,7 +101,6 @@ module SkyRedminePlugin
         indicador.qtd_retorno_testes = qtd_retorno_testes
         
         # Usar as datas já calculadas pela função obter_lista_tarefas_relacionadas
-        indicador.data_atendimento_primeira_tarefa_devel = primeira_tarefa_devel.data_atendimento
         indicador.data_criacao_ou_atendimento_primeira_tarefa_devel = primeira_tarefa_devel.data_criacao
         indicador.data_resolvida_ultima_tarefa_devel = ultima_tarefa_devel.data_resolvida
         indicador.data_fechamento_ultima_tarefa_devel = ultima_tarefa_devel.data_fechada
