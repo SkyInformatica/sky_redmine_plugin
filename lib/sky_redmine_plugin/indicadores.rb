@@ -169,7 +169,7 @@ module SkyRedminePlugin
             indicador.local_tarefa = "QS"
           end
         end
-
+        Rails.logger.info ">>> indicador.save: #{indicador.inspect}"
         indicador.save(validate: false)
       end
     end
