@@ -3,7 +3,7 @@ module SkyRedminePlugin
     class ControllerHooks < Redmine::Hook::Listener
       include CriarTarefasHelper
       include FluxoTarefasHelper
-      include TarefasRelacionadasHelper
+   
 
       def controller_issues_bulk_edit_before_save(context = {})
         Rails.logger.info ">>> controller_issues_bulk_edit_before_save"
@@ -72,7 +72,7 @@ module SkyRedminePlugin
 
       def atualizar_status_tarefa_qs_tarefa_devel(issue, new_status_name)
         if SkyRedminePlugin::Constants::Projects::QS_PROJECTS.include?(issue.project.name)
-          devel_issue = localizar_tarefa_origem_desenvolvimento(issue)
+          devel_issue = TarefasRelacionadas.localizar_tarefa_origem_desenvolvimento(issue)
           if devel_issue
             if custom_field = IssueCustomField.find_by(name: SkyRedminePlugin::Constants::CustomFields::TESTE_QS)
               devel_issue.custom_field_values = { custom_field.id => new_status_name }
@@ -86,7 +86,7 @@ module SkyRedminePlugin
       def fechar_tarefa_qs(issue, new_status_name)
         if new_status_name == SkyRedminePlugin::Constants::IssueStatus::FECHADA
           # Localizar uma cópia da tarefa nos projetos QS
-          copied_to_qs_issue = localizar_tarefa_copiada_qs(issue)
+          copied_to_qs_issue = TarefasRelacionadas.localizar_tarefa_copiada_qs(issue)
 
           # Se existir uma cópia e seu status for "Teste OK"
           if copied_to_qs_issue

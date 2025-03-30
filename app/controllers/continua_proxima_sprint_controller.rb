@@ -1,5 +1,4 @@
 class ContinuaProximaSprintController < ApplicationController
-  include TarefasRelacionadasHelper
   include CriarTarefasHelper
   before_action :inicializar
   before_action :find_issue, only: [:continua_proxima_sprint]
@@ -22,7 +21,7 @@ class ContinuaProximaSprintController < ApplicationController
     if (nova_emandamento_interrompida_status.include?(@issue.status.name))
 
       # Verificar se já existe uma cópia da tarefa de continuidade na proxima sprint
-      copied_to_issue = localizar_tarefa_continuidade(@issue)
+      copied_to_issue = TarefasRelacionadas.localizar_tarefa_continuidade(@issue)
       if copied_to_issue
         # A tarefa já possui uma copia de continuidade
         flash[:warning] = "A tarefa já possui continuidade em  #{view_context.link_to "#{copied_to_issue.tracker.name} ##{copied_to_issue.id}", issue_path(copied_to_issue)} e está com status #{copied_to_issue.status.name}." unless is_batch_call
@@ -44,7 +43,7 @@ class ContinuaProximaSprintController < ApplicationController
       # atualizar o campo Teste QS da tarefa de devel para Nova se a tarefa que está gerando continua na proxima sprint é do QS
       if SkyRedminePlugin::Constants::Projects::QS_PROJECTS.include?(@issue.project.name)
         # localizar a tarefa de origem do desenvolvimento
-        devel_issue = localizar_tarefa_origem_desenvolvimento(@issue)
+        devel_issue = TarefasRelacionadas.localizar_tarefa_origem_desenvolvimento(@issue)
 
         if devel_issue
           if custom_field = IssueCustomField.find_by(name: SkyRedminePlugin::Constants::CustomFields::TESTE_QS)

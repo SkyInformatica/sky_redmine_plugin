@@ -1,5 +1,4 @@
 class RetornoTestesController < ApplicationController
-  include TarefasRelacionadasHelper
   include CriarTarefasHelper
   before_action :inicializar
   before_action :find_issue, only: [:retorno_testes_devel, :retorno_testes_qs]
@@ -16,7 +15,7 @@ class RetornoTestesController < ApplicationController
     if (!SkyRedminePlugin::Constants::Projects::QS_PROJECTS.include?(@issue.project.name)) && (@issue.status.name == SkyRedminePlugin::Constants::IssueStatus::RESOLVIDA)
 
       # Verificar se já existe uma cópia da tarefa de retorno de testes
-      retorno_testes_issue = localizar_tarefa_retorno_testes(@issue)
+      retorno_testes_issue = TarefasRelacionadas.localizar_tarefa_retorno_testes(@issue)
 
       # Se existir um retorno de testes
       if retorno_testes_issue
@@ -28,7 +27,7 @@ class RetornoTestesController < ApplicationController
       end
 
       # Verificar se já existe uma cópia da tarefa nos projetos QS
-      copied_to_qs_issue = localizar_tarefa_copiada_qs(@issue)
+      copied_to_qs_issue = TarefasRelacionadas.localizar_tarefa_copiada_qs(@issue)
 
       tarefa_qs_removida = false
       # Se existir uma cópia e seu status for "Nova"
@@ -85,7 +84,7 @@ class RetornoTestesController < ApplicationController
     if (SkyRedminePlugin::Constants::Projects::QS_PROJECTS.include?(@issue.project.name) && (@issue.status.name == SkyRedminePlugin::Constants::IssueStatus::TESTE_NOK))
 
       # Verificar se já existe uma cópia da tarefa de retorno de testes
-      retorno_testes_issue = localizar_tarefa_retorno_testes(@issue)
+      retorno_testes_issue = TarefasRelacionadas.localizar_tarefa_retorno_testes(@issue)
 
       # Se existir um retorno de testes
       if retorno_testes_issue
@@ -97,7 +96,7 @@ class RetornoTestesController < ApplicationController
       end
 
       # localizar a tarefa de origem do desenvolvimento
-      devel_issue = localizar_tarefa_origem_desenvolvimento(@issue)
+      devel_issue = TarefasRelacionadas.localizar_tarefa_origem_desenvolvimento(@issue)
 
       if devel_issue
         # Criar nova tarefa com a categoria da tarefa de desenvolvimento
