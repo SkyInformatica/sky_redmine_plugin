@@ -9,7 +9,7 @@ require "groupdate"
 require_relative "app/helpers/fluxo_tarefas_helper"
 require_relative "lib/sky_redmine_plugin/issue_helper_patch"
 require_relative "app/models/sky_redmine_indicadores"
-require_relative "lib/sky_redmine_plugin/patches/issue_patch"
+require_relative "lib/sky_redmine_plugin/patches/sky_issue_patch"
 
 Redmine::Plugin.register :sky_redmine_plugin do
   name "Sky Redmine plugin"
