@@ -44,7 +44,7 @@ end
 
 begin
   require_dependency "issues_helper_patch"
-  IssuesHelper.prepend SkyRedminePlugin::Patches::IssueHelperPatch
+  IssuesHelperPatch.prepend SkyRedminePlugin::Patches::IssueHelperPatch
 rescue LoadError => e
   Rails.logger.error "Erro ao carregar IssueHelperPatch: #{e.message}"
 end
