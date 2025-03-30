@@ -4,7 +4,7 @@ module FluxoTarefasHelper
   include SkyRedminePlugin::TarefasRelacionadas
 
   def render_fluxo_tarefas_html(issue)
-    tarefas_relacionadas = obter_lista_tarefas_relacionadas(issue)
+    tarefas_relacionadas = TarefasRelacionadas.obter_lista_tarefas_relacionadas(issue)
     texto_fluxo = gerar_texto_fluxo_html(tarefas_relacionadas, issue.id)
     texto_fluxo.html_safe  # Permite renderizar HTML seguro na visualização
   end
