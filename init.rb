@@ -9,7 +9,7 @@ require "groupdate"
 require_relative "app/helpers/fluxo_tarefas_helper"
 require_relative "lib/sky_redmine_plugin/issue_helper_patch"
 require_relative "app/models/sky_redmine_indicadores"
-require_relative "lib/sky_redmine_plugin/patches/issue_patch"
+require_relative "lib/sky_redmine_plugin/hooks/model_hook"
 
 Redmine::Plugin.register :sky_redmine_plugin do
   name "Sky Redmine plugin"
@@ -49,11 +49,4 @@ end
 
 ActionView::Base.send :include, FluxoTarefasHelper
 
-# Garantir que nosso patch seja carregado após o additional_tags
-Rails.configuration.to_prepare do
-  # Aguardar um momento para garantir que o additional_tags foi carregado
-  #sleep(0.1) if Rails.env.development?
-  
-  # Incluir nosso patch
-  Issue.send(:include, SkyRedminePlugin::Patches::IssuePatch)
-end
+
