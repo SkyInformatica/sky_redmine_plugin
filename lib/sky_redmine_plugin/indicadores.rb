@@ -44,18 +44,31 @@ module SkyRedminePlugin
     def self.processar_indicadores(issue, is_exclusao = false)
       Rails.logger.info ">>> inicio processar_indicadores issue.id: #{issue.id}, is_exclusao: #{is_exclusao}"
       
-      # Obter fluxo de tarefas
-      tarefas_relacionadas = obter_lista_tarefas_relacionadas(issue)
+      # Se é uma exclusão, procurar o indicador por qualquer um dos campos de ID
+      if is_exclusao
+        indicador = SkyRedmineIndicadores.find_by(
+          "primeira_tarefa_devel_id = ? OR ultima_tarefa_devel_id = ? OR primeira_tarefa_qs_id = ? OR ultima_tarefa_qs_id = ?",
+          issue.id, issue.id, issue.id, issue.id
+        )
 
-      # Se é uma exclusão e a tarefa excluída é a primeira da lista, excluir o indicador
-      if is_exclusao && tarefas_relacionadas.first.id == issue.id
-        indicador = SkyRedmineIndicadores.find_by(primeira_tarefa_devel_id: issue.id)
         if indicador
-          Rails.logger.info ">>> excluindo indicador para primeira_tarefa_devel_id: #{issue.id}"
-          indicador.destroy
-          return
+          Rails.logger.info ">>> encontrado indicador para issue.id: #{issue.id}"
+          
+          # Se a tarefa excluída é a primeira_tarefa_devel_id, excluir o indicador
+          if indicador.primeira_tarefa_devel_id == issue.id
+            Rails.logger.info ">>> excluindo indicador pois issue.id é a primeira_tarefa_devel_id"
+            indicador.destroy
+            return
+          end
+          
+          # Se não é a primeira_tarefa_devel_id, reprocessar o indicador
+          Rails.logger.info ">>> reprocessando indicador usando primeira_tarefa_devel_id: #{indicador.primeira_tarefa_devel_id}"
+          issue = Issue.find(indicador.primeira_tarefa_devel_id)
         end
       end
+
+      # Obter fluxo de tarefas
+      tarefas_relacionadas = obter_lista_tarefas_relacionadas(issue)
 
       # Separar tarefas DEVEL e QS
       tarefas_devel = tarefas_relacionadas.select { |t| !SkyRedminePlugin::Constants::Projects::QS_PROJECTS.include?(t.project.name) }
