@@ -1,6 +1,7 @@
 module SkyRedminePlugin
   class Indicadores
     extend FluxoTarefasHelper
+    include TarefasRelacionadas
 
     def self.limpar_campos_indicador(indicador)
       Rails.logger.info ">>> Limpando todos os campos do indicador"
@@ -67,8 +68,8 @@ module SkyRedminePlugin
         end
       end
 
-      # Obter fluxo de tarefas
-      tarefas_relacionadas = obter_lista_tarefas_relacionadas(issue)
+      # Obter fluxo de tarefas usando o método do módulo TarefasRelacionadas
+      tarefas_relacionadas = TarefasRelacionadas.obter_lista_tarefas_relacionadas(issue)
 
       # Separar tarefas DEVEL e QS
       tarefas_devel = tarefas_relacionadas.select { |t| !SkyRedminePlugin::Constants::Projects::QS_PROJECTS.include?(t.project.name) }
