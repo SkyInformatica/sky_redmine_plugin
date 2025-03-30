@@ -4,13 +4,8 @@ module SkyRedminePlugin
 
     def self.limpar_campos_indicador(indicador)
       Rails.logger.info ">>> Limpando todos os campos do indicador"
-      # Campos de identificação
-      indicador.primeira_tarefa_devel_id = nil
-      indicador.ultima_tarefa_devel_id = nil
-      indicador.primeira_tarefa_qs_id = nil
-      indicador.ultima_tarefa_qs_id = nil
-
       # Campos de DEVEL
+      indicador.ultima_tarefa_devel_id = nil
       indicador.tipo_primeira_tarefa_devel = nil
       indicador.status_ultima_tarefa_devel = nil
       indicador.prioridade_primeira_tarefa_devel = nil
@@ -28,6 +23,8 @@ module SkyRedminePlugin
       indicador.data_andamento_primeira_tarefa_devel = nil
 
       # Campos de QS
+      indicador.primeira_tarefa_qs_id = nil
+      indicador.ultima_tarefa_qs_id = nil
       indicador.sprint_primeira_tarefa_qs = nil
       indicador.sprint_ultima_tarefa_qs = nil
       indicador.projeto_primeira_tarefa_qs = nil
