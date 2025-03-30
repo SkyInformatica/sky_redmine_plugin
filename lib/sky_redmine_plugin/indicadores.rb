@@ -60,8 +60,8 @@ module SkyRedminePlugin
         indicador.sprint_ultima_tarefa_devel = ultima_tarefa_devel.fixed_version.present? ? ultima_tarefa_devel.fixed_version.name : nil
         indicador.tempo_estimado_devel = tarefas_devel.sum { |t| t.estimated_hours.to_f }
         indicador.tempo_gasto_devel = tarefas_devel.sum { |t| t.spent_hours.to_f }
-        indicador.origem_primeira_tarefa_devel = TarefasRelacionadas.obter_valor_campo_personalizado(primeira_tarefa_devel, "Origem")
-        indicador.skynet_primeira_tarefa_devel = TarefasRelacionadas.obter_valor_campo_personalizado(primeira_tarefa_devel, "Sky.NET")
+        indicador.origem_primeira_tarefa_devel = SkyRedminePlugin::TarefasRelacionadas.obter_valor_campo_personalizado(primeira_tarefa_devel, "Origem")
+        indicador.skynet_primeira_tarefa_devel = SkyRedminePlugin::TarefasRelacionadas.obter_valor_campo_personalizado(primeira_tarefa_devel, "Sky.NET")
         
         # Contar retornos de testes baseado no fluxo entre projetos
         qtd_retorno_testes = 0

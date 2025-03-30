@@ -119,7 +119,7 @@ module SkyRedminePlugin
       end
     end
 
-    def localizar_tarefa_origem_desenvolvimento(issue)
+    def self.localizar_tarefa_origem_desenvolvimento(issue)
       current_issue = issue
       current_project_id = issue.project_id
       original_issue = nil
@@ -149,7 +149,7 @@ module SkyRedminePlugin
       original_issue
     end
   
-    def localizar_tarefa_copiada_qs(issue)
+    def self.localizar_tarefa_copiada_qs(issue)
       # Verificar se já existe uma cópia da tarefa nos projetos QS
       # retorna a ultima tarefa do QS na possivel sequencia de copias de continua na proxima sprint
       current_issue = issue
@@ -180,7 +180,7 @@ module SkyRedminePlugin
       last_qs_issue
     end
   
-    def localizar_tarefa_continuidade(issue)
+    def self.localizar_tarefa_continuidade(issue)
       # verificar se há uma copia de continuidade da tarefa
       related_issues = IssueRelation.where(issue_from_id: @issue.id, relation_type: "copied_to")
       copied_to_issue = related_issues.map { |relation| Issue.find_by(id: relation.issue_to_id) }
@@ -189,7 +189,7 @@ module SkyRedminePlugin
       copied_to_issue
     end
   
-    def localizar_tarefa_retorno_testes(issue)
+    def self.localizar_tarefa_retorno_testes(issue)
       # verificar se há uma copia de continuidade da tarefa
       related_issues = IssueRelation.where(issue_from_id: @issue.id, relation_type: "copied_to")
       copied_to_issue = related_issues.map { |relation| Issue.find_by(id: relation.issue_to_id) }
