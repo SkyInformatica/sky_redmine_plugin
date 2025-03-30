@@ -52,7 +52,7 @@ ActionView::Base.send :include, FluxoTarefasHelper
 # Garantir que nosso patch seja carregado após o additional_tags
 Rails.configuration.to_prepare do
   # Aguardar um momento para garantir que o additional_tags foi carregado
-  sleep(0.1) if Rails.env.development?
+  #sleep(0.1) if Rails.env.development?
   
   # Incluir nosso patch
   Issue.send(:include, SkyRedminePlugin::Patches::SkyIssuePatch)
