@@ -1,6 +1,5 @@
 module SkyRedminePlugin
-  class Indicadores
-    extend FluxoTarefasHelper
+  class Indicadores    
     include TarefasRelacionadas
 
     def self.limpar_campos_indicador(indicador)
@@ -69,7 +68,7 @@ module SkyRedminePlugin
       end
 
       # Obter fluxo de tarefas usando o método do módulo TarefasRelacionadas
-      tarefas_relacionadas = TarefasRelacionadas.obter_lista_tarefas_relacionadas(issue)
+      tarefas_relacionadas = SkyRedminePlugin::TarefasRelacionadas.obter_lista_tarefas_relacionadas(issue)
 
       # Separar tarefas DEVEL e QS
       tarefas_devel = tarefas_relacionadas.select { |t| !SkyRedminePlugin::Constants::Projects::QS_PROJECTS.include?(t.project.name) }
