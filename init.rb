@@ -45,6 +45,8 @@ end
 begin
   require_dependency "issues_helper"
   IssuesHelper.prepend SkyRedminePlugin::Patches::IssueHelperPatch
+rescue LoadError => e
+  Rails.logger.error "Erro ao carregar IssueHelperPatch: #{e.message}"
 end
 
 ActionView::Base.send :include, FluxoTarefasHelper
