@@ -1,6 +1,6 @@
 module SkyRedminePlugin
   module Patches
-    module IssuePatch
+    module SkyIssuePatch
       def self.included(base)
         base.class_eval do
           after_destroy :processar_exclusao_indicador
