@@ -1,7 +1,6 @@
 module FluxoTarefasHelper
   include ApplicationHelper
   include IssuesHelper
-  include SkyRedminePlugin::TarefasRelacionadas
 
   def render_fluxo_tarefas_html(issue)
     tarefas_relacionadas = SkyRedminePlugin::TarefasRelacionadas.obter_lista_tarefas_relacionadas(issue)
