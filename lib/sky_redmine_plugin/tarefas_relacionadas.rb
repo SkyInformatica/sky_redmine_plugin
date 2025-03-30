@@ -182,7 +182,7 @@ module SkyRedminePlugin
   
     def self.localizar_tarefa_continuidade(issue)
       # verificar se há uma copia de continuidade da tarefa
-      related_issues = IssueRelation.where(issue_from_id: @issue.id, relation_type: "copied_to")
+      related_issues = IssueRelation.where(issue_from_id: issue.id, relation_type: "copied_to")
       copied_to_issue = related_issues.map { |relation| Issue.find_by(id: relation.issue_to_id) }
         .find { |issue| @issue.project.name == issue.project.name }
   
@@ -191,7 +191,7 @@ module SkyRedminePlugin
   
     def self.localizar_tarefa_retorno_testes(issue)
       # verificar se há uma copia de continuidade da tarefa
-      related_issues = IssueRelation.where(issue_from_id: @issue.id, relation_type: "copied_to")
+      related_issues = IssueRelation.where(issue_from_id: issue.id, relation_type: "copied_to")
       copied_to_issue = related_issues.map { |relation| Issue.find_by(id: relation.issue_to_id) }
         .find { |issue| issue.tracker.name == SkyRedminePlugin::Constants::Trackers::RETORNO_TESTES }
   
