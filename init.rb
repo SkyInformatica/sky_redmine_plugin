@@ -47,3 +47,8 @@ begin
 end
 
 ActionView::Base.send :include, FluxoTarefasHelper
+
+Rails.configuration.to_prepare do
+  require_dependency 'sky_redmine_plugin/patches/issue_patch'
+  Issue.send(:include, SkyRedminePlugin::Patches::IssuePatch)
+end
