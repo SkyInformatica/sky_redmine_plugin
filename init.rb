@@ -44,7 +44,7 @@ end
 
 begin
   require_dependency "issues_helper"
-  IssuesHelper.prepend SkyRedminePlugin::IssueHelperPatch
+  IssuesHelper.prepend SkyRedminePlugin::Patches::IssueHelperPatch
 end
 
 ActionView::Base.send :include, FluxoTarefasHelper
