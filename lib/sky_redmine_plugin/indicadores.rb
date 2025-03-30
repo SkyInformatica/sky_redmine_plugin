@@ -137,7 +137,8 @@ module SkyRedminePlugin
           indicador.local_tarefa = "DEVEL"
         else
           ultima_tarefa_qs = tarefas_qs.last
-          if [SkyRedminePlugin::Constants::IssueStatus::TESTE_OK_FECHADA, SkyRedminePlugin::Constants::IssueStatus::TESTE_NOK_FECHADA].include?(ultima_tarefa_qs.status.name)
+          if [SkyRedminePlugin::Constants::IssueStatus::TESTE_OK, SkyRedminePlugin::Constants::IssueStatus::TESTE_NOK,
+              SkyRedminePlugin::Constants::IssueStatus::TESTE_OK_FECHADA, SkyRedminePlugin::Constants::IssueStatus::TESTE_NOK_FECHADA].include?(ultima_tarefa_qs.status.name)
             # Se a última tarefa QS está fechada (TESTE_OK_FECHADA ou TESTE_NOK_FECHADA), voltou para DEVEL
             indicador.local_tarefa = "DEVEL"
           else
