@@ -136,5 +136,11 @@ module SkyRedminePlugin
       custom_field = tarefa.custom_field_values.detect { |cf| cf.custom_field.name == nome_campo }
       custom_field ? custom_field.value : nil
     end
+
+    #def obter_valor_campo_personalizado(issue, nome_campo)
+    #  if custom_field = IssueCustomField.find_by(name: nome_campo)
+    #    issue.custom_field_value(custom_field.id)
+    #  end
+    #end
   end
 end 

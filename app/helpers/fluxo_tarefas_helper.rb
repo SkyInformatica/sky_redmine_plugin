@@ -3,12 +3,6 @@ module FluxoTarefasHelper
   include IssuesHelper
   include SkyRedminePlugin::TarefasRelacionadas
 
-  def obter_valor_campo_personalizado(issue, nome_campo)
-    if custom_field = IssueCustomField.find_by(name: nome_campo)
-      issue.custom_field_value(custom_field.id)
-    end
-  end
-
   def render_fluxo_tarefas_html(issue)
     tarefas_relacionadas = obter_lista_tarefas_relacionadas(issue)
     texto_fluxo = gerar_texto_fluxo_html(tarefas_relacionadas, issue.id)
