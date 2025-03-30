@@ -43,7 +43,7 @@ Redmine::Plugin.register :sky_redmine_plugin do
 end
 
 begin
-  require_dependency "issues_helper"
+  require_dependency "issues_helper_patch"
   IssuesHelper.prepend SkyRedminePlugin::Patches::IssueHelperPatch
 rescue LoadError => e
   Rails.logger.error "Erro ao carregar IssueHelperPatch: #{e.message}"
