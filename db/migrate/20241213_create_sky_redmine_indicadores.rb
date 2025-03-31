@@ -20,6 +20,9 @@ class CreateSkyRedmineIndicadores < ActiveRecord::Migration[5.2]
       t.date :data_andamento_primeira_tarefa_devel
       t.date :data_resolvida_ultima_tarefa_devel
       t.date :data_fechamento_ultima_tarefa_devel
+      t.integer :tempo_andamento_devel
+      t.integer :tempo_resolucao_devel
+      t.integer :tempo_fechamento_devel
       t.integer :primeira_tarefa_qs_id
       t.integer :ultima_tarefa_qs_id
       t.string :sprint_primeira_tarefa_qs
@@ -33,6 +36,9 @@ class CreateSkyRedmineIndicadores < ActiveRecord::Migration[5.2]
       t.date :data_andamento_primeira_tarefa_qs
       t.date :data_resolvida_ultima_tarefa_qs
       t.date :data_fechamento_ultima_tarefa_qs
+      t.integer :tempo_andamento_qs
+      t.integer :tempo_resolucao_qs
+      t.integer :tempo_fechamento_qs
 
       t.timestamps
     end
