@@ -15,9 +15,12 @@ module FluxoTarefasHelper
     # Gerar HTML dos cards de indicadores
     cards_html = ""
     
+    # Adicionar cards se houver indicadores
+    cards_html << (indicadores ? render_cards_indicadores(indicadores) : "")
+    
     # Adicionar link para processar indicadores
     if primeira_tarefa
-      cards_html << "<div style='margin-bottom: 10px;'>"
+      cards_html << "<div style='margin-bottom: 20px; text-align: right;'>"
       cards_html << button_to("Processar indicadores", 
                             processar_indicadores_tarefa_path(primeira_tarefa), 
                             method: :post,
@@ -25,9 +28,6 @@ module FluxoTarefasHelper
                             style: "padding: 5px 10px; font-size: 12px; cursor: pointer;")
       cards_html << "</div>"
     end
-    
-    # Adicionar cards se houver indicadores
-    cards_html << (indicadores ? render_cards_indicadores(indicadores) : "")
     
     # Gerar HTML do fluxo de tarefas
     texto_fluxo = gerar_texto_fluxo_html(tarefas_relacionadas, issue.id)
