@@ -287,16 +287,30 @@ module FluxoTarefasHelper
     html << "<div class='indicadores-grupo'>"
     html << "<div class='indicadores-titulo'>Desenvolvimento</div>"
     html << "<div class='indicadores-cards'>"
-    html << render_card("Dias para iniciar desenvolvimento", indicadores.tempo_andamento_devel)
     
-    # Card com detalhes das datas
+    # Dias para iniciar desenvolvimento
+    data_criacao = indicadores.data_criacao_ou_atendimento_primeira_tarefa_devel&.strftime("%d/%m/%Y")
+    data_andamento = indicadores.data_andamento_primeira_tarefa_devel&.strftime("%d/%m/%Y")
+    detalhe_andamento = data_criacao && data_andamento ? "De #{data_criacao} até #{data_andamento}" : nil
+    html << render_card("Dias para iniciar desenvolvimento", indicadores.tempo_andamento_devel, detalhe_andamento)
+    
+    # Dias para concluir desenvolvimento
     data_andamento = indicadores.data_andamento_primeira_tarefa_devel&.strftime("%d/%m/%Y")
     data_resolvida = indicadores.data_resolvida_ultima_tarefa_devel&.strftime("%d/%m/%Y")
-    detalhe_datas = data_andamento && data_resolvida ? "De #{data_andamento} até #{data_resolvida}" : nil
-    html << render_card("Dias para concluir desenvolvimento", indicadores.tempo_resolucao_devel, detalhe_datas)
+    detalhe_resolucao = data_andamento && data_resolvida ? "De #{data_andamento} até #{data_resolvida}" : nil
+    html << render_card("Dias para concluir desenvolvimento", indicadores.tempo_resolucao_devel, detalhe_resolucao)
     
-    html << render_card("Dias para liberar versão", indicadores.tempo_fechamento_devel)
-    html << render_card("Dias para encaminhar QS", indicadores.tempo_para_encaminhar_qs)
+    # Dias para liberar versão
+    data_resolvida = indicadores.data_resolvida_ultima_tarefa_devel&.strftime("%d/%m/%Y")
+    data_fechada = indicadores.data_fechamento_ultima_tarefa_devel&.strftime("%d/%m/%Y")
+    detalhe_fechamento = data_resolvida && data_fechada ? "De #{data_resolvida} até #{data_fechada}" : nil
+    html << render_card("Dias para liberar versão", indicadores.tempo_fechamento_devel, detalhe_fechamento)
+    
+    # Dias para encaminhar QS
+    data_resolvida = indicadores.data_resolvida_ultima_tarefa_devel&.strftime("%d/%m/%Y")
+    data_criacao_qs = indicadores.data_criacao_primeira_tarefa_qs&.strftime("%d/%m/%Y")
+    detalhe_encaminhar = data_resolvida && data_criacao_qs ? "De #{data_resolvida} até #{data_criacao_qs}" : nil
+    html << render_card("Dias para encaminhar QS", indicadores.tempo_para_encaminhar_qs, detalhe_encaminhar)
     html << "</div>"
     html << "</div>"
 
@@ -304,9 +318,24 @@ module FluxoTarefasHelper
     html << "<div class='indicadores-grupo'>"
     html << "<div class='indicadores-titulo'>Qualidade</div>"
     html << "<div class='indicadores-cards'>"
-    html << render_card("Dias para iniciar testes", indicadores.tempo_andamento_qs)
-    html << render_card("Dias para concluir testes", indicadores.tempo_resolucao_qs)
-    html << render_card("Dias para fechar tarefa", indicadores.tempo_fechamento_qs)
+    
+    # Dias para iniciar testes
+    data_criacao_qs = indicadores.data_criacao_primeira_tarefa_qs&.strftime("%d/%m/%Y")
+    data_andamento_qs = indicadores.data_andamento_primeira_tarefa_qs&.strftime("%d/%m/%Y")
+    detalhe_andamento_qs = data_criacao_qs && data_andamento_qs ? "De #{data_criacao_qs} até #{data_andamento_qs}" : nil
+    html << render_card("Dias para iniciar testes", indicadores.tempo_andamento_qs, detalhe_andamento_qs)
+    
+    # Dias para concluir testes
+    data_andamento_qs = indicadores.data_andamento_primeira_tarefa_qs&.strftime("%d/%m/%Y")
+    data_resolvida_qs = indicadores.data_resolvida_ultima_tarefa_qs&.strftime("%d/%m/%Y")
+    detalhe_resolucao_qs = data_andamento_qs && data_resolvida_qs ? "De #{data_andamento_qs} até #{data_resolvida_qs}" : nil
+    html << render_card("Dias para concluir testes", indicadores.tempo_resolucao_qs, detalhe_resolucao_qs)
+    
+    # Dias para fechar tarefa
+    data_resolvida_qs = indicadores.data_resolvida_ultima_tarefa_qs&.strftime("%d/%m/%Y")
+    data_fechada_qs = indicadores.data_fechamento_ultima_tarefa_qs&.strftime("%d/%m/%Y")
+    detalhe_fechamento_qs = data_resolvida_qs && data_fechada_qs ? "De #{data_resolvida_qs} até #{data_fechada_qs}" : nil
+    html << render_card("Dias para fechar tarefa", indicadores.tempo_fechamento_qs, detalhe_fechamento_qs)
     html << "</div>"
     html << "</div>"
 
