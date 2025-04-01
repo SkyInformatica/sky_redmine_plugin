@@ -125,6 +125,55 @@ module SkyRedminePlugin
       end
     end
 
+    def self.localizar_tarefa_copiada_qs(issue)
+      # Verificar se já existe uma cópia da tarefa nos projetos QS
+      # retorna a ultima tarefa do QS na possivel sequencia de copias de continua na proxima sprint
+      current_issue = issue
+      last_qs_issue = nil
+  
+      loop do
+        # Encontrar a relação de cópia a partir da current_issue
+        relation = IssueRelation.find_by(issue_from_id: current_issue.id, relation_type: "copied_to")
+  
+        # Se não houver mais relações de cópia, interrompe o loop
+        break unless relation
+  
+        # Obter a próxima tarefa na cadeia
+        next_issue = Issue.find_by(id: relation.issue_to_id)
+  
+        # Verifica se a próxima tarefa existe
+        break unless next_issue
+  
+        # Verifica se a tarefa está em um projeto QS
+        if SkyRedminePlugin::Constants::Projects::QS_PROJECTS.include?(next_issue.project.name)
+          last_qs_issue = next_issue
+        end
+  
+        # Avança para a próxima tarefa
+        current_issue = next_issue
+      end
+  
+      last_qs_issue
+    end
+  
+    def self.localizar_tarefa_continuidade(issue)
+      # verificar se há uma copia de continuidade da tarefa
+      related_issues = IssueRelation.where(issue_from_id: issue.id, relation_type: "copied_to")
+      copied_to_issue = related_issues.map { |relation| Issue.find_by(id: relation.issue_to_id) }
+        .find { |issue| @issue.project.name == issue.project.name }
+  
+      copied_to_issue
+    end
+  
+    def self.localizar_tarefa_retorno_testes(issue)
+      # verificar se há uma copia de continuidade da tarefa
+      related_issues = IssueRelation.where(issue_from_id: issue.id, relation_type: "copied_to")
+      copied_to_issue = related_issues.map { |relation| Issue.find_by(id: relation.issue_to_id) }
+        .find { |issue| issue.tracker.name == SkyRedminePlugin::Constants::Trackers::RETORNO_TESTES }
+  
+      copied_to_issue
+    end
+
     private
 
     def self.obter_data_mudanca_status(tarefa, status_nomes)
