@@ -158,7 +158,9 @@ module SkyRedminePlugin
 
           # Calcular tempo para encaminhar para QS (apenas no primeiro ciclo)
           if primeiro_ciclo_devel.last.data_resolvida.present? && indicador.data_criacao_primeira_tarefa_qs.present?
-            indicador.tempo_para_encaminhar_qs = (indicador.data_criacao_primeira_tarefa_qs - primeiro_ciclo_devel.last.data_resolvida).to_i
+            data_resolucao_devel = primeiro_ciclo_devel.last.data_resolvida.to_date
+            data_criacao_qs = indicador.data_criacao_primeira_tarefa_qs
+            indicador.tempo_para_encaminhar_qs = (data_criacao_qs - data_resolucao_devel).to_i
           end
         end
 
