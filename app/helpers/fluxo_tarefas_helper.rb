@@ -257,6 +257,12 @@ module FluxoTarefasHelper
       }
       .indicador-valor {
         font-size: 14px;
+        margin-bottom: 3px;
+      }
+      .indicador-detalhe {
+        color: #888;
+        font-style: italic;
+        font-size: 11px;
       }
     </style>"
 
@@ -282,7 +288,13 @@ module FluxoTarefasHelper
     html << "<div class='indicadores-titulo'>Desenvolvimento</div>"
     html << "<div class='indicadores-cards'>"
     html << render_card("Dias para iniciar desenvolvimento", indicadores.tempo_andamento_devel)
-    html << render_card("Dias para concluir desenvolvimento", indicadores.tempo_resolucao_devel)
+    
+    # Card com detalhes das datas
+    data_andamento = indicadores.data_andamento_primeira_tarefa_devel&.strftime("%d/%m/%Y")
+    data_resolvida = indicadores.data_resolvida_ultima_tarefa_devel&.strftime("%d/%m/%Y")
+    detalhe_datas = data_andamento && data_resolvida ? "De #{data_andamento} até #{data_resolvida}" : nil
+    html << render_card("Dias para concluir desenvolvimento", indicadores.tempo_resolucao_devel, detalhe_datas)
+    
     html << render_card("Dias para liberar versão", indicadores.tempo_fechamento_devel)
     html << render_card("Dias para encaminhar QS", indicadores.tempo_para_encaminhar_qs)
     html << "</div>"
@@ -302,10 +314,16 @@ module FluxoTarefasHelper
     html.join("\n")
   end
 
-  def render_card(caption, valor)
-    "<div class='indicador-card'>
+  def render_card(caption, valor, detalhe = nil)
+    html = "<div class='indicador-card'>
       <div class='indicador-caption'>#{caption}</div>
-      <div class='indicador-valor'>#{valor || '-'}</div>
-    </div>"
+      <div class='indicador-valor'>#{valor || '-'}</div>"
+    
+    if detalhe
+      html << "<div class='indicador-detalhe'>#{detalhe}</div>"
+    end
+    
+    html << "</div>"
+    html
   end
 end
