@@ -30,7 +30,7 @@ module FluxoTarefasHelper
     end
     
     # Adicionar cards se houver indicadores
-    cards_html << (indicadores ? render_cards_indicadores(indicadores) : "")
+    cards_html << (indicadores ? render_cards_indicadores(indicadores, tarefas_relacionadas) : "")
     
     # Fechar div description se tiver primeira tarefa
     cards_html << "</div>" if primeira_tarefa
@@ -229,7 +229,7 @@ module FluxoTarefasHelper
     </tr>"
   end
 
-  def render_cards_indicadores(indicadores)
+  def render_cards_indicadores(indicadores, tarefas_relacionadas)
     # CSS para os cards
     css = "<style>
       .indicadores-container {
@@ -303,7 +303,7 @@ module FluxoTarefasHelper
     tempo_gasto_devel = format("%.2f", indicadores.tempo_gasto_devel.to_f)
     tempo_total_liberar_versao = if indicadores.tempo_total_liberar_versao
       "#{indicadores.tempo_total_liberar_versao} #{indicadores.tempo_total_liberar_versao == 1 ? 'dia' : 'dias'}"
-    elsif indicadores.tempo_gasto_devel > 0
+    elsif indicadores.tempo_andamento_devel
       "em desenvolvimento"
     else
       "desenvolvimento não iniciado"
@@ -331,7 +331,9 @@ module FluxoTarefasHelper
                        "Tempo entre a tarefa de desenvolvimento ser colocada em andamento e sua situação ser resolvida (considerando o todos os ciclos incluindo os retornos de testes)")
     
     # Para encaminhar QS
-    data_resolvida = indicadores.data_resolvida_ultima_tarefa_devel&.strftime("%d/%m/%Y")
+    ciclos_devel = SkyRedminePlugin::TarefasRelacionadas.separar_ciclos_devel(tarefas_relacionadas)
+    primeiro_ciclo_devel = ciclos_devel.first    
+    data_resolvida = primeiro_ciclo_devel.last.data_resolvida&.strftime("%d/%m/%Y")
     data_criacao_qs = indicadores.data_criacao_primeira_tarefa_qs&.strftime("%d/%m/%Y")
     detalhe_encaminhar = data_resolvida && data_criacao_qs ? "De #{data_resolvida} até #{data_criacao_qs}" : nil
     valor_encaminhar = formatar_dias(indicadores.tempo_para_encaminhar_qs)
@@ -361,7 +363,7 @@ module FluxoTarefasHelper
     tempo_gasto_qs = format("%.2f", indicadores.tempo_gasto_qs.to_f)
     tempo_total_testes = if indicadores.tempo_total_testes
       "#{indicadores.tempo_total_testes} #{indicadores.tempo_total_testes == 1 ? 'dia' : 'dias'}"
-    elsif indicadores.tempo_gasto_qs > 0
+    elsif indicadores.tempo_andamento_qs
       "em testes"
     elsif indicadores.data_criacao_primeira_tarefa_qs
       "testes ainda não iniciados"

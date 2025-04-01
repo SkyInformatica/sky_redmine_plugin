@@ -82,7 +82,7 @@ module SkyRedminePlugin
         indicador.data_fechamento_ultima_tarefa_devel = ultima_tarefa_devel.data_fechada
 
         # Separar tarefas DEVEL em ciclos de desenvolvimento
-        ciclos_devel = separar_ciclos_devel(tarefas_relacionadas)
+        ciclos_devel = SkyRedminePlugin::TarefasRelacionadas.separar_ciclos_devel(tarefas_relacionadas)
         primeiro_ciclo_devel = ciclos_devel.first
 
         # Processar data de início em andamento usando apenas o primeiro ciclo
@@ -126,7 +126,7 @@ module SkyRedminePlugin
           indicador.data_criacao_primeira_tarefa_qs = primeira_tarefa_qs.created_on.to_date
           
           # Separar tarefas QS em ciclos de teste
-          ciclos_qs = separar_ciclos_qs(tarefas_relacionadas)
+          ciclos_qs = SkyRedminePlugin::TarefasRelacionadas.separar_ciclos_qs(tarefas_relacionadas)
           primeiro_ciclo_qs = ciclos_qs.first
 
           # Processar data de início em andamento QS usando apenas o primeiro ciclo
@@ -223,6 +223,7 @@ module SkyRedminePlugin
       indicador.tempo_resolucao_devel = nil
       indicador.tempo_fechamento_devel = nil
       indicador.tempo_para_encaminhar_qs = nil
+      indicador.tempo_total_liberar_versao = nil
 
       # Campos de QS
       indicador.primeira_tarefa_qs_id = nil
@@ -241,56 +242,14 @@ module SkyRedminePlugin
       indicador.tempo_andamento_qs = nil
       indicador.tempo_resolucao_qs = nil
       indicador.tempo_fechamento_qs = nil
-      indicador.tempo_concluido_testes_versao_liberada = nil
+      indicador.tempo_concluido_testes_versao_liberada = nil      
+      indicador.tempo_total_testes = nil
 
       # Campo de localização
       indicador.local_tarefa = nil
     end
 
     # Método para separar tarefas DEVEL em ciclos de desenvolvimento
-    def self.separar_ciclos_devel(tarefas_relacionadas)
-      ciclos = []
-      ciclo_atual = []
-      
-      tarefas_relacionadas.each do |tarefa|
-        # Se é uma tarefa de desenvolvimento
-        if !SkyRedminePlugin::Constants::Projects::QS_PROJECTS.include?(tarefa.project.name)
-          ciclo_atual << tarefa
-        # Se é uma tarefa de QS e temos um ciclo em andamento
-        elsif !ciclo_atual.empty?
-          # Finaliza o ciclo atual
-          ciclos << ciclo_atual
-          ciclo_atual = []
-        end
-      end
-      
-      # Adiciona o último ciclo se houver
-      ciclos << ciclo_atual unless ciclo_atual.empty?
-      
-      ciclos
-    end
-
-    # Método para separar tarefas QS em ciclos de teste
-    def self.separar_ciclos_qs(tarefas_relacionadas)
-      ciclos = []
-      ciclo_atual = []
-      
-      tarefas_relacionadas.each do |tarefa|
-        # Se é uma tarefa de QS
-        if SkyRedminePlugin::Constants::Projects::QS_PROJECTS.include?(tarefa.project.name)
-          ciclo_atual << tarefa
-        # Se é uma tarefa de desenvolvimento e temos um ciclo em andamento
-        elsif !ciclo_atual.empty?
-          # Finaliza o ciclo atual
-          ciclos << ciclo_atual
-          ciclo_atual = []
-        end
-      end
-      
-      # Adiciona o último ciclo se houver
-      ciclos << ciclo_atual unless ciclo_atual.empty?
-      
-      ciclos
-    end
+    
   end
 end

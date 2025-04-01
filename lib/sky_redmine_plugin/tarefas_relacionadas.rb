@@ -119,6 +119,51 @@ module SkyRedminePlugin
       end
     end
 
+    def self.separar_ciclos_devel(tarefas_relacionadas)
+      ciclos = []
+      ciclo_atual = []
+      
+      tarefas_relacionadas.each do |tarefa|
+        # Se é uma tarefa de desenvolvimento
+        if !SkyRedminePlugin::Constants::Projects::QS_PROJECTS.include?(tarefa.project.name)
+          ciclo_atual << tarefa
+        # Se é uma tarefa de QS e temos um ciclo em andamento
+        elsif !ciclo_atual.empty?
+          # Finaliza o ciclo atual
+          ciclos << ciclo_atual
+          ciclo_atual = []
+        end
+      end
+      
+      # Adiciona o último ciclo se houver
+      ciclos << ciclo_atual unless ciclo_atual.empty?
+      
+      ciclos
+    end
+
+    # Método para separar tarefas QS em ciclos de teste
+    def self.separar_ciclos_qs(tarefas_relacionadas)
+      ciclos = []
+      ciclo_atual = []
+      
+      tarefas_relacionadas.each do |tarefa|
+        # Se é uma tarefa de QS
+        if SkyRedminePlugin::Constants::Projects::QS_PROJECTS.include?(tarefa.project.name)
+          ciclo_atual << tarefa
+        # Se é uma tarefa de desenvolvimento e temos um ciclo em andamento
+        elsif !ciclo_atual.empty?
+          # Finaliza o ciclo atual
+          ciclos << ciclo_atual
+          ciclo_atual = []
+        end
+      end
+      
+      # Adiciona o último ciclo se houver
+      ciclos << ciclo_atual unless ciclo_atual.empty?
+      
+      ciclos
+    end
+
     def self.obter_valor_campo_personalizado(tarefa, nome_campo)
       if custom_field = IssueCustomField.find_by(name: nome_campo)
         tarefa.custom_field_value(custom_field.id)
