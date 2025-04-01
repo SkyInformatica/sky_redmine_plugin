@@ -158,13 +158,12 @@ module SkyRedminePlugin
 
           # Calcular tempo para encaminhar para QS (apenas no primeiro ciclo)
           if primeiro_ciclo_devel.last.data_resolvida.present? && indicador.data_criacao_primeira_tarefa_qs.present?
-            Rails.logger.info ">>> primeiro_ciclo_devel.last.data_resolvida: #{primeiro_ciclo_devel.last.data_resolvida}"
-            Rails.logger.info ">>> indicador.data_criacao_primeira_tarefa_qs: #{indicador.data_criacao_primeira_tarefa_qs}"
-            #data_resolucao_devel = primeiro_ciclo_devel.last.data_resolvida.to_date
-            #data_criacao_qs = indicador.data_criacao_primeira_tarefa_qs
-            #indicador.tempo_para_encaminhar_qs = (data_criacao_qs - data_resolucao_devel).to_i
             indicador.tempo_para_encaminhar_qs = indicador.data_criacao_primeira_tarefa_qs - primeiro_ciclo_devel.last.data_resolvida
+          end
 
+          # Calcular tempo entre conclusão dos testes e liberação da versão
+          if indicador.data_resolvida_ultima_tarefa_qs.present? && indicador.data_fechamento_ultima_tarefa_devel.present?
+            indicador.tempo_concluido_testes_versao_liberada = (indicador.data_fechamento_ultima_tarefa_devel - indicador.data_resolvida_ultima_tarefa_qs).to_i
           end
         end
 
@@ -229,6 +228,7 @@ module SkyRedminePlugin
       indicador.tempo_andamento_qs = nil
       indicador.tempo_resolucao_qs = nil
       indicador.tempo_fechamento_qs = nil
+      indicador.tempo_concluido_testes_versao_liberada = nil
 
       # Campo de localização
       indicador.local_tarefa = nil
@@ -240,17 +240,18 @@ module SkyRedminePlugin
       ciclo_atual = []
       
       tarefas_relacionadas.each do |tarefa|
-        # Se a tarefa é do projeto DEVEL
+        # Se é uma tarefa de desenvolvimento
         if !SkyRedminePlugin::Constants::Projects::QS_PROJECTS.include?(tarefa.project.name)
           ciclo_atual << tarefa
-        else
-          # Se encontrou uma tarefa QS, este ciclo DEVEL termina aqui
-          ciclos << ciclo_atual unless ciclo_atual.empty?
+        # Se é uma tarefa de QS e temos um ciclo em andamento
+        elsif !ciclo_atual.empty?
+          # Finaliza o ciclo atual
+          ciclos << ciclo_atual
           ciclo_atual = []
         end
       end
       
-      # Adicionar o último ciclo se não estiver vazio
+      # Adiciona o último ciclo se houver
       ciclos << ciclo_atual unless ciclo_atual.empty?
       
       ciclos
@@ -262,17 +263,18 @@ module SkyRedminePlugin
       ciclo_atual = []
       
       tarefas_relacionadas.each do |tarefa|
-        # Se a tarefa é do projeto QS
+        # Se é uma tarefa de QS
         if SkyRedminePlugin::Constants::Projects::QS_PROJECTS.include?(tarefa.project.name)
           ciclo_atual << tarefa
-        else
-          # Se encontrou uma tarefa DEVEL, este ciclo QS termina aqui
-          ciclos << ciclo_atual unless ciclo_atual.empty?
+        # Se é uma tarefa de desenvolvimento e temos um ciclo em andamento
+        elsif !ciclo_atual.empty?
+          # Finaliza o ciclo atual
+          ciclos << ciclo_atual
           ciclo_atual = []
         end
       end
       
-      # Adicionar o último ciclo se não estiver vazio
+      # Adiciona o último ciclo se houver
       ciclos << ciclo_atual unless ciclo_atual.empty?
       
       ciclos

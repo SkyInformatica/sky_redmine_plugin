@@ -349,6 +349,13 @@ module FluxoTarefasHelper
     detalhe_fechamento_qs = data_resolvida_qs && data_fechada_qs ? "De #{data_resolvida_qs} até #{data_fechada_qs}" : nil
     valor_fechamento_qs = formatar_dias(indicadores.tempo_fechamento_qs)
     html << render_card("Fechar tarefa", valor_fechamento_qs, detalhe_fechamento_qs)
+
+    # Tempo entre conclusão dos testes e liberação da versão
+    data_resolvida_qs = indicadores.data_resolvida_ultima_tarefa_qs&.strftime("%d/%m/%Y")
+    data_fechada_devel = indicadores.data_fechamento_ultima_tarefa_devel&.strftime("%d/%m/%Y")
+    detalhe_liberacao = data_resolvida_qs && data_fechada_devel ? "De #{data_resolvida_qs} até #{data_fechada_devel}" : nil
+    valor_liberacao = formatar_dias(indicadores.tempo_concluido_testes_versao_liberada)
+    html << render_card("Liberar versão após testes", valor_liberacao, detalhe_liberacao)
     html << "</div>"
     html << "</div>"
 
