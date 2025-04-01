@@ -190,7 +190,7 @@ module SkyRedminePlugin
 
         # Calcular tempo total de testes
         if indicador.data_criacao_primeira_tarefa_qs && indicador.data_resolvida_ultima_tarefa_qs && 
-          [SkyRedminePlugin::Constants::IssueStatus::TESTE_OK
+          [SkyRedminePlugin::Constants::IssueStatus::TESTE_OK,
           SkyRedminePlugin::Constants::IssueStatus::TESTE_OK_FECHADA].include?(ultima_tarefa_qs.status.name)
           indicador.tempo_total_testes = (indicador.data_resolvida_ultima_tarefa_qs - indicador.data_criacao_primeira_tarefa_qs).to_i
         end

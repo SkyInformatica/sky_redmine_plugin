@@ -303,7 +303,7 @@ module FluxoTarefasHelper
     tempo_gasto_devel = format("%.2f", indicadores.tempo_gasto_devel.to_f)
     tempo_total_liberar_versao = if indicadores.tempo_total_liberar_versao
       "#{indicadores.tempo_total_liberar_versao} #{indicadores.tempo_total_liberar_versao == 1 ? 'dia' : 'dias'}"
-    elsif indicadores.data_criacao_ou_atendimento_primeira_tarefa_devel
+    elsif indicadores.tempo_gasto_devel > 0
       "em desenvolvimento"
     else
       "desenvolvimento não iniciado"
@@ -361,8 +361,10 @@ module FluxoTarefasHelper
     tempo_gasto_qs = format("%.2f", indicadores.tempo_gasto_qs.to_f)
     tempo_total_testes = if indicadores.tempo_total_testes
       "#{indicadores.tempo_total_testes} #{indicadores.tempo_total_testes == 1 ? 'dia' : 'dias'}"
-    elsif indicadores.data_criacao_primeira_tarefa_qs
+    elsif indicadores.tempo_gasto_qs > 0
       "em testes"
+    elsif indicadores.data_criacao_primeira_tarefa_qs
+      "testes ainda não iniciados"
     else
       "testes ainda não encaminhados"
     end
