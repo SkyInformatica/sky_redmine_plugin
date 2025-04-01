@@ -15,19 +15,26 @@ module FluxoTarefasHelper
     # Gerar HTML dos cards de indicadores
     cards_html = ""
     
+    # Adicionar título e link para processar indicadores
+    if primeira_tarefa
+      cards_html << "<div class='description'>"
+      cards_html << "<hr>"
+      cards_html << "<p>"
+      cards_html << "<strong>Indicadores</strong>"
+      cards_html << " ("
+      cards_html << link_to("processar indicadores", 
+                           processar_indicadores_tarefa_path(primeira_tarefa),
+                           method: :post,
+                           data: { confirm: "Deseja processar os indicadores desta tarefa?" })
+      cards_html << ")"
+      cards_html << "</p>"
+    end
+    
     # Adicionar cards se houver indicadores
     cards_html << (indicadores ? render_cards_indicadores(indicadores) : "")
     
-    # Adicionar link para processar indicadores
-    if primeira_tarefa
-      cards_html << "<div style='margin-bottom: 20px; text-align: right;'>"
-      cards_html << button_to("Processar indicadores", 
-                            processar_indicadores_tarefa_path(primeira_tarefa), 
-                            method: :post,
-                            class: "button-positive",
-                            style: "padding: 5px 10px; font-size: 12px; cursor: pointer;")
-      cards_html << "</div>"
-    end
+    # Fechar div description se tiver primeira tarefa
+    cards_html << "</div>" if primeira_tarefa
     
     # Gerar HTML do fluxo de tarefas
     texto_fluxo = gerar_texto_fluxo_html(tarefas_relacionadas, issue.id)
