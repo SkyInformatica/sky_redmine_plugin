@@ -320,7 +320,7 @@ module FluxoTarefasHelper
     valor_resolucao = formatar_dias(indicadores.tempo_resolucao_devel)
     html << render_card("Concluir desenvolvimento", 
                         valor_resolucao, detalhe_resolucao,
-                       "Tempo entre a tarefa de desenvolvimento ser colocada em andamento e sua situação ser resolvida (considerando o último ciclo de desenvolvimento incluindo os retornos de testes)")
+                       "Tempo entre a tarefa de desenvolvimento ser colocada em andamento e sua situação ser resolvida (considerando o todos os ciclos incluindo os retornos de testes)")
     
     # Para encaminhar QS
     data_resolvida = indicadores.data_resolvida_ultima_tarefa_devel&.strftime("%d/%m/%Y")
@@ -328,16 +328,23 @@ module FluxoTarefasHelper
     detalhe_encaminhar = data_resolvida && data_criacao_qs ? "De #{data_resolvida} até #{data_criacao_qs}" : nil
     valor_encaminhar = formatar_dias(indicadores.tempo_para_encaminhar_qs)
     html << render_card("Encaminhar QS", valor_encaminhar, detalhe_encaminhar,
-                        "Tempo entre tarefa de desenvolvimento estar resolvida e a tarefa de QS ser encaminhada (apenas considerando o primeiro ciclo de desenvolvimento)")
+                        "Tempo entre tarefa de desenvolvimento estar resolvida e a tarefa de QS ser encaminhada (considerando somente o primeiro ciclo de desenvolvimento)")
 
     # Para liberar versão
     data_resolvida = indicadores.data_resolvida_ultima_tarefa_devel&.strftime("%d/%m/%Y")
     data_fechada = indicadores.data_fechamento_ultima_tarefa_devel&.strftime("%d/%m/%Y")
     detalhe_fechamento = data_resolvida && data_fechada ? "De #{data_resolvida} até #{data_fechada}" : nil
     valor_fechamento = formatar_dias(indicadores.tempo_fechamento_devel)
-    html << render_card("Liberar versão", valor_fechamento, detalhe_fechamento,
+    html << render_card("Concluir desenvolvimento, testar e liberar versão", valor_fechamento, detalhe_fechamento,
                         "Tempo entre tarefa de desenvolvimento estar resolvida e ser fechada (entre estes tempos existe o tempo das tarefas do QS)") 
     
+    # Tempo entre conclusão dos testes e liberação da versão
+    data_resolvida_qs = indicadores.data_resolvida_ultima_tarefa_qs&.strftime("%d/%m/%Y")
+    data_fechada_devel = indicadores.data_fechamento_ultima_tarefa_devel&.strftime("%d/%m/%Y")
+    detalhe_liberacao = data_resolvida_qs && data_fechada_devel ? "De #{data_resolvida_qs} até #{data_fechada_devel}" : nil
+    valor_liberacao = formatar_dias(indicadores.tempo_concluido_testes_versao_liberada)
+    html << render_card("Liberar versão após testes", valor_liberacao, detalhe_liberacao,
+                        "Tempo entre a tarefa de QS ser concluída (TESTE OK) e a tarefa de desenvolvimento ser fechada")
     html << "</div>"
     html << "</div>"
 
@@ -351,28 +358,25 @@ module FluxoTarefasHelper
     data_andamento_qs = indicadores.data_andamento_primeira_tarefa_qs&.strftime("%d/%m/%Y")
     detalhe_andamento_qs = data_criacao_qs && data_andamento_qs ? "De #{data_criacao_qs} até #{data_andamento_qs}" : nil
     valor_andamento_qs = formatar_dias(indicadores.tempo_andamento_qs)
-    html << render_card("Iniciar testes", valor_andamento_qs, detalhe_andamento_qs)
+    html << render_card("Iniciar testes", valor_andamento_qs, detalhe_andamento_qs,
+                        "Tempo entre a tarefa de QS ser encaminhada (criada) e ser colocada em andamento")
     
     # Para concluir testes
     data_andamento_qs = indicadores.data_andamento_primeira_tarefa_qs&.strftime("%d/%m/%Y")
     data_resolvida_qs = indicadores.data_resolvida_ultima_tarefa_qs&.strftime("%d/%m/%Y")
     detalhe_resolucao_qs = data_andamento_qs && data_resolvida_qs ? "De #{data_andamento_qs} até #{data_resolvida_qs}" : nil
     valor_resolucao_qs = formatar_dias(indicadores.tempo_resolucao_qs)
-    html << render_card("Concluir testes", valor_resolucao_qs, detalhe_resolucao_qs)
+    html << render_card("Concluir testes", valor_resolucao_qs, detalhe_resolucao_qs,
+                        "Tempo entre a tarefa de QS ser colocada em andamento e o seu teste ser concluído (TESTE OK) (considerando o todos os ciclos incluindo os retornos de testes)")
     
     # Para fechar tarefa
     data_resolvida_qs = indicadores.data_resolvida_ultima_tarefa_qs&.strftime("%d/%m/%Y")
     data_fechada_qs = indicadores.data_fechamento_ultima_tarefa_qs&.strftime("%d/%m/%Y")
     detalhe_fechamento_qs = data_resolvida_qs && data_fechada_qs ? "De #{data_resolvida_qs} até #{data_fechada_qs}" : nil
     valor_fechamento_qs = formatar_dias(indicadores.tempo_fechamento_qs)
-    html << render_card("Fechar tarefa", valor_fechamento_qs, detalhe_fechamento_qs)
-
-    # Tempo entre conclusão dos testes e liberação da versão
-    data_resolvida_qs = indicadores.data_resolvida_ultima_tarefa_qs&.strftime("%d/%m/%Y")
-    data_fechada_devel = indicadores.data_fechamento_ultima_tarefa_devel&.strftime("%d/%m/%Y")
-    detalhe_liberacao = data_resolvida_qs && data_fechada_devel ? "De #{data_resolvida_qs} até #{data_fechada_devel}" : nil
-    valor_liberacao = formatar_dias(indicadores.tempo_concluido_testes_versao_liberada)
-    html << render_card("Liberar versão após testes", valor_liberacao, detalhe_liberacao)
+    html << render_card("Fechar tarefa", valor_fechamento_qs, detalhe_fechamento_qs,
+                        "Tempo entre a tarefa de QS ser concluída (TESTE OK) e ser fechada (TESTE OK - FECHADA)")
+    
     html << "</div>"
     html << "</div>"
 
