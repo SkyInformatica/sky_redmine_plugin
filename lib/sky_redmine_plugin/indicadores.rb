@@ -155,6 +155,11 @@ module SkyRedminePlugin
           if indicador.data_resolvida_ultima_tarefa_qs.present? && indicador.data_fechamento_ultima_tarefa_qs.present?
             indicador.tempo_fechamento_qs = (indicador.data_fechamento_ultima_tarefa_qs - indicador.data_resolvida_ultima_tarefa_qs).to_i
           end
+
+          # Calcular tempo para encaminhar para QS (apenas no primeiro ciclo)
+          if primeiro_ciclo_devel.last.data_resolvida.present? && indicador.data_criacao_primeira_tarefa_qs.present?
+            indicador.tempo_para_encaminhar_qs = (indicador.data_criacao_primeira_tarefa_qs - primeiro_ciclo_devel.last.data_resolvida).to_i
+          end
         end
 
         # Determinar o local atual da tarefa
@@ -199,6 +204,7 @@ module SkyRedminePlugin
       indicador.tempo_andamento_devel = nil
       indicador.tempo_resolucao_devel = nil
       indicador.tempo_fechamento_devel = nil
+      indicador.tempo_para_encaminhar_qs = nil
 
       # Campos de QS
       indicador.primeira_tarefa_qs_id = nil
