@@ -125,6 +125,36 @@ module SkyRedminePlugin
       end
     end
 
+    def self.localizar_tarefa_origem_desenvolvimento(issue)
+      current_issue = issue
+      current_project_id = issue.project_id
+      original_issue = nil
+  
+      # Procura na lista de relações da tarefa para encontrar a origem
+      loop do
+        # Verifica se o projeto da tarefa atual é diferente do projeto original
+        if current_issue.project_id != current_project_id
+          original_issue = current_issue
+          break
+        end
+  
+        # Verifica a relação da tarefa para encontrar a tarefa original
+        relation = IssueRelation.find_by(issue_to_id: current_issue.id, relation_type: "copied_to")
+  
+        # Se não houver mais relações de cópia, interrompe o loop
+        break unless relation
+  
+        related_issue = Issue.find_by(id: relation.issue_from_id)
+  
+        # Verifica se a próxima tarefa existe
+        break unless related_issue
+  
+        current_issue = related_issue
+      end
+  
+      original_issue
+    end
+
     def self.localizar_tarefa_copiada_qs(issue)
       # Verificar se já existe uma cópia da tarefa nos projetos QS
       # retorna a ultima tarefa do QS na possivel sequencia de copias de continua na proxima sprint
