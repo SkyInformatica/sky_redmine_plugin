@@ -4,8 +4,36 @@ module FluxoTarefasHelper
 
   def render_fluxo_tarefas_html(issue)
     tarefas_relacionadas = SkyRedminePlugin::TarefasRelacionadas.obter_lista_tarefas_relacionadas(issue)
+    
+    # Obter indicadores da primeira tarefa
+    indicadores = nil
+    primeira_tarefa = tarefas_relacionadas.first
+    if primeira_tarefa
+      indicadores = SkyRedmineIndicadores.find_by(primeira_tarefa_devel_id: primeira_tarefa.id)
+    end
+    
+    # Gerar HTML dos cards de indicadores
+    cards_html = ""
+    
+    # Adicionar link para processar indicadores
+    if primeira_tarefa
+      cards_html << "<div style='margin-bottom: 10px;'>"
+      cards_html << button_to("Processar indicadores", 
+                            processar_indicadores_tarefa_path(primeira_tarefa), 
+                            method: :post,
+                            class: "button-positive",
+                            style: "padding: 5px 10px; font-size: 12px; cursor: pointer;")
+      cards_html << "</div>"
+    end
+    
+    # Adicionar cards se houver indicadores
+    cards_html << (indicadores ? render_cards_indicadores(indicadores) : "")
+    
+    # Gerar HTML do fluxo de tarefas
     texto_fluxo = gerar_texto_fluxo_html(tarefas_relacionadas, issue.id)
-    texto_fluxo.html_safe  # Permite renderizar HTML seguro na visualização
+    
+    # Combinar os dois HTMLs
+    (cards_html + texto_fluxo).html_safe
   end
 
   private
@@ -193,5 +221,91 @@ module FluxoTarefasHelper
       <td class='spent_hours'>#{horas_gastas}h</td>  
       <td class='revisao'>#{links_revisoes}</td>
     </tr>"
+  end
+
+  def render_cards_indicadores(indicadores)
+    # CSS para os cards
+    css = "<style>
+      .indicadores-container {
+        margin-bottom: 20px;
+      }
+      .indicadores-grupo {
+        margin-bottom: 15px;
+      }
+      .indicadores-titulo {
+        font-weight: bold;
+        margin-bottom: 10px;
+        font-size: 14px;
+      }
+      .indicadores-cards {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+      .indicador-card {
+        background: #f9f9f9;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        padding: 10px;
+        min-width: 200px;
+      }
+      .indicador-caption {
+        font-weight: bold;
+        color: #666;
+        font-size: 12px;
+        margin-bottom: 5px;
+      }
+      .indicador-valor {
+        font-size: 14px;
+      }
+    </style>"
+
+    # Gerar HTML dos cards
+    html = []
+    html << css
+    html << "<div class='indicadores-container'>"
+    
+    # Informações gerais
+    html << "<div class='indicadores-cards'>"
+    html << render_card("Responsável atual", indicadores.local_tarefa)
+    
+    retorno_testes = if indicadores.qtd_retorno_testes&.positive?
+      "SIM (#{indicadores.qtd_retorno_testes})"
+    else
+      "NÃO"
+    end
+    html << render_card("Retorno de testes", retorno_testes)
+    html << "</div>"
+
+    # Cards DEVEL
+    html << "<div class='indicadores-grupo'>"
+    html << "<div class='indicadores-titulo'>Desenvolvimento</div>"
+    html << "<div class='indicadores-cards'>"
+    html << render_card("Dias para iniciar desenvolvimento", indicadores.tempo_andamento_devel)
+    html << render_card("Dias para concluir desenvolvimento", indicadores.tempo_resolucao_devel)
+    html << render_card("Dias para liberar versão", indicadores.tempo_fechamento_devel)
+    html << render_card("Dias para encaminhar QS", indicadores.tempo_para_encaminhar_qs)
+    html << "</div>"
+    html << "</div>"
+
+    # Cards QS
+    html << "<div class='indicadores-grupo'>"
+    html << "<div class='indicadores-titulo'>Qualidade</div>"
+    html << "<div class='indicadores-cards'>"
+    html << render_card("Dias para iniciar testes", indicadores.tempo_andamento_qs)
+    html << render_card("Dias para concluir testes", indicadores.tempo_resolucao_qs)
+    html << render_card("Dias para fechar tarefa", indicadores.tempo_fechamento_qs)
+    html << "</div>"
+    html << "</div>"
+
+    html << "</div>"
+    html.join("\n")
+  end
+
+  def render_card(caption, valor)
+    "<div class='indicador-card'>
+      <div class='indicador-caption'>#{caption}</div>
+      <div class='indicador-valor'>#{valor || '-'}</div>
+    </div>"
   end
 end

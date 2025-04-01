@@ -1,5 +1,6 @@
 class ProcessarIndicadoresController < ApplicationController
   before_action :find_issues, only: [:processar_indicadores_lote]
+  before_action :find_issue, only: [:processar_indicadores_tarefa]
 
   def processar_indicadores_lote
     Rails.logger.info ">>> processar_indicadores_lote"
@@ -13,6 +14,14 @@ class ProcessarIndicadoresController < ApplicationController
     respond_to do |format|
       format.js
     end
+  end
+
+  def processar_indicadores_tarefa
+    Rails.logger.info ">>> processar_indicadores_tarefa #{@issue.id}"
+    SkyRedminePlugin::Indicadores.processar_indicadores(@issue)
+    
+    flash[:notice] = "Indicadores da tarefa ##{@issue.id} foram processados com sucesso."
+    redirect_to issue_path(@issue)
   end
 
   def limpar_indicadores
