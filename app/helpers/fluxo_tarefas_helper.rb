@@ -241,7 +241,7 @@ module FluxoTarefasHelper
       .indicadores-titulo {
         font-weight: bold;
         margin-bottom: 10px;
-        font-size: 14px;
+        font-size: 12px;
       }
       .indicadores-cards {
         display: flex;
@@ -317,28 +317,32 @@ module FluxoTarefasHelper
     data_resolvida = indicadores.data_resolvida_ultima_tarefa_devel&.strftime("%d/%m/%Y")
     detalhe_resolucao = data_andamento && data_resolvida ? "De #{data_andamento} até #{data_resolvida}" : nil
     valor_resolucao = formatar_dias(indicadores.tempo_resolucao_devel)
-    html << render_card("Concluir desenvolvimento", valor_resolucao, detalhe_resolucao)
+    html << render_card("Concluir desenvolvimento", 
+                        valor_resolucao, detalhe_resolucao,
+                       "Tempo entre a tarefa de desenvolvimento ser colocada 'em andamento' e sua situação ser 'resolvida' (considerando o último ciclo de desenvolvimento incluindo os retornos de testes)")
     
     # Para encaminhar QS
     data_resolvida = indicadores.data_resolvida_ultima_tarefa_devel&.strftime("%d/%m/%Y")
     data_criacao_qs = indicadores.data_criacao_primeira_tarefa_qs&.strftime("%d/%m/%Y")
     detalhe_encaminhar = data_resolvida && data_criacao_qs ? "De #{data_resolvida} até #{data_criacao_qs}" : nil
     valor_encaminhar = formatar_dias(indicadores.tempo_para_encaminhar_qs)
-    html << render_card("Encaminhar QS", valor_encaminhar, detalhe_encaminhar)
+    html << render_card("Encaminhar QS", valor_encaminhar, detalhe_encaminhar,
+                        "Tempo entre tarefa de desenvolvimento estar 'resolvida' e a tarefa de QS ser encaminhada (apenas considerando o primeiro ciclo de desenvolvimento)")
 
     # Para liberar versão
     data_resolvida = indicadores.data_resolvida_ultima_tarefa_devel&.strftime("%d/%m/%Y")
     data_fechada = indicadores.data_fechamento_ultima_tarefa_devel&.strftime("%d/%m/%Y")
     detalhe_fechamento = data_resolvida && data_fechada ? "De #{data_resolvida} até #{data_fechada}" : nil
     valor_fechamento = formatar_dias(indicadores.tempo_fechamento_devel)
-    html << render_card("Liberar versão", valor_fechamento, detalhe_fechamento)
+    html << render_card("Liberar versão", valor_fechamento, detalhe_fechamento,
+                        "Tempo entre tarefa de desenvolvimento estar 'resolvida' e ser 'fechada' (entre estes tempos existe o tempo das tarefas do QS)") 
     
     html << "</div>"
     html << "</div>"
 
     # Cards QS
     html << "<div class='indicadores-grupo'>"
-    html << "<div class='indicadores-titulo'>Qualidade</div>"
+    html << "<div class='indicadores-titulo'>QS</div>"
     html << "<div class='indicadores-cards'>"
     
     # Para iniciar testes
