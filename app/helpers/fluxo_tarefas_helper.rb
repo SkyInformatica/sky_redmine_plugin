@@ -152,7 +152,7 @@ module FluxoTarefasHelper
       total_tempo_formatado = format("%.2f", total_tempo)
 
       # Adicionar cabeçalho da seção com tempo total
-      linhas << "<p class='titulo-secao'>#{secao[:nome]} (Tempo gasto total: #{total_tempo_formatado}h)</p>"
+      linhas << "<p class='titulo-secao'>#{secao[:nome]} (Tempo gasto: #{total_tempo_formatado}h)</p>"
       #linhas << "<table class='tabela-fluxo-tarefas'>"
       linhas << "<table class='tabela-fluxo-tarefas'>"
       linhas << "<tr>  
@@ -300,7 +300,8 @@ module FluxoTarefasHelper
 
     # Cards DEVEL
     html << "<div class='indicadores-grupo'>"
-    html << "<div class='indicadores-titulo'>Desenvolvimento</div>"
+    tempo_gasto_devel = format("%.2f", indicadores.tempo_gasto_devel.to_f)
+    html << "<div class='indicadores-titulo'>Desenvolvimento (Tempo gasto total: #{tempo_gasto_devel}h)</div>"
     html << "<div class='indicadores-cards'>"
     
     # Para iniciar desenvolvimento
@@ -350,7 +351,8 @@ module FluxoTarefasHelper
 
     # Cards QS
     html << "<div class='indicadores-grupo'>"
-    html << "<div class='indicadores-titulo'>QS</div>"
+    tempo_gasto_qs = format("%.2f", indicadores.tempo_gasto_qs.to_f)
+    html << "<div class='indicadores-titulo'>QS (Tempo gasto total: #{tempo_gasto_qs}h)</div>"
     html << "<div class='indicadores-cards'>"
     
     # Para iniciar testes
@@ -374,7 +376,7 @@ module FluxoTarefasHelper
     data_fechada_qs = indicadores.data_fechamento_ultima_tarefa_qs&.strftime("%d/%m/%Y")
     detalhe_fechamento_qs = data_resolvida_qs && data_fechada_qs ? "De #{data_resolvida_qs} até #{data_fechada_qs}" : nil
     valor_fechamento_qs = formatar_dias(indicadores.tempo_fechamento_qs)
-    html << render_card("Fechar tarefa", valor_fechamento_qs, detalhe_fechamento_qs,
+    html << render_card("Fechar testes", valor_fechamento_qs, detalhe_fechamento_qs,
                         "Tempo entre a tarefa de QS ser concluída (TESTE OK) e ser fechada (TESTE OK - FECHADA)")
     
     html << "</div>"
