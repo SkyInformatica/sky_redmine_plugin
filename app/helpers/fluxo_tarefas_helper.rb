@@ -260,6 +260,9 @@ module FluxoTarefasHelper
         color: #666;
         font-size: 12px;
         margin-bottom: 5px;
+        display: flex;
+        align-items: center;
+        gap: 5px;
       }
       .indicador-valor {
         font-size: 14px;
@@ -269,6 +272,11 @@ module FluxoTarefasHelper
         color: #888;
         font-style: italic;
         font-size: 11px;
+      }
+      .info-icon {
+        color: #666;
+        cursor: help;
+        font-size: 14px;
       }
     </style>"
 
@@ -299,7 +307,10 @@ module FluxoTarefasHelper
     data_andamento = indicadores.data_andamento_primeira_tarefa_devel&.strftime("%d/%m/%Y")
     detalhe_andamento = data_criacao && data_andamento ? "De #{data_criacao} até #{data_andamento}" : nil
     valor_andamento = formatar_dias(indicadores.tempo_andamento_devel)
-    html << render_card("Iniciar desenvolvimento", valor_andamento, detalhe_andamento)
+    html << render_card("Iniciar desenvolvimento", 
+                       valor_andamento, 
+                       detalhe_andamento,
+                       "Tempo entre a data do atendimento/criação da tarefa até ele ser iniciada o desenvolvimento colocando a situação da tarefa em andamento")
     
     # Para concluir desenvolvimento
     data_andamento = indicadores.data_andamento_primeira_tarefa_devel&.strftime("%d/%m/%Y")
@@ -308,6 +319,13 @@ module FluxoTarefasHelper
     valor_resolucao = formatar_dias(indicadores.tempo_resolucao_devel)
     html << render_card("Concluir desenvolvimento", valor_resolucao, detalhe_resolucao)
     
+    # Para encaminhar QS
+    data_resolvida = indicadores.data_resolvida_ultima_tarefa_devel&.strftime("%d/%m/%Y")
+    data_criacao_qs = indicadores.data_criacao_primeira_tarefa_qs&.strftime("%d/%m/%Y")
+    detalhe_encaminhar = data_resolvida && data_criacao_qs ? "De #{data_resolvida} até #{data_criacao_qs}" : nil
+    valor_encaminhar = formatar_dias(indicadores.tempo_para_encaminhar_qs)
+    html << render_card("Encaminhar QS", valor_encaminhar, detalhe_encaminhar)
+
     # Para liberar versão
     data_resolvida = indicadores.data_resolvida_ultima_tarefa_devel&.strftime("%d/%m/%Y")
     data_fechada = indicadores.data_fechamento_ultima_tarefa_devel&.strftime("%d/%m/%Y")
@@ -315,12 +333,6 @@ module FluxoTarefasHelper
     valor_fechamento = formatar_dias(indicadores.tempo_fechamento_devel)
     html << render_card("Liberar versão", valor_fechamento, detalhe_fechamento)
     
-    # Para encaminhar QS
-    data_resolvida = indicadores.data_resolvida_ultima_tarefa_devel&.strftime("%d/%m/%Y")
-    data_criacao_qs = indicadores.data_criacao_primeira_tarefa_qs&.strftime("%d/%m/%Y")
-    detalhe_encaminhar = data_resolvida && data_criacao_qs ? "De #{data_resolvida} até #{data_criacao_qs}" : nil
-    valor_encaminhar = formatar_dias(indicadores.tempo_para_encaminhar_qs)
-    html << render_card("Encaminhar QS", valor_encaminhar, detalhe_encaminhar)
     html << "</div>"
     html << "</div>"
 
@@ -363,9 +375,17 @@ module FluxoTarefasHelper
     html.join("\n")
   end
 
-  def render_card(caption, valor, detalhe = nil)
+  def render_card(caption, valor, detalhe = nil, tooltip = nil)
     html = "<div class='indicador-card'>
-      <div class='indicador-caption'>#{caption}</div>
+      <div class='indicador-caption'>"
+    
+    html << caption
+    
+    if tooltip
+      html << " <span class='info-icon' title='#{tooltip}'>&#9432;</span>"
+    end
+    
+    html << "</div>
       <div class='indicador-valor'>#{valor || '-'}</div>"
     
     if detalhe
