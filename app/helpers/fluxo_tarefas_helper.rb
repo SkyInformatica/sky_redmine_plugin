@@ -22,10 +22,9 @@ module FluxoTarefasHelper
       cards_html << "<p>"
       cards_html << "<strong>Indicadores</strong>"
       cards_html << " ("
-      cards_html << link_to("processar indicadores", 
+      cards_html << link_to("Processar", 
                            processar_indicadores_tarefa_path(primeira_tarefa),
-                           method: :post,
-                           data: { confirm: "Deseja processar os indicadores desta tarefa?" })
+                           method: :post)
       cards_html << ")"
       cards_html << "</p>"
     end
