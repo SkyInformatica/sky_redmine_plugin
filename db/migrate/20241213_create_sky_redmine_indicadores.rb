@@ -1,4 +1,4 @@
-class CreateSkyRedmineIndicadores < ActiveRecord::Migration[5.2]
+class CreateSkyRedmineIndicadores < ActiveRecord::Migration[7.0]
   def change
     create_table :sky_redmine_indicadores do |t|
       t.integer :primeira_tarefa_devel_id
@@ -41,6 +41,8 @@ class CreateSkyRedmineIndicadores < ActiveRecord::Migration[5.2]
       t.integer :tempo_resolucao_qs
       t.integer :tempo_fechamento_qs
       t.integer :tempo_concluido_testes_versao_liberada
+      t.integer :tempo_total_liberar_versao
+      t.integer :tempo_total_testes
 
       t.timestamps
     end

@@ -301,7 +301,14 @@ module FluxoTarefasHelper
     # Cards DEVEL
     html << "<div class='indicadores-grupo'>"
     tempo_gasto_devel = format("%.2f", indicadores.tempo_gasto_devel.to_f)
-    html << "<div class='indicadores-titulo'>Desenvolvimento (Tempo gasto total: #{tempo_gasto_devel}h)</div>"
+    tempo_total_liberar_versao = if indicadores.tempo_total_liberar_versao
+      "#{indicadores.tempo_total_liberar_versao} #{indicadores.tempo_total_liberar_versao == 1 ? 'dia' : 'dias'}"
+    elsif indicadores.data_criacao_ou_atendimento_primeira_tarefa_devel
+      "em desenvolvimento"
+    else
+      "desenvolvimento não iniciado"
+    end
+    html << "<div class='indicadores-titulo'>Desenvolvimento (Tempo gasto total: #{tempo_gasto_devel}h) - Tempo total: #{tempo_total_liberar_versao}</div>"
     html << "<div class='indicadores-cards'>"
     
     # Para iniciar desenvolvimento
@@ -352,7 +359,14 @@ module FluxoTarefasHelper
     # Cards QS
     html << "<div class='indicadores-grupo'>"
     tempo_gasto_qs = format("%.2f", indicadores.tempo_gasto_qs.to_f)
-    html << "<div class='indicadores-titulo'>QS (Tempo gasto total: #{tempo_gasto_qs}h)</div>"
+    tempo_total_testes = if indicadores.tempo_total_testes
+      "#{indicadores.tempo_total_testes} #{indicadores.tempo_total_testes == 1 ? 'dia' : 'dias'}"
+    elsif indicadores.data_criacao_primeira_tarefa_qs
+      "em testes"
+    else
+      "testes ainda não encaminhados"
+    end
+    html << "<div class='indicadores-titulo'>QS (Tempo gasto total: #{tempo_gasto_qs}h) - Tempo total: #{tempo_total_testes}</div>"
     html << "<div class='indicadores-cards'>"
     
     # Para iniciar testes

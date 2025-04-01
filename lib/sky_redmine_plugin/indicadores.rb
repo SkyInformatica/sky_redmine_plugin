@@ -182,6 +182,19 @@ module SkyRedminePlugin
             indicador.local_tarefa = "QS"
           end
         end
+
+        # Calcular tempo total para liberar versão
+        if indicador.data_criacao_ou_atendimento_primeira_tarefa_devel && indicador.data_fechamento_ultima_tarefa_devel
+          indicador.tempo_total_liberar_versao = (indicador.data_fechamento_ultima_tarefa_devel - indicador.data_criacao_ou_atendimento_primeira_tarefa_devel).to_i
+        end
+
+        # Calcular tempo total de testes
+        if indicador.data_criacao_primeira_tarefa_qs && indicador.data_resolvida_ultima_tarefa_qs && 
+          [SkyRedminePlugin::Constants::IssueStatus::TESTE_OK
+          SkyRedminePlugin::Constants::IssueStatus::TESTE_OK_FECHADA].include?(ultima_tarefa_qs.status.name)
+          indicador.tempo_total_testes = (indicador.data_resolvida_ultima_tarefa_qs - indicador.data_criacao_primeira_tarefa_qs).to_i
+        end
+
         Rails.logger.info ">>> indicador.save: #{indicador.inspect}"
         indicador.save(validate: false)
       end
