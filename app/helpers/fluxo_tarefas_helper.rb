@@ -247,6 +247,7 @@ module FluxoTarefasHelper
         display: flex;
         flex-wrap: wrap;
         gap: 10px;
+        margin-bottom: 10px;
       }
       .indicador-card {
         background: #f9f9f9;
@@ -319,7 +320,7 @@ module FluxoTarefasHelper
     valor_resolucao = formatar_dias(indicadores.tempo_resolucao_devel)
     html << render_card("Concluir desenvolvimento", 
                         valor_resolucao, detalhe_resolucao,
-                       "Tempo entre a tarefa de desenvolvimento ser colocada 'em andamento' e sua situação ser 'resolvida' (considerando o último ciclo de desenvolvimento incluindo os retornos de testes)")
+                       "Tempo entre a tarefa de desenvolvimento ser colocada em andamento e sua situação ser 'resolvida' (considerando o último ciclo de desenvolvimento incluindo os retornos de testes)")
     
     # Para encaminhar QS
     data_resolvida = indicadores.data_resolvida_ultima_tarefa_devel&.strftime("%d/%m/%Y")
