@@ -158,9 +158,13 @@ module SkyRedminePlugin
 
           # Calcular tempo para encaminhar para QS (apenas no primeiro ciclo)
           if primeiro_ciclo_devel.last.data_resolvida.present? && indicador.data_criacao_primeira_tarefa_qs.present?
-            data_resolucao_devel = primeiro_ciclo_devel.last.data_resolvida.to_date
-            data_criacao_qs = indicador.data_criacao_primeira_tarefa_qs
-            indicador.tempo_para_encaminhar_qs = (data_criacao_qs - data_resolucao_devel).to_i
+            Rails.logger.info ">>> primeiro_ciclo_devel.last.data_resolvida: #{primeiro_ciclo_devel.last.data_resolvida}"
+            Rails.logger.info ">>> indicador.data_criacao_primeira_tarefa_qs: #{indicador.data_criacao_primeira_tarefa_qs}"
+            #data_resolucao_devel = primeiro_ciclo_devel.last.data_resolvida.to_date
+            #data_criacao_qs = indicador.data_criacao_primeira_tarefa_qs
+            #indicador.tempo_para_encaminhar_qs = (data_criacao_qs - data_resolucao_devel).to_i
+            indicador.tempo_para_encaminhar_qs = indicador.data_criacao_primeira_tarefa_qs - primeiro_ciclo_devel.last.data_resolvida
+
           end
         end
 
