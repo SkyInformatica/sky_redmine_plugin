@@ -419,7 +419,7 @@ module FluxoTarefasHelper
     data_fechada = indicadores.data_fechamento_ultima_tarefa_devel&.strftime("%d/%m/%Y")
     detalhe_fechamento = data_resolvida && data_fechada ? "De #{data_resolvida} até #{data_fechada}" : nil
     valor_fechamento = formatar_dias(indicadores.tempo_fechamento_devel)
-    html << render_card("Concluir desenvolvimento, testar e liberar versão", valor_fechamento, detalhe_fechamento,
+    html << render_card("Liberar versão após concluir o desenvolvimento", valor_fechamento, detalhe_fechamento,
                         "Tempo entre tarefa de desenvolvimento estar resolvida e ser fechada (entre estes tempos existe o tempo das tarefas do QS)") 
     
     html << "</div>"
