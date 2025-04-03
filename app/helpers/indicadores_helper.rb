@@ -13,7 +13,7 @@ module IndicadoresHelper
         ),
         render_card_grafico(
           'Tarefas por Status', 
-          'bar', 
+          'pie', 
           dados_graficos[:tarefas_por_status],
           'Distribuição das tarefas por status no período selecionado',
           'Total de tarefas agrupadas por status'
