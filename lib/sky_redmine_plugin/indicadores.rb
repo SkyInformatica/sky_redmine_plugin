@@ -170,7 +170,7 @@ module SkyRedminePlugin
         # Determinar o local atual da tarefa
         # Se a última tarefa DEVEL está fechada, está FECHADA
         ultima_tarefa_devel = tarefas_devel.last
-        if [SkyRedminePlugin::Constants::IssueStatus::FECHADA].include?(ultima_tarefa_qs.status.name)            
+        if [SkyRedminePlugin::Constants::IssueStatus::FECHADA].include?(ultima_tarefa_devel.status.name)            
            indicador.equipe_responsavel_atual = SkyRedminePlugin::Constants::EquipeResponsavel::FECHADA
         else       
           if tarefas_qs.empty?
