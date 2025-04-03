@@ -208,6 +208,7 @@ module SkyRedminePlugin
               indicador.tarefa_fechada_sem_testes = "SIM"
             end
           end
+        end
         
 
         # Calcular tempo total para liberar versão
