@@ -1,4 +1,15 @@
-.graficos-container {
+/* Reseta apenas os elementos dentro do nosso plugin */
+.sky-indicadores {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  line-height: 1.5;
+}
+
+/* Mantém os estilos da tabela do Redmine */
+.sky-indicadores table.list.issues {
+  font-family: inherit;
+}
+
+.sky-indicadores .graficos-container {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 24px;
@@ -6,8 +17,8 @@
 }
 
 /* Card base com glass morphism */
-.card-grafico,
-.card-valor {
+.sky-indicadores .card-grafico,
+.sky-indicadores .card-valor {
   background: rgba(255, 255, 255, 0.95);
   border-radius: 16px;
   padding: 20px;
@@ -16,20 +27,20 @@
   transition: transform 0.2s ease;
 }
 
-.card-grafico:hover,
-.card-valor:hover {
+.sky-indicadores .card-grafico:hover,
+.sky-indicadores .card-valor:hover {
   transform: translateY(-5px);
 }
 
 /* Header do card */
-.card-header {
+.sky-indicadores .card-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 16px;
 }
 
-.card-titulo {
+.sky-indicadores .card-titulo {
   font-size: 18px;
   font-weight: 600;
   color: #333;
@@ -37,24 +48,24 @@
 }
 
 /* Tooltip */
-.tooltip-container {
+.sky-indicadores .tooltip-container {
   position: relative;
 }
 
-.tooltip-container i {
+.sky-indicadores .tooltip-container i {
   color: #666;
   font-size: 16px;
   cursor: help;
 }
 
 /* Body do card */
-.card-body {
+.sky-indicadores .card-body {
   position: relative;
   min-height: 200px;
 }
 
 /* Estilos específicos para card de valor */
-.card-valor .valor-principal {
+.sky-indicadores .card-valor .valor-principal {
   font-size: 36px;
   font-weight: bold;
   color: #333;
@@ -62,28 +73,28 @@
   margin: 20px 0;
 }
 
-.card-valor .valor-tendencia {
+.sky-indicadores .card-valor .valor-tendencia {
   font-size: 14px;
   color: #666;
   text-align: center;
 }
 
-.valor-tendencia.positivo {
+.sky-indicadores .valor-tendencia.positivo {
   color: #4CAF50;
 }
 
-.valor-tendencia.negativo {
+.sky-indicadores .valor-tendencia.negativo {
   color: #F44336;
 }
 
 /* Footer do card */
-.card-footer {
+.sky-indicadores .card-footer {
   margin-top: 16px;
   padding-top: 16px;
   border-top: 1px solid rgba(0, 0, 0, 0.1);
 }
 
-.card-descricao {
+.sky-indicadores .card-descricao {
   font-size: 12px;
   color: #666;
   font-style: italic;
@@ -92,20 +103,20 @@
 
 /* Responsividade */
 @media (max-width: 1200px) {
-  .graficos-container {
+  .sky-indicadores .graficos-container {
     grid-template-columns: repeat(2, 1fr);
   }
 }
 
 @media (max-width: 768px) {
-  .graficos-container {
+  .sky-indicadores .graficos-container {
     grid-template-columns: 1fr;
   }
 }
 
-table.list.issues th {  
+/* Ajustes para a tabela */
+.sky-indicadores table.list.issues th {  
   white-space: normal;  
   word-wrap: break-word;  
-  /* Opcional: ajustar a largura máxima da coluna */  
   max-width: 200px;  
 } 
