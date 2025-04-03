@@ -12,9 +12,12 @@ class IndicadoresService
       [nil, nil]
     end
 
+    scope = SkyRedmineIndicadores.por_projeto_e_periodo(project, start_date, end_date)
+
     {
-      tarefas_por_tipo: SkyRedmineIndicadores.tarefas_por_tipo(project, start_date, end_date),
-      tarefas_por_status: SkyRedmineIndicadores.tarefas_por_status(project, start_date, end_date)
+      scope: scope,
+      tarefas_por_tipo: SkyRedmineIndicadores.tarefas_por_tipo(scope, start_date, end_date),
+      tarefas_por_status: SkyRedmineIndicadores.tarefas_por_status(scope, start_date, end_date)
     }
   end
 end 

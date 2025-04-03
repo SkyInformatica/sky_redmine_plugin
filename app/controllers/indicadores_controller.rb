@@ -19,7 +19,7 @@ class IndicadoresController < ApplicationController
     sort_update %w(primeira_tarefa_devel_id ultima_tarefa_devel_id status_ultima_tarefa_devel tempo_estimado_devel tempo_gasto_devel)
 
     # Buscar os registros da tabela SkyRedmineIndicadores com paginação e ordenação
-    scope = SkyRedmineIndicadores.por_projeto_e_periodo(@project, @periodo)
+    scope = @dados_graficos.scope
     scope = scope.order(sort_clause)
 
     # Paginação usando o Paginator do Redmine

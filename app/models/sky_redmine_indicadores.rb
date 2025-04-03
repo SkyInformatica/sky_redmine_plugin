@@ -3,13 +3,11 @@ class SkyRedmineIndicadores < ActiveRecord::Base
 
   # Associações, validações ou métodos adicionais, se necessários
 
-  def self.tarefas_por_tipo(project, start_date = nil, end_date = nil)
-    scope = por_projeto_e_periodo(project, start_date, end_date)
+  def self.tarefas_por_tipo(scope, start_date = nil, end_date = nil)
     scope.group(:tipo_primeira_tarefa_devel).count
   end
 
-  def self.tarefas_por_status(project, start_date = nil, end_date = nil)
-    scope = por_projeto_e_periodo(project, start_date, end_date)
+  def self.tarefas_por_status(scope, start_date = nil, end_date = nil)
     scope.group(:status_ultima_tarefa_devel).count
   end
 
