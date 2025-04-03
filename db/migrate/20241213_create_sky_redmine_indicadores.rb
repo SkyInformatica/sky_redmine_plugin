@@ -13,7 +13,7 @@ class CreateSkyRedmineIndicadores < ActiveRecord::Migration[7.0]
       t.float :tempo_gasto_devel
       t.string :origem_primeira_tarefa_devel
       t.string :skynet_primeira_tarefa_devel
-      t.string :equipe_responsavel
+      t.string :equipe_responsavel_atual
       t.string :situacao_atual
       t.integer :qtd_retorno_testes
       t.date :data_atendimento_primeira_tarefa_devel

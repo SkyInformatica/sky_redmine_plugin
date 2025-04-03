@@ -288,7 +288,7 @@ module FluxoTarefasHelper
     
     # Informações gerais
     html << "<div class='indicadores-cards'>"
-    html << render_card("Responsável atual", indicadores.equipe_responsavel)
+    html << render_card("Responsável atual", indicadores.equipe_responsavel_atual)
     
     retorno_testes = if indicadores.qtd_retorno_testes&.positive?
       "SIM (#{indicadores.qtd_retorno_testes})"
