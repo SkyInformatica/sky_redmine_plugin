@@ -1,0 +1,111 @@
+.graficos-container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  padding: 24px;
+}
+
+/* Card base com glass morphism */
+.card-grafico,
+.card-valor {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(200, 200, 200, 0.3);
+  transition: transform 0.2s ease;
+}
+
+.card-grafico:hover,
+.card-valor:hover {
+  transform: translateY(-5px);
+}
+
+/* Header do card */
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.card-titulo {
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
+  margin: 0;
+}
+
+/* Tooltip */
+.tooltip-container {
+  position: relative;
+}
+
+.tooltip-container i {
+  color: #666;
+  font-size: 16px;
+  cursor: help;
+}
+
+/* Body do card */
+.card-body {
+  position: relative;
+  min-height: 200px;
+}
+
+/* Estilos específicos para card de valor */
+.card-valor .valor-principal {
+  font-size: 36px;
+  font-weight: bold;
+  color: #333;
+  text-align: center;
+  margin: 20px 0;
+}
+
+.card-valor .valor-tendencia {
+  font-size: 14px;
+  color: #666;
+  text-align: center;
+}
+
+.valor-tendencia.positivo {
+  color: #4CAF50;
+}
+
+.valor-tendencia.negativo {
+  color: #F44336;
+}
+
+/* Footer do card */
+.card-footer {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.card-descricao {
+  font-size: 12px;
+  color: #666;
+  font-style: italic;
+  margin: 0;
+}
+
+/* Responsividade */
+@media (max-width: 1200px) {
+  .graficos-container {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .graficos-container {
+    grid-template-columns: 1fr;
+  }
+}
+
+table.list.issues th {  
+  white-space: normal;  
+  word-wrap: break-word;  
+  /* Opcional: ajustar a largura máxima da coluna */  
+  max-width: 200px;  
+} 
