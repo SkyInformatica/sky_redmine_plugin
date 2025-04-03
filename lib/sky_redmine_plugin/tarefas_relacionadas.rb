@@ -39,6 +39,12 @@ module SkyRedminePlugin
 
       # Adiciona os atributos de data para cada tarefa
       tarefas.map do |tarefa|
+        if SkyRedminePlugin::Constants::Projects::QS_PROJECTS.include?(tarefa.project.name)
+          equipe_responsavel = SkyRedminePlugin::Constants::EquipeResponsavel::QS
+        else
+          equipe_responsavel = SkyRedminePlugin::Constants::EquipeResponsavel::DEVEL
+        end
+
         # Data de criação pode ser a data de criação ou a data de atendimento
         data_atendimento = obter_valor_campo_personalizado(tarefa, "Data de Atendimento")
         data_criacao = data_atendimento.present? ? data_atendimento : tarefa.created_on
@@ -103,12 +109,14 @@ module SkyRedminePlugin
           data_fechada = nil
         end
 
+        tarefa.instance_variable_set(:@equipe_responsavel, equipe_responsavel)
         tarefa.instance_variable_set(:@data_atendimento, data_atendimento&.to_date)
         tarefa.instance_variable_set(:@data_criacao, data_criacao&.to_date)
         tarefa.instance_variable_set(:@data_em_andamento, data_em_andamento&.to_date)
         tarefa.instance_variable_set(:@data_resolvida, data_resolvida&.to_date)
         tarefa.instance_variable_set(:@data_fechada, data_fechada&.to_date)
 
+        tarefa.define_singleton_method(:equipe_responsavel) { @equipe_responsavel }
         tarefa.define_singleton_method(:data_atendimento) { @data_atendimento }
         tarefa.define_singleton_method(:data_criacao) { @data_criacao }
         tarefa.define_singleton_method(:data_em_andamento) { @data_em_andamento }

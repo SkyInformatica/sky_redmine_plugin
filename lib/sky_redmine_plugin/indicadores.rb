@@ -168,18 +168,23 @@ module SkyRedminePlugin
         end
 
         # Determinar o local atual da tarefa
-        if tarefas_qs.empty?
-          # Se não existe tarefa QS, está no DEVEL
-          indicador.local_tarefa = "DEVEL"
-        else
-          ultima_tarefa_qs = tarefas_qs.last
-          if [SkyRedminePlugin::Constants::IssueStatus::TESTE_OK, SkyRedminePlugin::Constants::IssueStatus::TESTE_NOK,
-              SkyRedminePlugin::Constants::IssueStatus::TESTE_OK_FECHADA, SkyRedminePlugin::Constants::IssueStatus::TESTE_NOK_FECHADA].include?(ultima_tarefa_qs.status.name)
-            # Se a última tarefa QS está fechada (TESTE_OK_FECHADA ou TESTE_NOK_FECHADA), voltou para DEVEL
-            indicador.local_tarefa = "DEVEL"
+        # Se a última tarefa DEVEL está fechada, está FECHADA
+        ultima_tarefa_devel = tarefas_devel.last
+        if [SkyRedminePlugin::Constants::IssueStatus::FECHADA].include?(ultima_tarefa_qs.status.name)            
+           indicador.equipe_responsavel = SkyRedminePlugin::Constants::EquipeResponsavel::FECHADA
+        else       
+          if tarefas_qs.empty?
+            # Se não existe tarefa QS, está no DEVEL
+            indicador.equipe_responsavel = SkyRedminePlugin::Constants::EquipeResponsavel::DEVEL
           else
-            # Se existe tarefa QS e não está fechada, está no QS
-            indicador.local_tarefa = "QS"
+            ultima_tarefa_qs = tarefas_qs.last
+            if [SkyRedminePlugin::Constants::IssueStatus::TESTE_OK, SkyRedminePlugin::Constants::IssueStatus::TESTE_NOK,
+                SkyRedminePlugin::Constants::IssueStatus::TESTE_OK_FECHADA, SkyRedminePlugin::Constants::IssueStatus::TESTE_NOK_FECHADA].include?(ultima_tarefa_qs.status.name)            
+              indicador.equipe_responsavel = SkyRedminePlugin::Constants::EquipeResponsavel::DEVEL
+            else
+              # Se existe tarefa QS e não está fechada, está no QS
+              indicador.equipe_responsavel = SkyRedminePlugin::Constants::EquipeResponsavel::QS
+            end
           end
         end
 
@@ -246,7 +251,7 @@ module SkyRedminePlugin
       indicador.tempo_total_testes = nil
 
       # Campo de localização
-      indicador.local_tarefa = nil
+      indicador.equipe_responsavel = nil
     end
 
     # Método para separar tarefas DEVEL em ciclos de desenvolvimento

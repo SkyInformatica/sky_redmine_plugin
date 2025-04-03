@@ -61,5 +61,11 @@ module SkyRedminePlugin
       PRIORIDADE = "_PRIORIDADE"
       TODAS_TAGS_AUTOMATIZADAS = [TESTAR, PRONTO, REVER, REUNIAO, RETESTAR]
     end
+
+    module EquipeResponsavel
+      FECHADA = "FECHADA"
+      DEVEL = "DEVEL"
+      QS = "QS"
+    end
   end
 end
