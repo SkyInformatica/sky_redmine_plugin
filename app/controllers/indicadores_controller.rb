@@ -18,9 +18,16 @@ class IndicadoresController < ApplicationController
     sort_init "id", "desc"
     sort_update %w(primeira_tarefa_devel_id ultima_tarefa_devel_id status_ultima_tarefa_devel tempo_estimado_devel tempo_gasto_devel)
 
+    # Logs para debug da ordenação
+    Rails.logger.info "Params de ordenação: #{params[:sort]}, #{params[:order]}"
+    Rails.logger.info "Cláusula de ordenação: #{sort_clause}"
+
     # Buscar os registros da tabela SkyRedmineIndicadores com paginação e ordenação
     scope = @dados_graficos[:scope]
     scope = scope.order(sort_clause)
+
+    # Log da query SQL final
+    Rails.logger.info "Query SQL: #{scope.to_sql}"
 
     # Paginação usando o Paginator do Redmine
     @limit = per_page_option
