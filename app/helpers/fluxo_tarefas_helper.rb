@@ -301,14 +301,14 @@ module FluxoTarefasHelper
     # Cards DEVEL
     html << "<div class='indicadores-grupo'>"
     tempo_gasto_devel = format("%.2f", indicadores.tempo_gasto_devel.to_f)
-    tempo_total_liberar_versao = if indicadores.tempo_total_liberar_versao
-      "#{indicadores.tempo_total_liberar_versao} #{indicadores.tempo_total_liberar_versao == 1 ? 'dia' : 'dias'}"
+    tempo_total_devel = if indicadores.tempo_total_devel
+      "#{indicadores.tempo_total_devel} #{indicadores.tempo_total_devel == 1 ? 'dia' : 'dias'}"
     elsif indicadores.tempo_andamento_devel
       "em desenvolvimento"
     else
       "desenvolvimento não iniciado"
     end
-    html << "<div class='indicadores-titulo'>Desenvolvimento (Tempo gasto total: #{tempo_gasto_devel}h) - Tempo total: #{tempo_total_liberar_versao}</div>"
+    html << "<div class='indicadores-titulo'>Desenvolvimento - Tempo gasto total: #{tempo_gasto_devel}h - #{tempo_total_devel}</div>"
     html << "<div class='indicadores-cards'>"
     
     # Para iniciar desenvolvimento
@@ -340,21 +340,7 @@ module FluxoTarefasHelper
     html << render_card("Encaminhar QS", valor_encaminhar, detalhe_encaminhar,
                         "Tempo entre tarefa de desenvolvimento estar resolvida e a tarefa de QS ser encaminhada (considerando somente o primeiro ciclo de desenvolvimento)")
 
-    # Para liberar versão
-    data_resolvida = indicadores.data_resolvida_ultima_tarefa_devel&.strftime("%d/%m/%Y")
-    data_fechada = indicadores.data_fechamento_ultima_tarefa_devel&.strftime("%d/%m/%Y")
-    detalhe_fechamento = data_resolvida && data_fechada ? "De #{data_resolvida} até #{data_fechada}" : nil
-    valor_fechamento = formatar_dias(indicadores.tempo_fechamento_devel)
-    html << render_card("Concluir desenvolvimento, testar e liberar versão", valor_fechamento, detalhe_fechamento,
-                        "Tempo entre tarefa de desenvolvimento estar resolvida e ser fechada (entre estes tempos existe o tempo das tarefas do QS)") 
     
-    # Tempo entre conclusão dos testes e liberação da versão
-    data_resolvida_qs = indicadores.data_resolvida_ultima_tarefa_qs&.strftime("%d/%m/%Y")
-    data_fechada_devel = indicadores.data_fechamento_ultima_tarefa_devel&.strftime("%d/%m/%Y")
-    detalhe_liberacao = data_resolvida_qs && data_fechada_devel ? "De #{data_resolvida_qs} até #{data_fechada_devel}" : nil
-    valor_liberacao = formatar_dias(indicadores.tempo_concluido_testes_versao_liberada)
-    html << render_card("Liberar versão após testes", valor_liberacao, detalhe_liberacao,
-                        "Tempo entre a tarefa de QS ser concluída (TESTE OK) e a tarefa de desenvolvimento ser fechada")
     html << "</div>"
     html << "</div>"
 
@@ -370,7 +356,7 @@ module FluxoTarefasHelper
     else
       "testes ainda não encaminhados"
     end
-    html << "<div class='indicadores-titulo'>QS (Tempo gasto total: #{tempo_gasto_qs}h) - Tempo total: #{tempo_total_testes}</div>"
+    html << "<div class='indicadores-titulo'>QS - Tempo gasto total: #{tempo_gasto_qs}h - #{tempo_total_testes}</div>"
     html << "<div class='indicadores-cards'>"
     
     # Para iniciar testes
@@ -396,6 +382,39 @@ module FluxoTarefasHelper
     valor_fechamento_qs = formatar_dias(indicadores.tempo_fechamento_qs)
     html << render_card("Fechar testes", valor_fechamento_qs, detalhe_fechamento_qs,
                         "Tempo entre a tarefa de QS ser concluída (TESTE OK) e ser fechada (TESTE OK - FECHADA)")
+    
+    html << "</div>"
+    html << "</div>"
+
+    # Cards Liberar versão
+    html << "<div class='indicadores-grupo'>"
+    tempo_gasto_devel = format("%.2f", indicadores.tempo_gasto_devel.to_f)
+    tempo_total_liberar_versao = if indicadores.tempo_total_liberar_versao
+      "#{indicadores.tempo_total_liberar_versao} #{indicadores.tempo_total_liberar_versao == 1 ? 'dia' : 'dias'}"
+    elsif indicadores.tempo_andamento_devel
+      "em desenvolvimento"
+    else
+      "desenvolvimento não iniciado"
+    end
+    html << "<div class='indicadores-titulo'>Liberar versão - Tempo total: #{tempo_total_liberar_versao}</div>"
+    html << "<div class='indicadores-cards'>"
+
+   
+    # Tempo entre conclusão dos testes e liberação da versão
+    data_resolvida_qs = indicadores.data_resolvida_ultima_tarefa_qs&.strftime("%d/%m/%Y")
+    data_fechada_devel = indicadores.data_fechamento_ultima_tarefa_devel&.strftime("%d/%m/%Y")
+    detalhe_liberacao = data_resolvida_qs && data_fechada_devel ? "De #{data_resolvida_qs} até #{data_fechada_devel}" : nil
+    valor_liberacao = formatar_dias(indicadores.tempo_concluido_testes_versao_liberada)
+    html << render_card("Liberar versão após testes", valor_liberacao, detalhe_liberacao,
+                        "Tempo entre a tarefa de QS ser concluída (TESTE OK) e a tarefa de desenvolvimento ser fechada")
+
+    # Para liberar versão
+    data_resolvida = indicadores.data_resolvida_ultima_tarefa_devel&.strftime("%d/%m/%Y")
+    data_fechada = indicadores.data_fechamento_ultima_tarefa_devel&.strftime("%d/%m/%Y")
+    detalhe_fechamento = data_resolvida && data_fechada ? "De #{data_resolvida} até #{data_fechada}" : nil
+    valor_fechamento = formatar_dias(indicadores.tempo_fechamento_devel)
+    html << render_card("Concluir desenvolvimento, testar e liberar versão", valor_fechamento, detalhe_fechamento,
+                        "Tempo entre tarefa de desenvolvimento estar resolvida e ser fechada (entre estes tempos existe o tempo das tarefas do QS)") 
     
     html << "</div>"
     html << "</div>"

@@ -193,6 +193,11 @@ module SkyRedminePlugin
           indicador.tempo_total_liberar_versao = (indicador.data_fechamento_ultima_tarefa_devel - indicador.data_criacao_ou_atendimento_primeira_tarefa_devel).to_i
         end
 
+        # Calcular tempo total de desenvolvimento
+        if indicador.data_criacao_ou_atendimento_primeira_tarefa_devel && indicador.data_resolvida_ultima_tarefa_devel
+          indicador.tempo_total_devel = (indicador.data_resolvida_ultima_tarefa_devel - indicador.data_criacao_ou_atendimento_primeira_tarefa_devel).to_i
+        end
+
         # Calcular tempo total de testes
         if indicador.data_criacao_primeira_tarefa_qs && indicador.data_resolvida_ultima_tarefa_qs && 
           [SkyRedminePlugin::Constants::IssueStatus::TESTE_OK,
