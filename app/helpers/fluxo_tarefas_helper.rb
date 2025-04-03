@@ -288,14 +288,20 @@ module FluxoTarefasHelper
     
     # Informações gerais
     html << "<div class='indicadores-cards'>"
-    html << render_card("Responsável atual", indicadores.equipe_responsavel_atual)
+    html << render_card("Responsável atual", indicadores.equipe_responsavel_atual, "","Equipe responsável pela tarefa")
     
-    retorno_testes = if indicadores.qtd_retorno_testes&.positive?
-      "SIM (#{indicadores.qtd_retorno_testes})"
-    else
-      "NÃO"
-    end
-    html << render_card("Retorno de testes", retorno_testes)
+    # Card de retorno de testes
+    html << render_card(
+      "Retorno de testes",
+      indicadores.qtd_retorno_testes || 0, "",
+      "Quantidade de vezes que a tarefa retornou para desenvolvimento")
+
+    # Card de versão liberada antes dos testes
+    html << render_card(
+      "Versão liberada antes dos testes",
+      indicadores.tarefa_fechada_sem_testes || "NAO", "",
+      "A versão foi liberada antes da conclusão dos testes")
+
     html << "</div>"
 
     # Cards DEVEL

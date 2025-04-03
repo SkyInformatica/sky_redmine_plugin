@@ -188,6 +188,28 @@ module SkyRedminePlugin
           end
         end
 
+        # Determinar se a tarefa foi fechada sem testes
+        if indicador.data_fechamento_ultima_tarefa_devel.present?
+          if tarefas_qs.empty?
+            # Se não existe tarefa QS e a última tarefa DEVEL está fechada
+            indicador.tarefa_fechada_sem_testes = "SIM"
+          else
+            # Se existe tarefa QS, verificar se a tarefa DEVEL foi fechada antes da tarefa QS
+            if indicador.data_fechamento_ultima_tarefa_qs.present?
+              if indicador.data_fechamento_ultima_tarefa_devel < indicador.data_fechamento_ultima_tarefa_qs
+                # Se a tarefa DEVEL foi fechada antes da tarefa QS
+                indicador.tarefa_fechada_sem_testes = "SIM"
+              else
+                # Se a tarefa DEVEL foi fechada depois da tarefa QS
+                indicador.tarefa_fechada_sem_testes = "NAO"
+              end
+            else
+              # Se a tarefa QS ainda não foi fechada
+              indicador.tarefa_fechada_sem_testes = "SIM"
+            end
+          end
+        
+
         # Calcular tempo total para liberar versão
         if indicador.data_criacao_ou_atendimento_primeira_tarefa_devel && indicador.data_fechamento_ultima_tarefa_devel
           indicador.tempo_total_liberar_versao = (indicador.data_fechamento_ultima_tarefa_devel - indicador.data_criacao_ou_atendimento_primeira_tarefa_devel).to_i
@@ -257,6 +279,7 @@ module SkyRedminePlugin
 
       # Campo de localização
       indicador.equipe_responsavel_atual = nil
+      indicador.tarefa_fechada_sem_testes = nil
     end
 
     # Método para separar tarefas DEVEL em ciclos de desenvolvimento
