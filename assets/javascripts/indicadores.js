@@ -14,6 +14,7 @@ document.addEventListener('DOMContentLoaded', function () {
             data: {
                 labels: Object.keys(config.dados),
                 datasets: [{
+                    label: ' ',  // Label vazio para não mostrar "undefined"
                     data: Object.values(config.dados),
                     backgroundColor: [
                         'rgba(54, 162, 235, 0.8)',
@@ -39,9 +40,14 @@ document.addEventListener('DOMContentLoaded', function () {
                 maintainAspectRatio: false,
                 plugins: {
                     legend: {
-                        position: 'bottom',
-                        labels: {
-                            padding: 20
+                        display: false  // Oculta a legenda pois já temos os labels nas barras
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            precision: 0  // Mostra apenas números inteiros no eixo Y
                         }
                     }
                 }
