@@ -8,3 +8,8 @@ git pull origin main
 bundle exec rake redmine:plugins:migrate RAILS_ENV=production
 service apache2 start
 
+
+chown -R www-data:www-data /opt/redmine-5.1.1/public/plugin_assets/sky_redmine_plugin/
+chmod -R 775 /opt/redmine-5.1.1/public/plugin_assets/sky_redmine_plugin/
+
+
