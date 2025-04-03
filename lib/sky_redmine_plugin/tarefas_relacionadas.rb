@@ -133,7 +133,7 @@ module SkyRedminePlugin
       
       tarefas_relacionadas.each do |tarefa|
         # Se é uma tarefa de desenvolvimento
-        if !SkyRedminePlugin::Constants::Projects::QS_PROJECTS.include?(tarefa.project.name)
+        if tarefa.equipe_responsavel == SkyRedminePlugin::Constants::EquipeResponsavel::DEVEL
           ciclo_atual << tarefa
         # Se é uma tarefa de QS e temos um ciclo em andamento
         elsif !ciclo_atual.empty?
@@ -156,7 +156,7 @@ module SkyRedminePlugin
       
       tarefas_relacionadas.each do |tarefa|
         # Se é uma tarefa de QS
-        if SkyRedminePlugin::Constants::Projects::QS_PROJECTS.include?(tarefa.project.name)
+        if tarefa.equipe_responsavel == SkyRedminePlugin::Constants::EquipeResponsavel::QS
           ciclo_atual << tarefa
         # Se é uma tarefa de desenvolvimento e temos um ciclo em andamento
         elsif !ciclo_atual.empty?

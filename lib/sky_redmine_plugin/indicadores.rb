@@ -34,8 +34,8 @@ module SkyRedminePlugin
       tarefas_relacionadas = SkyRedminePlugin::TarefasRelacionadas.obter_lista_tarefas_relacionadas(issue)
 
       # Separar tarefas DEVEL e QS
-      tarefas_devel = tarefas_relacionadas.select { |t| !SkyRedminePlugin::Constants::Projects::QS_PROJECTS.include?(t.project.name) }
-      tarefas_qs = tarefas_relacionadas.select { |t| SkyRedminePlugin::Constants::Projects::QS_PROJECTS.include?(t.project.name) }
+      tarefas_devel = tarefas_relacionadas.select { |t| t.equipe_responsavel == SkyRedminePlugin::Constants::EquipeResponsavel::DEVEL }
+      tarefas_qs = tarefas_relacionadas.select { |t| t.equipe_responsavel == SkyRedminePlugin::Constants::EquipeResponsavel::QS }
 
       Rails.logger.info ">>> tarefas_devel: #{tarefas_devel.inspect}"
       Rails.logger.info ">>> tarefas_qs: #{tarefas_qs.inspect}"
@@ -69,8 +69,8 @@ module SkyRedminePlugin
           next if index == 0 # Pula a primeira tarefa
           
           # Se a tarefa atual é DEVEL e a anterior era QS, é um retorno de testes
-          if !SkyRedminePlugin::Constants::Projects::QS_PROJECTS.include?(tarefa.project.name) &&
-             SkyRedminePlugin::Constants::Projects::QS_PROJECTS.include?(tarefas_relacionadas[index-1].project.name)
+          if tarefa.equipe_responsavel == SkyRedminePlugin::Constants::EquipeResponsavel::DEVEL &&
+             tarefas_relacionadas[index-1].equipe_responsavel == SkyRedminePlugin::Constants::EquipeResponsavel::QS
             qtd_retorno_testes += 1
           end
         end
