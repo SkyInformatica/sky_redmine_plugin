@@ -11,7 +11,7 @@ class IndicadoresController < ApplicationController
   include Redmine::Pagination
 
   def index
-    @periodo = params[:periodo] || "all"
+    @periodo = params[:periodo]
     @dados_graficos = IndicadoresService.obter_dados_graficos(@project, @periodo)
 
     # Adicionar ordenação
