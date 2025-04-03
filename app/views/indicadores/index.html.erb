@@ -13,24 +13,14 @@
                      ["Este mês", "current_month"],
                      ["Último mês", "last_month"],
                      ["Este ano", "current_year"],
-                   ], selected: params[:periodo]) %>  
+                   ], selected: @periodo) %>  
     <%= submit_tag "Filtrar" %>  
   </div>  
 <% end %>  
 
 <h2><%= l(:label_indicadores) %></h2>  
 
-<div class="graficos-container">  
-  <div class="grafico">  
-    <h3><%= l(:label_tarefas_por_tipo) %></h3>  
-    <%= pie_chart @tarefas_por_tipo, adapter: "google" %>  
-  </div>  
-
-  <div class="grafico">  
-    <h3><%= l(:label_tarefas_por_status) %></h3>  
-    <%= column_chart @tarefas_por_status %>  
-  </div>  
-</div> 
+<%= render_graficos_container(@dados_graficos) %>
 
 <!-- **Adicionar a tabela com estilos do Redmine** -->  
 <h2>Listagem de Indicadores</h2>  
