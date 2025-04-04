@@ -1,5 +1,6 @@
 class SkyRedmineSettingsController < ApplicationController
   def show
+    Rails.logger.info ">>> Executando SkyRedmineSettingsController#show"
     @ultima_execucao = SkyRedmineIndicadores.maximum(:updated_at)
     @tarefas_processadas = SkyRedmineIndicadores.count
   end

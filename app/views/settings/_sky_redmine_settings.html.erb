@@ -1,8 +1,10 @@
+<% controller.show %>
+
 <fieldset class="box">  
   <legend>Status do Processamento</legend>  
   <p>  
     <label>Última Execução</label>  
-    <%= @ultima_execucao ? format_time(@ultima_execucao) : "Nunca executadoxx" %>  
+    <%= @ultima_execucao ? format_time(@ultima_execucao) : "Nunca executado" %>  
   </p>  
   <p>  
     <label>Tarefas Processadas</label>  
