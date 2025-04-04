@@ -5,17 +5,18 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     // Inicializa todos os gráficos
-    document.querySelectorAll('[data-grafico]').forEach(function (el) {
-        const config = JSON.parse(el.dataset.grafico);
-        const ctx = el.getContext('2d');
+    document.querySelectorAll('canvas[data-grafico]').forEach(function (canvas) {
+        var config = JSON.parse(canvas.dataset.grafico);
+        var dados = config.dados;
+        var labels = Object.keys(dados);
+        var values = Object.values(dados);
 
-        const chartConfig = {
+        var chartConfig = {
             type: config.tipo,
             data: {
-                labels: Object.keys(config.dados),
+                labels: labels,
                 datasets: [{
-                    label: ' ',  // Label vazio para não mostrar "undefined"
-                    data: Object.values(config.dados),
+                    data: values,
                     backgroundColor: [
                         'rgba(54, 162, 235, 0.8)',
                         'rgba(255, 99, 132, 0.8)',
@@ -40,20 +41,25 @@ document.addEventListener('DOMContentLoaded', function () {
                 maintainAspectRatio: false,
                 plugins: {
                     legend: {
-                        display: false  // Oculta a legenda pois já temos os labels nas barras
-                    }
-                },
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        ticks: {
-                            precision: 0  // Mostra apenas números inteiros no eixo Y
-                        }
+                        display: config.tipo === 'pie' // Mostra legenda apenas para gráficos de pizza
                     }
                 }
             }
         };
 
-        new Chart(ctx, chartConfig);
+        // Configurações específicas para gráficos de barra
+        if (config.tipo === 'bar') {
+            chartConfig.options.scales = {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        stepSize: 1,
+                        precision: 0
+                    }
+                }
+            };
+        }
+
+        new Chart(canvas, chartConfig);
     });
 }); 
