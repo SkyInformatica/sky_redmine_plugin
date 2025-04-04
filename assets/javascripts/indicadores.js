@@ -1,3 +1,17 @@
+// Certifique-se de registrar os componentes necessários para o Chart.js 4.4.8
+Chart.register(
+    Chart.controllers.bar,
+    Chart.controllers.line,
+    Chart.elements.BarElement,
+    Chart.elements.LineElement,
+    Chart.elements.PointElement,
+    Chart.scales.CategoryScale,
+    Chart.scales.LinearScale,
+    Chart.plugins.Legend,
+    Chart.plugins.Title,
+    Chart.plugins.Tooltip
+);
+
 document.addEventListener('DOMContentLoaded', function () {
     // Inicializa todos os tooltips
     document.querySelectorAll('.tooltip-container i').forEach(function (el) {
@@ -40,8 +54,10 @@ document.addEventListener('DOMContentLoaded', function () {
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
-                legend: {
-                    display: false
+                plugins: {
+                    legend: {
+                        display: false
+                    }
                 }
             }
         };
@@ -49,7 +65,7 @@ document.addEventListener('DOMContentLoaded', function () {
         // Configurações específicas para gráficos
         if (config.tipo === 'pie') {
             // Mostra legenda apenas para gráficos de pizza
-            chartConfig.options.legend.display = true;
+            chartConfig.options.plugins.legend.display = true;
         } else if (config.tipo === 'bar') {
             // Configura o eixo Y para usar apenas números inteiros
             chartConfig.options.scales = {
@@ -65,4 +81,4 @@ document.addEventListener('DOMContentLoaded', function () {
 
         new Chart(canvas, chartConfig);
     });
-}); 
+});
