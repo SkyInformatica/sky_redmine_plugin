@@ -1,5 +1,4 @@
 function exibirProgresso(tipo, titulo) {
-    // Cria o diálogo se não existir
     if (!document.getElementById("progresso-dialogo")) {
         const dialogo = document.createElement("div");
         dialogo.id = "progresso-dialogo";
@@ -17,13 +16,9 @@ function exibirProgresso(tipo, titulo) {
         document.body.appendChild(dialogo);
     }
 
-    // Configura o título
     document.getElementById("progresso-titulo").innerText = titulo;
-
-    // Exibe o diálogo
     document.getElementById("progresso-dialogo").style.display = "block";
 
-    // Atualiza o progresso periodicamente
     const intervalo = setInterval(() => {
         fetch(`/progresso?tipo=${tipo}`)
             .then((response) => response.json())
@@ -32,7 +27,6 @@ function exibirProgresso(tipo, titulo) {
                 document.getElementById("progresso-barra").style.width = `${progresso}%`;
                 document.getElementById("progresso-texto").innerText = `${progresso}%`;
 
-                // Fecha o diálogo quando o progresso atinge 100%
                 if (progresso >= 100) {
                     clearInterval(intervalo);
                     setTimeout(() => {

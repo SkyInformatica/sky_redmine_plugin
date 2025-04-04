@@ -33,23 +33,11 @@ class ProcessarIndicadoresController < ApplicationController
   end
 
   def processar_indicadores_2024
-    Rails.logger.info ">>> processar_indicadores_2024"
-
     projetos = SkyRedminePlugin::Constants::Projects::REGISTRAL_PROJECTS + SkyRedminePlugin::Constants::Projects::NOTARIAL_PROJECTS
-    issues = Issue.where(project_id: Project.where(name: projetos).pluck(:id))
-                  .where("created_on >= ?", Date.new(2024, 1, 1))
+    ProcessarIndicadoresJob.perform_later(projetos, 2024)
 
-    @@progresso_indicadores[:total] = issues.count
-    @@progresso_indicadores[:processados] = 0
-
-    issues.each do |issue|
-      Rails.logger.info ">>> processando tarefa #{issue.id}"
-      SkyRedminePlugin::Indicadores.processar_indicadores(issue)
-      @@progresso_indicadores[:processados] += 1
-    end
-
-    flash[:notice] = "Indicadores das tarefas criadas a partir de 2024 foram processados com sucesso."
-    redirect_to sky_redmine_settings # Altere para a rota de configuração do plugin
+    flash[:notice] = "O processamento foi iniciado. Você pode acompanhar o progresso."
+    redirect_to sky_redmine_settings
   end
 
   def self.progresso_indicadores
