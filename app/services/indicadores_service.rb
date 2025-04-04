@@ -40,11 +40,14 @@ class IndicadoresService
     tarefas_por_tipo_tempo_gasto = scope.group(:tipo_primeira_tarefa_devel)
                                        .sum('ROUND(CAST(COALESCE(tempo_gasto_devel, 0) + COALESCE(tempo_gasto_qs, 0) AS DECIMAL(10,1)), 1)')
     
-    # Buscar quantidade de tarefas por retorno de testes
-    tarefas_por_retorno_testes = scope.group(:qtd_retorno_testes).count
+    # Criar scope apenas para tarefas fechadas
+    scope_fechadas = scope.where(equipe_responsavel_atual: SkyRedminePlugin::Constants::EquipeResponsavel::FECHADA)
+    
+    # Buscar quantidade de tarefas por retorno de testes (apenas fechadas)
+    tarefas_por_retorno_testes = scope_fechadas.group(:qtd_retorno_testes).count
 
-    # Buscar quantidade de tarefas fechadas sem testes
-    tarefas_fechadas_sem_testes = scope.group(:tarefa_fechada_sem_testes).count
+    # Buscar quantidade de tarefas fechadas sem testes (apenas fechadas)
+    tarefas_fechadas_sem_testes = scope_fechadas.group(:tarefa_fechada_sem_testes).count
 
     {
       scope: scope,

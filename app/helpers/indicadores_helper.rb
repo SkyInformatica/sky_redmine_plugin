@@ -14,17 +14,20 @@ module IndicadoresHelper
           render_card_valor(
             'Desenvolvimento',
             dados_graficos[:scope].where(equipe_responsavel_atual: SkyRedminePlugin::Constants::EquipeResponsavel::DEVEL).count,
-            'Total de tarefas em desenvolvimento'
+            'Total de tarefas aberta sob responsabilidade do desenvolvimento',
+            'Total de tarefas aberta sob responsabilidade do desenvolvimento no período selecionado'
           ),
           render_card_valor(
             'QS',
             dados_graficos[:scope].where(equipe_responsavel_atual: SkyRedminePlugin::Constants::EquipeResponsavel::QS).count,
-            'Total de tarefas em QS'
+            'Total de tarefas aberta sob responsabilidade da QS',
+            'Total de tarefas aberta sob responsabilidade da QS no período selecionado'
           ),
           render_card_valor(
             'Fechadas',
             dados_graficos[:scope].where(equipe_responsavel_atual: SkyRedminePlugin::Constants::EquipeResponsavel::FECHADA).count,
-            'Total de tarefas fechadas'
+            'Total de tarefas fechadas no período selecionado',
+            'Total de tarefas fechadas no período selecionado'
           )
         ]),
 
