@@ -36,7 +36,7 @@ class IndicadoresService
     end
 
     # Buscar as tarefas agrupadas por tipo e status usando os métodos da entidade
-    tarefas_por_tipo = scope.group(:tipo_tarefa).count
+    tarefas_por_tipo = scope.group(:tipo_primeira_tarefa_devel).count
     tarefas_por_status = scope.group(:status_ultima_tarefa_devel).count
 
     {
