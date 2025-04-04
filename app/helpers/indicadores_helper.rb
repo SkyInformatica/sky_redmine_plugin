@@ -21,7 +21,8 @@ module IndicadoresHelper
           'Em QS',
           dados_graficos[:scope].where(equipe_responsavel_atual: 'QS').count,
           'Total de tarefas em QS',
-          'Tarefas atualmente com a equipe de qualidade'
+          'Tarefas atualmente com a equipe de qualidade',
+          '50 % subindo'
         ),
         render_card_valor(
           'Fechadas',
