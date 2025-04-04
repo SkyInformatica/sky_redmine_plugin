@@ -4,20 +4,7 @@ document.addEventListener('DOMContentLoaded', function () {
         return;
     }
 
-    // Certifique-se de registrar os componentes necessários para o Chart.js 4.4.8
-    Chart.register(
-        Chart.controllers.bar,
-        Chart.controllers.line,
-        Chart.elements.BarElement,
-        Chart.elements.LineElement,
-        Chart.elements.PointElement,
-        Chart.elements.ArcElement, // Adicionado para gráficos de pizza
-        Chart.scales.CategoryScale,
-        Chart.scales.LinearScale,
-        Chart.plugins.Legend,
-        Chart.plugins.Title,
-        Chart.plugins.Tooltip
-    );
+    // Remova o registro manual dos componentes
 
     // Inicializa todos os tooltips
     document.querySelectorAll('.tooltip-container i').forEach(function (el) {
