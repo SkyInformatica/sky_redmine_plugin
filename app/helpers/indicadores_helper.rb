@@ -61,6 +61,7 @@ module IndicadoresHelper
     content_tag(:div, class: 'card-grafico') do
       [
         render_card_header(titulo, tooltip),
+        content_tag(:div, descricao, class: 'card-subtitulo'),
         content_tag(:div, class: 'card-body') do
           content_tag(:canvas, '', data: {
             grafico: {
@@ -68,8 +69,7 @@ module IndicadoresHelper
               dados: dados
             }.to_json
           })
-        end,
-        render_card_footer(descricao)
+        end
       ].join.html_safe
     end
   end

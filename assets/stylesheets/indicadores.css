@@ -99,6 +99,7 @@
   flex: 1 1 40%;
   min-width: 30%;
   max-width: 40%;
+  padding: 24px;
 }
 
 .sky-indicadores .card-grafico:hover,
@@ -106,48 +107,36 @@
   transform: translateY(-5px);
 }
 
-/* Header do card */
-.sky-indicadores .card-header {
+/* Header específico para card de gráfico */
+.sky-indicadores .card-grafico .card-header {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
   gap: 12px;
-  margin-bottom: 8px;
+  margin-bottom: 4px;
 }
 
-.sky-indicadores .card-titulo {
-  font-size: 14px;
-  font-weight: 400;
-  color: #666;
+.sky-indicadores .card-grafico .card-titulo {
+  font-size: 16px;
+  font-weight: 500;
+  color: #202020;
   margin: 0;
   line-height: 1.4;
 }
 
-/* Tooltip */
-.sky-indicadores .tooltip-container {
-  position: relative;
-  margin-top: 2px;
-}
-
-.sky-indicadores .tooltip-container i {
+.sky-indicadores .card-grafico .card-subtitulo {
+  font-size: 13px;
   color: #666;
-  font-size: 14px;
-  cursor: help;
+  margin: 0 0 20px 0;
+  line-height: 1.4;
+  font-weight: normal;
 }
 
-/* Body do card */
-.sky-indicadores .card-body {
-  position: relative;
-  text-align: left;
-}
-
+/* Body do card de gráfico */
 .sky-indicadores .card-grafico .card-body {
-  min-height: 200px;
-}
-
-.sky-indicadores .card-valor .card-body {
-  min-height: auto;
-  text-align: center;
+  position: relative;
+  min-height: 300px;
+  margin-top: 12px;
 }
 
 /* Estilos específicos para card de valor */
