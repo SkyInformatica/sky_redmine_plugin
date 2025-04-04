@@ -11,13 +11,7 @@ class IndicadoresService
       end_date = (Date.current - 1.month).end_of_month
     when "current_year"
       start_date = Date.current.beginning_of_year
-      end_date = Date.current.end_of_year
-    when 'ultima_semana'
-      start_date = 7.days.ago.beginning_of_day
-      end_date = Time.current.end_of_day
-    when 'ultimo_mes'
-      start_date = 30.days.ago.beginning_of_day
-      end_date = Time.current.end_of_day
+      end_date = Date.current.end_of_year    
     else
       start_date = nil
       end_date = nil
@@ -44,7 +38,7 @@ class IndicadoresService
     # Buscar as tarefas agrupadas por tipo e calcular tempo gasto
     tarefas_por_tipo = scope.group(:tipo_primeira_tarefa_devel).count
     tarefas_por_tipo_tempo_gasto = scope.group(:tipo_primeira_tarefa_devel)
-                                       .sum('COALESCE(tempo_gasto_devel, 0) + COALESCE(tempo_gasto_qs, 0)')
+                                       .sum('ROUND(CAST(COALESCE(tempo_gasto_devel, 0) + COALESCE(tempo_gasto_qs, 0) AS DECIMAL(10,1)), 1)')
 
     {
       scope: scope,
