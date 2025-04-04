@@ -39,6 +39,7 @@ module SkyRedminePlugin
     module Trackers
       RETORNO_TESTES = "Retorno de testes"
       DEFEITO = "Defeito"
+      CONVERSAO = "Conversão"
       FUNCIONALIDADE = "Funcionalidade"
       TESTE = "Teste"
       TESTE_ID = 9

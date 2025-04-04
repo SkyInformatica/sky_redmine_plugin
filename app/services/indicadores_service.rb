@@ -39,11 +39,19 @@ class IndicadoresService
     tarefas_por_tipo = scope.group(:tipo_primeira_tarefa_devel).count
     tarefas_por_tipo_tempo_gasto = scope.group(:tipo_primeira_tarefa_devel)
                                        .sum('ROUND(CAST(COALESCE(tempo_gasto_devel, 0) + COALESCE(tempo_gasto_qs, 0) AS DECIMAL(10,1)), 1)')
+    
+    # Buscar quantidade de tarefas por retorno de testes
+    tarefas_por_retorno_testes = scope.group(:qtd_retorno_testes).count
+
+    # Buscar quantidade de tarefas fechadas sem testes
+    tarefas_fechadas_sem_testes = scope.group(:tarefa_fechada_sem_testes).count
 
     {
       scope: scope,
       tarefas_por_tipo: tarefas_por_tipo,
-      tarefas_por_tipo_tempo_gasto: tarefas_por_tipo_tempo_gasto
+      tarefas_por_tipo_tempo_gasto: tarefas_por_tipo_tempo_gasto,
+      tarefas_por_retorno_testes: tarefas_por_retorno_testes,
+      tarefas_fechadas_sem_testes: tarefas_fechadas_sem_testes
     }
   end
 end 

@@ -32,17 +32,35 @@ module IndicadoresHelper
         render_cards_row([
           render_card_grafico(
             'Tarefas por Tipo', 
-            'doughnut', 
+            'bar', 
             dados_graficos[:tarefas_por_tipo],
             'Distribuição das tarefas por tipo no período selecionado',
             'Total de tarefas agrupadas por tipo'
           ),
           render_card_grafico(
             'Tempo gasto em horas por tipo', 
-            'doughnut', 
+            'pie', 
             dados_graficos[:tarefas_por_tipo_tempo_gasto],
-            'Distribuição do tempo gasto do desenvolvimento + QS em horas por tipo de tarefa no período selecionado',
-            'Soma do tempo gasto do desenvolvimento e QS'
+            'Total do tempo gasto em horas por tipo de tarefa',
+            'Total do tempo gasto do desenvolvimento + QS'
+          )
+        ]),
+
+        # Terceira linha - Cards de gráficos
+        render_cards_row([
+          render_card_grafico(
+            'Retornos de Testes', 
+            'bar', 
+            dados_graficos[:tarefas_por_retorno_testes],
+            'Quantidade de vezes que as tarefas retornaram dos testes',
+            'Total de tarefas agrupadas por quantidade de retornos de testes'
+          ),
+          render_card_grafico(
+            'Tarefas Fechadas sem Testes', 
+            'pie', 
+            dados_graficos[:tarefas_fechadas_sem_testes],
+            'Tarefas que foram fechadas antes de passar por testes',
+            'Total de tarefas fechadas sem passar por testes'
           )
         ])
       ])
