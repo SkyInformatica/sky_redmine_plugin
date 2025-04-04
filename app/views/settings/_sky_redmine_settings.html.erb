@@ -15,5 +15,17 @@
 <% end %>
 
 <%= button_to "Limpar todos indicadores", limpar_indicadores_path, method: :delete, data: { confirm: "Tem certeza que deseja limpar todos os indicadores armazenados?" }, class: "btn btn-danger" %>
-<%= button_to "Processar indicadores apartir de 2024", processar_indicadores_2024_path, method: :post, class: "button", onclick: "exibirProgresso('processar_indicadores_2024', 'Processando Indicadores a partir de 2024...'); return false;" %>
+<%= button_to "Processar indicadores apartir de 2024", processar_indicadores_2024_path, method: :post, class: "button", data: { type: "processar_indicadores_2024" } %>
+
+<%= javascript_tag do %>
+  document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('button[data-type="processar_indicadores_2024"]').forEach(function (button) {
+      button.addEventListener('click', function (event) {
+        event.preventDefault(); // Impede o envio automático do formulário
+        exibirProgresso('processar_indicadores_2024', 'Processando Indicadores a partir de 2024...');
+        setTimeout(() => button.closest('form').submit(), 500); // Aguarda 500ms antes de enviar o formulário
+      });
+    });
+  });
+<% end %>
 
