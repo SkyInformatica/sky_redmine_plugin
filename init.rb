@@ -11,6 +11,16 @@ require_relative "lib/sky_redmine_plugin/patches/issue_helper_patch"
 #require_relative "lib/sky_redmine_plugin/issue_helper_patch"
 require_relative "app/models/sky_redmine_indicadores"
 require_relative "lib/sky_redmine_plugin/hooks/model_hook"
+require_relative "lib/sky_redmine_plugin/hooks/settings_hook"
+
+Redmine::Plugin.register :sky_redmine_plugin do
+  name "Sky Redmine Plugin"
+  author "Seu Nome"
+  description "Descrição do plugin"
+  version "0.1.0"
+  url "http://exemplo.com"
+  author_url "http://exemplo.com"
+end
 
 Redmine::Plugin.register :sky_redmine_plugin do
   name "Sky Redmine plugin"
@@ -50,7 +60,6 @@ rescue LoadError => e
   Rails.logger.error "Erro ao carregar IssueHelperPatch: #{e.message}"
 end
 
-
 #begin
 #  require_dependency "issues_helper"
 #  IssuesHelper.prepend SkyRedminePlugin::IssueHelperPatch
@@ -58,7 +67,4 @@ end
 #  Rails.logger.error "Erro ao carregar IssueHelperPatch: #{e.message}"
 #end
 
-
 ActionView::Base.send :include, FluxoTarefasHelper
-
-
