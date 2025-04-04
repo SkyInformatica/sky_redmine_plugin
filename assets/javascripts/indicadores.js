@@ -11,6 +11,7 @@ document.addEventListener('DOMContentLoaded', function () {
         Chart.elements.BarElement,
         Chart.elements.LineElement,
         Chart.elements.PointElement,
+        Chart.elements.ArcElement, // Adicionado para gráficos de pizza
         Chart.scales.CategoryScale,
         Chart.scales.LinearScale,
         Chart.plugins.Legend,
