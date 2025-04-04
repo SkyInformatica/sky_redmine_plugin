@@ -41,8 +41,8 @@ module IndicadoresHelper
             'Tempo gasto em horas por tipo', 
             'pie', 
             dados_graficos[:tarefas_por_tipo_tempo_gasto],
-            'Total do tempo gasto em horas por tipo de tarefa',
-            'Total do tempo gasto do desenvolvimento + QS'
+            'Distribuição do tempo gasto do desenvolvimento + QS em horas por tipo de tarefa no período selecionado',
+            'Soma do tempo gasto do desenvolvimento e QS'
           )
         ])
       ])
