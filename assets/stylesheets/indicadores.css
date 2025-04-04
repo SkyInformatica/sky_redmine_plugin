@@ -209,4 +209,26 @@
   white-space: normal;  
   word-wrap: break-word;  
   max-width: 200px;  
+}
+
+/* Estilo do tooltip */
+.sky-indicadores [data-bs-toggle="tooltip"] {
+  position: relative;
+}
+
+/* Customização do tooltip do Bootstrap */
+.tooltip {
+  --bs-tooltip-bg: #1c1c1c;
+  --bs-tooltip-color: #ffffff;
+  --bs-tooltip-padding-x: 12px;
+  --bs-tooltip-padding-y: 8px;
+  --bs-tooltip-font-size: 14px;
+  --bs-tooltip-border-radius: 8px;
+  --bs-tooltip-opacity: 1;
+  filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1));
+}
+
+.tooltip .tooltip-inner {
+  max-width: 300px;
+  text-align: left;
 } 

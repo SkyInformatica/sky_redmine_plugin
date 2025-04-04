@@ -110,7 +110,13 @@ module IndicadoresHelper
     return nil unless texto.present?
 
     content_tag(:div, class: 'tooltip-container') do
-      content_tag(:i, '', class: 'fa fa-info-circle', title: texto)
+      content_tag(:i, '', class: 'fa fa-info-circle', 
+        data: { 
+          bs_toggle: 'tooltip',
+          bs_placement: 'top',
+          bs_title: texto
+        }
+      )
     end
   end
 end 
