@@ -1,19 +1,5 @@
-<% # <%= form_tag({ controller: "sky_redmine_settings", action: "update" }, method: :post) do %>  
+<%= form_tag({ controller: "sky_redmine_settings", action: "update" }, method: :post) do %>  
   <div class="box tabular settings">  
-    <p>  
-      <label>Atualização Automática</label>  
-      <%= check_box_tag "settings[atualizacao_automatica]", "1", @settings["atualizacao_automatica"] == "1" %>  
-      <em class="info">Habilitar atualização diária dos indicadores</em>  
-    </p>  
-
-    <div id="hora_execucao_container" style="<%= @settings["atualizacao_automatica"] != "1" ? "display: none;" : "" %>">  
-      <p>  
-        <label>Horário de Execução</label>  
-        <%= text_field_tag "settings[hora_execucao]", @settings["hora_execucao"], size: 10 %>  
-        <em class="info">Formato: HH:MM (exemplo: 18:00)</em>  
-      </p>  
-    </div>  
-
     <fieldset class="box">  
       <legend>Status do Processamento</legend>  
       <p>  
@@ -25,22 +11,9 @@
         <%= @settings["tarefas_processadas"] || 0 %>  
       </p>  
     </fieldset>  
-  </div>  
-
-  <%= submit_tag l(:button_save) %>  
-<% # end %>
+  </div>    
+<% end %>
 
 <%= button_to "Limpar todos indicadores", limpar_indicadores_path, method: :delete, data: { confirm: "Tem certeza que deseja limpar todos os indicadores armazenados?" }, class: "btn btn-danger" %>
 <%= button_to "Processar indicadores apartir de 2024", processar_indicadores_2024_path, method: :post, class: "button", onclick: "exibirProgresso('processar_indicadores_2024', 'Processando Indicadores a partir de 2024...'); return false;" %>
 
-<% # <%= javascript_tag do %>  
-  $(document).ready(function() {  
-    $('#settings_atualizacao_automatica').change(function() {  
-      if($(this).is(':checked')) {  
-        $('#hora_execucao_container').show();  
-      } else {  
-        $('#hora_execucao_container').hide();  
-      }  
-    });  
-  });  
-<% # end %>
