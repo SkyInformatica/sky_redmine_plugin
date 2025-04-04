@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', function () {
             data: {
                 labels: labels,
                 datasets: [{
-                    label: '',  // Label vazio para não mostrar 'undefined'
+                    label: ' ',  // Espaço em branco para não mostrar 'undefined'
                     data: values,
                     backgroundColor: [
                         'rgba(54, 162, 235, 0.8)',
@@ -40,13 +40,8 @@ document.addEventListener('DOMContentLoaded', function () {
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        display: false // Não mostra legenda por padrão
-                    },
-                    title: {
-                        display: false // Não mostra título
-                    }
+                legend: {
+                    display: false
                 }
             }
         };
@@ -54,7 +49,7 @@ document.addEventListener('DOMContentLoaded', function () {
         // Configurações específicas para gráficos
         if (config.tipo === 'pie') {
             // Mostra legenda apenas para gráficos de pizza
-            chartConfig.options.plugins.legend.display = true;
+            chartConfig.options.legend.display = true;
         } else if (config.tipo === 'bar') {
             // Configura o eixo Y para usar apenas números inteiros
             chartConfig.options.scales = {
