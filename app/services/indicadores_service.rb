@@ -57,6 +57,10 @@ class IndicadoresService
     tempo_medio_andamento_qs = scope_fechadas.average(:tempo_andamento_qs)
     tempo_medio_resolucao_qs = scope_fechadas.average(:tempo_resolucao_qs)
 
+    # Calcular tempos médios adicionais
+    tempo_medio_concluido_testes_versao_liberada = scope_fechadas.average(:tempo_concluido_testes_versao_liberada)
+    tempo_medio_fechamento_devel = scope_fechadas.average(:tempo_fechamento_devel)
+
     {
       scope: scope,
       tarefas_por_tipo: tarefas_por_tipo,
@@ -68,6 +72,8 @@ class IndicadoresService
       tempo_medio_para_encaminhar_qs: tempo_medio_para_encaminhar_qs,
       tempo_medio_andamento_qs: tempo_medio_andamento_qs,
       tempo_medio_resolucao_qs: tempo_medio_resolucao_qs,
+      tempo_medio_concluido_testes_versao_liberada: tempo_medio_concluido_testes_versao_liberada,
+      tempo_medio_fechamento_devel: tempo_medio_fechamento_devel,
     }
   end
 end

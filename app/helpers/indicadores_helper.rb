@@ -66,7 +66,7 @@ module IndicadoresHelper
           ),
         ]),
 
-        # Quarta linha - Card do gráfico de tempos médios
+        # Quarta linha - Cards dos gráficos de tempos médios
         render_cards_row([
           render_card_grafico(
             "Tempos médios do desenvolvimento",
@@ -87,6 +87,16 @@ module IndicadoresHelper
               "Concluir Testes" => dados_graficos[:tempo_medio_resolucao_qs].to_f || 0,
             },
             "Gráfico de barras com os tempos médios de início e conclusão de testes para tarefas fechadas",
+            "Tempos médios em dias para tarefas fechadas"
+          ),
+          render_card_grafico(
+            "Tempos médios de liberação versão",
+            "bar",
+            {
+              "Após testes" => dados_graficos[:tempo_medio_concluido_testes_versao_liberada].to_f || 0,
+              "Após concluir desenvolvimento" => dados_graficos[:tempo_medio_fechamento_devel].to_f || 0,
+            },
+            "Gráfico de barras com os tempos médios para liberar a versão. Após concluir o desenvolvimento inclui o tempo total entre a tarefa desenvolvimento ficar pronta, testar e liberar a versão",
             "Tempos médios em dias para tarefas fechadas"
           ),
         ]),
