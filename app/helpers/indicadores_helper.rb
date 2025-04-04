@@ -9,25 +9,26 @@ module IndicadoresHelper
           render_card_valor(
             'Total de tarefas',
             dados_graficos[:scope].count,
-            'Total de tarefas no período selecionado'
+            'Total de tarefas no período selecionado',
+            'Geral'
           ),
           render_card_valor(
             'Desenvolvimento',
             dados_graficos[:scope].where(equipe_responsavel_atual: SkyRedminePlugin::Constants::EquipeResponsavel::DEVEL).count,
-            'Total de tarefas aberta sob responsabilidade do desenvolvimento',
-            'Total de tarefas aberta sob responsabilidade do desenvolvimento no período selecionado'
+            'Total de tarefas abertas sob responsabilidade do desenvolvimento no período selecionado',
+            'Tarefas abertas sob responsabilidade do desenvolvimento'
           ),
           render_card_valor(
             'QS',
             dados_graficos[:scope].where(equipe_responsavel_atual: SkyRedminePlugin::Constants::EquipeResponsavel::QS).count,
-            'Total de tarefas aberta sob responsabilidade da QS',
-            'Total de tarefas aberta sob responsabilidade da QS no período selecionado'
+            'Total de tarefas aberta sob responsabilidade da QS no período selecionado', 
+            'Tarefas abertas sob responsabilidade do QS',
           ),
           render_card_valor(
             'Fechadas',
             dados_graficos[:scope].where(equipe_responsavel_atual: SkyRedminePlugin::Constants::EquipeResponsavel::FECHADA).count,
             'Total de tarefas fechadas no período selecionado',
-            'Total de tarefas fechadas no período selecionado'
+            'Tarefas fechadas no período selecionado',            
           )
         ]),
 
@@ -42,7 +43,7 @@ module IndicadoresHelper
           ),
           render_card_grafico(
             'Tempo gasto em horas por tipo', 
-            'pie', 
+            'doughnut', 
             dados_graficos[:tarefas_por_tipo_tempo_gasto],
             'Total do tempo gasto em horas por tipo de tarefa',
             'Total do tempo gasto do desenvolvimento + QS'
@@ -59,8 +60,8 @@ module IndicadoresHelper
             'Total de tarefas agrupadas por quantidade de retornos de testes'
           ),
           render_card_grafico(
-            'Tarefas Fechadas sem Testes', 
-            'pie', 
+            'Tarefas fechadas sem testes', 
+            'bar', 
             dados_graficos[:tarefas_fechadas_sem_testes],
             'Tarefas que foram fechadas antes de passar por testes',
             'Total de tarefas fechadas sem passar por testes'
