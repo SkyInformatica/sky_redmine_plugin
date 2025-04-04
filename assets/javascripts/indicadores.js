@@ -16,6 +16,7 @@ document.addEventListener('DOMContentLoaded', function () {
             data: {
                 labels: labels,
                 datasets: [{
+                    label: '',  // Label vazio para não mostrar 'undefined'
                     data: values,
                     backgroundColor: [
                         'rgba(54, 162, 235, 0.8)',
@@ -41,7 +42,10 @@ document.addEventListener('DOMContentLoaded', function () {
                 maintainAspectRatio: false,
                 plugins: {
                     legend: {
-                        display: false // Por padrão, não mostra legenda
+                        display: false // Não mostra legenda por padrão
+                    },
+                    title: {
+                        display: false // Não mostra título
                     }
                 }
             }
