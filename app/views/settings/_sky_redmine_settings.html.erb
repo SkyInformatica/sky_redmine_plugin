@@ -1,5 +1,5 @@
 <%= form_tag({ controller: "sky_redmine_settings", action: "update" }, method: :post) do %>  
-  <div class="box tabular settings">  
+  
     <fieldset class="box">  
       <legend>Status do Processamento</legend>  
       <p>  
@@ -11,7 +11,7 @@
         <%= @settings["tarefas_processadas"] || 0 %>  
       </p>  
     </fieldset>  
-  </div>    
+  
 <% end %>
 
 <%= button_to "Limpar todos indicadores", limpar_indicadores_path, method: :delete, data: { confirm: "Tem certeza que deseja limpar todos os indicadores armazenados?" }, class: "btn btn-danger" %>
