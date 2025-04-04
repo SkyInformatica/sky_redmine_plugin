@@ -9,7 +9,9 @@ module IndicadoresHelper
           render_card_valor(
             'Total de tarefas',
             dados_graficos[:scope].count,
-            'Total de tarefas no período selecionado'            
+            'Total de tarefas no período selecionado',
+            'Descricao',
+            'Tendencia'            
           ),
           render_card_valor(
             'Desenvolvimento',
