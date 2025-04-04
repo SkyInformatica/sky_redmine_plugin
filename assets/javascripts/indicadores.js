@@ -1,18 +1,23 @@
-// Certifique-se de registrar os componentes necessários para o Chart.js 4.4.8
-Chart.register(
-    Chart.controllers.bar,
-    Chart.controllers.line,
-    Chart.elements.BarElement,
-    Chart.elements.LineElement,
-    Chart.elements.PointElement,
-    Chart.scales.CategoryScale,
-    Chart.scales.LinearScale,
-    Chart.plugins.Legend,
-    Chart.plugins.Title,
-    Chart.plugins.Tooltip
-);
-
 document.addEventListener('DOMContentLoaded', function () {
+    if (typeof Chart === 'undefined') {
+        console.error('Chart.js não foi carregado corretamente.');
+        return;
+    }
+
+    // Certifique-se de registrar os componentes necessários para o Chart.js 4.4.8
+    Chart.register(
+        Chart.controllers.bar,
+        Chart.controllers.line,
+        Chart.elements.BarElement,
+        Chart.elements.LineElement,
+        Chart.elements.PointElement,
+        Chart.scales.CategoryScale,
+        Chart.scales.LinearScale,
+        Chart.plugins.Legend,
+        Chart.plugins.Title,
+        Chart.plugins.Tooltip
+    );
+
     // Inicializa todos os tooltips
     document.querySelectorAll('.tooltip-container i').forEach(function (el) {
         new bootstrap.Tooltip(el);
