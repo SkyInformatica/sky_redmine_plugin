@@ -69,11 +69,29 @@ module IndicadoresHelper
         # Quarta linha - Card do gráfico de tempos médios
         render_cards_row([
           render_card_grafico(
-            "Tempos Médios (Fechadas)",
+            "Tempos médios do desenvolvimento",
             "bar",
-            grafico_tempos_medios(dados_graficos),
-            "Gráfico de barras com os tempos médios de andamento, resolução e encaminhamento para tarefas fechadas",
-            "Tempos médios em horas para tarefas fechadas"
+            {
+              "Andamento" => dados_graficos[:tempo_medio_andamento_devel].to_f || 0,
+              "Resolução" => dados_graficos[:tempo_medio_resolucao_devel].to_f || 0,
+              "Encaminhar QS" => dados_graficos[:tempo_medio_para_encaminhar_qs].to_f || 0,
+            },
+            "Gráfico de barras com os tempos médios de andamento, resolução e encaminhamento ao QS para tarefas fechadas",
+            "Tempos médios em dias para tarefas fechadas"
+          ),
+        ]),
+
+        # Quinta linha - Card do gráfico de tempos médios do QS
+        render_cards_row([
+          render_card_grafico(
+            "Tempos médios do QS",
+            "bar",
+            {
+              "Iniciar Testes" => dados_graficos[:tempo_medio_andamento_qs].to_f || 0,
+              "Concluir Testes" => dados_graficos[:tempo_medio_resolucao_qs].to_f || 0,
+            },
+            "Gráfico de barras com os tempos médios de início e conclusão de testes para tarefas fechadas",
+            "Tempos médios em dias para tarefas fechadas"
           ),
         ]),
       ])
@@ -150,11 +168,29 @@ module IndicadoresHelper
     end
   end
 
-  def grafico_tempos_medios(dados)
-    {
-      "Tempo Médio Andamento (Devel)" => dados[:tempo_medio_andamento_devel].to_f || 0,
-      "Tempo Médio Resolução (Devel)" => dados[:tempo_medio_resolucao_devel].to_f || 0,
-      "Tempo Médio Encaminhamento (QS)" => dados[:tempo_medio_para_encaminhar_qs].to_f || 0,
+  def gerar_grafico_tempos_medios_qs(indicadores)
+    data = {
+      labels: ["Iniciar Testes", "Concluir Testes"],
+      datasets: [
+        {
+          label: "Tempos Médios do QS (dias)",
+          backgroundColor: ["#36A2EB", "#FF6384"],
+          data: [
+            indicadores.tempo_medio_andamento_qs || 0,
+            indicadores.tempo_medio_resolucao_qs || 0,
+          ],
+        },
+      ],
     }
+
+    options = {
+      responsive: true,
+      plugins: {
+        legend: { position: "top" },
+        tooltip: { enabled: true },
+      },
+    }
+
+    render_chart("bar", data, options)
   end
 end

@@ -53,6 +53,10 @@ class IndicadoresService
     tempo_medio_resolucao_devel = scope_fechadas.average(:tempo_resolucao_devel)
     tempo_medio_para_encaminhar_qs = scope_fechadas.average(:tempo_para_encaminhar_qs)
 
+    # Calcular tempos médios do QS
+    tempo_medio_andamento_qs = scope_fechadas.average(:tempo_andamento_qs)
+    tempo_medio_resolucao_qs = scope_fechadas.average(:tempo_resolucao_qs)
+
     {
       scope: scope,
       tarefas_por_tipo: tarefas_por_tipo,
@@ -62,6 +66,8 @@ class IndicadoresService
       tempo_medio_andamento_devel: tempo_medio_andamento_devel,
       tempo_medio_resolucao_devel: tempo_medio_resolucao_devel,
       tempo_medio_para_encaminhar_qs: tempo_medio_para_encaminhar_qs,
+      tempo_medio_andamento_qs: tempo_medio_andamento_qs,
+      tempo_medio_resolucao_qs: tempo_medio_resolucao_qs,
     }
   end
 end

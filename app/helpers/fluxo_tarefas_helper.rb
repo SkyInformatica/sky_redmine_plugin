@@ -4,17 +4,17 @@ module FluxoTarefasHelper
 
   def render_fluxo_tarefas_html(issue)
     tarefas_relacionadas = SkyRedminePlugin::TarefasRelacionadas.obter_lista_tarefas_relacionadas(issue)
-    
+
     # Obter indicadores da primeira tarefa
     indicadores = nil
     primeira_tarefa = tarefas_relacionadas.first
     if primeira_tarefa
       indicadores = SkyRedmineIndicadores.find_by(primeira_tarefa_devel_id: primeira_tarefa.id)
     end
-    
+
     # Gerar HTML dos cards de indicadores
     cards_html = ""
-    
+
     # Adicionar título e link para processar indicadores
     if primeira_tarefa
       cards_html << "<div class='description'>"
@@ -22,22 +22,22 @@ module FluxoTarefasHelper
       cards_html << "<p>"
       cards_html << "<strong>Indicadores</strong>"
       cards_html << " ("
-      cards_html << link_to("Processar", 
-                           processar_indicadores_tarefa_path(primeira_tarefa),
-                           method: :post)
+      cards_html << link_to("Processar",
+                            processar_indicadores_tarefa_path(primeira_tarefa),
+                            method: :post)
       cards_html << ")"
       cards_html << "</p>"
     end
-    
+
     # Adicionar cards se houver indicadores
     cards_html << (indicadores ? render_cards_indicadores(indicadores, tarefas_relacionadas) : "")
-    
+
     # Fechar div description se tiver primeira tarefa
     cards_html << "</div>" if primeira_tarefa
-    
+
     # Gerar HTML do fluxo de tarefas
     texto_fluxo = gerar_texto_fluxo_html(tarefas_relacionadas, issue.id)
-    
+
     # Combinar os dois HTMLs
     (cards_html + texto_fluxo).html_safe
   end
@@ -285,22 +285,24 @@ module FluxoTarefasHelper
     html = []
     html << css
     html << "<div class='indicadores-container'>"
-    
+
     # Informações gerais
     html << "<div class='indicadores-cards'>"
-    html << render_card("Responsável atual", indicadores.equipe_responsavel_atual, "","Equipe responsável pela tarefa")
-    
+    html << render_card("Responsável atual", indicadores.equipe_responsavel_atual, "", "Equipe responsável pela tarefa")
+
     # Card de retorno de testes
     html << render_card(
       "Retorno de testes",
       indicadores.qtd_retorno_testes || 0, "",
-      "Quantidade de vezes que a tarefa retornou para desenvolvimento")
+      "Quantidade de vezes que a tarefa retornou para desenvolvimento"
+    )
 
     # Card de versão liberada antes dos testes
     html << render_card(
       "Versão liberada antes dos testes",
       indicadores.tarefa_fechada_sem_testes || "NAO", "",
-      "A versão foi liberada antes da conclusão dos testes")
+      "A versão foi liberada antes da conclusão dos testes"
+    )
 
     html << "</div>"
 
@@ -308,37 +310,37 @@ module FluxoTarefasHelper
     html << "<div class='indicadores-grupo'>"
     tempo_gasto_devel = format("%.2f", indicadores.tempo_gasto_devel.to_f)
     tempo_total_devel = if indicadores.tempo_total_devel
-      "#{indicadores.tempo_total_devel} #{indicadores.tempo_total_devel == 1 ? 'dia' : 'dias'}"
-    elsif indicadores.tempo_andamento_devel
-      "em desenvolvimento"
-    else
-      "desenvolvimento não iniciado"
-    end
+        "#{indicadores.tempo_total_devel} #{indicadores.tempo_total_devel == 1 ? "dia" : "dias"}"
+      elsif indicadores.tempo_andamento_devel
+        "em desenvolvimento"
+      else
+        "desenvolvimento não iniciado"
+      end
     html << "<div class='indicadores-titulo'>Desenvolvimento - Tempo gasto total: #{tempo_gasto_devel}h - #{tempo_total_devel}</div>"
     html << "<div class='indicadores-cards'>"
-    
+
     # Para iniciar desenvolvimento
     data_criacao = indicadores.data_criacao_ou_atendimento_primeira_tarefa_devel&.strftime("%d/%m/%Y")
     data_andamento = indicadores.data_andamento_primeira_tarefa_devel&.strftime("%d/%m/%Y")
     detalhe_andamento = data_criacao && data_andamento ? "De #{data_criacao} até #{data_andamento}" : nil
     valor_andamento = formatar_dias(indicadores.tempo_andamento_devel)
-    html << render_card("Iniciar desenvolvimento", 
-                       valor_andamento, 
-                       detalhe_andamento,
-                       "Tempo entre a data do atendimento/criação da tarefa até ele ser iniciada o desenvolvimento colocando a situação da tarefa em andamento")
-    
+    html << render_card("Iniciar desenvolvimento",
+                        valor_andamento,
+                        detalhe_andamento,
+                        "Tempo entre a data do atendimento/criação da tarefa até ele ser iniciada o desenvolvimento colocando a situação da tarefa em andamento")
+
     # Para concluir desenvolvimento
     data_andamento = indicadores.data_andamento_primeira_tarefa_devel&.strftime("%d/%m/%Y")
     data_resolvida = indicadores.data_resolvida_ultima_tarefa_devel&.strftime("%d/%m/%Y")
     detalhe_resolucao = data_andamento && data_resolvida ? "De #{data_andamento} até #{data_resolvida}" : nil
     valor_resolucao = formatar_dias(indicadores.tempo_resolucao_devel)
-    html << render_card("Concluir desenvolvimento", 
+    html << render_card("Concluir desenvolvimento",
                         valor_resolucao, detalhe_resolucao,
-                       "Tempo entre a tarefa de desenvolvimento ser colocada em andamento e sua situação ser resolvida (considerando o todos os ciclos incluindo os retornos de testes)")
-    
+                        "Tempo entre a tarefa de desenvolvimento ser colocada em andamento e sua situação ser resolvida (considerando o todos os ciclos incluindo os retornos de testes)")
+
     # Para encaminhar QS
     ciclos_devel = SkyRedminePlugin::TarefasRelacionadas.separar_ciclos_devel(tarefas_relacionadas)
-    primeiro_ciclo_devel = ciclos_devel.first    
+    primeiro_ciclo_devel = ciclos_devel.first
     data_resolvida = primeiro_ciclo_devel.last.data_resolvida&.strftime("%d/%m/%Y")
     data_criacao_qs = indicadores.data_criacao_primeira_tarefa_qs&.strftime("%d/%m/%Y")
     detalhe_encaminhar = data_resolvida && data_criacao_qs ? "De #{data_resolvida} até #{data_criacao_qs}" : nil
@@ -346,7 +348,6 @@ module FluxoTarefasHelper
     html << render_card("Encaminhar QS", valor_encaminhar, detalhe_encaminhar,
                         "Tempo entre tarefa de desenvolvimento estar resolvida e a tarefa de QS ser encaminhada (considerando somente o primeiro ciclo de desenvolvimento)")
 
-    
     html << "</div>"
     html << "</div>"
 
@@ -354,17 +355,17 @@ module FluxoTarefasHelper
     html << "<div class='indicadores-grupo'>"
     tempo_gasto_qs = format("%.2f", indicadores.tempo_gasto_qs.to_f)
     tempo_total_testes = if indicadores.tempo_total_testes
-      "#{indicadores.tempo_total_testes} #{indicadores.tempo_total_testes == 1 ? 'dia' : 'dias'}"
-    elsif indicadores.tempo_andamento_qs
-      "em testes"
-    elsif indicadores.data_criacao_primeira_tarefa_qs
-      "testes ainda não iniciados"
-    else
-      "testes ainda não encaminhados"
-    end
+        "#{indicadores.tempo_total_testes} #{indicadores.tempo_total_testes == 1 ? "dia" : "dias"}"
+      elsif indicadores.tempo_andamento_qs
+        "em testes"
+      elsif indicadores.data_criacao_primeira_tarefa_qs
+        "testes ainda não iniciados"
+      else
+        "testes ainda não encaminhados"
+      end
     html << "<div class='indicadores-titulo'>QS - Tempo gasto total: #{tempo_gasto_qs}h - #{tempo_total_testes}</div>"
     html << "<div class='indicadores-cards'>"
-    
+
     # Para iniciar testes
     data_criacao_qs = indicadores.data_criacao_primeira_tarefa_qs&.strftime("%d/%m/%Y")
     data_andamento_qs = indicadores.data_andamento_primeira_tarefa_qs&.strftime("%d/%m/%Y")
@@ -372,7 +373,7 @@ module FluxoTarefasHelper
     valor_andamento_qs = formatar_dias(indicadores.tempo_andamento_qs)
     html << render_card("Iniciar testes", valor_andamento_qs, detalhe_andamento_qs,
                         "Tempo entre a tarefa de QS ser encaminhada (criada) e ser colocada em andamento")
-    
+
     # Para concluir testes
     data_andamento_qs = indicadores.data_andamento_primeira_tarefa_qs&.strftime("%d/%m/%Y")
     data_resolvida_qs = indicadores.data_resolvida_ultima_tarefa_qs&.strftime("%d/%m/%Y")
@@ -380,7 +381,7 @@ module FluxoTarefasHelper
     valor_resolucao_qs = formatar_dias(indicadores.tempo_resolucao_qs)
     html << render_card("Concluir testes", valor_resolucao_qs, detalhe_resolucao_qs,
                         "Tempo entre a tarefa de QS ser colocada em andamento e o seu teste ser concluído (TESTE OK) (considerando o todos os ciclos incluindo os retornos de testes)")
-    
+
     # Para fechar tarefa
     data_resolvida_qs = indicadores.data_resolvida_ultima_tarefa_qs&.strftime("%d/%m/%Y")
     data_fechada_qs = indicadores.data_fechamento_ultima_tarefa_qs&.strftime("%d/%m/%Y")
@@ -388,7 +389,7 @@ module FluxoTarefasHelper
     valor_fechamento_qs = formatar_dias(indicadores.tempo_fechamento_qs)
     html << render_card("Fechar testes", valor_fechamento_qs, detalhe_fechamento_qs,
                         "Tempo entre a tarefa de QS ser concluída (TESTE OK) e ser fechada (TESTE OK - FECHADA)")
-    
+
     html << "</div>"
     html << "</div>"
 
@@ -396,16 +397,15 @@ module FluxoTarefasHelper
     html << "<div class='indicadores-grupo'>"
     tempo_gasto_devel = format("%.2f", indicadores.tempo_gasto_devel.to_f)
     tempo_total_liberar_versao = if indicadores.tempo_total_liberar_versao
-      "#{indicadores.tempo_total_liberar_versao} #{indicadores.tempo_total_liberar_versao == 1 ? 'dia' : 'dias'}"
-    elsif indicadores.tempo_andamento_devel
-      "em desenvolvimento"
-    else
-      "desenvolvimento não iniciado"
-    end
+        "#{indicadores.tempo_total_liberar_versao} #{indicadores.tempo_total_liberar_versao == 1 ? "dia" : "dias"}"
+      elsif indicadores.tempo_andamento_devel
+        "em desenvolvimento"
+      else
+        "desenvolvimento não iniciado"
+      end
     html << "<div class='indicadores-titulo'>Liberar versão - Tempo total: #{tempo_total_liberar_versao}</div>"
     html << "<div class='indicadores-cards'>"
 
-   
     # Tempo entre conclusão dos testes e liberação da versão
     data_resolvida_qs = indicadores.data_resolvida_ultima_tarefa_qs&.strftime("%d/%m/%Y")
     data_fechada_devel = indicadores.data_fechamento_ultima_tarefa_devel&.strftime("%d/%m/%Y")
@@ -420,8 +420,8 @@ module FluxoTarefasHelper
     detalhe_fechamento = data_resolvida && data_fechada ? "De #{data_resolvida} até #{data_fechada}" : nil
     valor_fechamento = formatar_dias(indicadores.tempo_fechamento_devel)
     html << render_card("Liberar versão após concluir o desenvolvimento", valor_fechamento, detalhe_fechamento,
-                        "Tempo entre tarefa de desenvolvimento estar resolvida e ser fechada (entre estes tempos existe o tempo das tarefas do QS)") 
-    
+                        "Tempo entre tarefa de desenvolvimento estar resolvida e ser fechada (entre estes tempos existe o tempo das tarefas do QS)")
+
     html << "</div>"
     html << "</div>"
 
@@ -432,26 +432,26 @@ module FluxoTarefasHelper
   def render_card(caption, valor, detalhe = nil, tooltip = nil)
     html = "<div class='indicador-card'>
       <div class='indicador-caption'>"
-    
+
     html << caption
-    
+
     if tooltip
       html << " <span class='info-icon' title='#{tooltip}'>&#9432;</span>"
     end
-    
+
     html << "</div>
-      <div class='indicador-valor'>#{valor || '-'}</div>"
-    
+      <div class='indicador-valor'>#{valor || "-"}</div>"
+
     if detalhe
       html << "<div class='indicador-detalhe'>#{detalhe}</div>"
     end
-    
+
     html << "</div>"
     html
   end
 
   def formatar_dias(valor)
     return "-" unless valor
-    "#{valor} #{valor == 1 ? 'dia' : 'dias'}"
+    "#{valor} #{valor == 1 ? "dia" : "dias"}"
   end
 end
