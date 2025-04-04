@@ -1,18 +1,14 @@
-<%= form_tag({ controller: "sky_redmine_settings", action: "update" }, method: :post) do %>  
-  
-    <fieldset class="box">  
-      <legend>Status do Processamento</legend>  
-      <p>  
-        <label>Última Execução</label>  
-        <%= @ultima_execucao ? format_time(@ultima_execucao) : "Nunca executado" %>  
-      </p>  
-      <p>  
-        <label>Tarefas Processadas</label>  
-        <%= @tarefas_processadas || 0 %>  
-      </p>  
-    </fieldset>  
-  
-<% end %>
+<fieldset class="box">  
+  <legend>Status do Processamento</legend>  
+  <p>  
+    <label>Última Execução</label>  
+    <%= @ultima_execucao ? format_time(@ultima_execucao) : "Nunca executado" %>  
+  </p>  
+  <p>  
+    <label>Tarefas Processadas</label>  
+    <%= @tarefas_processadas || 0 %>  
+  </p>  
+</fieldset>  
 
 <%= button_to "Limpar todos indicadores", limpar_indicadores_path, method: :delete, data: { confirm: "Tem certeza que deseja limpar todos os indicadores armazenados?" }, class: "btn btn-danger" %>
 <%= button_to "Processar indicadores apartir de 2024", processar_indicadores_2024_path, method: :post, class: "button" %>
