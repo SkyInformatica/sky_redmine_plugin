@@ -9,23 +9,22 @@ module IndicadoresHelper
           render_card_valor(
             'Total de tarefas',
             dados_graficos[:scope].count,
-            'Total de tarefas no período selecionado',
-            'Descricao', 'Tendencia'                       
+            'Total de tarefas no período selecionado'
           ),
           render_card_valor(
             'Desenvolvimento',
             dados_graficos[:scope].where(equipe_responsavel_atual: SkyRedminePlugin::Constants::EquipeResponsavel::DEVEL).count,
-            'Total de tarefas com a equipe de desenvolvimento'
+            'Total de tarefas em desenvolvimento'
           ),
           render_card_valor(
             'QS',
             dados_graficos[:scope].where(equipe_responsavel_atual: SkyRedminePlugin::Constants::EquipeResponsavel::QS).count,
-            'Total de tarefas com a equipe QS'            
+            'Total de tarefas em QS'
           ),
           render_card_valor(
             'Fechadas',
             dados_graficos[:scope].where(equipe_responsavel_atual: SkyRedminePlugin::Constants::EquipeResponsavel::FECHADA).count,
-            'Total de tarefas com versão liberada'
+            'Total de tarefas fechadas'
           )
         ]),
 
@@ -39,11 +38,11 @@ module IndicadoresHelper
             'Total de tarefas agrupadas por tipo'
           ),
           render_card_grafico(
-            'Tarefas por Status', 
-            'bar', 
-            dados_graficos[:tarefas_por_status],
-            'Distribuição das tarefas por status no período selecionado',
-            'Total de tarefas agrupadas por status'
+            'Tempo gasto em horas por tipo', 
+            'pie', 
+            dados_graficos[:tarefas_por_tipo_tempo_gasto],
+            'Total do tempo gasto em horas por tipo de tarefa',
+            'Total do tempo gasto do desenvolvimento + QS'
           )
         ])
       ])

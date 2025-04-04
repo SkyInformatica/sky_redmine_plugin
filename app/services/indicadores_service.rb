@@ -12,6 +12,12 @@ class IndicadoresService
     when "current_year"
       start_date = Date.current.beginning_of_year
       end_date = Date.current.end_of_year
+    when 'ultima_semana'
+      start_date = 7.days.ago.beginning_of_day
+      end_date = Time.current.end_of_day
+    when 'ultimo_mes'
+      start_date = 30.days.ago.beginning_of_day
+      end_date = Time.current.end_of_day
     else
       start_date = nil
       end_date = nil
@@ -35,14 +41,15 @@ class IndicadoresService
       scope = scope.where(equipe_responsavel_atual: SkyRedminePlugin::Constants::EquipeResponsavel::FECHADA)
     end
 
-    # Buscar as tarefas agrupadas por tipo e status usando os métodos da entidade
+    # Buscar as tarefas agrupadas por tipo e calcular tempo gasto
     tarefas_por_tipo = scope.group(:tipo_primeira_tarefa_devel).count
-    tarefas_por_status = scope.group(:status_ultima_tarefa_devel).count
+    tarefas_por_tipo_tempo_gasto = scope.group(:tipo_primeira_tarefa_devel)
+                                       .sum('COALESCE(tempo_gasto_devel, 0) + COALESCE(tempo_gasto_qs, 0)')
 
     {
       scope: scope,
       tarefas_por_tipo: tarefas_por_tipo,
-      tarefas_por_status: tarefas_por_status
+      tarefas_por_tipo_tempo_gasto: tarefas_por_tipo_tempo_gasto
     }
   end
 end 
