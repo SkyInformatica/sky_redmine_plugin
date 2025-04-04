@@ -161,17 +161,17 @@
 
 /* Estilos específicos para card de valor */
 .sky-indicadores .card-valor .valor-principal {
-  font-size: 28px;
+  font-size: 36px;
   font-weight: 600;
   color: #202020;
-  margin: 12px 0;
-  line-height: 1.2;
+  margin: 16px 0;
+  line-height: 1;
 }
 
 .sky-indicadores .card-valor .valor-tendencia {
   font-size: 13px;
   color: #202020;
-  margin: 12px 0;
+  margin: 8px 0 4px 0;
   line-height: 1.4;
 }
 
@@ -185,7 +185,7 @@
 
 /* Footer do card */
 .sky-indicadores .card-footer {
-  margin-top: 12px;
+  margin-top: 4px;
   padding-top: 0;
   border-top: none;
 }
