@@ -4,8 +4,6 @@ document.addEventListener('DOMContentLoaded', function () {
         return;
     }
 
-    // Remova o registro manual dos componentes
-
     // Inicializa todos os tooltips
     document.querySelectorAll('.tooltip-container i').forEach(function (el) {
         new bootstrap.Tooltip(el);

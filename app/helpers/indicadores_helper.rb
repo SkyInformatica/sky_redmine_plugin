@@ -79,10 +79,6 @@ module IndicadoresHelper
             "Gráfico de barras com os tempos médios de andamento, resolução e encaminhamento ao QS para tarefas fechadas",
             "Tempos médios em dias para tarefas fechadas"
           ),
-        ]),
-
-        # Quinta linha - Card do gráfico de tempos médios do QS
-        render_cards_row([
           render_card_grafico(
             "Tempos médios do QS",
             "bar",
