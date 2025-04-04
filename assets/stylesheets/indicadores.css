@@ -216,25 +216,27 @@
   position: relative;
 }
 
-/* Customização do tooltip do Bootstrap */
+/* Tooltip personalizado */
 .tooltip {
-  --bs-tooltip-bg: #202020;
-  --bs-tooltip-color: #ffffff;
-  --bs-tooltip-padding-x: 16px;
-  --bs-tooltip-padding-y: 10px;
-  --bs-tooltip-font-size: 13px;
-  --bs-tooltip-border-radius: 12px;
-  --bs-tooltip-opacity: 1;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  position: absolute;
+  z-index: 1000;
 }
 
-.tooltip .tooltip-inner {
-  max-width: 300px;
-  text-align: left;
-  font-weight: 400;
-  line-height: 1.4;
+.tooltip .tooltip-inner,
+.tooltip-inner {
+  background-color: #202020 !important;
+  color: white !important;
+  padding: 10px 16px !important;
+  font-size: 13px !important;
+  border-radius: 12px !important;
+  max-width: 300px !important;
+  text-align: left !important;
+  font-weight: 400 !important;
+  line-height: 1.4 !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
 }
 
-.tooltip .tooltip-arrow {
-  display: none;
+.tooltip .tooltip-arrow,
+.tooltip-arrow {
+  display: none !important;
 } 
