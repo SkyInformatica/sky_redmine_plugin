@@ -91,6 +91,7 @@
 .sky-indicadores .card-valor {
   flex: 0 1 auto;
   min-width: 150px;
+  padding: 24px;
 }
 
 /* Cards de gráfico ocupam mais espaço */
@@ -109,22 +110,23 @@
 .sky-indicadores .card-header {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
   gap: 12px;
-  margin-bottom: 16px;
+  margin-bottom: 8px;
 }
 
 .sky-indicadores .card-titulo {
-  font-size: 16px;
-  font-weight: 600;
-  color: #333;
+  font-size: 14px;
+  font-weight: 400;
+  color: #666;
   margin: 0;
-  white-space: nowrap;
+  line-height: 1.4;
 }
 
 /* Tooltip */
 .sky-indicadores .tooltip-container {
   position: relative;
+  margin-top: 2px;
 }
 
 .sky-indicadores .tooltip-container i {
@@ -136,6 +138,7 @@
 /* Body do card */
 .sky-indicadores .card-body {
   position: relative;
+  text-align: left;
 }
 
 .sky-indicadores .card-grafico .card-body {
@@ -149,15 +152,18 @@
 
 /* Estilos específicos para card de valor */
 .sky-indicadores .card-valor .valor-principal {
-  font-size: 24px;
-  font-weight: bold;
-  color: #333;
-  margin: 10px 0;
+  font-size: 28px;
+  font-weight: 600;
+  color: #202020;
+  margin: 12px 0;
+  line-height: 1.2;
 }
 
 .sky-indicadores .card-valor .valor-tendencia {
-  font-size: 12px;
-  color: #666;
+  font-size: 13px;
+  color: #202020;
+  margin: 12px 0;
+  line-height: 1.4;
 }
 
 .sky-indicadores .valor-tendencia.positivo {
@@ -171,17 +177,16 @@
 /* Footer do card */
 .sky-indicadores .card-footer {
   margin-top: 12px;
-  padding-top: 12px;
-  border-top: 1px solid rgba(0, 0, 0, 0.1);
+  padding-top: 0;
+  border-top: none;
 }
 
 .sky-indicadores .card-descricao {
-  font-size: 11px;
+  font-size: 13px;
   color: #666;
-  font-style: italic;
+  font-style: normal;
   margin: 0;
-  word-wrap: break-word;
-  overflow-wrap: break-word;
+  line-height: 1.4;
 }
 
 /* Responsividade */
