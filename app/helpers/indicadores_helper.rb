@@ -3,49 +3,63 @@ module IndicadoresHelper
 
   def render_graficos_container(dados_graficos)
     content_tag(:div, class: 'graficos-container') do
-      [
-        # Cards de valores
-        render_card_valor(
-          'Total de tarefas',
-          dados_graficos[:scope].count, 
-          'Total de tarefas processadas'         
-        ),
-        render_card_valor(
-          'Desenvolvimento',
-          dados_graficos[:scope].where(equipe_responsavel_atual: 'DEVEL').count,
-          'Total de tarefas no desenvolvimento'
-        ),
-        render_card_valor(
-          'QS',
-          dados_graficos[:scope].where(equipe_responsavel_atual: 'QS').count,
-          'Total de tarefas no QS'
-                    
-        ),
-        render_card_valor(
-          'Fechadas',
-          dados_graficos[:scope].where(equipe_responsavel_atual: 'FECHADA').count,
-          'Total de tarefas fechadas'
-        ),
-        # Gráficos existentes
-        render_card_grafico(
-          'Tarefas por Tipo', 
-          'bar', 
-          dados_graficos[:tarefas_por_tipo],
-          'Distribuição das tarefas por tipo no período selecionado',
-          'Total de tarefas agrupadas por tipo'
-        ),
-        render_card_grafico(
-          'Tarefas por Status', 
-          'bar', 
-          dados_graficos[:tarefas_por_status],
-          'Distribuição das tarefas por status no período selecionado',
-          'Total de tarefas agrupadas por status'
-        )
-      ].join.html_safe
+      safe_join([
+        # Primeira linha - Cards de valores
+        render_cards_row([
+          render_card_valor(
+            'Total de Tarefas',
+            dados_graficos[:scope].count,
+            'Total de tarefas no período selecionado',
+            'Todas as tarefas registradas'
+          ),
+          render_card_valor(
+            'Em Desenvolvimento',
+            dados_graficos[:scope].where(equipe_responsavel_atual: SkyRedminePlugin::Constants::EquipeResponsavel::DEVEL).count,
+            'Total de tarefas em desenvolvimento',
+            'Tarefas atualmente com a equipe de desenvolvimento'
+          ),
+          render_card_valor(
+            'Em QS',
+            dados_graficos[:scope].where(equipe_responsavel_atual: SkyRedminePlugin::Constants::EquipeResponsavel::QS).count,
+            'Total de tarefas em QS',
+            'Tarefas atualmente com a equipe de qualidade'
+          ),
+          render_card_valor(
+            'Fechadas',
+            dados_graficos[:scope].where(equipe_responsavel_atual: SkyRedminePlugin::Constants::EquipeResponsavel::FECHADA).count,
+            'Total de tarefas fechadas',
+            'Tarefas que foram concluídas'
+          )
+        ]),
+
+        # Segunda linha - Cards de gráficos
+        render_cards_row([
+          render_card_grafico(
+            'Tarefas por Tipo', 
+            'bar', 
+            dados_graficos[:tarefas_por_tipo],
+            'Distribuição das tarefas por tipo no período selecionado',
+            'Total de tarefas agrupadas por tipo'
+          ),
+          render_card_grafico(
+            'Tarefas por Status', 
+            'bar', 
+            dados_graficos[:tarefas_por_status],
+            'Distribuição das tarefas por status no período selecionado',
+            'Total de tarefas agrupadas por status'
+          )
+        ])
+      ])
     end
   end
 
   private
+
+  def render_cards_row(cards)
+    content_tag(:div, class: 'cards-row') do
+      safe_join(cards)
+    end
+  end
 
   def render_card_grafico(titulo, tipo_grafico, dados, tooltip, descricao = nil)
     content_tag(:div, class: 'card-grafico') do

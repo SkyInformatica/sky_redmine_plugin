@@ -64,9 +64,16 @@
 
 .sky-indicadores .graficos-container {
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column;
   gap: 24px;
   padding: 24px;
+}
+
+.sky-indicadores .cards-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  width: 100%;
 }
 
 /* Card base com glass morphism */
@@ -90,7 +97,6 @@
 .sky-indicadores .card-valor {
   flex: 0 1 auto;
   min-width: 150px;
-  padding: 15px;
 }
 
 .sky-indicadores .card-grafico:hover,
