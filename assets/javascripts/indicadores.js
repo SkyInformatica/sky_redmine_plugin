@@ -41,17 +41,17 @@ document.addEventListener('DOMContentLoaded', function () {
                 maintainAspectRatio: false,
                 plugins: {
                     legend: {
-                        display: config.tipo === 'pie' // Mostra legenda apenas para gráficos de pizza
+                        display: false // Por padrão, não mostra legenda
                     }
                 }
             }
         };
 
-        // Configurações específicas para gráficos de barra
-        if (config.tipo === 'bar') {
-            // Remove a legenda "undefined"
-            chartConfig.data.datasets[0].label = ' ';
-
+        // Configurações específicas para gráficos
+        if (config.tipo === 'pie') {
+            // Mostra legenda apenas para gráficos de pizza
+            chartConfig.options.plugins.legend.display = true;
+        } else if (config.tipo === 'bar') {
             // Configura o eixo Y para usar apenas números inteiros
             chartConfig.options.scales = {
                 y: {
