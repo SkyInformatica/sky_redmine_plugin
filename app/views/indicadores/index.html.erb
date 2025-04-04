@@ -21,7 +21,7 @@
       <div class="filtro-grupo">
         <%= label_tag :equipe, "Equipe:" %>  
         <%= select_tag :equipe, options_for_select([
-                         ["Todas tarefas", "all"],
+                         ["Todas", "all"],
                          ["Desenvolvimento", SkyRedminePlugin::Constants::EquipeResponsavel::DEVEL],
                          ["QS", SkyRedminePlugin::Constants::EquipeResponsavel::QS],
                          ["Desenvolvimento+QS", "#{SkyRedminePlugin::Constants::EquipeResponsavel::DEVEL}_#{SkyRedminePlugin::Constants::EquipeResponsavel::QS}"],

@@ -7,28 +7,24 @@ module IndicadoresHelper
         # Primeira linha - Cards de valores
         render_cards_row([
           render_card_valor(
-            'Total de Tarefas',
+            'Total de tarefas',
             dados_graficos[:scope].count,
-            'Total de tarefas no período selecionado',
-            'Todas as tarefas registradas'
+            'Total de tarefas no período selecionado'            
           ),
           render_card_valor(
-            'Em Desenvolvimento',
+            'Desenvolvimento',
             dados_graficos[:scope].where(equipe_responsavel_atual: SkyRedminePlugin::Constants::EquipeResponsavel::DEVEL).count,
-            'Total de tarefas em desenvolvimento',
-            'Tarefas atualmente com a equipe de desenvolvimento'
+            'Total de tarefas com a equipe de desenvolvimento'
           ),
           render_card_valor(
-            'Em QS',
+            'QS',
             dados_graficos[:scope].where(equipe_responsavel_atual: SkyRedminePlugin::Constants::EquipeResponsavel::QS).count,
-            'Total de tarefas em QS',
-            'Tarefas atualmente com a equipe de qualidade'
+            'Total de tarefas com a equipe QS'            
           ),
           render_card_valor(
             'Fechadas',
             dados_graficos[:scope].where(equipe_responsavel_atual: SkyRedminePlugin::Constants::EquipeResponsavel::FECHADA).count,
-            'Total de tarefas fechadas',
-            'Tarefas que foram concluídas'
+            'Total de tarefas com versão liberada'
           )
         ]),
 
