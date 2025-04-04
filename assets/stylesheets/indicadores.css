@@ -87,18 +87,16 @@
   transition: transform 0.2s ease;
 }
 
-/* Cards de gráfico ocupam mais espaço */
-.sky-indicadores .card-grafico {
-  width: calc(50% - 12px);
-  min-width: 400px;
-  max-width: calc(50% - 12px);
-  display: inline-block;
-}
-
 /* Cards de valor são menores e flexíveis */
 .sky-indicadores .card-valor {
   flex: 0 1 auto;
   min-width: 150px;
+}
+
+/* Cards de gráfico ocupam mais espaço */
+.sky-indicadores .card-grafico {
+  flex: 0 0 calc(50% - 12px);
+  min-width: 400px;
 }
 
 .sky-indicadores .card-grafico:hover,
@@ -188,8 +186,7 @@
 /* Responsividade */
 @media (max-width: 824px) {
   .sky-indicadores .card-grafico {
-    width: 100%;
-    max-width: 100%;
+    flex: 1 1 100%;
   }
 }
 
