@@ -49,6 +49,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
         // Configurações específicas para gráficos de barra
         if (config.tipo === 'bar') {
+            // Remove a legenda "undefined"
+            chartConfig.data.datasets[0].label = ' ';
+
+            // Configura o eixo Y para usar apenas números inteiros
             chartConfig.options.scales = {
                 y: {
                     beginAtZero: true,
