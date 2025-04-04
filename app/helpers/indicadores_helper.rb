@@ -152,18 +152,9 @@ module IndicadoresHelper
 
   def grafico_tempos_medios(dados)
     {
-      labels: ["Tempo Médio Andamento (Devel)", "Tempo Médio Resolução (Devel)", "Tempo Médio Encaminhamento (QS)"],
-      datasets: [
-        {
-          label: "Tempos Médios (em horas)",
-          backgroundColor: ["#4CAF50", "#2196F3", "#FFC107"],
-          data: [
-            dados[:tempo_medio_andamento_devel].to_f || 0,
-            dados[:tempo_medio_resolucao_devel].to_f || 0,
-            dados[:tempo_medio_para_encaminhar_qs].to_f || 0,
-          ],
-        },
-      ],
+      "Tempo Médio Andamento (Devel)" => dados[:tempo_medio_andamento_devel].to_f || 0,
+      "Tempo Médio Resolução (Devel)" => dados[:tempo_medio_resolucao_devel].to_f || 0,
+      "Tempo Médio Encaminhamento (QS)" => dados[:tempo_medio_para_encaminhar_qs].to_f || 0,
     }
   end
 end
