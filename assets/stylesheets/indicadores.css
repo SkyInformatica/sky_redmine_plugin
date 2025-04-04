@@ -116,9 +116,9 @@
 
 /* Cards de gráfico ocupam mais espaço */
 .sky-indicadores .card-grafico {
-  flex: 1 1 40%;
+  flex: 1 1 30%; /* Ajustado para 30% para permitir 3 gráficos por linha */
   min-width: 30%;
-  max-width: 40%;
+  max-width: 30%; /* Ajustado para limitar o tamanho máximo a 30% */
   padding: 24px;
 }
 
@@ -253,4 +253,4 @@
 .tooltip .tooltip-arrow,
 .tooltip-arrow {
   display: none !important;
-} 
+}
