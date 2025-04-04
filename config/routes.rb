@@ -23,3 +23,4 @@ match "projects/:id/indicadores", to: "indicadores#index", via: "get", as: "indi
 # processar indicadores
 get "processar_indicadores_lote", to: "processar_indicadores#processar_indicadores_lote", as: "processar_indicadores_lote"
 post "processar_indicadores_tarefa/:id", to: "processar_indicadores#processar_indicadores_tarefa", as: "processar_indicadores_tarefa"
+post "processar_indicadores_2024", to: "processar_indicadores#processar_indicadores_2024"
