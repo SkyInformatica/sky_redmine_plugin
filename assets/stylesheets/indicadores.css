@@ -4,6 +4,56 @@
   line-height: 1.5;
 }
 
+/* Filtros */
+.sky-indicadores .filtros-form {
+  margin-bottom: 24px;
+}
+
+.sky-indicadores .filtros-container {
+  display: flex;
+  align-items: flex-end;
+  gap: 16px;
+  padding: 16px;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.sky-indicadores .filtro-grupo {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.sky-indicadores .filtro-grupo label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #666;
+}
+
+.sky-indicadores .filtro-grupo select {
+  padding: 6px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+  min-width: 160px;
+}
+
+.sky-indicadores .filtro-submit {
+  padding: 8px 16px;
+  background: #3498db;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.2s;
+}
+
+.sky-indicadores .filtro-submit:hover {
+  background: #2980b9;
+}
+
 /* Mantém os estilos da tabela do Redmine */
 .sky-indicadores table.list.issues {
   font-family: inherit;
