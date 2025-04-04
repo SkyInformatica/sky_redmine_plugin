@@ -63,8 +63,8 @@
 }
 
 .sky-indicadores .graficos-container {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  display: flex;
+  flex-wrap: wrap;
   gap: 24px;
   padding: 24px;
 }
@@ -80,13 +80,16 @@
   transition: transform 0.2s ease;
 }
 
-/* Cards de gráfico ocupam 2 colunas */
+/* Cards de gráfico ocupam mais espaço */
 .sky-indicadores .card-grafico {
-  grid-column: span 2;
+  flex: 1 1 calc(50% - 24px);
+  min-width: 400px;
 }
 
-/* Cards de valor são menores */
+/* Cards de valor são menores e flexíveis */
 .sky-indicadores .card-valor {
+  flex: 0 1 auto;
+  min-width: 150px;
   padding: 15px;
 }
 
@@ -100,6 +103,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 12px;
   margin-bottom: 16px;
 }
 
@@ -108,6 +112,7 @@
   font-weight: 600;
   color: #333;
   margin: 0;
+  white-space: nowrap;
 }
 
 /* Tooltip */
@@ -168,26 +173,26 @@
   color: #666;
   font-style: italic;
   margin: 0;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 
 /* Responsividade */
 @media (max-width: 1200px) {
-  .sky-indicadores .graficos-container {
-    grid-template-columns: repeat(2, 1fr);
-  }
-  
   .sky-indicadores .card-grafico {
-    grid-column: span 2;
+    flex: 1 1 100%;
   }
 }
 
 @media (max-width: 768px) {
-  .sky-indicadores .graficos-container {
-    grid-template-columns: 1fr;
+  .sky-indicadores .card-valor {
+    flex: 1 1 calc(50% - 24px);
   }
-  
-  .sky-indicadores .card-grafico {
-    grid-column: span 1;
+}
+
+@media (max-width: 480px) {
+  .sky-indicadores .card-valor {
+    flex: 1 1 100%;
   }
 }
 
