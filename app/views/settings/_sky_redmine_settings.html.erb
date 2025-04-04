@@ -4,11 +4,11 @@
       <legend>Status do Processamento</legend>  
       <p>  
         <label>Última Execução</label>  
-        <%= @settings["ultima_execucao"] ? format_time(@settings["ultima_execucao"].to_time) : "Nunca executado" %>  
+        <%= @ultima_execucao ? format_time(@ultima_execucao) : "Nunca executado" %>  
       </p>  
       <p>  
         <label>Tarefas Processadas</label>  
-        <%= @settings["tarefas_processadas"] || 0 %>  
+        <%= @tarefas_processadas || 0 %>  
       </p>  
     </fieldset>  
   
