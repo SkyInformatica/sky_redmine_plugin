@@ -7,17 +7,18 @@ module IndicadoresHelper
         # Cards de valores
         render_card_valor(
           'Total de tarefas',
-          dados_graficos[:scope].count,          
+          dados_graficos[:scope].count, 
+          'Total de tarefas processadas'         
         ),
         render_card_valor(
           'Desenvolvimento',
           dados_graficos[:scope].where(equipe_responsavel_atual: 'DEVEL').count,
-          'Total de tarefas em desenvolvimento'
+          'Total de tarefas no desenvolvimento'
         ),
         render_card_valor(
           'QS',
           dados_graficos[:scope].where(equipe_responsavel_atual: 'QS').count,
-          'Total de tarefas em QS'
+          'Total de tarefas no QS'
                     
         ),
         render_card_valor(
