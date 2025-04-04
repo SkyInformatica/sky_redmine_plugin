@@ -31,6 +31,7 @@
 <% end %>  
 
 <%= button_to "Limpar todos indicadores", limpar_indicadores_path, method: :delete, data: { confirm: "Tem certeza que deseja limpar todos os indicadores armazenados?" }, class: "btn btn-danger" %>
+<%= button_to "Processar Indicadores a partir de 2024", processar_indicadores_2024_path, method: :post, class: "button" %>
 
 <%= javascript_tag do %>  
   $(document).ready(function() {  
