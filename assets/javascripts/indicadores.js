@@ -49,17 +49,14 @@ document.addEventListener('DOMContentLoaded', function () {
                 maintainAspectRatio: false,
                 plugins: {
                     legend: {
-                        display: false
+                        display: config.tipo !== 'bar' // Remove legenda apenas para gráficos de barra
                     }
                 }
             }
         };
 
         // Configurações específicas para gráficos
-        if (config.tipo === 'pie') {
-            // Mostra legenda apenas para gráficos de pizza
-            chartConfig.options.plugins.legend.display = true;
-        } else if (config.tipo === 'bar') {
+        if (config.tipo === 'bar') {
             // Configura o eixo Y para usar apenas números inteiros
             chartConfig.options.scales = {
                 y: {
