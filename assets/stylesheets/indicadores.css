@@ -95,8 +95,9 @@
 
 /* Cards de gráfico ocupam mais espaço */
 .sky-indicadores .card-grafico {
-  flex: 0 0 calc(50% - 12px);
-  min-width: 400px;
+  flex: 1 1 40%;
+  min-width: 30%;
+  max-width: 40%;
 }
 
 .sky-indicadores .card-grafico:hover,
@@ -187,6 +188,7 @@
 @media (max-width: 824px) {
   .sky-indicadores .card-grafico {
     flex: 1 1 100%;
+    max-width: 100%;
   }
 }
 
