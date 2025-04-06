@@ -13,14 +13,6 @@ require_relative "app/models/sky_redmine_indicadores"
 require_relative "lib/sky_redmine_plugin/hooks/model_hook"
 require_relative "lib/sky_redmine_plugin/hooks/settings_hook"
 
-Redmine::Plugin.register :sky_redmine_plugin do
-  name "Sky Redmine Plugin"
-  author "Seu Nome"
-  description "Descrição do plugin"
-  version "0.1.0"
-  url "http://exemplo.com"
-  author_url "http://exemplo.com"
-end
 
 Redmine::Plugin.register :sky_redmine_plugin do
   name "Sky Redmine plugin"
@@ -28,7 +20,7 @@ Redmine::Plugin.register :sky_redmine_plugin do
   description "Disponibiliza facilitadores para gerir o fluxo de tarefas entre Devel e QS."
   url "https://github.com/SkyInformatica/sky_redmine_plugin"
   author_url "mailto:maglan.diemer@skyinformatica.com.br"
-  version "2025.03.30.1"
+  version "2025.04.06.1"
 
   # Adicionar configurações do plugin
   settings default: {

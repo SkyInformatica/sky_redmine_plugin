@@ -21,6 +21,13 @@ bundle exec rake redmine:plugins:migrate RAILS_ENV=production
 
 # O que há de novo?
 
+## 2025.04.06.1
+
+- Nova tabela de indicadores no fluxo das tarefas (individual por tarefa)
+- Timeline das etapas de desenvolvimento no fluxo das tarefas
+- Nova página de Indicadores em cada um dos projetos para um resumo geral da situacao atual envolvendo todas as tarefas do projeto.
+- Novas tags SkyRP\_ para marcar as tarefas de DEVEL com sua situacao atual da sua etapa de desenvolvimento.
+
 ## 2025.01.06.1
 
 - Corrigido o problema que não estava executando as acoes automatizadas ao editar tarefas em lote
