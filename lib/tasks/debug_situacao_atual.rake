@@ -1,8 +1,9 @@
+#RAILS_ENV=production rake sky_redmine_plugin:debug_situacao_atual[65408]
 namespace :sky_redmine_plugin do
   desc "Depura a situação atual e tarefas relacionadas para uma tarefa específica. Uso: rake sky_redmine_plugin:debug_situacao_atual[TAREFA_ID]"
   task :debug_situacao_atual, [:tarefa_id] => :environment do |t, args|
     if args[:tarefa_id].blank?
-      puts "Erro: É necessário fornecer o ID da tarefa. Exemplo: rake sky_redmine_plugin:debug_situacao_atual[12345]"
+      puts "Erro: É necessário fornecer o ID da tarefa. Exemplo: RAILS_ENV=production rake sky_redmine_plugin:debug_situacao_atual[12345]"
       exit 1
     end
 
