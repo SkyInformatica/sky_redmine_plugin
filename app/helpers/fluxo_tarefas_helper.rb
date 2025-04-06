@@ -623,7 +623,7 @@ module FluxoTarefasHelper
     
     # Preparar HTML
     html = "<div class='indicadores-grupo'>"
-    html << "<div class='indicadores-titulo'>Timeline de Progresso</div>"
+    html << "<div class='indicadores-titulo'>Timeline de Progresso xx</div>"
     html << "<div class='timeline-container'>"
     
     if tem_retorno_testes
