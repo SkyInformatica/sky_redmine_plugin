@@ -229,6 +229,11 @@ module SkyRedminePlugin
           indicador.tempo_total_testes = (indicador.data_resolvida_ultima_tarefa_qs - indicador.data_criacao_primeira_tarefa_qs).to_i
         end
 
+        # Calcular tempo total desde a criação da tarefa até a conclusão dos testes
+        if indicador.data_criacao_primeira_tarefa_devel && indicador.data_resolvida_ultima_tarefa_qs
+          indicador.tempo_total_devel_concluir_testes = (indicador.data_resolvida_ultima_tarefa_qs.to_date - indicador.data_criacao_primeira_tarefa_devel.to_date).to_i
+        end
+
         Rails.logger.info ">>> indicador.save: #{indicador.inspect}"
         indicador.save(validate: false)
         
@@ -261,6 +266,7 @@ module SkyRedminePlugin
       indicador.tempo_fechamento_devel = nil
       indicador.tempo_para_encaminhar_qs = nil
       indicador.tempo_total_liberar_versao = nil
+      indicador.tempo_total_devel_concluir_testes = nil
 
       # Campos de QS
       indicador.primeira_tarefa_qs_id = nil

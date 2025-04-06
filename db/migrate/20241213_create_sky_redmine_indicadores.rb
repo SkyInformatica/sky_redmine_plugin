@@ -46,6 +46,7 @@ class CreateSkyRedmineIndicadores < ActiveRecord::Migration[5.2]
       t.integer :tempo_total_testes
       t.integer :tempo_total_devel
       t.string :tarefa_fechada_sem_testes
+      t.integer :tempo_total_devel_concluir_testes
 
       t.timestamps
     end
