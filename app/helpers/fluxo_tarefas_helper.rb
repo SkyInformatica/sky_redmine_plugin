@@ -307,7 +307,7 @@ module FluxoTarefasHelper
         width: 100%;
         height: 2px;
         background-color: #ddd;
-        top: 20px !important; /* Centralizar na bolinha */
+        top: 10px !important; /* Centralizar na bolinha - ajustado para garantir alinhamento no centro */
         left: 50%;
         z-index: 1;
       }
@@ -315,11 +315,11 @@ module FluxoTarefasHelper
       .timeline-step-completed::after {
         background-color: #4CAF50;
       }
-      /* Cor azul para a linha da etapa atual */
+      /* A linha após a etapa atual deve ser cinza (restaurando a linha) */
       .timeline-step-current::after {
-        display: none; /* Removendo a linha azul após a etapa atual */
+        background-color: #ddd; /* Cinza, não azul */
       }
-      /* Importante: a linha à direita da etapa atual deve ser cinza */
+      /* Garantindo que todas as linhas após a etapa atual sejam cinza */
       .timeline-step-current + .timeline-step::after {
         background-color: #ddd;
       }
