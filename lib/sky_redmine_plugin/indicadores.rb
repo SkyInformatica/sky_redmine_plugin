@@ -323,6 +323,15 @@ module SkyRedminePlugin
         # Existe tarefa de QS
         ultima_tarefa_qs = tarefas_qs.last
         
+        # NOVA LÓGICA: Se a última tarefa QS é mais recente que a última resolução DEVEL,
+        # então a situação deve ser baseada na tarefa QS
+        if ultima_tarefa_devel.status.name == SkyRedminePlugin::Constants::IssueStatus::RESOLVIDA &&
+           ultima_tarefa_qs.status.name == SkyRedminePlugin::Constants::IssueStatus::NOVA
+          # Se a tarefa DEVEL está RESOLVIDA e já existe uma tarefa QS NOVA,
+          # significa que a tarefa já saiu do DEVEL e está no QS
+          return eh_retorno_testes ? "ESTOQUE_QS_RETORNO_TESTES" : "ESTOQUE_QS"
+        end
+        
         # CORREÇÃO: Verificar primeiro se a última tarefa DEVEL é de retorno de testes e está em algum status ativo
         # Isso deve ter precedência mesmo que a última tarefa do QS esteja com TESTE_NOK_FECHADA
         if eh_retorno_testes
@@ -332,6 +341,7 @@ module SkyRedminePlugin
           when SkyRedminePlugin::Constants::IssueStatus::EM_ANDAMENTO
             return "EM_ANDAMENTO_DEVEL_RETORNO_TESTES"
           when SkyRedminePlugin::Constants::IssueStatus::RESOLVIDA
+            # Se a última tarefa QS não está com status NOVA, ainda está no DEVEL
             return "RESOLVIDA_DEVEL_RETORNO_TESTES"
           end
         end
@@ -339,9 +349,13 @@ module SkyRedminePlugin
         # Verificar o status da última tarefa QS
         case ultima_tarefa_qs.status.name
         when SkyRedminePlugin::Constants::IssueStatus::NOVA
-          return "ESTOQUE_QS"
+          # Identificar se é retorno de testes ou não
+          return ultima_tarefa_qs.tracker.name == SkyRedminePlugin::Constants::Trackers::RETORNO_TESTES ? 
+                 "ESTOQUE_QS_RETORNO_TESTES" : "ESTOQUE_QS"
         when SkyRedminePlugin::Constants::IssueStatus::EM_ANDAMENTO
-          return "EM_ANDAMENTO_QS"
+          # Identificar se é retorno de testes ou não
+          return ultima_tarefa_qs.tracker.name == SkyRedminePlugin::Constants::Trackers::RETORNO_TESTES ? 
+                 "EM_ANDAMENTO_QS_RETORNO_TESTES" : "EM_ANDAMENTO_QS"
         when SkyRedminePlugin::Constants::IssueStatus::TESTE_OK
           return "AGUARDANDO_VERSAO"
         when SkyRedminePlugin::Constants::IssueStatus::TESTE_NOK
