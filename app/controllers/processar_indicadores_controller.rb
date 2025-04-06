@@ -44,8 +44,8 @@ class ProcessarIndicadoresController < ApplicationController
     redirect_to admin_plugins_path
   end
 
-  def limpar_tags_2024
-    Rails.logger.info ">>> Iniciando limpeza de tags SkyRP_ a partir de 2024"
+  def limpar_tags_skyrp
+    Rails.logger.info ">>> Iniciando limpeza de todas as tags SkyRP_"
     
     # Buscar todas as tags que começam com SkyRP_
     tags_skyrp = ActsAsTaggableOn::Tag.where("name LIKE ?", "SkyRP_%")
@@ -68,7 +68,7 @@ class ProcessarIndicadoresController < ApplicationController
       end
     end
 
-    flash[:notice] = "Tags SkyRP_ foram removidas com sucesso."
+    flash[:notice] = "Todas as tags SkyRP_ foram removidas com sucesso."
     redirect_to admin_plugins_path
   end
 end
