@@ -285,12 +285,13 @@ module FluxoTarefasHelper
         margin-bottom: 15px;
         width: 100%;
         overflow-x: auto;
+        position: relative;
       }
       .timeline {
         display: flex;
         width: 100%;
         position: relative;
-        margin-bottom: 10px;
+        margin-bottom: 0;
       }
       .timeline-step {
         flex: 1;
@@ -358,30 +359,51 @@ module FluxoTarefasHelper
       .timeline-step-future .timeline-label {
         color: #999;
       }
-      .timeline-connector {
+      
+      /* Conector em L invertido entre as duas linhas */
+      .timeline-row-connector {
         position: relative;
-        height: 40px;
-        width: 20px;
-        margin: 0 auto;
+        height: 45px; /* Altura do espaço entre as duas linhas */
+        margin: 0;
+        padding: 0;
       }
-      .timeline-connector::before {
-        content: '';
+      
+      /* Conector vertical que desce do final da primeira linha */
+      .timeline-vertical-connector {
         position: absolute;
         width: 2px;
-        height: 40px;
+        height: 100%;
         background-color: #ddd;
-        left: 50%;
+        right: 10px;
         top: 0;
-        transform: translateX(-50%);
+        z-index: 1;
       }
-      .timeline-connector-completed::before {
+      
+      /* Conector horizontal que liga à segunda linha */
+      .timeline-horizontal-connector {
+        position: absolute;
+        height: 2px;
+        background-color: #ddd;
+        left: 10px;
+        right: 10px;
+        bottom: 0;
+        z-index: 1;
+      }
+      
+      /* Cores para os diferentes estados dos conectores */
+      .connector-completed .timeline-vertical-connector,
+      .connector-completed .timeline-horizontal-connector {
         background-color: #4CAF50;
       }
-      .timeline-connector-current::before {
+      
+      .connector-current .timeline-vertical-connector,
+      .connector-current .timeline-horizontal-connector {
         background-color: #2196F3;
       }
+      
       .timeline-row {
-        margin-bottom: 5px;
+        margin-bottom: 0;
+        position: relative;
       }
     </style>"
 
@@ -619,7 +641,11 @@ module FluxoTarefasHelper
         conector_estado = "completed"
       end
       
-      html << "<div class='timeline-connector timeline-connector-#{conector_estado}'></div>"
+      # Adicionar o conector em L invertido entre as duas linhas
+      html << "<div class='timeline-row-connector connector-#{conector_estado}'>"
+      html << "<div class='timeline-vertical-connector'></div>"
+      html << "<div class='timeline-horizontal-connector'></div>"
+      html << "</div>"
       
       # Renderizar a segunda linha da timeline
       html << "<div class='timeline-row'>"
