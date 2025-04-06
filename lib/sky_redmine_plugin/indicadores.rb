@@ -324,6 +324,17 @@ module SkyRedminePlugin
         # Existe tarefa de QS
         ultima_tarefa_qs = tarefas_qs.last
         
+        # CORREÇÃO: Verificar se a tarefa QS já está com teste OK mesmo que a DEVEL esteja somente resolvida
+        if ultima_tarefa_qs.status.name == SkyRedminePlugin::Constants::IssueStatus::TESTE_OK ||
+           ultima_tarefa_qs.status.name == SkyRedminePlugin::Constants::IssueStatus::TESTE_OK_FECHADA
+          # Se a tarefa QS já está com Teste OK, está aguardando versão
+          if ultima_tarefa_devel.status.name == SkyRedminePlugin::Constants::IssueStatus::FECHADA
+            return "VERSAO_LIBERADA"
+          else
+            return "AGUARDANDO_VERSAO"
+          end
+        end
+        
         # NOVA LÓGICA: Se a última tarefa QS é mais recente que a última resolução DEVEL,
         # então a situação deve ser baseada na tarefa QS
         if ultima_tarefa_devel.status.name == SkyRedminePlugin::Constants::IssueStatus::RESOLVIDA &&
@@ -342,7 +353,21 @@ module SkyRedminePlugin
           when SkyRedminePlugin::Constants::IssueStatus::EM_ANDAMENTO
             return "EM_ANDAMENTO_DEVEL_RETORNO_TESTES"
           when SkyRedminePlugin::Constants::IssueStatus::RESOLVIDA
-            # Se a última tarefa QS não está com status NOVA, ainda está no DEVEL
+            # CORREÇÃO: Verificar se existe uma tarefa QS posterior já com Teste OK
+            # Verificamos pela data de criação da QS posterior à data de resolução da DEVEL
+            if ultima_tarefa_devel.data_resolvida.present? && 
+               ultima_tarefa_qs.created_on.to_date > ultima_tarefa_devel.data_resolvida
+              # Se existe tarefa QS criada após a resolução da DEVEL, avaliar seu status
+              if ultima_tarefa_qs.status.name == SkyRedminePlugin::Constants::IssueStatus::TESTE_OK ||
+                 ultima_tarefa_qs.status.name == SkyRedminePlugin::Constants::IssueStatus::TESTE_OK_FECHADA
+                return "AGUARDANDO_VERSAO"
+              elsif ultima_tarefa_qs.status.name == SkyRedminePlugin::Constants::IssueStatus::NOVA
+                return "ESTOQUE_QS_RETORNO_TESTES"
+              elsif ultima_tarefa_qs.status.name == SkyRedminePlugin::Constants::IssueStatus::EM_ANDAMENTO
+                return "EM_ANDAMENTO_QS_RETORNO_TESTES"
+              end
+            end
+            # Se não há tarefa QS posterior ou não está com Teste OK
             return "AGUARDANDO_ENCAMINHAR_QS_RETORNO_TESTES"
           when SkyRedminePlugin::Constants::IssueStatus::FECHADA
             # Verificar se a última tarefa QS está com TESTE_OK ou TESTE_OK_FECHADA
@@ -394,7 +419,13 @@ module SkyRedminePlugin
               when SkyRedminePlugin::Constants::IssueStatus::EM_ANDAMENTO
                 return "EM_ANDAMENTO_DEVEL_RETORNO_TESTES"
               when SkyRedminePlugin::Constants::IssueStatus::RESOLVIDA
-                return "AGUARDANDO_ENCAMINHAR_QS_RETORNO_TESTES"
+                # CORREÇÃO: Verificar se existe tarefa QS posterior com Teste OK
+                if ultima_tarefa_qs.status.name == SkyRedminePlugin::Constants::IssueStatus::TESTE_OK ||
+                   ultima_tarefa_qs.status.name == SkyRedminePlugin::Constants::IssueStatus::TESTE_OK_FECHADA
+                  return "AGUARDANDO_VERSAO"
+                else
+                  return "AGUARDANDO_ENCAMINHAR_QS_RETORNO_TESTES"
+                end
               end
             end
           end
