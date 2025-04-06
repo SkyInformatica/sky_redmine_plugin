@@ -555,7 +555,7 @@ module FluxoTarefasHelper
     detalhe_fechamento = data_resolvida && data_fechada ? "De #{data_resolvida} até #{data_fechada}" : nil
     valor_fechamento = formatar_dias(indicadores.tempo_fechamento_devel)
     html << render_card("Liberar versão após concluir o desenvolvimento", valor_fechamento, detalhe_fechamento,
-                        "Tempo entre tarefa de desenvolvimento estar resolvida e ser fechada (entre estes tempos existe o tempo das tarefas do QS)")
+                        "Tempo entre tarefa de desenvolvimento estar concluída e ser fechada (entre estes tempos existe o tempo das tarefas do QS)")
 
     html << "</div>"
     html << "</div>"
@@ -586,7 +586,7 @@ module FluxoTarefasHelper
     
     # Preparar HTML
     html = "<div class='indicadores-grupo'>"
-    html << "<div class='indicadores-titulo'>Timeline de Progresso</div>"
+    html << "<div class='indicadores-titulo'>Progresso</div>"
     html << "<div class='timeline-container'>"
     
     if tem_retorno_testes
