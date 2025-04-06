@@ -564,15 +564,6 @@ module FluxoTarefasHelper
     valor_fechamento = formatar_dias(indicadores.tempo_fechamento_devel)
     html << render_card("Liberar versão após concluir o desenvolvimento", valor_fechamento, detalhe_fechamento,
                         "Tempo entre tarefa de desenvolvimento estar concluída e ser fechada (entre estes tempos existe o tempo das tarefas do QS)")
-
-    # Tempo total entre início do desenvolvimento e conclusão dos testes
-    data_andamento_devel = indicadores.data_andamento_primeira_tarefa_devel&.strftime("%d/%m/%Y")
-    data_resolvida_qs = indicadores.data_resolvida_ultima_tarefa_qs&.strftime("%d/%m/%Y")
-    detalhe_total = data_andamento_devel && data_resolvida_qs ? "De #{data_andamento_devel} até #{data_resolvida_qs}" : nil
-    valor_total = formatar_dias(indicadores.tempo_total_devel_concluir_testes)
-    html << render_card("Tempo total até conclusão dos testes", valor_total, detalhe_total,
-                        "Tempo total entre o início do desenvolvimento e a conclusão dos testes (TESTE OK)")
-
     html << "</div>"
     html << "</div>"
     
