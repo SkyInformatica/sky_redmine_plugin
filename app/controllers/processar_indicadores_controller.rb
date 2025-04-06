@@ -41,7 +41,7 @@ class ProcessarIndicadoresController < ApplicationController
     end
 
     flash[:notice] = "Indicadores das tarefas criadas a partir de 2024 foram processados com sucesso."
-    redirect_to sky_redmine_settings_path
+    redirect_to admin_plugins_path
   end
 
   def limpar_tags_2024
@@ -69,6 +69,6 @@ class ProcessarIndicadoresController < ApplicationController
     end
 
     flash[:notice] = "Tags SkyRP_ foram removidas com sucesso."
-    redirect_to settings_path
+    redirect_to admin_plugins_path
   end
 end
