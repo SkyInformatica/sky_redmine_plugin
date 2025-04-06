@@ -376,6 +376,17 @@ module FluxoTarefasHelper
         color: #999;
       }
       
+      /* Estilos específicos para o texto dentro da timeline */
+      .timeline-step-completed .timeline-text {
+        color: #4CAF50;
+      }
+      .timeline-step-current .timeline-text {
+        color: #2196F3;
+      }
+      .timeline-step-future .timeline-text {
+        color: #999;
+      }
+      
       /* Conector em L invertido entre as duas linhas */
       .timeline-row-connector {
         position: relative;
