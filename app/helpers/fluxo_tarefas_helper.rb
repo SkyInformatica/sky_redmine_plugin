@@ -324,6 +324,17 @@ module FluxoTarefasHelper
       left: 50%;
       z-index: 1;
     }
+    /* Cores das linhas baseadas no estado */
+    .timeline-step-completed::after {
+      background-color: #4CAF50; /* Verde para etapas concluídas */
+    }
+    .timeline-step-current::after {
+      background-color: #ddd; /* Cinza para a linha após a etapa atual */
+    }
+    /* Garantir que qualquer etapa após a atual tenha linhas cinzas */
+    .timeline-step-current + .timeline-step::after {
+      background-color: #ddd;
+    }
     /* Cores dos círculos baseadas no estado */
     .timeline-step-completed .timeline-circle {
       background-color: #4CAF50;
