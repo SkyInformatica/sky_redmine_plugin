@@ -144,7 +144,7 @@ module FluxoTarefasHelper
         font-weight: bold;  
         margin: 10px 0 5px 0;  
       }  
-      /* Timeline CSS - Nova implementação */
+      /* Timeline CSS - Nova implementação simplificada */
       .timeline-container {
         margin: 20px 0;
         padding: 20px 0;
@@ -157,6 +157,20 @@ module FluxoTarefasHelper
         position: relative;
         width: 100%;
         min-height: 80px;
+        align-items: center; /* Centraliza verticalmente todos os elementos */
+      }
+      
+      /* Linha contínua base */
+      .timeline::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 0;
+        right: 0;
+        height: 2px;
+        background-color: #ddd;
+        transform: translateY(-50%);
+        z-index: 1;
       }
       
       .timeline-step {
@@ -166,17 +180,7 @@ module FluxoTarefasHelper
         align-items: center;
         position: relative;
         min-width: 90px;
-        padding: 0 10px; /* Adiciona um pequeno espaçamento horizontal */
-      }
-      
-      .timeline-circle-wrapper {
-        position: relative;
-        width: 20px;
-        height: 20px;
-        margin: 10px 0;
-        display: flex;
-        align-items: center;
-        justify-content: center;
+        padding: 0 10px;
       }
       
       .timeline-circle {
@@ -190,21 +194,7 @@ module FluxoTarefasHelper
         color: white;
         position: relative;
         z-index: 2;
-      }
-      
-      .timeline-line {
-        position: absolute;
-        top: 50%;
-        right: -50%;
-        height: 2px;
-        background-color: #ddd;
-        transform: translateY(-50%);
-        width: 100%; /* A linha vai do centro do círculo atual até o centro do próximo */
-        z-index: 1;
-      }
-      
-      .timeline-step:last-child .timeline-line {
-        display: none;
+        margin: 10px 0;
       }
       
       /* Estados da timeline */
@@ -212,16 +202,8 @@ module FluxoTarefasHelper
         background-color: #4CAF50;
       }
       
-      .timeline-step-completed .timeline-line {
-        background-color: #4CAF50;
-      }
-      
       .timeline-step-current .timeline-circle {
         background-color: #2196F3;
-      }
-      
-      .timeline-step-current .timeline-line {
-        background-color: #ddd;
       }
       
       /* Textos da timeline */
