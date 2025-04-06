@@ -358,6 +358,31 @@ module FluxoTarefasHelper
       .timeline-step-future .timeline-label {
         color: #999;
       }
+      .timeline-connector {
+        position: relative;
+        height: 40px;
+        width: 20px;
+        margin: 0 auto;
+      }
+      .timeline-connector::before {
+        content: '';
+        position: absolute;
+        width: 2px;
+        height: 40px;
+        background-color: #ddd;
+        left: 50%;
+        top: 0;
+        transform: translateX(-50%);
+      }
+      .timeline-connector-completed::before {
+        background-color: #4CAF50;
+      }
+      .timeline-connector-current::before {
+        background-color: #2196F3;
+      }
+      .timeline-row {
+        margin-bottom: 5px;
+      }
     </style>"
 
     # Gerar HTML dos cards
@@ -535,6 +560,113 @@ module FluxoTarefasHelper
     html = "<div class='indicadores-grupo'>"
     html << "<div class='indicadores-titulo'>Timeline de Progresso</div>"
     html << "<div class='timeline-container'>"
+    
+    if tem_retorno_testes
+      # Ponto de divisão - índice do AGUARDANDO_RETORNO_TESTES
+      ponto_divisao = fluxo.index(SkyRedminePlugin::Constants::SituacaoAtual::AGUARDANDO_RETORNO_TESTES)
+      
+      # Se o ponto de divisão não for encontrado, usar o fluxo normal
+      if ponto_divisao.nil?
+        return render_timeline_normal(fluxo, indice_atual)
+      end
+      
+      # Dividir o fluxo em duas partes
+      primeira_parte = fluxo[0..ponto_divisao]
+      segunda_parte = fluxo[(ponto_divisao+1)..-1]
+      
+      # Determinar em qual parte está a situação atual
+      esta_na_primeira_parte = indice_atual <= ponto_divisao
+      
+      # Renderizar a primeira linha da timeline
+      html << "<div class='timeline-row'>"
+      html << "<div class='timeline'>"
+      
+      primeira_parte.each_with_index do |situacao, i|
+        # Determinar o estado desta etapa
+        if i < indice_atual
+          estado = "completed" # Etapas já concluídas
+          icon = "&#10003;" # Checkmark
+        elsif i == indice_atual && esta_na_primeira_parte
+          estado = "current" # Etapa atual
+          icon = "&#8226;" # Bullet point
+        else
+          estado = "future" # Etapas futuras
+          icon = ""
+        end
+        
+        # Formatar o texto da situação para exibição
+        texto_situacao = situacao.gsub("_", " ")
+        
+        # Renderizar uma etapa da timeline
+        html << "<div class='timeline-step timeline-step-#{estado}'>"
+        html << "<div class='timeline-circle'>#{icon}</div>"
+        html << "<div class='timeline-label'><div class='timeline-text'>#{texto_situacao}</div></div>"
+        html << "</div>"
+      end
+      
+      html << "</div>" # Fechar timeline
+      html << "</div>" # Fechar timeline-row
+      
+      # Adicionar o conector entre as duas linhas
+      if indice_atual < ponto_divisao
+        # Se ainda não chegou ao fim da primeira linha
+        conector_estado = "future"
+      elsif indice_atual == ponto_divisao
+        # Se está exatamente no ponto de divisão
+        conector_estado = "current"
+      else
+        # Se já passou do ponto de divisão
+        conector_estado = "completed"
+      end
+      
+      html << "<div class='timeline-connector timeline-connector-#{conector_estado}'></div>"
+      
+      # Renderizar a segunda linha da timeline
+      html << "<div class='timeline-row'>"
+      html << "<div class='timeline'>"
+      
+      segunda_parte.each_with_index do |situacao, i|
+        # Ajustar o índice para a comparação com o índice atual
+        i_ajustado = i + primeira_parte.length
+        
+        # Determinar o estado desta etapa
+        if i_ajustado < indice_atual
+          estado = "completed" # Etapas já concluídas
+          icon = "&#10003;" # Checkmark
+        elsif i_ajustado == indice_atual
+          estado = "current" # Etapa atual
+          icon = "&#8226;" # Bullet point
+        else
+          estado = "future" # Etapas futuras
+          icon = ""
+        end
+        
+        # Formatar o texto da situação para exibição
+        texto_situacao = situacao.gsub("_", " ")
+        
+        # Renderizar uma etapa da timeline
+        html << "<div class='timeline-step timeline-step-#{estado}'>"
+        html << "<div class='timeline-circle'>#{icon}</div>"
+        html << "<div class='timeline-label'><div class='timeline-text'>#{texto_situacao}</div></div>"
+        html << "</div>"
+      end
+      
+      html << "</div>" # Fechar timeline
+      html << "</div>" # Fechar timeline-row
+    else
+      # Fluxo normal sem retorno de testes (uma única linha)
+      html << render_timeline_normal(fluxo, indice_atual)
+    end
+    
+    html << "</div>" # Fechar timeline-container
+    html << "</div>" # Fechar grupo
+    
+    html
+  end
+  
+  # Método auxiliar para renderizar uma timeline simples de uma linha
+  def render_timeline_normal(fluxo, indice_atual)
+    html = "<div class='timeline-row'>"
     html << "<div class='timeline'>"
     
     # Renderizar cada etapa da timeline
@@ -562,8 +694,7 @@ module FluxoTarefasHelper
     end
     
     html << "</div>" # Fechar timeline
-    html << "</div>" # Fechar timeline-container
-    html << "</div>" # Fechar grupo
+    html << "</div>" # Fechar timeline-row
     
     html
   end
