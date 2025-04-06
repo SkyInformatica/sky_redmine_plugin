@@ -58,6 +58,8 @@ class ProcessarIndicadoresController < ApplicationController
         begin
           # Remover a tag de todas as tarefas que a possuem
           tag.taggings.destroy_all
+          # Excluir a tag da tabela de tags
+          tag.destroy
           Rails.logger.info ">>> Tag #{tag.name} removida com sucesso"
         rescue => e
           Rails.logger.error ">>> Erro ao remover tag #{tag.name}: #{e.message}"
@@ -67,6 +69,6 @@ class ProcessarIndicadoresController < ApplicationController
     end
 
     flash[:notice] = "Tags SkyRP_ foram removidas com sucesso."
-    redirect_to sky_redmine_settings_path
+    redirect_to settings_path
   end
 end
