@@ -384,40 +384,6 @@ module FluxoTarefasHelper
       position: relative;
       z-index: 2;
     }
-    /* Ajuste da linha da timeline para alinhar com o centro das bolinhas */
-    .timeline-step::after {
-      content: '';
-      position: absolute;
-      width: 100%;
-      height: 2px;
-      background-color: #ddd;
-      top: 50%; /* Ajuste para alinhar com o centro da bolinha */
-      transform: translateY(-50%); /* Centraliza a linha verticalmente */
-      left: 50%;
-      z-index: 1;
-    }
-    /* Cores das linhas baseadas no estado */
-    .timeline-step-completed::after {
-      background-color: #4CAF50; /* Verde para etapas concluídas */
-    }
-    .timeline-step-current::after {
-      background-color: #ddd; /* Cinza para a linha após a etapa atual */
-    }
-    /* Garantir que qualquer etapa após a atual tenha linhas cinzas */
-    .timeline-step-current + .timeline-step::after {
-      background-color: #ddd;
-    }
-    /* Cores dos círculos baseadas no estado */
-    .timeline-step-completed .timeline-circle {
-      background-color: #4CAF50;
-    }
-    .timeline-step-current .timeline-circle {
-      background-color: #2196F3;
-    }
-    /* Linhas conectoras entre os círculos */
-    .timeline-step:last-child::after {
-      display: none;
-    }
     /* Textos da timeline */
     .timeline-label {
       display: block;
@@ -623,7 +589,7 @@ module FluxoTarefasHelper
     
     # Preparar HTML
     html = "<div class='indicadores-grupo'>"
-    html << "<div class='indicadores-titulo'>Timeline de Progresso xx</div>"
+    html << "<div class='indicadores-titulo'>Timeline de Progresso</div>"
     html << "<div class='timeline-container'>"
     
     if tem_retorno_testes
