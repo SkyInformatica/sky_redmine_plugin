@@ -68,5 +68,49 @@ module SkyRedminePlugin
       DEVEL = "DEVEL"
       QS = "QS"
     end
+    
+    module SituacaoAtual
+      # Situações de desenvolvimento inicial
+      ESTOQUE_DEVEL = "ESTOQUE_DEVEL"
+      EM_ANDAMENTO_DEVEL = "EM_ANDAMENTO_DEVEL"
+      AGUARDANDO_ENCAMINHAR_QS = "AGUARDANDO_ENCAMINHAR_QS"
+      
+      # Situações de QS inicial
+      ESTOQUE_QS = "ESTOQUE_QS"
+      EM_ANDAMENTO_QS = "EM_ANDAMENTO_QS"
+      
+      # Situações após aprovação de QS
+      AGUARDANDO_VERSAO = "AGUARDANDO_VERSAO"
+      VERSAO_LIBERADA = "VERSAO_LIBERADA"
+      
+      # Situações de retorno de testes
+      AGUARDANDO_RETORNO_TESTES = "AGUARDANDO_RETORNO_TESTES"
+      
+      # Situações de desenvolvimento em retorno de testes
+      ESTOQUE_DEVEL_RETORNO_TESTES = "ESTOQUE_DEVEL_RETORNO_TESTES"
+      EM_ANDAMENTO_DEVEL_RETORNO_TESTES = "EM_ANDAMENTO_DEVEL_RETORNO_TESTES"
+      AGUARDANDO_ENCAMINHAR_QS_RETORNO_TESTES = "AGUARDANDO_ENCAMINHAR_QS_RETORNO_TESTES"
+      
+      # Situações de QS em retorno de testes
+      ESTOQUE_QS_RETORNO_TESTES = "ESTOQUE_QS_RETORNO_TESTES"
+      EM_ANDAMENTO_QS_RETORNO_TESTES = "EM_ANDAMENTO_QS_RETORNO_TESTES"
+      
+      # Lista de todas as situações em ordem cronológica
+      TODAS_SITUACOES = [
+        ESTOQUE_DEVEL,
+        EM_ANDAMENTO_DEVEL,
+        AGUARDANDO_ENCAMINHAR_QS,
+        ESTOQUE_QS,
+        EM_ANDAMENTO_QS,
+        AGUARDANDO_VERSAO,
+        VERSAO_LIBERADA,
+        AGUARDANDO_RETORNO_TESTES,
+        ESTOQUE_DEVEL_RETORNO_TESTES,
+        EM_ANDAMENTO_DEVEL_RETORNO_TESTES,
+        AGUARDANDO_ENCAMINHAR_QS_RETORNO_TESTES,
+        ESTOQUE_QS_RETORNO_TESTES,
+        EM_ANDAMENTO_QS_RETORNO_TESTES
+      ]
+    end
   end
 end
