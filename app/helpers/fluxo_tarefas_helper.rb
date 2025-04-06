@@ -144,6 +144,110 @@ module FluxoTarefasHelper
         font-weight: bold;  
         margin: 10px 0 5px 0;  
       }  
+      /* Timeline CSS - Nova implementação */
+      .timeline-container {
+        margin: 20px 0;
+        padding: 20px 0;
+        width: 100%;
+        overflow-x: auto;
+      }
+      
+      .timeline {
+        display: flex;
+        position: relative;
+        width: 100%;
+        min-height: 80px;
+      }
+      
+      .timeline-step {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        position: relative;
+        min-width: 90px;
+      }
+      
+      .timeline-circle-wrapper {
+        position: relative;
+        width: 20px;
+        height: 20px;
+        margin: 10px 0;
+      }
+      
+      .timeline-circle {
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background-color: #ddd;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        position: relative;
+        z-index: 2;
+      }
+      
+      .timeline-line {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        height: 2px;
+        background-color: #ddd;
+        transform: translateY(-50%);
+        width: 100%;
+        z-index: 1;
+      }
+      
+      .timeline-step:last-child .timeline-line {
+        display: none;
+      }
+      
+      /* Estados da timeline */
+      .timeline-step-completed .timeline-circle {
+        background-color: #4CAF50;
+      }
+      
+      .timeline-step-completed .timeline-line {
+        background-color: #4CAF50;
+      }
+      
+      .timeline-step-current .timeline-circle {
+        background-color: #2196F3;
+      }
+      
+      .timeline-step-current .timeline-line {
+        background-color: #ddd;
+      }
+      
+      /* Textos da timeline */
+      .timeline-label {
+        text-align: center;
+        margin-top: 5px;
+      }
+      
+      .timeline-text {
+        font-size: 10px;
+        color: #666;
+        max-width: 100px;
+        margin: 0 auto;
+        word-wrap: break-word;
+      }
+      
+      .timeline-step-completed .timeline-text {
+        color: #4CAF50;
+        font-weight: bold;
+      }
+      
+      .timeline-step-current .timeline-text {
+        color: #2196F3;
+        font-weight: bold;
+      }
+      
+      /* Espaçamento entre linhas da timeline */
+      .timeline-row + .timeline-row {
+        margin-top: 30px;
+      }
     </style>"
 
     secoes.each do |secao|
@@ -310,7 +414,6 @@ module FluxoTarefasHelper
       margin: 10px auto 5px;
       position: relative;
       z-index: 2;
-      color: white;
     }
     /* Ajuste da linha da timeline para alinhar com o centro das bolinhas */
     .timeline-step::after {
@@ -651,32 +754,31 @@ module FluxoTarefasHelper
     html = "<div class='timeline-row'>"
     html << "<div class='timeline'>"
     
-    # Renderizar cada etapa da timeline
     fluxo.each_with_index do |situacao, i|
-      # Determinar o estado desta etapa
       if i < indice_atual
-        estado = "completed" # Etapas já concluídas
-        icon = "&#10003;" # Checkmark
+        estado = "completed"
+        icon = "&#10003;"
       elsif i == indice_atual
-        estado = "current" # Etapa atual
-        icon = "&#8226;" # Bullet point
+        estado = "current"
+        icon = "&#8226;"
       else
-        estado = "future" # Etapas futuras
+        estado = "future"
         icon = ""
       end
       
-      # Formatar o texto da situação para exibição (remover prefixos, substituir _ por espaço)
       texto_situacao = situacao.gsub("_", " ")
       
-      # Renderizar uma etapa da timeline
       html << "<div class='timeline-step timeline-step-#{estado}'>"
+      html << "<div class='timeline-circle-wrapper'>"
       html << "<div class='timeline-circle'>#{icon}</div>"
+      html << "<div class='timeline-line'></div>"
+      html << "</div>"
       html << "<div class='timeline-label'><div class='timeline-text'>#{texto_situacao}</div></div>"
       html << "</div>"
     end
     
-    html << "</div>" # Fechar timeline
-    html << "</div>" # Fechar timeline-row
+    html << "</div>"
+    html << "</div>"
     
     html
   end
