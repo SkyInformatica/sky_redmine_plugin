@@ -646,23 +646,8 @@ module FluxoTarefasHelper
       html << "</div>" # Fechar timeline
       html << "</div>" # Fechar timeline-row
       
-      # Adicionar o conector entre as duas linhas
-      if indice_atual < ponto_divisao
-        # Se ainda não chegou ao fim da primeira linha
-        conector_estado = "future"
-      elsif indice_atual == ponto_divisao
-        # Se está exatamente no ponto de divisão
-        conector_estado = "current"
-      else
-        # Se já passou do ponto de divisão
-        conector_estado = "completed"
-      end
-      
-      # Adicionar o conector em L invertido entre as duas linhas
-      html << "<div class='timeline-row-connector connector-#{conector_estado}'>"
-      html << "<div class='timeline-vertical-connector'></div>"
-      html << "<div class='timeline-horizontal-connector'></div>"
-      html << "</div>"
+      # Adicionar apenas um espaçamento entre as duas linhas (conector removido temporariamente)
+      html << "<div style='height: 30px;'></div>"
       
       # Renderizar a segunda linha da timeline
       html << "<div class='timeline-row'>"
