@@ -326,7 +326,7 @@ module FluxoTarefasHelper
         white-space: normal;
         margin: 0 auto;
         text-align: center;
-        font-size: 11px;
+        font-size: 9px; /* Tamanho reduzido */
         color: #666;
       }
       /* Ajustando as linhas para passarem pelo centro exato das bolinhas */
