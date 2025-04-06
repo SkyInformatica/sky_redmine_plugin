@@ -166,6 +166,7 @@ module FluxoTarefasHelper
         align-items: center;
         position: relative;
         min-width: 90px;
+        padding: 0 10px; /* Adiciona um pequeno espaçamento horizontal */
       }
       
       .timeline-circle-wrapper {
@@ -173,6 +174,9 @@ module FluxoTarefasHelper
         width: 20px;
         height: 20px;
         margin: 10px 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
       }
       
       .timeline-circle {
@@ -191,13 +195,12 @@ module FluxoTarefasHelper
       .timeline-line {
         position: absolute;
         top: 50%;
-        right: 0;
+        right: -50%;
         height: 2px;
         background-color: #ddd;
         transform: translateY(-50%);
-        width: calc(100% - 10px); /* Reduz a largura da linha para não sobrepor a bolinha */
+        width: 100%; /* A linha vai do centro do círculo atual até o centro do próximo */
         z-index: 1;
-        left: 10px; /* Move o início da linha para depois da bolinha */
       }
       
       .timeline-step:last-child .timeline-line {
