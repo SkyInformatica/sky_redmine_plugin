@@ -307,9 +307,17 @@ module FluxoTarefasHelper
         width: 100%;
         height: 2px;
         background-color: #ddd;
-        top: 40px;
+        top: 20px; /* Centralizar na bolinha */
         left: 50%;
         z-index: 1;
+      }
+      /* Cor verde para as linhas das etapas concluídas */
+      .timeline-step-completed::after {
+        background-color: #4CAF50;
+      }
+      /* Cor azul para a linha da etapa atual */
+      .timeline-step-current::after {
+        background-color: #2196F3;
       }
       .timeline-step:last-child::after {
         display: none;
@@ -322,7 +330,7 @@ module FluxoTarefasHelper
         display: flex;
         align-items: center;
         justify-content: center;
-        margin: 0 auto 5px;
+        margin: 10px auto 5px; /* Ajuste para alinhar com as linhas */
         position: relative;
         z-index: 2;
         color: white;
@@ -374,7 +382,7 @@ module FluxoTarefasHelper
         width: 2px;
         height: 100%;
         background-color: #ddd;
-        right: 10px;
+        right: calc(10px + 45px); /* Ajuste para alinhar com o círculo da última etapa da primeira linha */
         top: 0;
         z-index: 1;
       }
@@ -384,21 +392,26 @@ module FluxoTarefasHelper
         position: absolute;
         height: 2px;
         background-color: #ddd;
-        left: 10px;
-        right: 10px;
-        bottom: 0;
+        left: calc(10px + 45px); /* Ajuste para alinhar com o círculo da primeira etapa da segunda linha */
+        right: calc(10px + 45px);
+        bottom: 20px; /* Ajuste para alinhar com as bolinhas da segunda linha */
         z-index: 1;
       }
       
       /* Cores para os diferentes estados dos conectores */
       .connector-completed .timeline-vertical-connector,
       .connector-completed .timeline-horizontal-connector {
-        background-color: #4CAF50;
+        background-color: #4CAF50; /* Verde para concluído */
       }
       
       .connector-current .timeline-vertical-connector,
       .connector-current .timeline-horizontal-connector {
-        background-color: #2196F3;
+        background-color: #2196F3; /* Azul para atual */
+      }
+      
+      /* Último ajuste para o posicionamento do círculo */
+      .timeline-circle {
+        margin-top: 10px; /* Ajuste para alinhar com as linhas */
       }
       
       .timeline-row {
