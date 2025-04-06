@@ -307,7 +307,7 @@ module FluxoTarefasHelper
         width: 100%;
         height: 2px;
         background-color: #ddd;
-        top: 20px; /* Centralizar na bolinha */
+        top: 20px !important; /* Força a linha a ficar no meio da bolinha */
         left: 50%;
         z-index: 1;
       }
@@ -318,6 +318,10 @@ module FluxoTarefasHelper
       /* Cor azul para a linha da etapa atual */
       .timeline-step-current::after {
         background-color: #2196F3;
+      }
+      /* Importante: a linha à direita da etapa atual deve ser cinza */
+      .timeline-step-current + .timeline-step::after {
+        background-color: #ddd;
       }
       .timeline-step:last-child::after {
         display: none;
@@ -330,7 +334,7 @@ module FluxoTarefasHelper
         display: flex;
         align-items: center;
         justify-content: center;
-        margin: 10px auto 5px; /* Ajuste para alinhar com as linhas */
+        margin: 10px auto 5px;
         position: relative;
         z-index: 2;
         color: white;
@@ -382,7 +386,7 @@ module FluxoTarefasHelper
         width: 2px;
         height: 100%;
         background-color: #ddd;
-        right: calc(10px + 45px); /* Ajuste para alinhar com o círculo da última etapa da primeira linha */
+        right: calc(10px + 45px);
         top: 0;
         z-index: 1;
       }
@@ -392,9 +396,9 @@ module FluxoTarefasHelper
         position: absolute;
         height: 2px;
         background-color: #ddd;
-        left: calc(10px + 45px); /* Ajuste para alinhar com o círculo da primeira etapa da segunda linha */
+        left: calc(10px + 45px);
         right: calc(10px + 45px);
-        bottom: 20px; /* Ajuste para alinhar com as bolinhas da segunda linha */
+        bottom: 20px !important; /* Força o alinhamento com as bolinhas da segunda linha */
         z-index: 1;
       }
       
