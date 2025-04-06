@@ -136,6 +136,15 @@ module FluxoTarefasHelper
     css << "  border-radius: 50%;"
     css << "  background-color: white;"
     css << "}"
+    css << ".timeline-step-warning .timeline-circle {"
+    css << "  background-color: #FFC107;"
+    css << "  border-color: #FFC107;"
+    css << "}"
+    css << ".timeline-step-warning .timeline-label,"
+    css << ".timeline-step-warning .timeline-text {"
+    css << "  color: #FFC107;"
+    css << "  font-weight: bold;"
+    css << "}"
     css << ".timeline-step-future .timeline-circle {"
     css << "  background-color: #fff;"
     css << "  border-color: #e0e0e0;"
@@ -583,7 +592,7 @@ module FluxoTarefasHelper
       
       # Se o ponto de divisão não for encontrado, usar o fluxo normal
       if ponto_divisao.nil?
-        return render_timeline_normal(fluxo, indice_atual)
+        return render_timeline_normal(fluxo, indice_atual, @indicadores)
       end
       
       # Dividir o fluxo em duas partes
@@ -627,10 +636,16 @@ module FluxoTarefasHelper
       segunda_parte.each_with_index do |situacao, i|
         i_ajustado = i + primeira_parte.length
         
+        # Verificar se é a última situação da segunda parte (última do fluxo completo)
+        eh_ultima_etapa = i == segunda_parte.length - 1
+        eh_fechada = @indicadores&.equipe_responsavel_atual == SkyRedminePlugin::Constants::EquipeResponsavel::FECHADA
+        
         estado = if i_ajustado < indice_atual
           "completed"
         elsif i_ajustado == indice_atual
           "current"
+        elsif eh_ultima_etapa && eh_fechada && @indicadores.situacao_atual != SkyRedminePlugin::Constants::SituacaoAtual::VERSAO_LIBERADA
+          "warning"
         else
           "future"
         end
@@ -647,7 +662,7 @@ module FluxoTarefasHelper
       html << "</div>"
     else
       # Fluxo normal sem retorno de testes
-      html << render_timeline_normal(fluxo, indice_atual)
+      html << render_timeline_normal(fluxo, indice_atual, @indicadores)
     end
     
     html << "</div>"
@@ -657,15 +672,21 @@ module FluxoTarefasHelper
   end
   
   # Método auxiliar para renderizar uma timeline simples de uma linha
-  def render_timeline_normal(fluxo, indice_atual)
+  def render_timeline_normal(fluxo, indice_atual, indicadores)
     html = "<div class='timeline-row'>"
     html << "<div class='timeline'>"
     
     fluxo.each_with_index do |situacao, i|
+      # Verificar se é a última situação (VERSAO LIBERADA) e se o responsável atual é FECHADA
+      eh_ultima_etapa = i == fluxo.length - 1
+      eh_fechada = indicadores&.equipe_responsavel_atual == SkyRedminePlugin::Constants::EquipeResponsavel::FECHADA
+      
       estado = if i < indice_atual
         "completed"
       elsif i == indice_atual
         "current"
+      elsif eh_ultima_etapa && eh_fechada && indicadores.situacao_atual != SkyRedminePlugin::Constants::SituacaoAtual::VERSAO_LIBERADA
+        "warning"  # Novo estado para versão liberada quando fechada e não estamos na etapa de versão liberada
       else
         "future"
       end
