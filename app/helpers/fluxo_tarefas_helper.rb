@@ -2,6 +2,242 @@ module FluxoTarefasHelper
   include ApplicationHelper
   include IssuesHelper
 
+  private
+
+  def get_table_css
+    <<~CSS
+      .tabela-fluxo-tarefas {
+        border-collapse: collapse;
+        table-layout: fixed;
+        width: 100%;
+        margin: 0 auto;
+      }
+      .tabela-fluxo-tarefas th,
+      .tabela-fluxo-tarefas td {
+        border: 1px solid #dddddd;
+        text-align: left;
+        padding: 4px;
+        word-wrap: break-word;
+        font-size: 12px;
+      }
+      .tabela-fluxo-tarefas th:nth-child(1),
+      .tabela-fluxo-tarefas td:nth-child(1) {
+        width: 50%;
+      }
+      .tabela-fluxo-tarefas th:nth-child(2),
+      .tabela-fluxo-tarefas td:nth-child(2) {
+        width: 11%;
+      }
+      .tabela-fluxo-tarefas th:nth-child(3),
+      .tabela-fluxo-tarefas td:nth-child(3) {
+        width: 9%;
+      }
+      .tabela-fluxo-tarefas th:nth-child(4),
+      .tabela-fluxo-tarefas td:nth-child(4) {
+        width: 8%;
+      }
+      .tabela-fluxo-tarefas th:nth-child(5),
+      .tabela-fluxo-tarefas td:nth-child(5) {
+        width: 8%;
+      }
+      .tabela-fluxo-tarefas th:nth-child(6),
+      .tabela-fluxo-tarefas td:nth-child(6) {
+        width: 8%;
+      }
+      .tabela-fluxo-tarefas th:nth-child(7),
+      .tabela-fluxo-tarefas td:nth-child(7) {
+        width: 8%;
+      }
+      .tabela-fluxo-tarefas th:nth-child(8),
+      .tabela-fluxo-tarefas td:nth-child(8) {
+        width: 10%;
+      }
+      .tabela-fluxo-tarefas th:nth-child(9),
+      .tabela-fluxo-tarefas td:nth-child(9) {
+        width: 6%;
+      }
+      .tabela-fluxo-tarefas th:nth-child(10),
+      .tabela-fluxo-tarefas td:nth-child(10) {
+        width: 6%;
+      }
+      .titulo-secao {
+        font-size: 12px;
+        font-weight: bold;
+        margin: 10px 0 5px 0;
+      }
+    CSS
+  end
+
+  def get_timeline_css
+    <<~CSS
+      .timeline-container {
+        margin: 20px 0;
+        width: 100%;
+        overflow-x: auto;
+      }
+      .timeline {
+        position: relative;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        padding-top: 12px;
+      }
+      /* Linha conectora */
+      .timeline::before {
+        content: '';
+        position: absolute;
+        top: 24px;
+        left: 12px;
+        right: 12px;
+        height: 2px;
+        background-color: #e0e0e0;
+        z-index: 0;
+      }
+      .timeline-step {
+        flex: 1;
+        position: relative;
+        text-align: center;
+        padding: 0 5px;
+        min-width: 80px;
+      }
+      .timeline-circle {
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        border: 2px solid #e0e0e0;
+        background-color: #fff;
+        margin: 0 auto;
+        position: relative;
+        z-index: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      /* Estados dos círculos */
+      .timeline-step-completed .timeline-circle {
+        background-color: #4CAF50;
+        border-color: #4CAF50;
+      }
+      .timeline-step-completed .timeline-circle::after {
+        content: '✓';
+        color: white;
+        font-weight: bold;
+        font-size: 14px;
+      }
+      .timeline-step-current .timeline-circle {
+        background-color: #2196F3;
+        border-color: #2196F3;
+      }
+      .timeline-step-current .timeline-circle::after {
+        content: '';
+        display: block;
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background-color: white;
+      }
+      .timeline-step-future .timeline-circle {
+        background-color: #fff;
+        border-color: #e0e0e0;
+      }
+      /* Textos da timeline */
+      .timeline-label {
+        display: block;
+        font-size: 10px;
+        margin-top: 10px;
+        word-wrap: break-word;
+      }
+      .timeline-text {
+        max-width: 100px;
+        margin: 0 auto;
+        text-align: center;
+        font-size: 9px;
+        color: #666;
+      }
+      /* Cores dos textos baseadas no estado */
+      .timeline-step-completed .timeline-label,
+      .timeline-step-completed .timeline-text {
+        color: #333;
+        font-weight: bold;
+      }
+      .timeline-step-current .timeline-label,
+      .timeline-step-current .timeline-text {
+        color: #2196F3;
+        font-weight: bold;
+      }
+      .timeline-step-future .timeline-label,
+      .timeline-step-future .timeline-text {
+        color: #999;
+      }
+      /* Espaçamento entre múltiplas timelines */
+      .timeline-row + .timeline-row {
+        margin-top: 30px;
+      }
+    CSS
+  end
+
+  def get_indicadores_css
+    <<~CSS
+      .indicadores-container {
+        margin-bottom: 20px;
+      }
+      .indicadores-grupo {
+        margin-bottom: 15px;
+      }
+      .indicadores-titulo {
+        font-weight: bold;
+        margin-bottom: 10px;
+        font-size: 12px;
+      }
+      .indicadores-cards {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-bottom: 10px;
+      }
+      .indicador-card {
+        background: #f9f9f9;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        padding: 10px;
+        min-width: 200px;
+      }
+      .indicador-caption {
+        font-weight: bold;
+        color: #666;
+        font-size: 12px;
+        margin-bottom: 5px;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+      }
+      .indicador-valor {
+        font-size: 14px;
+        margin-bottom: 3px;
+      }
+      .indicador-detalhe {
+        color: #888;
+        font-style: italic;
+        font-size: 11px;
+      }
+      .info-icon {
+        color: #666;
+        cursor: help;
+        font-size: 14px;
+      }
+    CSS
+  end
+
+  def get_all_css
+    <<~CSS
+      <style>
+        #{get_table_css}
+        #{get_timeline_css}
+        #{get_indicadores_css}
+      </style>
+    CSS
+  end
+
   def render_fluxo_tarefas_html(issue)
     tarefas_relacionadas = SkyRedminePlugin::TarefasRelacionadas.obter_lista_tarefas_relacionadas(issue)
 
@@ -42,8 +278,6 @@ module FluxoTarefasHelper
     (cards_html + texto_fluxo).html_safe
   end
 
-  private
-
   def gerar_texto_fluxo_html(tarefas, tarefa_atual_id)
     secoes = []
     secao_atual = nil
@@ -82,187 +316,7 @@ module FluxoTarefasHelper
     linhas << "<div class='description'>"
     linhas << "<hr>"
     linhas << "<p><strong>Fluxo das tarefas</strong></b></p>"
-
-    linhas << "<style>  
-      .tabela-fluxo-tarefas {  
-        border-collapse: collapse;  
-        table-layout: fixed; /* Definição importante para controlar as larguras */  
-        width: 100%; /* Ocupará toda a largura disponível */  
-        margin: 0 auto; /* Centraliza a tabela */                  
-      }  
-      .tabela-fluxo-tarefas th,  
-      .tabela-fluxo-tarefas td {  
-        border: 1px solid #dddddd;  
-        text-align: left;  
-        padding: 4px;  
-        word-wrap: break-word; /* Quebra palavras longas */  
-        font-size: 12px; /* Tamanho da fonte ajustado */  
-      }        
-      .tabela-fluxo-tarefas th:nth-child(1),  
-      .tabela-fluxo-tarefas td:nth-child(1) {  
-        width: 50%;   
-      }  
-      .tabela-fluxo-tarefas th:nth-child(2),  
-      .tabela-fluxo-tarefas td:nth-child(2) {  
-        width: 11%;   
-      }  
-      .tabela-fluxo-tarefas th:nth-child(3),  
-      .tabela-fluxo-tarefas td:nth-child(3) {  
-        width: 9%;   
-      }  
-      .tabela-fluxo-tarefas th:nth-child(4),  
-      .tabela-fluxo-tarefas td:nth-child(4) {  
-        width: 8%; 
-      }  
-      .tabela-fluxo-tarefas th:nth-child(5),  
-      .tabela-fluxo-tarefas td:nth-child(5) {  
-        width: 8%; 
-      }  
-      .tabela-fluxo-tarefas th:nth-child(6),  
-      .tabela-fluxo-tarefas td:nth-child(6) {  
-        width: 8%; 
-      }  
-      .tabela-fluxo-tarefas th:nth-child(7),  
-      .tabela-fluxo-tarefas td:nth-child(7) {  
-        width: 8%; 
-      }  
-      .tabela-fluxo-tarefas th:nth-child(8),  
-      .tabela-fluxo-tarefas td:nth-child(8) {  
-        width: 10%;   
-      }  
-      .tabela-fluxo-tarefas th:nth-child(9),  
-      .tabela-fluxo-tarefas td:nth-child(9) {  
-        width: 6%;   
-      }  
-      .tabela-fluxo-tarefas th:nth-child(10),  
-      .tabela-fluxo-tarefas td:nth-child(10) {  
-        width: 6%; 
-      }  
-      /* estilo para o título da seção */  
-      .titulo-secao {  
-        font-size: 12px;  
-        font-weight: bold;  
-        margin: 10px 0 5px 0;  
-      }  
-      /* Timeline CSS */
-      .timeline-container {
-        margin: 20px 0;
-        width: 100%;
-        overflow-x: auto;
-      }
-      
-      .timeline {
-        position: relative;
-        display: flex;
-        justify-content: space-between;
-        align-items: flex-start;
-        padding-top: 12px;
-      }
-      
-      /* Linha conectora */
-      .timeline::before {
-        content: '';
-        position: absolute;
-        top: 24px;
-        left: 12px;
-        right: 12px;
-        height: 2px;
-        background-color: #e0e0e0;
-        z-index: 0;
-      }
-      
-      .timeline-step {
-        flex: 1;
-        position: relative;
-        text-align: center;
-        padding: 0 5px;
-        min-width: 80px;
-      }
-      
-      .timeline-circle {
-        width: 24px;
-        height: 24px;
-        border-radius: 50%;
-        border: 2px solid #e0e0e0;
-        background-color: #fff;
-        margin: 0 auto;
-        position: relative;
-        z-index: 1;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-weight: bold;
-        font-size: 14px;
-      }
-      
-      /* Estados dos círculos */
-      .timeline-step-completed .timeline-circle {
-        background-color: #4CAF50;
-        border-color: #4CAF50;
-        color: white;
-      }
-      .timeline-step-completed .timeline-circle::after {
-        content: '✓';
-      }
-      
-      .timeline-step-current .timeline-circle {
-        background-color: #2196F3;
-        border-color: #2196F3;
-        color: white;
-      }
-      .timeline-step-current .timeline-circle::after {
-        content: '';
-        display: block;
-        width: 8px;
-        height: 8px;
-        border-radius: 50%;
-        background-color: white;
-      }
-      
-      .timeline-step-future .timeline-circle {
-        background-color: #fff;
-        border-color: #e0e0e0;
-      }
-      
-      /* Textos da timeline */
-      .timeline-label {
-        display: block;
-        font-size: 10px;
-        margin-top: 10px;
-        word-wrap: break-word;
-      }
-      
-      .timeline-text {
-        max-width: 100px;
-        margin: 0 auto;
-        text-align: center;
-        font-size: 9px;
-        color: #666;
-      }
-      
-      /* Cores dos textos baseadas no estado */
-      .timeline-step-completed .timeline-label,
-      .timeline-step-completed .timeline-text {
-        color: #333;
-        font-weight: bold;
-      }
-      
-      .timeline-step-current .timeline-label,
-      .timeline-step-current .timeline-text {
-        color: #2196F3;
-        font-weight: bold;
-      }
-      
-      .timeline-step-future .timeline-label,
-      .timeline-step-future .timeline-text {
-        color: #999;
-      }
-      
-      /* Espaçamento entre múltiplas timelines */
-      .timeline-row + .timeline-row {
-        margin-top: 30px;
-      }
-    </style>"
+    linhas << get_all_css
 
     secoes.each do |secao|
       # Calcular tempo total gasto na seção
@@ -271,7 +325,6 @@ module FluxoTarefasHelper
 
       # Adicionar cabeçalho da seção com tempo total
       linhas << "<p class='titulo-secao'>#{secao[:nome]} (Tempo gasto: #{total_tempo_formatado}h)</p>"
-      #linhas << "<table class='tabela-fluxo-tarefas'>"
       linhas << "<table class='tabela-fluxo-tarefas'>"
       linhas << "<tr>  
         <th>Título</th>  
@@ -348,173 +401,9 @@ module FluxoTarefasHelper
   end
 
   def render_cards_indicadores(indicadores, tarefas_relacionadas)
-    # CSS para os cards
-    css = css = "<style>
-    .indicadores-container {
-      margin-bottom: 20px;
-    }
-    .indicadores-grupo {
-      margin-bottom: 15px;
-    }
-    .indicadores-titulo {
-      font-weight: bold;
-      margin-bottom: 10px;
-      font-size: 12px;
-    }
-    .indicadores-cards {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-bottom: 10px;
-    }
-    .indicador-card {
-      background: #f9f9f9;
-      border: 1px solid #ddd;
-      border-radius: 4px;
-      padding: 10px;
-      min-width: 200px;
-    }
-    .indicador-caption {
-      font-weight: bold;
-      color: #666;
-      font-size: 12px;
-      margin-bottom: 5px;
-      display: flex;
-      align-items: center;
-      gap: 5px;
-    }
-    .indicador-valor {
-      font-size: 14px;
-      margin-bottom: 3px;
-    }
-    .indicador-detalhe {
-      color: #888;
-      font-style: italic;
-      font-size: 11px;
-    }
-    .info-icon {
-      color: #666;
-      cursor: help;
-      font-size: 14px;
-    }
-    /* Timeline CSS */
-    .timeline-container {
-      margin-top: 15px;
-      margin-bottom: 15px;
-      width: 100%;
-      overflow-x: auto;
-    }
-    .timeline {
-      position: relative;
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      padding-top: 12px;
-    }
-    
-    /* Linha conectora */
-    .timeline::before {
-      content: '';
-      position: absolute;
-      top: 24px;
-      left: 12px;
-      right: 12px;
-      height: 2px;
-      background-color: #e0e0e0;
-      z-index: 0;
-    }
-    
-    .timeline-step {
-      flex: 1;
-      position: relative;
-      text-align: center;
-      padding: 0 5px;
-      min-width: 80px;
-    }
-    
-    .timeline-circle {
-      width: 24px;
-      height: 24px;
-      border-radius: 50%;
-      border: 2px solid #e0e0e0;
-      background-color: #fff;
-      margin: 0 auto;
-      position: relative;
-      z-index: 1;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: bold;
-      font-size: 14px;
-    }
-    
-    /* Estados dos círculos */
-    .timeline-step-completed .timeline-circle {
-      background-color: #4CAF50;
-      border-color: #4CAF50;
-      color: white;
-    }
-    .timeline-step-completed .timeline-circle::after {
-      content: '✓';
-    }
-    
-    .timeline-step-current .timeline-circle {
-      background-color: #2196F3;
-      border-color: #2196F3;
-      color: white;
-    }
-    .timeline-step-current .timeline-circle::after {
-      content: '';
-      display: block;
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background-color: white;
-    }
-    
-    .timeline-step-future .timeline-circle {
-      background-color: #fff;
-      border-color: #e0e0e0;
-    }
-    
-    /* Textos da timeline */
-    .timeline-label {
-      display: block;
-      font-size: 10px;
-      margin-top: 10px;
-      word-wrap: break-word;
-    }
-    
-    .timeline-text {
-      max-width: 100px;
-      margin: 0 auto;
-      text-align: center;
-      font-size: 9px;
-      color: #666;
-    }
-    
-    /* Cores dos textos baseadas no estado */
-    .timeline-step-completed .timeline-label,
-    .timeline-step-completed .timeline-text {
-      color: #333;
-      font-weight: bold;
-    }
-    
-    .timeline-step-current .timeline-label,
-    .timeline-step-current .timeline-text {
-      color: #2196F3;
-      font-weight: bold;
-    }
-    
-    .timeline-step-future .timeline-label,
-    .timeline-step-future .timeline-text {
-      color: #999;
-    }
-  </style>"
-
     # Gerar HTML dos cards
     html = []
-    html << css
+    html << get_all_css
     html << "<div class='indicadores-container'>"
 
     # Informações gerais
@@ -717,18 +606,10 @@ module FluxoTarefasHelper
           "future"
         end
         
-        icon = case estado
-        when "completed" then "&#10003;"
-        when "current" then "&#8226;"
-        else ""
-        end
-        
         texto_situacao = situacao.gsub("_", " ")
         
         html << "<div class='timeline-step timeline-step-#{estado}'>"
-        html << "<div class='timeline-circle-container'>"
-        html << "<div class='timeline-circle'>#{icon}</div>"
-        html << "</div>"
+        html << "<div class='timeline-circle'></div>"
         html << "<div class='timeline-label'><div class='timeline-text'>#{texto_situacao}</div></div>"
         html << "</div>"
       end
@@ -754,18 +635,10 @@ module FluxoTarefasHelper
           "future"
         end
         
-        icon = case estado
-        when "completed" then "&#10003;"
-        when "current" then "&#8226;"
-        else ""
-        end
-        
         texto_situacao = situacao.gsub("_", " ")
         
         html << "<div class='timeline-step timeline-step-#{estado}'>"
-        html << "<div class='timeline-circle-container'>"
-        html << "<div class='timeline-circle'>#{icon}</div>"
-        html << "</div>"
+        html << "<div class='timeline-circle'></div>"
         html << "<div class='timeline-label'><div class='timeline-text'>#{texto_situacao}</div></div>"
         html << "</div>"
       end
@@ -797,18 +670,10 @@ module FluxoTarefasHelper
         "future"
       end
       
-      icon = case estado
-      when "completed" then "&#10003;"
-      when "current" then "&#8226;"
-      else ""
-      end
-      
       texto_situacao = situacao.gsub("_", " ")
       
       html << "<div class='timeline-step timeline-step-#{estado}'>"
-      html << "<div class='timeline-circle-container'>"
-      html << "<div class='timeline-circle'>#{icon}</div>"
-      html << "</div>"
+      html << "<div class='timeline-circle'></div>"
       html << "<div class='timeline-label'><div class='timeline-text'>#{texto_situacao}</div></div>"
       html << "</div>"
     end
