@@ -155,8 +155,7 @@ module FluxoTarefasHelper
       .timeline {
         display: flex;
         width: 100%;
-        min-height: 80px;
-        align-items: center;
+        align-items: center; /* Alinha os itens verticalmente no centro */
       }
       
       .timeline-step {
@@ -168,6 +167,14 @@ module FluxoTarefasHelper
         padding: 0 10px;
       }
       
+      /* Container para o círculo para garantir alinhamento consistente */
+      .timeline-circle-container {
+        height: 40px; /* Altura fixa para todos os containers de círculo */
+        display: flex;
+        align-items: center; /* Centraliza o círculo verticalmente */
+        justify-content: center;
+      }
+      
       .timeline-circle {
         width: 20px;
         height: 20px;
@@ -177,7 +184,6 @@ module FluxoTarefasHelper
         align-items: center;
         justify-content: center;
         color: white;
-        margin: 10px 0;
       }
       
       /* Estados dos ícones */
@@ -630,7 +636,9 @@ module FluxoTarefasHelper
         texto_situacao = situacao.gsub("_", " ")
         
         html << "<div class='timeline-step timeline-step-#{estado}'>"
+        html << "<div class='timeline-circle-container'>"
         html << "<div class='timeline-circle'>#{icon}</div>"
+        html << "</div>"
         html << "<div class='timeline-label'><div class='timeline-text'>#{texto_situacao}</div></div>"
         html << "</div>"
       end
@@ -665,7 +673,9 @@ module FluxoTarefasHelper
         texto_situacao = situacao.gsub("_", " ")
         
         html << "<div class='timeline-step timeline-step-#{estado}'>"
+        html << "<div class='timeline-circle-container'>"
         html << "<div class='timeline-circle'>#{icon}</div>"
+        html << "</div>"
         html << "<div class='timeline-label'><div class='timeline-text'>#{texto_situacao}</div></div>"
         html << "</div>"
       end
@@ -706,7 +716,9 @@ module FluxoTarefasHelper
       texto_situacao = situacao.gsub("_", " ")
       
       html << "<div class='timeline-step timeline-step-#{estado}'>"
+      html << "<div class='timeline-circle-container'>"
       html << "<div class='timeline-circle'>#{icon}</div>"
+      html << "</div>"
       html << "<div class='timeline-label'><div class='timeline-text'>#{texto_situacao}</div></div>"
       html << "</div>"
     end
