@@ -144,7 +144,7 @@ module FluxoTarefasHelper
         font-weight: bold;  
         margin: 10px 0 5px 0;  
       }  
-      /* Timeline CSS - Apenas ícones */
+      /* Timeline CSS - Alinhamento vertical preciso */
       .timeline-container {
         margin: 20px 0;
         padding: 20px 0;
@@ -155,24 +155,16 @@ module FluxoTarefasHelper
       .timeline {
         display: flex;
         width: 100%;
-        align-items: center; /* Alinha os itens verticalmente no centro */
+        position: relative;
+        padding-top: 30px; /* Espaço para os ícones */
       }
       
       .timeline-step {
         flex: 1;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
         min-width: 90px;
+        position: relative;
         padding: 0 10px;
-      }
-      
-      /* Container para o círculo para garantir alinhamento consistente */
-      .timeline-circle-container {
-        height: 40px; /* Altura fixa para todos os containers de círculo */
-        display: flex;
-        align-items: center; /* Centraliza o círculo verticalmente */
-        justify-content: center;
+        padding-top: 30px; /* Espaço para o ícone */
       }
       
       .timeline-circle {
@@ -180,6 +172,10 @@ module FluxoTarefasHelper
         height: 20px;
         border-radius: 50%;
         background-color: #ddd;
+        position: absolute;
+        top: 0;
+        left: 50%;
+        transform: translateX(-50%);
         display: flex;
         align-items: center;
         justify-content: center;
@@ -198,7 +194,6 @@ module FluxoTarefasHelper
       /* Textos da timeline */
       .timeline-label {
         text-align: center;
-        margin-top: 5px;
       }
       
       .timeline-text {
