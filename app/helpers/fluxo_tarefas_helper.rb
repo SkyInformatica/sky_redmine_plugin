@@ -561,7 +561,7 @@ module FluxoTarefasHelper
     # Verificar se há uma situação atual e quantidade de retornos de testes
     tem_retorno_testes = indicadores.qtd_retorno_testes.to_i > 0
     if indicadores.situacao_atual.present?
-      html << render_timeline_situacao_atual(indicadores.situacao_atual, tem_retorno_testes)
+      html << render_timeline_situacao_atual(indicadores.situacao_atual, tem_retorno_testes, indicadores)
     end
 
     html << "</div>"
@@ -569,7 +569,7 @@ module FluxoTarefasHelper
   end
   
   # Método para renderizar a timeline da situação atual
-  def render_timeline_situacao_atual(situacao_atual, tem_retorno_testes)
+  def render_timeline_situacao_atual(situacao_atual, tem_retorno_testes, indicadores)
     return "" unless situacao_atual
     
     # Determinar qual fluxo usar baseado em se teve retornos de testes
@@ -592,7 +592,7 @@ module FluxoTarefasHelper
       
       # Se o ponto de divisão não for encontrado, usar o fluxo normal
       if ponto_divisao.nil?
-        return render_timeline_normal(fluxo, indice_atual, @indicadores)
+        return render_timeline_normal(fluxo, indice_atual, indicadores)
       end
       
       # Dividir o fluxo em duas partes
@@ -603,66 +603,16 @@ module FluxoTarefasHelper
       esta_na_primeira_parte = indice_atual <= ponto_divisao
       
       # Renderizar a primeira linha da timeline
-      html << "<div class='timeline-row'>"
-      html << "<div class='timeline'>"
-      
-      primeira_parte.each_with_index do |situacao, i|
-        estado = if !esta_na_primeira_parte || i < indice_atual
-          "completed"
-        elsif i == indice_atual && esta_na_primeira_parte
-          "current"
-        else
-          "future"
-        end
-        
-        texto_situacao = situacao.gsub("_", " ")
-        
-        html << "<div class='timeline-step timeline-step-#{estado}'>"
-        html << "<div class='timeline-circle'></div>"
-        html << "<div class='timeline-label'><div class='timeline-text'>#{texto_situacao}</div></div>"
-        html << "</div>"
-      end
-      
-      html << "</div>"
-      html << "</div>"
+      html << render_timeline_steps(primeira_parte, indice_atual, indicadores, esta_na_primeira_parte)
       
       # Adicionar espaçamento entre as linhas
       html << "<div style='height: 30px;'></div>"
       
       # Renderizar a segunda linha da timeline
-      html << "<div class='timeline-row'>"
-      html << "<div class='timeline'>"
-      
-      segunda_parte.each_with_index do |situacao, i|
-        i_ajustado = i + primeira_parte.length
-        
-        # Verificar se é a última situação da segunda parte (última do fluxo completo)
-        eh_ultima_etapa = i == segunda_parte.length - 1
-        eh_fechada = @indicadores&.equipe_responsavel_atual == SkyRedminePlugin::Constants::EquipeResponsavel::FECHADA
-        
-        estado = if i_ajustado < indice_atual
-          "completed"
-        elsif i_ajustado == indice_atual
-          "current"
-        elsif eh_ultima_etapa && eh_fechada && @indicadores.situacao_atual != SkyRedminePlugin::Constants::SituacaoAtual::VERSAO_LIBERADA
-          "warning"
-        else
-          "future"
-        end
-        
-        texto_situacao = situacao.gsub("_", " ")
-        
-        html << "<div class='timeline-step timeline-step-#{estado}'>"
-        html << "<div class='timeline-circle'></div>"
-        html << "<div class='timeline-label'><div class='timeline-text'>#{texto_situacao}</div></div>"
-        html << "</div>"
-      end
-      
-      html << "</div>"
-      html << "</div>"
+      html << render_timeline_steps(segunda_parte, indice_atual - primeira_parte.length, indicadores, !esta_na_primeira_parte, primeira_parte.length)
     else
       # Fluxo normal sem retorno de testes
-      html << render_timeline_normal(fluxo, indice_atual, @indicadores)
+      html << render_timeline_normal(fluxo, indice_atual, indicadores)
     end
     
     html << "</div>"
@@ -673,20 +623,24 @@ module FluxoTarefasHelper
   
   # Método auxiliar para renderizar uma timeline simples de uma linha
   def render_timeline_normal(fluxo, indice_atual, indicadores)
-    html = "<div class='timeline-row'>"
-    html << "<div class='timeline'>"
+    "<div class='timeline-row'>" + render_timeline_steps(fluxo, indice_atual, indicadores) + "</div>"
+  end
+
+  # Método auxiliar para renderizar os passos da timeline
+  def render_timeline_steps(fluxo, indice_atual, indicadores, esta_na_parte_atual = true, offset = 0)
+    html = "<div class='timeline'>"
     
     fluxo.each_with_index do |situacao, i|
-      # Verificar se é a última situação (VERSAO LIBERADA) e se o responsável atual é FECHADA
+      i_ajustado = i + offset
       eh_ultima_etapa = i == fluxo.length - 1
       eh_fechada = indicadores&.equipe_responsavel_atual == SkyRedminePlugin::Constants::EquipeResponsavel::FECHADA
       
-      estado = if i < indice_atual
+      estado = if !esta_na_parte_atual || i < indice_atual
         "completed"
-      elsif i == indice_atual
+      elsif i == indice_atual && esta_na_parte_atual
         "current"
       elsif eh_ultima_etapa && eh_fechada && indicadores.situacao_atual != SkyRedminePlugin::Constants::SituacaoAtual::VERSAO_LIBERADA
-        "warning"  # Novo estado para versão liberada quando fechada e não estamos na etapa de versão liberada
+        "warning"
       else
         "future"
       end
@@ -700,8 +654,6 @@ module FluxoTarefasHelper
     end
     
     html << "</div>"
-    html << "</div>"
-    
     html
   end
 
