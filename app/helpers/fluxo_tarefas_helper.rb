@@ -647,7 +647,6 @@ module FluxoTarefasHelper
       html << "<div class='timeline'>"
       
       primeira_parte.each_with_index do |situacao, i|
-        # Se estamos na segunda parte do fluxo, toda a primeira parte está completa
         estado = if !esta_na_primeira_parte || i < indice_atual
           "completed"
         elsif i == indice_atual && esta_na_primeira_parte
@@ -665,10 +664,7 @@ module FluxoTarefasHelper
         texto_situacao = situacao.gsub("_", " ")
         
         html << "<div class='timeline-step timeline-step-#{estado}'>"
-        html << "<div class='timeline-circle-wrapper'>"
         html << "<div class='timeline-circle'>#{icon}</div>"
-        html << "<div class='timeline-line'></div>"
-        html << "</div>"
         html << "<div class='timeline-label'><div class='timeline-text'>#{texto_situacao}</div></div>"
         html << "</div>"
       end
@@ -703,10 +699,7 @@ module FluxoTarefasHelper
         texto_situacao = situacao.gsub("_", " ")
         
         html << "<div class='timeline-step timeline-step-#{estado}'>"
-        html << "<div class='timeline-circle-wrapper'>"
         html << "<div class='timeline-circle'>#{icon}</div>"
-        html << "<div class='timeline-line'></div>"
-        html << "</div>"
         html << "<div class='timeline-label'><div class='timeline-text'>#{texto_situacao}</div></div>"
         html << "</div>"
       end
