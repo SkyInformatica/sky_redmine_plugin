@@ -425,9 +425,6 @@ module FluxoTarefasHelper
     html << "<div class='indicadores-cards'>"
     html << render_card("Responsável atual", indicadores.equipe_responsavel_atual, "", "Equipe responsável pela tarefa")
 
-    # Card de situação atual do desenvolvimento
-    html << render_card("Situação atual", indicadores.situacao_atual, "", "Status atual do ciclo de desenvolvimento da tarefa")
-
     # Card de retorno de testes
     html << render_card(
       "Retorno de testes",
