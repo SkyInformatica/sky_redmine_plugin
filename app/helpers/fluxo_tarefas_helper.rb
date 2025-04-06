@@ -285,22 +285,20 @@ module FluxoTarefasHelper
         margin-bottom: 15px;
         width: 100%;
         overflow-x: auto;
-        position: relative;
       }
       .timeline {
         display: flex;
         width: 100%;
         position: relative;
-        margin-bottom: 0;
       }
       .timeline-step {
         flex: 1;
         text-align: center;
         padding: 10px 5px;
         position: relative;
-        font-size: 11px;
         min-width: 90px;
       }
+      /* Círculos da timeline */
       .timeline-circle {
         width: 20px;
         height: 20px;
@@ -314,22 +312,14 @@ module FluxoTarefasHelper
         z-index: 2;
         color: white;
       }
-      .timeline-label {
-        display: block;
-        font-size: 10px;
-        color: #333;
-        margin-top: 5px;
-        word-wrap: break-word;
+      /* Cores dos círculos baseadas no estado */
+      .timeline-step-completed .timeline-circle {
+        background-color: #4CAF50;
       }
-      .timeline-text {
-        max-width: 100px;
-        white-space: normal;
-        margin: 0 auto;
-        text-align: center;
-        font-size: 9px; /* Tamanho reduzido */
-        color: #666;
+      .timeline-step-current .timeline-circle {
+        background-color: #2196F3;
       }
-      /* Ajustando as linhas para passarem pelo centro exato das bolinhas */
+      /* Linhas conectoras entre os círculos */
       .timeline-step::after {
         content: '';
         position: absolute;
@@ -340,102 +330,45 @@ module FluxoTarefasHelper
         left: 50%;
         z-index: 1;
       }
-      /* Cor verde para as linhas das etapas concluídas */
+      /* Cores das linhas baseadas no estado */
       .timeline-step-completed::after {
         background-color: #4CAF50;
       }
-      /* A linha após a etapa atual deve ser cinza */
       .timeline-step-current::after {
-        background-color: #ddd;
-      }
-      /* Garantindo que todas as linhas após a etapa atual sejam cinza */
-      .timeline-step-current + .timeline-step::after {
         background-color: #ddd;
       }
       .timeline-step:last-child::after {
         display: none;
       }
-      .timeline-step-completed .timeline-circle {
-        background-color: #4CAF50;
+      /* Textos da timeline */
+      .timeline-label {
+        display: block;
+        font-size: 10px;
+        margin-top: 5px;
+        word-wrap: break-word;
       }
-      .timeline-step-current .timeline-circle {
-        background-color: #2196F3;
+      .timeline-text {
+        max-width: 100px;
+        white-space: normal;
+        margin: 0 auto;
+        text-align: center;
+        font-size: 9px;
+        color: #666;
       }
-      .timeline-step-future .timeline-circle {
-        background-color: #ddd;
-      }
-      .timeline-step-completed .timeline-label {
-        color: #4CAF50;
-        font-weight: bold;
-      }
-      .timeline-step-current .timeline-label {
-        color: #2196F3;
-        font-weight: bold;
-      }
-      .timeline-step-future .timeline-label {
-        color: #999;
-      }
-      
-      /* Estilos específicos para o texto dentro da timeline */
+      /* Cores dos textos baseadas no estado */
+      .timeline-step-completed .timeline-label,
       .timeline-step-completed .timeline-text {
         color: #4CAF50;
+        font-weight: bold;
       }
+      .timeline-step-current .timeline-label,
       .timeline-step-current .timeline-text {
         color: #2196F3;
+        font-weight: bold;
       }
+      .timeline-step-future .timeline-label,
       .timeline-step-future .timeline-text {
         color: #999;
-      }
-      
-      /* Conector em L invertido entre as duas linhas */
-      .timeline-row-connector {
-        position: relative;
-        height: 45px; /* Altura do espaço entre as duas linhas */
-        margin: 0;
-        padding: 0;
-      }
-      
-      /* Conector vertical que desce do final da primeira linha */
-      .timeline-vertical-connector {
-        position: absolute;
-        width: 2px;
-        height: 100%;
-        background-color: #ddd;
-        right: calc(10px + 45px);
-        top: 0;
-        z-index: 1;
-      }
-      
-      /* Conector horizontal que liga à segunda linha */
-      .timeline-horizontal-connector {
-        position: absolute;
-        height: 2px;
-        background-color: #ddd;
-        left: calc(10px + 45px);
-        right: calc(10px + 45px);
-        bottom: 20px !important; /* Força o alinhamento com as bolinhas da segunda linha */
-        z-index: 1;
-      }
-      
-      /* Cores para os diferentes estados dos conectores */
-      .connector-completed .timeline-vertical-connector,
-      .connector-completed .timeline-horizontal-connector {
-        background-color: #4CAF50; /* Verde para concluído */
-      }
-      
-      .connector-current .timeline-vertical-connector,
-      .connector-current .timeline-horizontal-connector {
-        background-color: #2196F3; /* Azul para atual */
-      }
-      
-      /* Último ajuste para o posicionamento do círculo */
-      .timeline-circle {
-        margin-top: 10px; /* Ajuste para alinhar com as linhas */
-      }
-      
-      .timeline-row {
-        margin-bottom: 0;
-        position: relative;
       }
     </style>"
 
