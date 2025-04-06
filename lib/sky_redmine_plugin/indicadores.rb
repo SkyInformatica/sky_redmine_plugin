@@ -231,6 +231,9 @@ module SkyRedminePlugin
 
         Rails.logger.info ">>> indicador.save: #{indicador.inspect}"
         indicador.save(validate: false)
+        
+        # Atualizar as tags das tarefas com a situação atual
+        atualizar_tags_situacao_atual(tarefas_devel, tarefas_qs, indicador.situacao_atual)
       end
     end
 
@@ -283,6 +286,74 @@ module SkyRedminePlugin
       indicador.equipe_responsavel_atual = nil
       indicador.tarefa_fechada_sem_testes = nil
       indicador.situacao_atual = nil
+    end
+    
+    # Método para atualizar as tags das tarefas com a situação atual
+    def self.atualizar_tags_situacao_atual(tarefas_devel, tarefas_qs, situacao_atual)
+      begin
+        Rails.logger.info ">>> Atualizando tags das tarefas com situação atual: #{situacao_atual}"
+        
+        # Prefixo padrão para as tags de situação
+        prefixo_tag = "SkyRP_"
+        
+        # Criar a nova tag baseada na situação atual
+        nova_tag = "#{prefixo_tag}#{situacao_atual}"
+        
+        # Atualizar a última tarefa DEVEL se existir
+        unless tarefas_devel.empty?
+          ultima_tarefa_devel = tarefas_devel.last
+          atualizar_tag_tarefa(ultima_tarefa_devel, prefixo_tag, nova_tag)
+        end
+        
+        # Atualizar a última tarefa QS se existir
+        unless tarefas_qs.empty?
+          ultima_tarefa_qs = tarefas_qs.last
+          atualizar_tag_tarefa(ultima_tarefa_qs, prefixo_tag, nova_tag)
+        end
+        
+        # Procurar nas outras tarefas para remover tags antigas
+        (tarefas_devel + tarefas_qs).each do |tarefa|
+          # Pular as últimas tarefas que já foram atualizadas
+          next if !tarefas_devel.empty? && tarefa.id == tarefas_devel.last.id
+          next if !tarefas_qs.empty? && tarefa.id == tarefas_qs.last.id
+          
+          # Remover apenas as tags antigas sem adicionar nova
+          atualizar_tag_tarefa(tarefa, prefixo_tag, nil)
+        end
+        
+        Rails.logger.info ">>> Tags atualizadas com sucesso"
+      rescue => e
+        Rails.logger.error ">>> Erro ao atualizar tags: #{e.message}"
+        Rails.logger.error e.backtrace.join("\n")
+      end
+    end
+    
+    # Método auxiliar para atualizar tags de uma tarefa específica
+    def self.atualizar_tag_tarefa(tarefa, prefixo_tag, nova_tag)
+      begin
+        # Verificar se a tarefa tem o método tag_list (alguns plugins de tagging podem não estar instalados)
+        return unless tarefa.respond_to?(:tag_list)
+        
+        Rails.logger.info ">>> Atualizando tag da tarefa #{tarefa.id}"
+        
+        # Obter lista atual de tags da tarefa
+        tags_atuais = tarefa.tag_list.dup
+        
+        # Remover tags antigas que começam com o prefixo
+        tags_filtradas = tags_atuais.reject { |tag| tag.start_with?(prefixo_tag) }
+        
+        # Adicionar a nova tag se não for nil
+        tags_filtradas << nova_tag if nova_tag.present?
+        
+        # Se as tags mudaram, atualizar a tarefa
+        if tags_filtradas != tags_atuais
+          Rails.logger.info ">>> Tarefa #{tarefa.id}: alterando tags de #{tags_atuais.join(', ')} para #{tags_filtradas.join(', ')}"
+          tarefa.tag_list = tags_filtradas
+          tarefa.save(validate: false)
+        end
+      rescue => e
+        Rails.logger.error ">>> Erro ao atualizar tag da tarefa #{tarefa.id}: #{e.message}"
+      end
     end
 
     # Método para determinar a situação atual com base no status das tarefas
