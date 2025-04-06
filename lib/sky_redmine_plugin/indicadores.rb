@@ -307,26 +307,15 @@ module SkyRedminePlugin
         
         Rails.logger.info ">>> Nova tag a ser definida: #{nova_tag || 'Nenhuma (VERSAO_LIBERADA)'}"
         
-        # Atualizar a última tarefa DEVEL se existir
-        unless tarefas_devel.empty?
+        # Primeiro, remover todas as tags antigas de todas as tarefas DEVEL
+        tarefas_devel.each do |tarefa|
+          atualizar_tag_tarefa(tarefa, prefixo_tag, nil)
+        end
+        
+        # Depois, se existir uma nova tag para definir, definir apenas na última tarefa DEVEL
+        if nova_tag.present? && !tarefas_devel.empty?
           ultima_tarefa_devel = tarefas_devel.last
           atualizar_tag_tarefa(ultima_tarefa_devel, prefixo_tag, nova_tag)
-        end
-        
-        # Atualizar a última tarefa QS se existir
-        unless tarefas_qs.empty?
-          ultima_tarefa_qs = tarefas_qs.last
-          atualizar_tag_tarefa(ultima_tarefa_qs, prefixo_tag, nova_tag)
-        end
-        
-        # Procurar nas outras tarefas para remover tags antigas
-        (tarefas_devel + tarefas_qs).each do |tarefa|
-          # Pular as últimas tarefas que já foram atualizadas
-          next if !tarefas_devel.empty? && tarefa.id == tarefas_devel.last.id
-          next if !tarefas_qs.empty? && tarefa.id == tarefas_qs.last.id
-          
-          # Remover apenas as tags antigas sem adicionar nova
-          atualizar_tag_tarefa(tarefa, prefixo_tag, nil)
         end
         
         Rails.logger.info ">>> Tags atualizadas com sucesso"
