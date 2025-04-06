@@ -157,7 +157,7 @@ module FluxoTarefasHelper
     css << "/* Cores dos textos baseadas no estado */"
     css << ".timeline-step-completed .timeline-label,"
     css << ".timeline-step-completed .timeline-text {"
-    css << "  color: #333;"
+    css << "  color: #4CAF50;"
     css << "  font-weight: bold;"
     css << "}"
     css << ".timeline-step-current .timeline-label,"
