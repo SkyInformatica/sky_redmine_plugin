@@ -5,237 +5,237 @@ module FluxoTarefasHelper
   private
 
   def obter_css_tabela
-    <<~CSS
-      .tabela-fluxo-tarefas {
-        border-collapse: collapse;
-        table-layout: fixed;
-        width: 100%;
-        margin: 0 auto;
-      }
-      .tabela-fluxo-tarefas th,
-      .tabela-fluxo-tarefas td {
-        border: 1px solid #dddddd;
-        text-align: left;
-        padding: 4px;
-        word-wrap: break-word;
-        font-size: 12px;
-      }
-      .tabela-fluxo-tarefas th:nth-child(1),
-      .tabela-fluxo-tarefas td:nth-child(1) {
-        width: 50%;
-      }
-      .tabela-fluxo-tarefas th:nth-child(2),
-      .tabela-fluxo-tarefas td:nth-child(2) {
-        width: 11%;
-      }
-      .tabela-fluxo-tarefas th:nth-child(3),
-      .tabela-fluxo-tarefas td:nth-child(3) {
-        width: 9%;
-      }
-      .tabela-fluxo-tarefas th:nth-child(4),
-      .tabela-fluxo-tarefas td:nth-child(4) {
-        width: 8%;
-      }
-      .tabela-fluxo-tarefas th:nth-child(5),
-      .tabela-fluxo-tarefas td:nth-child(5) {
-        width: 8%;
-      }
-      .tabela-fluxo-tarefas th:nth-child(6),
-      .tabela-fluxo-tarefas td:nth-child(6) {
-        width: 8%;
-      }
-      .tabela-fluxo-tarefas th:nth-child(7),
-      .tabela-fluxo-tarefas td:nth-child(7) {
-        width: 8%;
-      }
-      .tabela-fluxo-tarefas th:nth-child(8),
-      .tabela-fluxo-tarefas td:nth-child(8) {
-        width: 10%;
-      }
-      .tabela-fluxo-tarefas th:nth-child(9),
-      .tabela-fluxo-tarefas td:nth-child(9) {
-        width: 6%;
-      }
-      .tabela-fluxo-tarefas th:nth-child(10),
-      .tabela-fluxo-tarefas td:nth-child(10) {
-        width: 6%;
-      }
-      .titulo-secao {
-        font-size: 12px;
-        font-weight: bold;
-        margin: 10px 0 5px 0;
-      }
-    CSS
+    css = []
+    css << ".tabela-fluxo-tarefas {"
+    css << "  border-collapse: collapse;"
+    css << "  table-layout: fixed;"
+    css << "  width: 100%;"
+    css << "  margin: 0 auto;"
+    css << "}"
+    css << ".tabela-fluxo-tarefas th,"
+    css << ".tabela-fluxo-tarefas td {"
+    css << "  border: 1px solid #dddddd;"
+    css << "  text-align: left;"
+    css << "  padding: 4px;"
+    css << "  word-wrap: break-word;"
+    css << "  font-size: 12px;"
+    css << "}"
+    css << ".tabela-fluxo-tarefas th:nth-child(1),"
+    css << ".tabela-fluxo-tarefas td:nth-child(1) {"
+    css << "  width: 50%;"
+    css << "}"
+    css << ".tabela-fluxo-tarefas th:nth-child(2),"
+    css << ".tabela-fluxo-tarefas td:nth-child(2) {"
+    css << "  width: 11%;"
+    css << "}"
+    css << ".tabela-fluxo-tarefas th:nth-child(3),"
+    css << ".tabela-fluxo-tarefas td:nth-child(3) {"
+    css << "  width: 9%;"
+    css << "}"
+    css << ".tabela-fluxo-tarefas th:nth-child(4),"
+    css << ".tabela-fluxo-tarefas td:nth-child(4) {"
+    css << "  width: 8%;"
+    css << "}"
+    css << ".tabela-fluxo-tarefas th:nth-child(5),"
+    css << ".tabela-fluxo-tarefas td:nth-child(5) {"
+    css << "  width: 8%;"
+    css << "}"
+    css << ".tabela-fluxo-tarefas th:nth-child(6),"
+    css << ".tabela-fluxo-tarefas td:nth-child(6) {"
+    css << "  width: 8%;"
+    css << "}"
+    css << ".tabela-fluxo-tarefas th:nth-child(7),"
+    css << ".tabela-fluxo-tarefas td:nth-child(7) {"
+    css << "  width: 8%;"
+    css << "}"
+    css << ".tabela-fluxo-tarefas th:nth-child(8),"
+    css << ".tabela-fluxo-tarefas td:nth-child(8) {"
+    css << "  width: 10%;"
+    css << "}"
+    css << ".tabela-fluxo-tarefas th:nth-child(9),"
+    css << ".tabela-fluxo-tarefas td:nth-child(9) {"
+    css << "  width: 6%;"
+    css << "}"
+    css << ".tabela-fluxo-tarefas th:nth-child(10),"
+    css << ".tabela-fluxo-tarefas td:nth-child(10) {"
+    css << "  width: 6%;"
+    css << "}"
+    css << ".titulo-secao {"
+    css << "  font-size: 12px;"
+    css << "  font-weight: bold;"
+    css << "  margin: 10px 0 5px 0;"
+    css << "}"
+    css.join("\n")
   end
 
   def obter_css_timeline
-    <<~CSS
-      .timeline-container {
-        margin: 20px 0;
-        width: 100%;
-        overflow-x: auto;
-      }
-      .timeline {
-        position: relative;
-        display: flex;
-        justify-content: space-between;
-        align-items: flex-start;
-        padding-top: 12px;
-      }
-      /* Linha conectora */
-      .timeline::before {
-        content: '';
-        position: absolute;
-        top: 24px;
-        left: 12px;
-        right: 12px;
-        height: 2px;
-        background-color: #e0e0e0;
-        z-index: 0;
-      }
-      .timeline-step {
-        flex: 1;
-        position: relative;
-        text-align: center;
-        padding: 0 5px;
-        min-width: 80px;
-      }
-      .timeline-circle {
-        width: 24px;
-        height: 24px;
-        border-radius: 50%;
-        border: 2px solid #e0e0e0;
-        background-color: #fff;
-        margin: 0 auto;
-        position: relative;
-        z-index: 1;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      }
-      /* Estados dos círculos */
-      .timeline-step-completed .timeline-circle {
-        background-color: #4CAF50;
-        border-color: #4CAF50;
-      }
-      .timeline-step-completed .timeline-circle::after {
-        content: '✓';
-        color: white;
-        font-weight: bold;
-        font-size: 14px;
-      }
-      .timeline-step-current .timeline-circle {
-        background-color: #2196F3;
-        border-color: #2196F3;
-      }
-      .timeline-step-current .timeline-circle::after {
-        content: '';
-        display: block;
-        width: 8px;
-        height: 8px;
-        border-radius: 50%;
-        background-color: white;
-      }
-      .timeline-step-future .timeline-circle {
-        background-color: #fff;
-        border-color: #e0e0e0;
-      }
-      /* Textos da timeline */
-      .timeline-label {
-        display: block;
-        font-size: 10px;
-        margin-top: 10px;
-        word-wrap: break-word;
-      }
-      .timeline-text {
-        max-width: 100px;
-        margin: 0 auto;
-        text-align: center;
-        font-size: 9px;
-        color: #666;
-      }
-      /* Cores dos textos baseadas no estado */
-      .timeline-step-completed .timeline-label,
-      .timeline-step-completed .timeline-text {
-        color: #333;
-        font-weight: bold;
-      }
-      .timeline-step-current .timeline-label,
-      .timeline-step-current .timeline-text {
-        color: #2196F3;
-        font-weight: bold;
-      }
-      .timeline-step-future .timeline-label,
-      .timeline-step-future .timeline-text {
-        color: #999;
-      }
-      /* Espaçamento entre múltiplas timelines */
-      .timeline-row + .timeline-row {
-        margin-top: 30px;
-      }
-    CSS
+    css = []
+    css << ".timeline-container {"
+    css << "  margin: 20px 0;"
+    css << "  width: 100%;"
+    css << "  overflow-x: auto;"
+    css << "}"
+    css << ".timeline {"
+    css << "  position: relative;"
+    css << "  display: flex;"
+    css << "  justify-content: space-between;"
+    css << "  align-items: flex-start;"
+    css << "  padding-top: 12px;"
+    css << "}"
+    css << "/* Linha conectora */"
+    css << ".timeline::before {"
+    css << "  content: '';"
+    css << "  position: absolute;"
+    css << "  top: 24px;"
+    css << "  left: 12px;"
+    css << "  right: 12px;"
+    css << "  height: 2px;"
+    css << "  background-color: #e0e0e0;"
+    css << "  z-index: 0;"
+    css << "}"
+    css << ".timeline-step {"
+    css << "  flex: 1;"
+    css << "  position: relative;"
+    css << "  text-align: center;"
+    css << "  padding: 0 5px;"
+    css << "  min-width: 80px;"
+    css << "}"
+    css << ".timeline-circle {"
+    css << "  width: 24px;"
+    css << "  height: 24px;"
+    css << "  border-radius: 50%;"
+    css << "  border: 2px solid #e0e0e0;"
+    css << "  background-color: #fff;"
+    css << "  margin: 0 auto;"
+    css << "  position: relative;"
+    css << "  z-index: 1;"
+    css << "  display: flex;"
+    css << "  align-items: center;"
+    css << "  justify-content: center;"
+    css << "}"
+    css << "/* Estados dos círculos */"
+    css << ".timeline-step-completed .timeline-circle {"
+    css << "  background-color: #4CAF50;"
+    css << "  border-color: #4CAF50;"
+    css << "}"
+    css << ".timeline-step-completed .timeline-circle::after {"
+    css << "  content: '✓';"
+    css << "  color: white;"
+    css << "  font-weight: bold;"
+    css << "  font-size: 14px;"
+    css << "}"
+    css << ".timeline-step-current .timeline-circle {"
+    css << "  background-color: #2196F3;"
+    css << "  border-color: #2196F3;"
+    css << "}"
+    css << ".timeline-step-current .timeline-circle::after {"
+    css << "  content: '';"
+    css << "  display: block;"
+    css << "  width: 8px;"
+    css << "  height: 8px;"
+    css << "  border-radius: 50%;"
+    css << "  background-color: white;"
+    css << "}"
+    css << ".timeline-step-future .timeline-circle {"
+    css << "  background-color: #fff;"
+    css << "  border-color: #e0e0e0;"
+    css << "}"
+    css << "/* Textos da timeline */"
+    css << ".timeline-label {"
+    css << "  display: block;"
+    css << "  font-size: 10px;"
+    css << "  margin-top: 10px;"
+    css << "  word-wrap: break-word;"
+    css << "}"
+    css << ".timeline-text {"
+    css << "  max-width: 100px;"
+    css << "  margin: 0 auto;"
+    css << "  text-align: center;"
+    css << "  font-size: 9px;"
+    css << "  color: #666;"
+    css << "}"
+    css << "/* Cores dos textos baseadas no estado */"
+    css << ".timeline-step-completed .timeline-label,"
+    css << ".timeline-step-completed .timeline-text {"
+    css << "  color: #333;"
+    css << "  font-weight: bold;"
+    css << "}"
+    css << ".timeline-step-current .timeline-label,"
+    css << ".timeline-step-current .timeline-text {"
+    css << "  color: #2196F3;"
+    css << "  font-weight: bold;"
+    css << "}"
+    css << ".timeline-step-future .timeline-label,"
+    css << ".timeline-step-future .timeline-text {"
+    css << "  color: #999;"
+    css << "}"
+    css << "/* Espaçamento entre múltiplas timelines */"
+    css << ".timeline-row + .timeline-row {"
+    css << "  margin-top: 30px;"
+    css << "}"
+    css.join("\n")
   end
 
   def obter_css_indicadores
-    <<~CSS
-      .indicadores-container {
-        margin-bottom: 20px;
-      }
-      .indicadores-grupo {
-        margin-bottom: 15px;
-      }
-      .indicadores-titulo {
-        font-weight: bold;
-        margin-bottom: 10px;
-        font-size: 12px;
-      }
-      .indicadores-cards {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 10px;
-        margin-bottom: 10px;
-      }
-      .indicador-card {
-        background: #f9f9f9;
-        border: 1px solid #ddd;
-        border-radius: 4px;
-        padding: 10px;
-        min-width: 200px;
-      }
-      .indicador-caption {
-        font-weight: bold;
-        color: #666;
-        font-size: 12px;
-        margin-bottom: 5px;
-        display: flex;
-        align-items: center;
-        gap: 5px;
-      }
-      .indicador-valor {
-        font-size: 14px;
-        margin-bottom: 3px;
-      }
-      .indicador-detalhe {
-        color: #888;
-        font-style: italic;
-        font-size: 11px;
-      }
-      .info-icon {
-        color: #666;
-        cursor: help;
-        font-size: 14px;
-      }
-    CSS
+    css = []
+    css << ".indicadores-container {"
+    css << "  margin-bottom: 20px;"
+    css << "}"
+    css << ".indicadores-grupo {"
+    css << "  margin-bottom: 15px;"
+    css << "}"
+    css << ".indicadores-titulo {"
+    css << "  font-weight: bold;"
+    css << "  margin-bottom: 10px;"
+    css << "  font-size: 12px;"
+    css << "}"
+    css << ".indicadores-cards {"
+    css << "  display: flex;"
+    css << "  flex-wrap: wrap;"
+    css << "  gap: 10px;"
+    css << "  margin-bottom: 10px;"
+    css << "}"
+    css << ".indicador-card {"
+    css << "  background: #f9f9f9;"
+    css << "  border: 1px solid #ddd;"
+    css << "  border-radius: 4px;"
+    css << "  padding: 10px;"
+    css << "  min-width: 200px;"
+    css << "}"
+    css << ".indicador-caption {"
+    css << "  font-weight: bold;"
+    css << "  color: #666;"
+    css << "  font-size: 12px;"
+    css << "  margin-bottom: 5px;"
+    css << "  display: flex;"
+    css << "  align-items: center;"
+    css << "  gap: 5px;"
+    css << "}"
+    css << ".indicador-valor {"
+    css << "  font-size: 14px;"
+    css << "  margin-bottom: 3px;"
+    css << "}"
+    css << ".indicador-detalhe {"
+    css << "  color: #888;"
+    css << "  font-style: italic;"
+    css << "  font-size: 11px;"
+    css << "}"
+    css << ".info-icon {"
+    css << "  color: #666;"
+    css << "  cursor: help;"
+    css << "  font-size: 14px;"
+    css << "}"
+    css.join("\n")
   end
 
   def obter_css_completo
-    <<~CSS
-      <style>
-        #{obter_css_tabela}
-        #{obter_css_timeline}
-        #{obter_css_indicadores}
-      </style>
-    CSS
+    css = []
+    css << "<style>"
+    css << obter_css_tabela
+    css << obter_css_timeline
+    css << obter_css_indicadores
+    css << "</style>"
+    css.join("\n")
   end
 
   def render_fluxo_tarefas_html(issue)
