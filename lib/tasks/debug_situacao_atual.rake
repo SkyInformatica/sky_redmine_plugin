@@ -94,6 +94,8 @@ namespace :sky_redmine_plugin do
     
     # Exibir situação atual do indicador
     primeira_tarefa = tarefas_relacionadas.first
+    indicador = nil
+    
     if primeira_tarefa
       indicador = SkyRedmineIndicadores.find_by(primeira_tarefa_devel_id: primeira_tarefa.id)
       if indicador
@@ -113,6 +115,67 @@ namespace :sky_redmine_plugin do
     else
       puts "Não foram encontradas tarefas relacionadas."
     end
+    
+    # Gerar JSON das tarefas relacionadas
+    json_tarefas = tarefas_relacionadas.map do |tarefa|
+      {
+        id: tarefa.id,
+        projeto: tarefa.project.name,
+        projeto_id: tarefa.project_id,
+        tipo: tarefa.tracker.name,
+        tracker_id: tarefa.tracker_id,
+        status: tarefa.status.name,
+        status_id: tarefa.status_id,
+        versao: tarefa.fixed_version&.name,
+        versao_id: tarefa.fixed_version_id,
+        atribuido_para: tarefa.assigned_to&.name,
+        equipe_responsavel: tarefa.equipe_responsavel,
+        datas: {
+          criacao: tarefa.data_criacao&.strftime("%d/%m/%Y"),
+          atendimento: tarefa.data_atendimento&.strftime("%d/%m/%Y"),
+          em_andamento: tarefa.data_em_andamento&.strftime("%d/%m/%Y"),
+          resolvida: tarefa.data_resolvida&.strftime("%d/%m/%Y"),
+          fechada: tarefa.data_fechada&.strftime("%d/%m/%Y")
+        }
+      }
+    end
+    
+    # Adicionar informações do indicador se existir
+    json_resultado = {
+      tarefa_id: tarefa_id,
+      tarefas_relacionadas: json_tarefas,
+      ciclos_desenvolvimento: ciclos_devel.map.with_index { |ciclo, i| 
+        {
+          numero: i + 1,
+          tarefas: ciclo.map { |t| { id: t.id, tipo: t.tracker.name, status: t.status.name } }
+        }
+      },
+      ciclos_qs: ciclos_qs.map.with_index { |ciclo, i| 
+        {
+          numero: i + 1,
+          tarefas: ciclo.map { |t| { id: t.id, tipo: t.tracker.name, status: t.status.name } }
+        }
+      }
+    }
+    
+    # Adicionar indicador ao JSON se existe
+    if indicador
+      json_resultado[:indicador] = {
+        primeira_tarefa_devel_id: indicador.primeira_tarefa_devel_id,
+        ultima_tarefa_devel_id: indicador.ultima_tarefa_devel_id,
+        status_ultima_tarefa_devel: indicador.status_ultima_tarefa_devel,
+        primeira_tarefa_qs_id: indicador.primeira_tarefa_qs_id,
+        ultima_tarefa_qs_id: indicador.ultima_tarefa_qs_id,
+        status_ultima_tarefa_qs: indicador.status_ultima_tarefa_qs,
+        equipe_responsavel_atual: indicador.equipe_responsavel_atual,
+        qtd_retorno_testes: indicador.qtd_retorno_testes,
+        situacao_atual: indicador.situacao_atual
+      }
+    end
+    
+    # Exibir JSON formatado
+    puts "\n=== JSON das tarefas relacionadas ==="
+    puts JSON.pretty_generate(json_resultado)
     
     puts "\n=== Fim da depuração ==="
   end
