@@ -730,24 +730,24 @@ module FluxoTarefasHelper
     html << "<div class='timeline'>"
     
     fluxo.each_with_index do |situacao, i|
-      if i < indice_atual
-        estado = "completed"
-        icon = "&#10003;"
+      estado = if i < indice_atual
+        "completed"
       elsif i == indice_atual
-        estado = "current"
-        icon = "&#8226;"
+        "current"
       else
-        estado = "future"
-        icon = ""
+        "future"
+      end
+      
+      icon = case estado
+      when "completed" then "&#10003;"
+      when "current" then "&#8226;"
+      else ""
       end
       
       texto_situacao = situacao.gsub("_", " ")
       
       html << "<div class='timeline-step timeline-step-#{estado}'>"
-      html << "<div class='timeline-circle-wrapper'>"
       html << "<div class='timeline-circle'>#{icon}</div>"
-      html << "<div class='timeline-line'></div>"
-      html << "</div>"
       html << "<div class='timeline-label'><div class='timeline-text'>#{texto_situacao}</div></div>"
       html << "</div>"
     end
