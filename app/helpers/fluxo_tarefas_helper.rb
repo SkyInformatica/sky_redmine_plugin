@@ -4,7 +4,7 @@ module FluxoTarefasHelper
 
   private
 
-  def get_table_css
+  def obter_css_tabela
     <<~CSS
       .tabela-fluxo-tarefas {
         border-collapse: collapse;
@@ -68,7 +68,7 @@ module FluxoTarefasHelper
     CSS
   end
 
-  def get_timeline_css
+  def obter_css_timeline
     <<~CSS
       .timeline-container {
         margin: 20px 0;
@@ -176,7 +176,7 @@ module FluxoTarefasHelper
     CSS
   end
 
-  def get_indicadores_css
+  def obter_css_indicadores
     <<~CSS
       .indicadores-container {
         margin-bottom: 20px;
@@ -228,12 +228,12 @@ module FluxoTarefasHelper
     CSS
   end
 
-  def get_all_css
+  def obter_css_completo
     <<~CSS
       <style>
-        #{get_table_css}
-        #{get_timeline_css}
-        #{get_indicadores_css}
+        #{obter_css_tabela}
+        #{obter_css_timeline}
+        #{obter_css_indicadores}
       </style>
     CSS
   end
@@ -316,7 +316,7 @@ module FluxoTarefasHelper
     linhas << "<div class='description'>"
     linhas << "<hr>"
     linhas << "<p><strong>Fluxo das tarefas</strong></b></p>"
-    linhas << get_all_css
+    linhas << obter_css_completo
 
     secoes.each do |secao|
       # Calcular tempo total gasto na seção
@@ -403,7 +403,7 @@ module FluxoTarefasHelper
   def render_cards_indicadores(indicadores, tarefas_relacionadas)
     # Gerar HTML dos cards
     html = []
-    html << get_all_css
+    html << obter_css_completo
     html << "<div class='indicadores-container'>"
 
     # Informações gerais
