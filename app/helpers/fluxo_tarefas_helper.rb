@@ -301,31 +301,6 @@ module FluxoTarefasHelper
         font-size: 11px;
         min-width: 90px;
       }
-      .timeline-step::after {
-        content: '';
-        position: absolute;
-        width: 100%;
-        height: 2px;
-        background-color: #ddd;
-        top: 10px !important; /* Centralizar na bolinha - ajustado para garantir alinhamento no centro */
-        left: 50%;
-        z-index: 1;
-      }
-      /* Cor verde para as linhas das etapas concluídas */
-      .timeline-step-completed::after {
-        background-color: #4CAF50;
-      }
-      /* A linha após a etapa atual deve ser cinza (restaurando a linha) */
-      .timeline-step-current::after {
-        background-color: #ddd; /* Cinza, não azul */
-      }
-      /* Garantindo que todas as linhas após a etapa atual sejam cinza */
-      .timeline-step-current + .timeline-step::after {
-        background-color: #ddd;
-      }
-      .timeline-step:last-child::after {
-        display: none;
-      }
       .timeline-circle {
         width: 20px;
         height: 20px;
@@ -350,6 +325,35 @@ module FluxoTarefasHelper
         max-width: 100px;
         white-space: normal;
         margin: 0 auto;
+        text-align: center;
+        font-size: 11px;
+        color: #666;
+      }
+      /* Ajustando as linhas para passarem pelo centro exato das bolinhas */
+      .timeline-step::after {
+        content: '';
+        position: absolute;
+        width: 100%;
+        height: 2px;
+        background-color: #ddd;
+        top: 20px; /* Alinha com o centro das bolinhas */
+        left: 50%;
+        z-index: 1;
+      }
+      /* Cor verde para as linhas das etapas concluídas */
+      .timeline-step-completed::after {
+        background-color: #4CAF50;
+      }
+      /* A linha após a etapa atual deve ser cinza */
+      .timeline-step-current::after {
+        background-color: #ddd;
+      }
+      /* Garantindo que todas as linhas após a etapa atual sejam cinza */
+      .timeline-step-current + .timeline-step::after {
+        background-color: #ddd;
+      }
+      .timeline-step:last-child::after {
+        display: none;
       }
       .timeline-step-completed .timeline-circle {
         background-color: #4CAF50;
