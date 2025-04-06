@@ -301,10 +301,10 @@ module SkyRedminePlugin
           when SkyRedminePlugin::Constants::IssueStatus::EM_ANDAMENTO
             return "EM_ANDAMENTO_DEVEL_RETORNO_TESTES"
           when SkyRedminePlugin::Constants::IssueStatus::RESOLVIDA
-            return "RESOLVIDA_DEVEL_RETORNO_TESTES"
+            return "AGUARDANDO_ENCAMINHAR_QS_RETORNO_TESTES"
           when SkyRedminePlugin::Constants::IssueStatus::FECHADA
-            # Não deveria ocorrer normalmente, mas tratamos como finalizado
-            return "AGUARDANDO_VERSAO"
+            # Se a tarefa DEVEL está fechada, a versão foi liberada
+            return "VERSAO_LIBERADA"
           end
         else
           # Está em desenvolvimento normal
@@ -314,9 +314,10 @@ module SkyRedminePlugin
           when SkyRedminePlugin::Constants::IssueStatus::EM_ANDAMENTO
             return "EM_ANDAMENTO_DEVEL"
           when SkyRedminePlugin::Constants::IssueStatus::RESOLVIDA
-            return "RESOLVIDA_DEVEL"
+            return "AGUARDANDO_ENCAMINHAR_QS"
           when SkyRedminePlugin::Constants::IssueStatus::FECHADA
-            return "AGUARDANDO_VERSAO"
+            # Se a tarefa DEVEL está fechada, a versão foi liberada
+            return "VERSAO_LIBERADA"
           end
         end
       else
@@ -342,7 +343,14 @@ module SkyRedminePlugin
             return "EM_ANDAMENTO_DEVEL_RETORNO_TESTES"
           when SkyRedminePlugin::Constants::IssueStatus::RESOLVIDA
             # Se a última tarefa QS não está com status NOVA, ainda está no DEVEL
-            return "RESOLVIDA_DEVEL_RETORNO_TESTES"
+            return "AGUARDANDO_ENCAMINHAR_QS_RETORNO_TESTES"
+          when SkyRedminePlugin::Constants::IssueStatus::FECHADA
+            # Verificar se a última tarefa QS está com TESTE_OK ou TESTE_OK_FECHADA
+            if ultima_tarefa_qs.status.name == SkyRedminePlugin::Constants::IssueStatus::TESTE_OK ||
+               ultima_tarefa_qs.status.name == SkyRedminePlugin::Constants::IssueStatus::TESTE_OK_FECHADA
+              # Se o teste foi OK e a tarefa DEVEL está fechada, a versão foi liberada
+              return "VERSAO_LIBERADA"
+            end
           end
         end
         
@@ -357,12 +365,22 @@ module SkyRedminePlugin
           return ultima_tarefa_qs.tracker.name == SkyRedminePlugin::Constants::Trackers::RETORNO_TESTES ? 
                  "EM_ANDAMENTO_QS_RETORNO_TESTES" : "EM_ANDAMENTO_QS"
         when SkyRedminePlugin::Constants::IssueStatus::TESTE_OK
-          return "AGUARDANDO_VERSAO"
+          # Se o teste foi OK, está aguardando versão
+          # Verificar se a tarefa DEVEL foi fechada
+          if ultima_tarefa_devel.status.name == SkyRedminePlugin::Constants::IssueStatus::FECHADA
+            return "VERSAO_LIBERADA"
+          else
+            return "AGUARDANDO_VERSAO"
+          end
         when SkyRedminePlugin::Constants::IssueStatus::TESTE_NOK
           return "AGUARDANDO_RETORNO_TESTES"
         when SkyRedminePlugin::Constants::IssueStatus::TESTE_OK_FECHADA
-          # Se a tarefa de teste foi aprovada e fechada, é porque a versão foi liberada
-          return "AGUARDANDO_VERSAO"
+          # Se o teste foi OK e fechado, verificar se a tarefa DEVEL foi fechada
+          if ultima_tarefa_devel.status.name == SkyRedminePlugin::Constants::IssueStatus::FECHADA
+            return "VERSAO_LIBERADA"
+          else
+            return "AGUARDANDO_VERSAO"
+          end
         when SkyRedminePlugin::Constants::IssueStatus::TESTE_NOK_FECHADA
           # Verificar se há nova tarefa de DEVEL de retorno_testes e seu status
           if ciclos_devel.size > 1 
@@ -376,7 +394,7 @@ module SkyRedminePlugin
               when SkyRedminePlugin::Constants::IssueStatus::EM_ANDAMENTO
                 return "EM_ANDAMENTO_DEVEL_RETORNO_TESTES"
               when SkyRedminePlugin::Constants::IssueStatus::RESOLVIDA
-                return "RESOLVIDA_DEVEL_RETORNO_TESTES"
+                return "AGUARDANDO_ENCAMINHAR_QS_RETORNO_TESTES"
               end
             end
           end
@@ -391,7 +409,10 @@ module SkyRedminePlugin
           when SkyRedminePlugin::Constants::IssueStatus::EM_ANDAMENTO
             return "EM_ANDAMENTO_DEVEL"
           when SkyRedminePlugin::Constants::IssueStatus::RESOLVIDA
-            return "RESOLVIDA_DEVEL"
+            return "AGUARDANDO_ENCAMINHAR_QS"
+          when SkyRedminePlugin::Constants::IssueStatus::FECHADA
+            # Se a tarefa DEVEL está fechada, a versão foi liberada
+            return "VERSAO_LIBERADA"
           end
         end
       end
