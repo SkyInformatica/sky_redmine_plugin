@@ -679,7 +679,8 @@ module FluxoTarefasHelper
       html << "<div class='timeline'>"
       
       primeira_parte.each_with_index do |situacao, i|
-        estado = if i < indice_atual && esta_na_primeira_parte
+        # Se estamos na segunda parte do fluxo, toda a primeira parte está completa
+        estado = if !esta_na_primeira_parte || i < indice_atual
           "completed"
         elsif i == indice_atual && esta_na_primeira_parte
           "current"
