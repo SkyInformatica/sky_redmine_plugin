@@ -191,12 +191,13 @@ module FluxoTarefasHelper
       .timeline-line {
         position: absolute;
         top: 50%;
-        left: 50%;
+        right: 0;
         height: 2px;
         background-color: #ddd;
         transform: translateY(-50%);
-        width: 100%;
+        width: calc(100% - 10px); /* Reduz a largura da linha para não sobrepor a bolinha */
         z-index: 1;
+        left: 10px; /* Move o início da linha para depois da bolinha */
       }
       
       .timeline-step:last-child .timeline-line {
