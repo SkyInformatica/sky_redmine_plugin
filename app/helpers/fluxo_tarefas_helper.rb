@@ -231,146 +231,141 @@ module FluxoTarefasHelper
 
   def render_cards_indicadores(indicadores, tarefas_relacionadas)
     # CSS para os cards
-    css = "<style>
-      .indicadores-container {
-        margin-bottom: 20px;
-      }
-      .indicadores-grupo {
-        margin-bottom: 15px;
-      }
-      .indicadores-titulo {
-        font-weight: bold;
-        margin-bottom: 10px;
-        font-size: 12px;
-      }
-      .indicadores-cards {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 10px;
-        margin-bottom: 10px;
-      }
-      .indicador-card {
-        background: #f9f9f9;
-        border: 1px solid #ddd;
-        border-radius: 4px;
-        padding: 10px;
-        min-width: 200px;
-      }
-      .indicador-caption {
-        font-weight: bold;
-        color: #666;
-        font-size: 12px;
-        margin-bottom: 5px;
-        display: flex;
-        align-items: center;
-        gap: 5px;
-      }
-      .indicador-valor {
-        font-size: 14px;
-        margin-bottom: 3px;
-      }
-      .indicador-detalhe {
-        color: #888;
-        font-style: italic;
-        font-size: 11px;
-      }
-      .info-icon {
-        color: #666;
-        cursor: help;
-        font-size: 14px;
-      }
-      /* Timeline CSS */
-      .timeline-container {
-        margin-top: 15px;
-        margin-bottom: 15px;
-        width: 100%;
-        overflow-x: auto;
-      }
-      .timeline {
-        display: flex;
-        width: 100%;
-        position: relative;
-      }
-      .timeline-step {
-        flex: 1;
-        text-align: center;
-        padding: 10px 5px;
-        position: relative;
-        min-width: 90px;
-      }
-      /* Círculos da timeline */
-      .timeline-circle {
-        width: 20px;
-        height: 20px;
-        border-radius: 50%;
-        background-color: #ddd;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin: 10px auto 5px;
-        position: relative;
-        z-index: 2;
-        color: white;
-      }
-      /* Cores dos círculos baseadas no estado */
-      .timeline-step-completed .timeline-circle {
-        background-color: #4CAF50;
-      }
-      .timeline-step-current .timeline-circle {
-        background-color: #2196F3;
-      }
-      /* Linhas conectoras entre os círculos */
-      .timeline-step::after {
-        content: '';
-        position: absolute;
-        width: 100%;
-        height: 2px;
-        background-color: #ddd;
-        top: calc(10px + 10px); /* 10px (margem superior) + 10px (metade da altura da bolinha) */
-        left: 50%;
-        z-index: 1;
-      }
-      /* Cores das linhas baseadas no estado */
-      .timeline-step-completed::after {
-        background-color: #4CAF50;
-      }
-      .timeline-step-current::after {
-        background-color: #ddd;
-      }
-      .timeline-step:last-child::after {
-        display: none;
-      }
-      /* Textos da timeline */
-      .timeline-label {
-        display: block;
-        font-size: 10px;
-        margin-top: 5px;
-        word-wrap: break-word;
-      }
-      .timeline-text {
-        max-width: 100px;
-        white-space: normal;
-        margin: 0 auto;
-        text-align: center;
-        font-size: 9px;
-        color: #666;
-      }
-      /* Cores dos textos baseadas no estado */
-      .timeline-step-completed .timeline-label,
-      .timeline-step-completed .timeline-text {
-        color: #4CAF50;
-        font-weight: bold;
-      }
-      .timeline-step-current .timeline-label,
-      .timeline-step-current .timeline-text {
-        color: #2196F3;
-        font-weight: bold;
-      }
-      .timeline-step-future .timeline-label,
-      .timeline-step-future .timeline-text {
-        color: #999;
-      }
-    </style>"
+    css = css = "<style>
+    .indicadores-container {
+      margin-bottom: 20px;
+    }
+    .indicadores-grupo {
+      margin-bottom: 15px;
+    }
+    .indicadores-titulo {
+      font-weight: bold;
+      margin-bottom: 10px;
+      font-size: 12px;
+    }
+    .indicadores-cards {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+    .indicador-card {
+      background: #f9f9f9;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      padding: 10px;
+      min-width: 200px;
+    }
+    .indicador-caption {
+      font-weight: bold;
+      color: #666;
+      font-size: 12px;
+      margin-bottom: 5px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .indicador-valor {
+      font-size: 14px;
+      margin-bottom: 3px;
+    }
+    .indicador-detalhe {
+      color: #888;
+      font-style: italic;
+      font-size: 11px;
+    }
+    .info-icon {
+      color: #666;
+      cursor: help;
+      font-size: 14px;
+    }
+    /* Timeline CSS */
+    .timeline-container {
+      margin-top: 15px;
+      margin-bottom: 15px;
+      width: 100%;
+      overflow-x: auto;
+    }
+    .timeline {
+      display: flex;
+      width: 100%;
+      position: relative;
+    }
+    .timeline-step {
+      flex: 1;
+      text-align: center;
+      padding: 10px 5px;
+      position: relative;
+      min-width: 90px;
+    }
+    /* Círculos da timeline */
+    .timeline-circle {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background-color: #ddd;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 10px auto 5px;
+      position: relative;
+      z-index: 2;
+      color: white;
+    }
+    /* Ajuste da linha da timeline para alinhar com o centro das bolinhas */
+    .timeline-step::after {
+      content: '';
+      position: absolute;
+      width: 100%;
+      height: 2px;
+      background-color: #ddd;
+      top: 50%; /* Ajuste para alinhar com o centro da bolinha */
+      transform: translateY(-50%); /* Centraliza a linha verticalmente */
+      left: 50%;
+      z-index: 1;
+    }
+    /* Cores dos círculos baseadas no estado */
+    .timeline-step-completed .timeline-circle {
+      background-color: #4CAF50;
+    }
+    .timeline-step-current .timeline-circle {
+      background-color: #2196F3;
+    }
+    /* Linhas conectoras entre os círculos */
+    .timeline-step:last-child::after {
+      display: none;
+    }
+    /* Textos da timeline */
+    .timeline-label {
+      display: block;
+      font-size: 10px;
+      margin-top: 5px;
+      word-wrap: break-word;
+    }
+    .timeline-text {
+      max-width: 100px;
+      white-space: normal;
+      margin: 0 auto;
+      text-align: center;
+      font-size: 9px;
+      color: #666;
+    }
+    /* Cores dos textos baseadas no estado */
+    .timeline-step-completed .timeline-label,
+    .timeline-step-completed .timeline-text {
+      color: #4CAF50;
+      font-weight: bold;
+    }
+    .timeline-step-current .timeline-label,
+    .timeline-step-current .timeline-text {
+      color: #2196F3;
+      font-weight: bold;
+    }
+    .timeline-step-future .timeline-label,
+    .timeline-step-future .timeline-text {
+      color: #999;
+    }
+  </style>"
 
     # Gerar HTML dos cards
     html = []
