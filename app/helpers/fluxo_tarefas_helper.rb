@@ -336,7 +336,7 @@ module FluxoTarefasHelper
         width: 100%;
         height: 2px;
         background-color: #ddd;
-        top: 20px; /* Alinha com o centro das bolinhas */
+        top: calc(10px + 10px); /* 10px (margem superior) + 10px (metade da altura da bolinha) */
         left: 50%;
         z-index: 1;
       }
@@ -610,126 +610,9 @@ module FluxoTarefasHelper
     indice_atual = fluxo.index(situacao_atual)
     return "" unless indice_atual # Se não encontrar, não renderizar
     
-    # Preparar CSS para a nova abordagem
-    css = <<-CSS
-      <style>
-        .timeline-container {
-          margin-top: 20px;
-        }
-        
-        .timeline {
-          display: flex;
-          position: relative;
-          padding: 20px 0;
-          margin-bottom: 10px;
-        }
-        
-        /* Linha base que passa por toda a timeline */
-        .timeline::before {
-          content: '';
-          position: absolute;
-          top: 20px;
-          left: 0;
-          right: 0;
-          height: 2px;
-          background-color: #ddd;
-          z-index: 1;
-        }
-        
-        /* Linha colorida para partes completadas */
-        .timeline-completed-line {
-          position: absolute;
-          top: 20px;
-          left: 0;
-          height: 2px;
-          background-color: #4CAF50;
-          z-index: 1;
-        }
-        
-        .timeline-step {
-          flex: 1;
-          text-align: center;
-          position: relative;
-          z-index: 2;
-          min-width: 90px;
-        }
-        
-        .timeline-circle {
-          width: 20px;
-          height: 20px;
-          border-radius: 50%;
-          background-color: #ddd;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          margin: 10px auto 5px;
-          position: relative;
-          z-index: 3;
-          color: white;
-        }
-        
-        .timeline-label {
-          display: block;
-          font-size: 10px;
-          color: #333;
-          margin-top: 5px;
-          word-wrap: break-word;
-        }
-        
-        .timeline-text {
-          max-width: 100px;
-          white-space: normal;
-          margin: 0 auto;
-          text-align: center;
-          font-size: 9px;
-          color: #666;
-        }
-        
-        .timeline-step-completed .timeline-circle {
-          background-color: #4CAF50;
-        }
-        
-        .timeline-step-current .timeline-circle {
-          background-color: #2196F3;
-        }
-        
-        .timeline-step-future .timeline-circle {
-          background-color: #ddd;
-        }
-        
-        .timeline-step-completed .timeline-label {
-          color: #4CAF50;
-          font-weight: bold;
-        }
-        
-        .timeline-step-current .timeline-label {
-          color: #2196F3;
-          font-weight: bold;
-        }
-        
-        .timeline-step-future .timeline-label {
-          color: #999;
-        }
-        
-        /* Estilos específicos para o texto dentro da timeline */
-        .timeline-step-completed .timeline-text {
-          color: #4CAF50;
-        }
-        
-        .timeline-step-current .timeline-text {
-          color: #2196F3;
-        }
-        
-        .timeline-step-future .timeline-text {
-          color: #999;
-        }
-      </style>
-    CSS
-    
     # Preparar HTML
     html = "<div class='indicadores-grupo'>"
     html << "<div class='indicadores-titulo'>Timeline de Progresso</div>"
-    html << css
     html << "<div class='timeline-container'>"
     
     if tem_retorno_testes
@@ -738,7 +621,7 @@ module FluxoTarefasHelper
       
       # Se o ponto de divisão não for encontrado, usar o fluxo normal
       if ponto_divisao.nil?
-        return render_timeline_normal_new(fluxo, indice_atual)
+        return render_timeline_normal(fluxo, indice_atual)
       end
       
       # Dividir o fluxo em duas partes
@@ -751,16 +634,6 @@ module FluxoTarefasHelper
       # Renderizar a primeira linha da timeline
       html << "<div class='timeline-row'>"
       html << "<div class='timeline'>"
-      
-      # Adicionar a linha colorida para o progresso concluído
-      if esta_na_primeira_parte
-        # Se estamos na primeira parte, a linha vai até a etapa atual
-        progresso_percentual = (indice_atual.to_f / primeira_parte.length.to_f) * 100
-        html << "<div class='timeline-completed-line' style='width: #{progresso_percentual}%;'></div>"
-      else
-        # Se já passamos da primeira parte, a linha cobre toda a primeira parte
-        html << "<div class='timeline-completed-line' style='width: 100%;'></div>"
-      end
       
       primeira_parte.each_with_index do |situacao, i|
         # Determinar o estado desta etapa
@@ -788,20 +661,12 @@ module FluxoTarefasHelper
       html << "</div>" # Fechar timeline
       html << "</div>" # Fechar timeline-row
       
-      # Adicionar espaçamento entre as duas linhas
+      # Adicionar apenas um espaçamento entre as duas linhas
       html << "<div style='height: 30px;'></div>"
       
       # Renderizar a segunda linha da timeline
       html << "<div class='timeline-row'>"
       html << "<div class='timeline'>"
-      
-      # Adicionar a linha colorida para o progresso concluído na segunda parte
-      if !esta_na_primeira_parte
-        # Calcular progresso apenas na segunda parte
-        indice_na_segunda_parte = indice_atual - primeira_parte.length
-        progresso_percentual = (indice_na_segunda_parte.to_f / segunda_parte.length.to_f) * 100
-        html << "<div class='timeline-completed-line' style='width: #{progresso_percentual}%;'></div>"
-      end
       
       segunda_parte.each_with_index do |situacao, i|
         # Ajustar o índice para a comparação com o índice atual
@@ -833,7 +698,7 @@ module FluxoTarefasHelper
       html << "</div>" # Fechar timeline-row
     else
       # Fluxo normal sem retorno de testes (uma única linha)
-      html << render_timeline_normal_new(fluxo, indice_atual)
+      html << render_timeline_normal(fluxo, indice_atual)
     end
     
     html << "</div>" # Fechar timeline-container
@@ -842,14 +707,10 @@ module FluxoTarefasHelper
     html
   end
   
-  # Método auxiliar para renderizar uma timeline simples de uma linha com a nova abordagem
-  def render_timeline_normal_new(fluxo, indice_atual)
+  # Método auxiliar para renderizar uma timeline simples de uma linha
+  def render_timeline_normal(fluxo, indice_atual)
     html = "<div class='timeline-row'>"
     html << "<div class='timeline'>"
-    
-    # Adicionar a linha colorida para o progresso concluído
-    progresso_percentual = (indice_atual.to_f / fluxo.length.to_f) * 100
-    html << "<div class='timeline-completed-line' style='width: #{progresso_percentual}%;'></div>"
     
     # Renderizar cada etapa da timeline
     fluxo.each_with_index do |situacao, i|
