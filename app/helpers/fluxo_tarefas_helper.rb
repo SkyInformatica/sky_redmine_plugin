@@ -144,7 +144,7 @@ module FluxoTarefasHelper
         font-weight: bold;  
         margin: 10px 0 5px 0;  
       }  
-      /* Timeline CSS - Nova implementação simplificada */
+      /* Timeline CSS - Apenas ícones */
       .timeline-container {
         margin: 20px 0;
         padding: 20px 0;
@@ -154,23 +154,9 @@ module FluxoTarefasHelper
       
       .timeline {
         display: flex;
-        position: relative;
         width: 100%;
         min-height: 80px;
-        align-items: center; /* Centraliza verticalmente todos os elementos */
-      }
-      
-      /* Linha contínua base */
-      .timeline::before {
-        content: '';
-        position: absolute;
-        top: 50%;
-        left: 0;
-        right: 0;
-        height: 2px;
-        background-color: #ddd;
-        transform: translateY(-50%);
-        z-index: 1;
+        align-items: center;
       }
       
       .timeline-step {
@@ -178,7 +164,6 @@ module FluxoTarefasHelper
         display: flex;
         flex-direction: column;
         align-items: center;
-        position: relative;
         min-width: 90px;
         padding: 0 10px;
       }
@@ -192,12 +177,10 @@ module FluxoTarefasHelper
         align-items: center;
         justify-content: center;
         color: white;
-        position: relative;
-        z-index: 2;
         margin: 10px 0;
       }
       
-      /* Estados da timeline */
+      /* Estados dos ícones */
       .timeline-step-completed .timeline-circle {
         background-color: #4CAF50;
       }
