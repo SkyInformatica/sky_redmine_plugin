@@ -323,6 +323,19 @@ module SkyRedminePlugin
         # Existe tarefa de QS
         ultima_tarefa_qs = tarefas_qs.last
         
+        # CORREÇÃO: Verificar primeiro se a última tarefa DEVEL é de retorno de testes e está em algum status ativo
+        # Isso deve ter precedência mesmo que a última tarefa do QS esteja com TESTE_NOK_FECHADA
+        if eh_retorno_testes
+          case ultima_tarefa_devel.status.name
+          when SkyRedminePlugin::Constants::IssueStatus::NOVA
+            return "ESTOQUE_DEVEL_RETORNO_TESTES"
+          when SkyRedminePlugin::Constants::IssueStatus::EM_ANDAMENTO
+            return "EM_ANDAMENTO_DEVEL_RETORNO_TESTES"
+          when SkyRedminePlugin::Constants::IssueStatus::RESOLVIDA
+            return "RESOLVIDA_DEVEL_RETORNO_TESTES"
+          end
+        end
+        
         # Verificar o status da última tarefa QS
         case ultima_tarefa_qs.status.name
         when SkyRedminePlugin::Constants::IssueStatus::NOVA
@@ -337,49 +350,34 @@ module SkyRedminePlugin
           # Se a tarefa de teste foi aprovada e fechada, é porque a versão foi liberada
           return "AGUARDANDO_VERSAO"
         when SkyRedminePlugin::Constants::IssueStatus::TESTE_NOK_FECHADA
-          # Se o status do último DEVEL é FECHADA_CONTINUA_RETORNO_TESTES, então o retorno já está em andamento
-          if ultima_tarefa_devel.status.name == SkyRedminePlugin::Constants::IssueStatus::FECHADA_CONTINUA_RETORNO_TESTES
-            # Verificar se há nova tarefa de DEVEL de retorno_testes e seu status
-            if ciclos_devel.size > 1 
-              ultimo_ciclo_devel = ciclos_devel.last
-              ultima_tarefa_ultimo_ciclo = ultimo_ciclo_devel.last
-              
-              if ultima_tarefa_ultimo_ciclo.tracker.name == SkyRedminePlugin::Constants::Trackers::RETORNO_TESTES
-                case ultima_tarefa_ultimo_ciclo.status.name
-                when SkyRedminePlugin::Constants::IssueStatus::NOVA
-                  return "ESTOQUE_DEVEL_RETORNO_TESTES"
-                when SkyRedminePlugin::Constants::IssueStatus::EM_ANDAMENTO
-                  return "EM_ANDAMENTO_DEVEL_RETORNO_TESTES"
-                when SkyRedminePlugin::Constants::IssueStatus::RESOLVIDA
-                  return "RESOLVIDA_DEVEL_RETORNO_TESTES"
-                end
+          # Verificar se há nova tarefa de DEVEL de retorno_testes e seu status
+          if ciclos_devel.size > 1 
+            ultimo_ciclo_devel = ciclos_devel.last
+            ultima_tarefa_ultimo_ciclo = ultimo_ciclo_devel.last
+            
+            if ultima_tarefa_ultimo_ciclo.tracker.name == SkyRedminePlugin::Constants::Trackers::RETORNO_TESTES
+              case ultima_tarefa_ultimo_ciclo.status.name
+              when SkyRedminePlugin::Constants::IssueStatus::NOVA
+                return "ESTOQUE_DEVEL_RETORNO_TESTES"
+              when SkyRedminePlugin::Constants::IssueStatus::EM_ANDAMENTO
+                return "EM_ANDAMENTO_DEVEL_RETORNO_TESTES"
+              when SkyRedminePlugin::Constants::IssueStatus::RESOLVIDA
+                return "RESOLVIDA_DEVEL_RETORNO_TESTES"
               end
-            else
-              return "AGUARDANDO_RETORNO_TESTES"
             end
-          else
-            return "AGUARDANDO_RETORNO_TESTES"
           end
+          
+          # Se não encontrou uma tarefa de retorno ativa, significa que está aguardando
+          return "AGUARDANDO_RETORNO_TESTES"
         else
-          # Para outros casos, verificar se está no QS ou DEVEL
-          if eh_retorno_testes
-            case ultima_tarefa_devel.status.name
-            when SkyRedminePlugin::Constants::IssueStatus::NOVA
-              return "ESTOQUE_DEVEL_RETORNO_TESTES"
-            when SkyRedminePlugin::Constants::IssueStatus::EM_ANDAMENTO
-              return "EM_ANDAMENTO_DEVEL_RETORNO_TESTES"
-            when SkyRedminePlugin::Constants::IssueStatus::RESOLVIDA
-              return "RESOLVIDA_DEVEL_RETORNO_TESTES"
-            end
-          else
-            case ultima_tarefa_devel.status.name
-            when SkyRedminePlugin::Constants::IssueStatus::NOVA
-              return "ESTOQUE_DEVEL"
-            when SkyRedminePlugin::Constants::IssueStatus::EM_ANDAMENTO
-              return "EM_ANDAMENTO_DEVEL"
-            when SkyRedminePlugin::Constants::IssueStatus::RESOLVIDA
-              return "RESOLVIDA_DEVEL"
-            end
+          # Para outros casos, verificar a situação do DEVEL
+          case ultima_tarefa_devel.status.name
+          when SkyRedminePlugin::Constants::IssueStatus::NOVA
+            return "ESTOQUE_DEVEL"
+          when SkyRedminePlugin::Constants::IssueStatus::EM_ANDAMENTO
+            return "EM_ANDAMENTO_DEVEL"
+          when SkyRedminePlugin::Constants::IssueStatus::RESOLVIDA
+            return "RESOLVIDA_DEVEL"
           end
         end
       end
