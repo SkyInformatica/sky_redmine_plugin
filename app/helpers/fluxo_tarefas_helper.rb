@@ -651,7 +651,7 @@ module FluxoTarefasHelper
     
     # Encontrar o índice da situação atual no fluxo
     indice_atual = fluxo.index(situacao_atual)
-    return "" unless indice_atual # Se não encontrar, não renderizar
+    return "" unless indice_atual
     
     # Preparar HTML
     html = "<div class='indicadores-grupo'>"
@@ -679,32 +679,35 @@ module FluxoTarefasHelper
       html << "<div class='timeline'>"
       
       primeira_parte.each_with_index do |situacao, i|
-        # Determinar o estado desta etapa
-        if i < indice_atual
-          estado = "completed" # Etapas já concluídas
-          icon = "&#10003;" # Checkmark
+        estado = if i < indice_atual && esta_na_primeira_parte
+          "completed"
         elsif i == indice_atual && esta_na_primeira_parte
-          estado = "current" # Etapa atual
-          icon = "&#8226;" # Bullet point
+          "current"
         else
-          estado = "future" # Etapas futuras
-          icon = ""
+          "future"
         end
         
-        # Formatar o texto da situação para exibição
+        icon = case estado
+        when "completed" then "&#10003;"
+        when "current" then "&#8226;"
+        else ""
+        end
+        
         texto_situacao = situacao.gsub("_", " ")
         
-        # Renderizar uma etapa da timeline
         html << "<div class='timeline-step timeline-step-#{estado}'>"
+        html << "<div class='timeline-circle-wrapper'>"
         html << "<div class='timeline-circle'>#{icon}</div>"
+        html << "<div class='timeline-line'></div>"
+        html << "</div>"
         html << "<div class='timeline-label'><div class='timeline-text'>#{texto_situacao}</div></div>"
         html << "</div>"
       end
       
-      html << "</div>" # Fechar timeline
-      html << "</div>" # Fechar timeline-row
+      html << "</div>"
+      html << "</div>"
       
-      # Adicionar apenas um espaçamento entre as duas linhas
+      # Adicionar espaçamento entre as linhas
       html << "<div style='height: 30px;'></div>"
       
       # Renderizar a segunda linha da timeline
@@ -712,40 +715,42 @@ module FluxoTarefasHelper
       html << "<div class='timeline'>"
       
       segunda_parte.each_with_index do |situacao, i|
-        # Ajustar o índice para a comparação com o índice atual
         i_ajustado = i + primeira_parte.length
         
-        # Determinar o estado desta etapa
-        if i_ajustado < indice_atual
-          estado = "completed" # Etapas já concluídas
-          icon = "&#10003;" # Checkmark
+        estado = if i_ajustado < indice_atual
+          "completed"
         elsif i_ajustado == indice_atual
-          estado = "current" # Etapa atual
-          icon = "&#8226;" # Bullet point
+          "current"
         else
-          estado = "future" # Etapas futuras
-          icon = ""
+          "future"
         end
         
-        # Formatar o texto da situação para exibição
+        icon = case estado
+        when "completed" then "&#10003;"
+        when "current" then "&#8226;"
+        else ""
+        end
+        
         texto_situacao = situacao.gsub("_", " ")
         
-        # Renderizar uma etapa da timeline
         html << "<div class='timeline-step timeline-step-#{estado}'>"
+        html << "<div class='timeline-circle-wrapper'>"
         html << "<div class='timeline-circle'>#{icon}</div>"
+        html << "<div class='timeline-line'></div>"
+        html << "</div>"
         html << "<div class='timeline-label'><div class='timeline-text'>#{texto_situacao}</div></div>"
         html << "</div>"
       end
       
-      html << "</div>" # Fechar timeline
-      html << "</div>" # Fechar timeline-row
+      html << "</div>"
+      html << "</div>"
     else
-      # Fluxo normal sem retorno de testes (uma única linha)
+      # Fluxo normal sem retorno de testes
       html << render_timeline_normal(fluxo, indice_atual)
     end
     
-    html << "</div>" # Fechar timeline-container
-    html << "</div>" # Fechar grupo
+    html << "</div>"
+    html << "</div>"
     
     html
   end
