@@ -43,4 +43,10 @@ class ProcessarIndicadoresController < ApplicationController
     flash[:notice] = "Indicadores das tarefas criadas a partir de 2024 foram processados com sucesso."
     redirect_to sky_redmine_settings
   end
+
+  def limpar_tags_2024
+    Rails.logger.info ">>> Iniciando limpeza de tags SkyRP_ a partir de 2024"
+    Rake::Task['sky_redmine_plugin:limpar_tags'].invoke
+    redirect_to sky_redmine_settings_path, notice: "Limpeza de tags SkyRP_ a partir de 2024 concluída"
+  end
 end
