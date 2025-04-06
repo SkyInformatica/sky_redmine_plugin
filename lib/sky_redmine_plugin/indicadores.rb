@@ -404,7 +404,12 @@ module SkyRedminePlugin
           if ultima_tarefa_devel.status.name == SkyRedminePlugin::Constants::IssueStatus::FECHADA
             return SkyRedminePlugin::Constants::SituacaoAtual::VERSAO_LIBERADA
           else
-            return SkyRedminePlugin::Constants::SituacaoAtual::AGUARDANDO_VERSAO
+            # Verificar se é um retorno de testes
+            if eh_retorno_testes || tarefas_qs.any? { |t| [SkyRedminePlugin::Constants::IssueStatus::TESTE_NOK, SkyRedminePlugin::Constants::IssueStatus::TESTE_NOK_FECHADA].include?(t.status.name) }
+              return SkyRedminePlugin::Constants::SituacaoAtual::AGUARDANDO_VERSAO_RETORNO_TESTES
+            else
+              return SkyRedminePlugin::Constants::SituacaoAtual::AGUARDANDO_VERSAO
+            end
           end
         end
         
@@ -434,7 +439,7 @@ module SkyRedminePlugin
               # Se existe tarefa QS criada após a resolução da DEVEL, avaliar seu status
               if ultima_tarefa_qs.status.name == SkyRedminePlugin::Constants::IssueStatus::TESTE_OK ||
                  ultima_tarefa_qs.status.name == SkyRedminePlugin::Constants::IssueStatus::TESTE_OK_FECHADA
-                return SkyRedminePlugin::Constants::SituacaoAtual::AGUARDANDO_VERSAO
+                return SkyRedminePlugin::Constants::SituacaoAtual::AGUARDANDO_VERSAO_RETORNO_TESTES
               elsif ultima_tarefa_qs.status.name == SkyRedminePlugin::Constants::IssueStatus::NOVA
                 return SkyRedminePlugin::Constants::SituacaoAtual::ESTOQUE_QS_RETORNO_TESTES
               elsif ultima_tarefa_qs.status.name == SkyRedminePlugin::Constants::IssueStatus::EM_ANDAMENTO
@@ -471,7 +476,12 @@ module SkyRedminePlugin
           if ultima_tarefa_devel.status.name == SkyRedminePlugin::Constants::IssueStatus::FECHADA
             return SkyRedminePlugin::Constants::SituacaoAtual::VERSAO_LIBERADA
           else
-            return SkyRedminePlugin::Constants::SituacaoAtual::AGUARDANDO_VERSAO
+            # Verificar se é um retorno de testes
+            if eh_retorno_testes || tarefas_qs.any? { |t| [SkyRedminePlugin::Constants::IssueStatus::TESTE_NOK, SkyRedminePlugin::Constants::IssueStatus::TESTE_NOK_FECHADA].include?(t.status.name) }
+              return SkyRedminePlugin::Constants::SituacaoAtual::AGUARDANDO_VERSAO_RETORNO_TESTES
+            else
+              return SkyRedminePlugin::Constants::SituacaoAtual::AGUARDANDO_VERSAO
+            end
           end
         when SkyRedminePlugin::Constants::IssueStatus::TESTE_NOK
           return SkyRedminePlugin::Constants::SituacaoAtual::AGUARDANDO_RETORNO_TESTES
@@ -480,7 +490,12 @@ module SkyRedminePlugin
           if ultima_tarefa_devel.status.name == SkyRedminePlugin::Constants::IssueStatus::FECHADA
             return SkyRedminePlugin::Constants::SituacaoAtual::VERSAO_LIBERADA
           else
-            return SkyRedminePlugin::Constants::SituacaoAtual::AGUARDANDO_VERSAO
+            # Verificar se é um retorno de testes
+            if eh_retorno_testes || tarefas_qs.any? { |t| [SkyRedminePlugin::Constants::IssueStatus::TESTE_NOK, SkyRedminePlugin::Constants::IssueStatus::TESTE_NOK_FECHADA].include?(t.status.name) }
+              return SkyRedminePlugin::Constants::SituacaoAtual::AGUARDANDO_VERSAO_RETORNO_TESTES
+            else
+              return SkyRedminePlugin::Constants::SituacaoAtual::AGUARDANDO_VERSAO
+            end
           end
         when SkyRedminePlugin::Constants::IssueStatus::TESTE_NOK_FECHADA
           # Verificar se há nova tarefa de DEVEL de retorno_testes e seu status
@@ -498,7 +513,7 @@ module SkyRedminePlugin
                 # CORREÇÃO: Verificar se existe tarefa QS posterior com Teste OK
                 if ultima_tarefa_qs.status.name == SkyRedminePlugin::Constants::IssueStatus::TESTE_OK ||
                    ultima_tarefa_qs.status.name == SkyRedminePlugin::Constants::IssueStatus::TESTE_OK_FECHADA
-                  return SkyRedminePlugin::Constants::SituacaoAtual::AGUARDANDO_VERSAO
+                  return SkyRedminePlugin::Constants::SituacaoAtual::AGUARDANDO_VERSAO_RETORNO_TESTES
                 else
                   return SkyRedminePlugin::Constants::SituacaoAtual::AGUARDANDO_ENCAMINHAR_QS_RETORNO_TESTES
                 end

@@ -279,6 +279,85 @@ module FluxoTarefasHelper
         cursor: help;
         font-size: 14px;
       }
+      /* Timeline CSS */
+      .timeline-container {
+        margin-top: 15px;
+        margin-bottom: 15px;
+        width: 100%;
+        overflow-x: auto;
+      }
+      .timeline {
+        display: flex;
+        width: 100%;
+        position: relative;
+        margin-bottom: 10px;
+      }
+      .timeline-step {
+        flex: 1;
+        text-align: center;
+        padding: 10px 5px;
+        position: relative;
+        font-size: 11px;
+        min-width: 90px;
+      }
+      .timeline-step::after {
+        content: '';
+        position: absolute;
+        width: 100%;
+        height: 2px;
+        background-color: #ddd;
+        top: 40px;
+        left: 50%;
+        z-index: 1;
+      }
+      .timeline-step:last-child::after {
+        display: none;
+      }
+      .timeline-circle {
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background-color: #ddd;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 5px;
+        position: relative;
+        z-index: 2;
+        color: white;
+      }
+      .timeline-label {
+        display: block;
+        font-size: 10px;
+        color: #333;
+        margin-top: 5px;
+        word-wrap: break-word;
+      }
+      .timeline-text {
+        max-width: 100px;
+        white-space: normal;
+        margin: 0 auto;
+      }
+      .timeline-step-completed .timeline-circle {
+        background-color: #4CAF50;
+      }
+      .timeline-step-current .timeline-circle {
+        background-color: #2196F3;
+      }
+      .timeline-step-future .timeline-circle {
+        background-color: #ddd;
+      }
+      .timeline-step-completed .timeline-label {
+        color: #4CAF50;
+        font-weight: bold;
+      }
+      .timeline-step-current .timeline-label {
+        color: #2196F3;
+        font-weight: bold;
+      }
+      .timeline-step-future .timeline-label {
+        color: #999;
+      }
     </style>"
 
     # Gerar HTML dos cards
@@ -353,7 +432,7 @@ module FluxoTarefasHelper
 
     html << "</div>"
     html << "</div>"
-
+    
     # Cards QS
     html << "<div class='indicadores-grupo'>"
     tempo_gasto_qs = format("%.2f", indicadores.tempo_gasto_qs.to_f)
@@ -395,7 +474,7 @@ module FluxoTarefasHelper
 
     html << "</div>"
     html << "</div>"
-
+    
     # Cards Liberar versão
     html << "<div class='indicadores-grupo'>"
     tempo_gasto_devel = format("%.2f", indicadores.tempo_gasto_devel.to_f)
@@ -427,9 +506,66 @@ module FluxoTarefasHelper
 
     html << "</div>"
     html << "</div>"
+    
+    # Timeline de situação atual
+    # Verificar se há uma situação atual e quantidade de retornos de testes
+    tem_retorno_testes = indicadores.qtd_retorno_testes.to_i > 0
+    if indicadores.situacao_atual.present?
+      html << render_timeline_situacao_atual(indicadores.situacao_atual, tem_retorno_testes)
+    end
 
     html << "</div>"
     html.join("\n")
+  end
+  
+  # Método para renderizar a timeline da situação atual
+  def render_timeline_situacao_atual(situacao_atual, tem_retorno_testes)
+    return "" unless situacao_atual
+    
+    # Determinar qual fluxo usar baseado em se teve retornos de testes
+    fluxo = tem_retorno_testes ? 
+      SkyRedminePlugin::Constants::SituacaoAtual::FLUXO_RETORNO_TESTES : 
+      SkyRedminePlugin::Constants::SituacaoAtual::FLUXO_IDEAL
+    
+    # Encontrar o índice da situação atual no fluxo
+    indice_atual = fluxo.index(situacao_atual)
+    return "" unless indice_atual # Se não encontrar, não renderizar
+    
+    # Preparar HTML
+    html = "<div class='indicadores-grupo'>"
+    html << "<div class='indicadores-titulo'>Timeline de Progresso</div>"
+    html << "<div class='timeline-container'>"
+    html << "<div class='timeline'>"
+    
+    # Renderizar cada etapa da timeline
+    fluxo.each_with_index do |situacao, i|
+      # Determinar o estado desta etapa
+      if i < indice_atual
+        estado = "completed" # Etapas já concluídas
+        icon = "&#10003;" # Checkmark
+      elsif i == indice_atual
+        estado = "current" # Etapa atual
+        icon = "&#8226;" # Bullet point
+      else
+        estado = "future" # Etapas futuras
+        icon = ""
+      end
+      
+      # Formatar o texto da situação para exibição (remover prefixos, substituir _ por espaço)
+      texto_situacao = situacao.gsub("_", " ")
+      
+      # Renderizar uma etapa da timeline
+      html << "<div class='timeline-step timeline-step-#{estado}'>"
+      html << "<div class='timeline-circle'>#{icon}</div>"
+      html << "<div class='timeline-label'><div class='timeline-text'>#{texto_situacao}</div></div>"
+      html << "</div>"
+    end
+    
+    html << "</div>" # Fechar timeline
+    html << "</div>" # Fechar timeline-container
+    html << "</div>" # Fechar grupo
+    
+    html
   end
 
   def render_card(caption, valor, detalhe = nil, tooltip = nil)

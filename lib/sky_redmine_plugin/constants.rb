@@ -94,6 +94,7 @@ module SkyRedminePlugin
       # Situações de QS em retorno de testes
       ESTOQUE_QS_RETORNO_TESTES = "ESTOQUE_QS_RETORNO_TESTES"
       EM_ANDAMENTO_QS_RETORNO_TESTES = "EM_ANDAMENTO_QS_RETORNO_TESTES"
+      AGUARDANDO_VERSAO_RETORNO_TESTES = "AGUARDANDO_VERSAO_RETORNO_TESTES"
       
       # Lista de todas as situações em ordem cronológica
       TODAS_SITUACOES = [
@@ -109,7 +110,38 @@ module SkyRedminePlugin
         EM_ANDAMENTO_DEVEL_RETORNO_TESTES,
         AGUARDANDO_ENCAMINHAR_QS_RETORNO_TESTES,
         ESTOQUE_QS_RETORNO_TESTES,
-        EM_ANDAMENTO_QS_RETORNO_TESTES
+        EM_ANDAMENTO_QS_RETORNO_TESTES,
+        AGUARDANDO_VERSAO_RETORNO_TESTES
+      ]
+      
+      # Fluxo de situações ideal (sem retorno de testes)
+      FLUXO_IDEAL = [
+        ESTOQUE_DEVEL,
+        EM_ANDAMENTO_DEVEL,
+        AGUARDANDO_ENCAMINHAR_QS,
+        ESTOQUE_QS,
+        EM_ANDAMENTO_QS,
+        AGUARDANDO_VERSAO,
+        VERSAO_LIBERADA
+      ]
+      
+      # Fluxo de situações com retorno de testes
+      FLUXO_RETORNO_TESTES = [
+        ESTOQUE_DEVEL,
+        EM_ANDAMENTO_DEVEL,
+        AGUARDANDO_ENCAMINHAR_QS,
+        ESTOQUE_QS,
+        EM_ANDAMENTO_QS,
+        AGUARDANDO_VERSAO,
+        VERSAO_LIBERADA,
+        AGUARDANDO_RETORNO_TESTES,
+        ESTOQUE_DEVEL_RETORNO_TESTES,
+        EM_ANDAMENTO_DEVEL_RETORNO_TESTES,
+        AGUARDANDO_ENCAMINHAR_QS_RETORNO_TESTES,
+        ESTOQUE_QS_RETORNO_TESTES,
+        EM_ANDAMENTO_QS_RETORNO_TESTES,
+        AGUARDANDO_VERSAO_RETORNO_TESTES,
+        VERSAO_LIBERADA
       ]
     end
   end
