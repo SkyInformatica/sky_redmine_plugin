@@ -144,7 +144,7 @@ module FluxoTarefasHelper
         font-weight: bold;  
         margin: 10px 0 5px 0;  
       }  
-      /* Timeline CSS - Versão minimalista */
+      /* Timeline CSS */
       .timeline-container {
         margin: 20px 0;
         width: 100%;
@@ -152,64 +152,115 @@ module FluxoTarefasHelper
       }
       
       .timeline {
-        display: flex;
-        width: 100%;
         position: relative;
-        padding-top: 30px;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        padding-top: 12px;
+      }
+      
+      /* Linha conectora */
+      .timeline::before {
+        content: '';
+        position: absolute;
+        top: 24px;
+        left: 12px;
+        right: 12px;
+        height: 2px;
+        background-color: #e0e0e0;
+        z-index: 0;
       }
       
       .timeline-step {
         flex: 1;
-        min-width: 90px;
         position: relative;
-        padding: 30px 10px 0;
+        text-align: center;
+        padding: 0 5px;
+        min-width: 80px;
       }
       
       .timeline-circle {
-        width: 20px;
-        height: 20px;
+        width: 24px;
+        height: 24px;
         border-radius: 50%;
-        background-color: #ddd;
-        position: absolute;
-        top: 0;
-        left: 50%;
-        transform: translateX(-50%);
+        border: 2px solid #e0e0e0;
+        background-color: #fff;
+        margin: 0 auto;
+        position: relative;
+        z-index: 1;
         display: flex;
         align-items: center;
         justify-content: center;
-        color: white;
+        font-weight: bold;
+        font-size: 14px;
       }
       
-      /* Estados dos ícones */
+      /* Estados dos círculos */
       .timeline-step-completed .timeline-circle {
         background-color: #4CAF50;
+        border-color: #4CAF50;
+        color: white;
+      }
+      .timeline-step-completed .timeline-circle::after {
+        content: '✓';
       }
       
       .timeline-step-current .timeline-circle {
         background-color: #2196F3;
+        border-color: #2196F3;
+        color: white;
+      }
+      .timeline-step-current .timeline-circle::after {
+        content: '';
+        display: block;
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background-color: white;
+      }
+      
+      .timeline-step-future .timeline-circle {
+        background-color: #fff;
+        border-color: #e0e0e0;
       }
       
       /* Textos da timeline */
       .timeline-label {
-        text-align: center;
-      }
-      
-      .timeline-text {
+        display: block;
         font-size: 10px;
-        color: #666;
-        max-width: 100px;
-        margin: 0 auto;
+        margin-top: 10px;
         word-wrap: break-word;
       }
       
+      .timeline-text {
+        max-width: 100px;
+        margin: 0 auto;
+        text-align: center;
+        font-size: 9px;
+        color: #666;
+      }
+      
+      /* Cores dos textos baseadas no estado */
+      .timeline-step-completed .timeline-label,
       .timeline-step-completed .timeline-text {
-        color: #4CAF50;
+        color: #333;
         font-weight: bold;
       }
       
+      .timeline-step-current .timeline-label,
       .timeline-step-current .timeline-text {
         color: #2196F3;
         font-weight: bold;
+      }
+      
+      .timeline-step-future .timeline-label,
+      .timeline-step-future .timeline-text {
+        color: #999;
+      }
+      
+      /* Espaçamento entre múltiplas timelines */
+      .timeline-row + .timeline-row {
+        margin-top: 30px;
       }
     </style>"
 
@@ -354,56 +405,107 @@ module FluxoTarefasHelper
       overflow-x: auto;
     }
     .timeline {
-      display: flex;
-      width: 100%;
       position: relative;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      padding-top: 12px;
     }
+    
+    /* Linha conectora */
+    .timeline::before {
+      content: '';
+      position: absolute;
+      top: 24px;
+      left: 12px;
+      right: 12px;
+      height: 2px;
+      background-color: #e0e0e0;
+      z-index: 0;
+    }
+    
     .timeline-step {
       flex: 1;
-      text-align: center;
-      padding: 10px 5px;
       position: relative;
-      min-width: 90px;
+      text-align: center;
+      padding: 0 5px;
+      min-width: 80px;
     }
-    /* Círculos da timeline */
+    
     .timeline-circle {
-      width: 20px;
-      height: 20px;
+      width: 24px;
+      height: 24px;
       border-radius: 50%;
-      background-color: #ddd;
+      border: 2px solid #e0e0e0;
+      background-color: #fff;
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
       display: flex;
       align-items: center;
       justify-content: center;
-      margin: 10px auto 5px;
-      position: relative;
-      z-index: 2;
+      font-weight: bold;
+      font-size: 14px;
     }
+    
+    /* Estados dos círculos */
+    .timeline-step-completed .timeline-circle {
+      background-color: #4CAF50;
+      border-color: #4CAF50;
+      color: white;
+    }
+    .timeline-step-completed .timeline-circle::after {
+      content: '✓';
+    }
+    
+    .timeline-step-current .timeline-circle {
+      background-color: #2196F3;
+      border-color: #2196F3;
+      color: white;
+    }
+    .timeline-step-current .timeline-circle::after {
+      content: '';
+      display: block;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background-color: white;
+    }
+    
+    .timeline-step-future .timeline-circle {
+      background-color: #fff;
+      border-color: #e0e0e0;
+    }
+    
     /* Textos da timeline */
     .timeline-label {
       display: block;
       font-size: 10px;
-      margin-top: 5px;
+      margin-top: 10px;
       word-wrap: break-word;
     }
+    
     .timeline-text {
       max-width: 100px;
-      white-space: normal;
       margin: 0 auto;
       text-align: center;
       font-size: 9px;
       color: #666;
     }
+    
     /* Cores dos textos baseadas no estado */
     .timeline-step-completed .timeline-label,
     .timeline-step-completed .timeline-text {
-      color: #4CAF50;
+      color: #333;
       font-weight: bold;
     }
+    
     .timeline-step-current .timeline-label,
     .timeline-step-current .timeline-text {
       color: #2196F3;
       font-weight: bold;
     }
+    
     .timeline-step-future .timeline-label,
     .timeline-step-future .timeline-text {
       color: #999;
