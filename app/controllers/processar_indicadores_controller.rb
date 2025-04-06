@@ -41,7 +41,7 @@ class ProcessarIndicadoresController < ApplicationController
     end
 
     flash[:notice] = "Indicadores das tarefas criadas a partir de 2024 foram processados com sucesso."
-    redirect_to sky_redmine_settings
+    redirect_to sky_redmine_settings_path
   end
 
   def limpar_tags_2024
