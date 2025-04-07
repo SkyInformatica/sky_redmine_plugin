@@ -1,8 +1,7 @@
 class SkyRedmineIndicadores < ActiveRecord::Base
   self.table_name = "sky_redmine_indicadores"
 
-  # Associações, validações ou métodos adicionais, se necessários
-
+  # Métodos de classe
   def self.tarefas_por_tipo(scope, start_date = nil, end_date = nil)
     scope.group(:tipo_primeira_tarefa_devel).count
   end

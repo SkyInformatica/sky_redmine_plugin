@@ -63,16 +63,25 @@ module SkyRedminePlugin
         
         # Contar retornos de testes baseado no fluxo entre projetos
         qtd_retorno_testes = 0
+        qtd_retorno_testes_devel = 0
         tarefas_relacionadas.each_with_index do |tarefa, index|
           next if index == 0 # Pula a primeira tarefa
           
-          # Se a tarefa atual é DEVEL e a anterior era QS, é um retorno de testes
+          # Se a tarefa atual é DEVEL e a anterior era QS, é um retorno de testes do QS
           if tarefa.equipe_responsavel == SkyRedminePlugin::Constants::EquipeResponsavel::DEVEL &&
              tarefas_relacionadas[index-1].equipe_responsavel == SkyRedminePlugin::Constants::EquipeResponsavel::QS
             qtd_retorno_testes += 1
           end
+          
+          # Se a tarefa atual é DEVEL e é um retorno de testes, e a anterior foi fechada com FECHADA_CONTINUA_RETORNO_TESTES
+          if tarefa.equipe_responsavel == SkyRedminePlugin::Constants::EquipeResponsavel::DEVEL &&
+             tarefa.tracker.name == SkyRedminePlugin::Constants::Trackers::RETORNO_TESTES &&
+             tarefas_relacionadas[index-1].status.name == SkyRedminePlugin::Constants::IssueStatus::FECHADA_CONTINUA_RETORNO_TESTES
+            qtd_retorno_testes_devel += 1
+          end
         end
         indicador.qtd_retorno_testes = qtd_retorno_testes
+        indicador.qtd_retorno_testes_devel = qtd_retorno_testes_devel
         
         # Usar as datas já calculadas pela função obter_lista_tarefas_relacionadas
         indicador.data_criacao_ou_atendimento_primeira_tarefa_devel = primeira_tarefa_devel.data_criacao

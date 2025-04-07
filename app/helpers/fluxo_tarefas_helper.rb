@@ -426,9 +426,17 @@ module FluxoTarefasHelper
     html << render_card("Responsável atual", indicadores.equipe_responsavel_atual, "", "Equipe responsável pela tarefa")
 
     # Card de retorno de testes
+    retornos = []
+    if indicadores.qtd_retorno_testes.to_i > 0
+      retornos << "QS: #{indicadores.qtd_retorno_testes}"
+    end
+    if indicadores.qtd_retorno_testes_devel.to_i > 0
+      retornos << "DEVEL: #{indicadores.qtd_retorno_testes_devel}"
+    end
     html << render_card(
       "Retorno de testes",
-      indicadores.qtd_retorno_testes || 0, "",
+      retornos.any? ? retornos.join(", ") : "0",
+      "",
       "Quantidade de vezes que a tarefa retornou para desenvolvimento"
     )
 
@@ -569,7 +577,7 @@ module FluxoTarefasHelper
     
     # Timeline de situação atual
     # Verificar se há uma situação atual e quantidade de retornos de testes
-    tem_retorno_testes = indicadores.qtd_retorno_testes.to_i > 0
+    tem_retorno_testes = indicadores.qtd_retorno_testes.to_i > 0 || indicadores.qtd_retorno_testes_devel.to_i > 0
     if indicadores.situacao_atual.present?
       html << render_timeline_situacao_atual(indicadores.situacao_atual, tem_retorno_testes, indicadores)
     end
