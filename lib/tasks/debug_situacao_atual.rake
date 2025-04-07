@@ -108,7 +108,8 @@ namespace :sky_redmine_plugin do
         puts "Última tarefa QS ID: #{indicador.ultima_tarefa_qs_id}"
         puts "Status última tarefa QS: #{indicador.status_ultima_tarefa_qs}"
         puts "Equipe responsável atual: #{indicador.equipe_responsavel_atual}"
-        puts "Retornos de testes: #{indicador.qtd_retorno_testes}"
+        puts "Retornos de testes QS: #{indicador.qtd_retorno_testes_qs}"
+        puts "Retornos de testes DEVEL: #{indicador.qtd_retorno_testes_devel}"
         puts "Situação atual: #{indicador.situacao_atual}"
       else
         puts "Não foi encontrado indicador para a primeira tarefa (ID: #{primeira_tarefa.id})"
@@ -169,7 +170,8 @@ namespace :sky_redmine_plugin do
         ultima_tarefa_qs_id: indicador.ultima_tarefa_qs_id,
         status_ultima_tarefa_qs: indicador.status_ultima_tarefa_qs,
         equipe_responsavel_atual: indicador.equipe_responsavel_atual,
-        qtd_retorno_testes: indicador.qtd_retorno_testes,
+        qtd_retorno_testes_qs: indicador.qtd_retorno_testes_qs,
+        qtd_retorno_testes_devel: indicador.qtd_retorno_testes_devel,
         situacao_atual: indicador.situacao_atual
       }
     end
