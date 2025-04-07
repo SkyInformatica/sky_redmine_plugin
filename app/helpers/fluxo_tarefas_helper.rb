@@ -615,8 +615,8 @@ module FluxoTarefasHelper
     html << "<div class='timeline-container'>"
     
     if tem_retorno_testes
-      # Ponto de divisão - índice do AGUARDANDO_RETORNO_TESTES
-      ponto_divisao = fluxo.index(SkyRedminePlugin::Constants::SituacaoAtual::AGUARDANDO_RETORNO_TESTES)
+      # Ponto de divisão - índice do AGUARDANDO_ENCAMINHAR_RETORNO_TESTES
+      ponto_divisao = fluxo.index(SkyRedminePlugin::Constants::SituacaoAtual::AGUARDANDO_ENCAMINHAR_RETORNO_TESTES)
       
       # Se o ponto de divisão não for encontrado, usar o fluxo normal
       if ponto_divisao.nil?

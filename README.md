@@ -47,7 +47,7 @@ bundle exec rake redmine:plugins:migrate RAILS_ENV=production
   | `SkyRP_AGUARDANDO_ENCAMINHAR_QS` | Está resolvida e na fila para encaminhar para o QS |  
   | `SkyRP_ESTOQUE_QS` | Foi encaminhada para QS e está no estoque do QS, uma tarefa nova |  
   | `SkyRP_EM_ANDAMENTO_QS` | Está em testes |  
-  | `SkyRP_AGUARDANDO_RETORNO_TESTES` | O resultado do teste foi TESTE_NOK e está aguardando criar o retorno de testes |  
+  | `SkyRP_AGUARDANDO_ENCAMINHAR_RETORNO_TESTES` | O resultado do teste foi TESTE_NOK e está aguardando criar o retorno de testes |  
   | `SkyRP_ESTOQUE_DEVEL_RETORNO_TESTES` | O retorno de testes foi criado e a tarefa está no estoque do desenvolvimento, uma tarefa para ser desenvolvida |  
   | `SkyRP_EM_ANDAMENTO_DEVEL_RETORNO_TESTES` | Retorno de testes está em desenvolvimento |  
   | `SkyRP_AGUARDANDO_ENCAMINHAR_QS_RETORNO_TESTES` | O retorno de testes está resolvido e na fila para encaminhar para o QS |  

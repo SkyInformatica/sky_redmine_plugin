@@ -311,11 +311,11 @@ module SkyRedminePlugin
         prefixos_situacoes = {
           SkyRedminePlugin::Constants::SituacaoAtual::ESTOQUE_DEVEL => "01",
           SkyRedminePlugin::Constants::SituacaoAtual::EM_ANDAMENTO_DEVEL => "02",
-          SkyRedminePlugin::Constants::SituacaoAtual::AGUARDANDO_ENCAMINHAR_QS => "03",
+          SkyRedminePlugin::Constants::SituacaoAtual::AGUARDANDO_ENCAMINHAR_RETORNO_TESTES => "03",
           SkyRedminePlugin::Constants::SituacaoAtual::ESTOQUE_QS => "04",
           SkyRedminePlugin::Constants::SituacaoAtual::EM_ANDAMENTO_QS => "05",
           SkyRedminePlugin::Constants::SituacaoAtual::AGUARDANDO_VERSAO => "06",
-          SkyRedminePlugin::Constants::SituacaoAtual::AGUARDANDO_RETORNO_TESTES => "07",
+          SkyRedminePlugin::Constants::SituacaoAtual::AGUARDANDO_ENCAMINHAR_RETORNO_TESTES => "07",
           SkyRedminePlugin::Constants::SituacaoAtual::ESTOQUE_DEVEL_RETORNO_TESTES => "01",
           SkyRedminePlugin::Constants::SituacaoAtual::EM_ANDAMENTO_DEVEL_RETORNO_TESTES => "02",
           SkyRedminePlugin::Constants::SituacaoAtual::AGUARDANDO_ENCAMINHAR_QS_RETORNO_TESTES => "03",
@@ -509,7 +509,7 @@ module SkyRedminePlugin
             end
           end
         when SkyRedminePlugin::Constants::IssueStatus::TESTE_NOK
-          return SkyRedminePlugin::Constants::SituacaoAtual::AGUARDANDO_RETORNO_TESTES
+          return SkyRedminePlugin::Constants::SituacaoAtual::AGUARDANDO_ENCAMINHAR_RETORNO_TESTES
         when SkyRedminePlugin::Constants::IssueStatus::TESTE_OK_FECHADA
           # Se o teste foi OK e fechado, verificar se a tarefa DEVEL foi fechada
           if ultima_tarefa_devel.status.name == SkyRedminePlugin::Constants::IssueStatus::FECHADA
@@ -547,7 +547,7 @@ module SkyRedminePlugin
           end
           
           # Se não encontrou uma tarefa de retorno ativa, significa que está aguardando
-          return SkyRedminePlugin::Constants::SituacaoAtual::AGUARDANDO_RETORNO_TESTES
+          return SkyRedminePlugin::Constants::SituacaoAtual::AGUARDANDO_ENCAMINHAR_RETORNO_TESTES
         else
           # Para outros casos, verificar a situação do DEVEL
           case ultima_tarefa_devel.status.name
