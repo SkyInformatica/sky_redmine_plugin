@@ -28,6 +28,30 @@ bundle exec rake redmine:plugins:migrate RAILS_ENV=production
 - Nova página de Indicadores em cada um dos projetos para um resumo geral da situacao atual envolvendo todas as tarefas do projeto.
 - Novas tags SkyRP\_ para marcar as tarefas de DEVEL com sua situacao atual da sua etapa de desenvolvimento.
 
+  Fluxo sem retorno de testes do QS:
+  SkyRP_ESTOQUE_DEVEL: está na fila do estoque do desenvolvimento, uma tarefa nova
+  SkyRP_EM_ANDAMENTO_DEVEL: está em desenvolvimento
+  SkyRP_AGUARDANDO_ENCAMINHAR_QS: está resolvida e na fila para encaminhar para o QS
+  SkyRP_ESTOQUE_QS: foi encaminhada para QS e está no estoque do QS, uma tarefa nova
+  SkyRP_EM_ANDAMENTO_QS: está em testes
+  SkyRP_AGUARDANDO_VERSAO: está com TESTE_OK e aguardando liberacao da versão
+  SkyRP_VERSAO_LIBERADA: versão liberada (tarefa fechada)
+
+  Fluxo com retorno de testes do QS:
+  SkyRP_ESTOQUE_DEVEL: está na fila do estoque do desenvolvimento, uma tarefa nova
+  SkyRP_EM_ANDAMENTO_DEVEL: está em desenvolvimento
+  SkyRP_AGUARDANDO_ENCAMINHAR_QS: está resolvida e na fila para encaminhar para o QS
+  SkyRP_ESTOQUE_QS: foi encaminhada para QS e está no estoque do QS, uma tarefa nova
+  SkyRP_EM_ANDAMENTO_QS: está em testes
+  SkyRP_AGUARDANDO_RETORNO_TESTES: o resultado do teste foi TESTE_NOK e está aguardando criar o retorno de testes
+  SkyRP_ESTOQUE_DEVEL_RETORNO_TESTES: o retorno de testes foi criado e a tarefa está no estoque do desenvolvimento, uma tarefa para ser desenvolvida
+  SkyRP_EM_ANDAMENTO_DEVEL_RETORNO_TESTES: retorno de testes está em desenvolvimento
+  SkyRP_AGUARDANDO_ENCAMINHAR_QS_RETORNO_TESTES: o retorno de testes está resolvido e na fila para encaminhar para o QS
+  SkyRP_ESTOQUE_QS_RETORNO_TESTES: o retorno de testes foi encaminhado para o QS e está no estoque do QS, uma tarefa para ser testada
+  SkyRP_EM_ANDAMENTO_QS_RETORNO_TESTES: retorno de testes está em testes
+  SkyRP_AGUARDANDO_VERSAO_RETORNO_TESTES: retorno de testes está com TESTE_OK e aguardando liberacao da versão
+  SkyRP_VERSAO_LIBERADA: versão liberada (tarefa fechada)
+
 ## 2025.01.06.1
 
 - Corrigido o problema que não estava executando as acoes automatizadas ao editar tarefas em lote
