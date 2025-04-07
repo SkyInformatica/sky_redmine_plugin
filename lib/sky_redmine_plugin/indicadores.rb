@@ -243,7 +243,6 @@ module SkyRedminePlugin
           indicador.tempo_total_devel_concluir_testes = (indicador.data_resolvida_ultima_tarefa_qs.to_date - indicador.data_criacao_ou_atendimento_primeira_tarefa_devel.to_date).to_i
         end
 
-        Rails.logger.info ">>> indicador.save: #{indicador.inspect}"
         indicador.save(validate: false)
         
         # Atualizar as tags das tarefas com a situação atual
@@ -312,7 +311,7 @@ module SkyRedminePlugin
         prefixo_tag = "SkyRP_"
         
         # Criar a nova tag baseada na situação atual, exceto para VERSAO_LIBERADA
-        nova_tag = situacao_atual == SkyRedminePlugin::Constants::SituacaoAtual::VERSAO_LIBERADA ? nil : "#{prefixo_tag}#{situacao_atual}"
+        nova_tag = situacao_atual == SkyRedminePlugin::Constants::SituacaoAtual::VERSAO_LIBERADA ? nil : "#{prefixo_tag}#{situacao_atual.gsub('RETORNO_TESTES', 'RT')}"
         
         Rails.logger.info ">>> Nova tag a ser definida: #{nova_tag || 'Nenhuma (VERSAO_LIBERADA)'}"
         
