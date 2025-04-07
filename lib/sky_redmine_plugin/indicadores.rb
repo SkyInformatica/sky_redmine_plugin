@@ -62,7 +62,7 @@ module SkyRedminePlugin
         indicador.skynet_primeira_tarefa_devel = SkyRedminePlugin::TarefasRelacionadas.obter_valor_campo_personalizado(primeira_tarefa_devel, "Sky.NET")
         
         # Contar retornos de testes baseado no fluxo entre projetos
-        qtd_retorno_testes = 0
+        qtd_retorno_testes_qs = 0
         qtd_retorno_testes_devel = 0
         tarefas_relacionadas.each_with_index do |tarefa, index|
           next if index == 0 # Pula a primeira tarefa
@@ -70,7 +70,7 @@ module SkyRedminePlugin
           # Se a tarefa atual é DEVEL e a anterior era QS, é um retorno de testes do QS
           if tarefa.equipe_responsavel == SkyRedminePlugin::Constants::EquipeResponsavel::DEVEL &&
              tarefas_relacionadas[index-1].equipe_responsavel == SkyRedminePlugin::Constants::EquipeResponsavel::QS
-            qtd_retorno_testes += 1
+            qtd_retorno_testes_qs += 1
           end
           
           # Se a tarefa atual é DEVEL e é um retorno de testes, e a anterior foi fechada com FECHADA_CONTINUA_RETORNO_TESTES
@@ -80,7 +80,7 @@ module SkyRedminePlugin
             qtd_retorno_testes_devel += 1
           end
         end
-        indicador.qtd_retorno_testes = qtd_retorno_testes
+        indicador.qtd_retorno_testes_qs = qtd_retorno_testes_qs
         indicador.qtd_retorno_testes_devel = qtd_retorno_testes_devel
         
         # Usar as datas já calculadas pela função obter_lista_tarefas_relacionadas
@@ -265,7 +265,7 @@ module SkyRedminePlugin
       indicador.tempo_gasto_devel = nil
       indicador.origem_primeira_tarefa_devel = nil
       indicador.skynet_primeira_tarefa_devel = nil
-      indicador.qtd_retorno_testes = nil
+      indicador.qtd_retorno_testes_qs = nil
       indicador.data_criacao_ou_atendimento_primeira_tarefa_devel = nil
       indicador.data_resolvida_ultima_tarefa_devel = nil
       indicador.data_fechamento_ultima_tarefa_devel = nil

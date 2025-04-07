@@ -427,8 +427,8 @@ module FluxoTarefasHelper
 
     # Card de retorno de testes
     retornos = []
-    if indicadores.qtd_retorno_testes.to_i > 0
-      retornos << "QS: #{indicadores.qtd_retorno_testes}"
+    if indicadores.qtd_retorno_testes_qs.to_i > 0
+      retornos << "QS: #{indicadores.qtd_retorno_testes_qs}"
     end
     if indicadores.qtd_retorno_testes_devel.to_i > 0
       retornos << "DEVEL: #{indicadores.qtd_retorno_testes_devel}"
@@ -577,7 +577,7 @@ module FluxoTarefasHelper
     
     # Timeline de situação atual
     # Verificar se há uma situação atual e quantidade de retornos de testes
-    tem_retorno_testes = indicadores.qtd_retorno_testes.to_i > 0 || indicadores.qtd_retorno_testes_devel.to_i > 0
+    tem_retorno_testes = indicadores.qtd_retorno_testes_qs.to_i > 0 || indicadores.qtd_retorno_testes_devel.to_i > 0
     if indicadores.situacao_atual.present?
       html << render_timeline_situacao_atual(indicadores.situacao_atual, tem_retorno_testes, indicadores)
     end
