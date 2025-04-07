@@ -631,21 +631,29 @@ module FluxoTarefasHelper
       esta_na_primeira_parte = indice_atual <= ponto_divisao
       
       # Renderizar a primeira linha da timeline com o indicador de continuação
+      html << "<div class='timeline-row'>"
+      html << "<div class='timeline'>"
       html << render_timeline_steps(primeira_parte, indice_atual, indicadores, esta_na_primeira_parte)
       html << "<div class='timeline-step timeline-step-continua'>"
       html << "<div class='timeline-circle'></div>"
       html << "<div class='timeline-label'><div class='timeline-text'>continua...</div></div>"
+      html << "</div>"
+      html << "</div>"
       html << "</div>"
       
       # Adicionar espaçamento entre as linhas
       html << "<div style='height: 30px;'></div>"
       
       # Renderizar a segunda linha da timeline com o indicador de continuação
+      html << "<div class='timeline-row'>"
+      html << "<div class='timeline'>"
       html << "<div class='timeline-step timeline-step-continua'>"
       html << "<div class='timeline-circle'></div>"
       html << "<div class='timeline-label'><div class='timeline-text'>...continuação</div></div>"
       html << "</div>"
       html << render_timeline_steps(segunda_parte, indice_atual - primeira_parte.length, indicadores, !esta_na_primeira_parte, primeira_parte.length)
+      html << "</div>"
+      html << "</div>"
     else
       # Fluxo normal sem retorno de testes
       html << render_timeline_normal(fluxo, indice_atual, indicadores)
