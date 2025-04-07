@@ -1,0 +1,246 @@
+<!-- Saída simulada do Ruby com tem_retorno_testes = true -->
+<div class="indicadores-grupo">
+  <div class="indicadores-titulo">Progresso</div>
+  <div class="timeline-container">
+    <div class="timeline-split-wrapper">
+      <!-- Wrapper adicionado -->
+
+      <!-- Primeira Linha -->
+      <div class="timeline-row">
+        <div class="timeline">
+          <div class="timeline-step timeline-step-completed">
+            <div class="timeline-circle"></div>
+            <div class="timeline-label">
+              <div class="timeline-text">PASSO A</div>
+            </div>
+          </div>
+          <div class="timeline-step timeline-step-completed">
+            <div class="timeline-circle"></div>
+            <div class="timeline-label">
+              <div class="timeline-text">PASSO B</div>
+            </div>
+          </div>
+          <!-- Último passo da primeira linha -->
+          <div
+            class="timeline-step timeline-step-completed timeline-step-split-end"
+          >
+            <div class="timeline-circle"></div>
+            <div class="timeline-label">
+              <div class="timeline-text">AGUARDANDO RETORNO TESTES</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Segunda Linha -->
+      <div class="timeline-row">
+        <div class="timeline">
+          <!-- Primeiro passo da segunda linha -->
+          <div
+            class="timeline-step timeline-step-current timeline-step-split-start"
+          >
+            <div class="timeline-circle"></div>
+            <div class="timeline-label">
+              <div class="timeline-text">PASSO C (APOS RETORNO)</div>
+            </div>
+          </div>
+          <div class="timeline-step timeline-step-future">
+            <div class="timeline-circle"></div>
+            <div class="timeline-label">
+              <div class="timeline-text">PASSO D</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Fim do wrapper -->
+  </div>
+</div>
+
+<!-- Coloque o CSS completo aqui -->
+<style>
+  /* ... (cole todo o CSS gerado por obter_css_timeline AQUI) ... */
+  /* ... (e adicione as NOVAS regras CSS listadas acima AQUI) ... */
+
+  /* Estilos básicos para demonstração */
+  body {
+    font-family: sans-serif;
+    padding: 20px;
+  }
+  .indicadores-grupo {
+    border: 1px solid #ccc;
+    padding: 15px;
+    margin-bottom: 20px;
+    background-color: #f9f9f9;
+  }
+  .indicadores-titulo {
+    font-weight: bold;
+    margin-bottom: 15px;
+    font-size: 1.1em;
+  }
+
+  /* Seu CSS existente .timeline-container, .timeline, .timeline-step, etc. */
+  .timeline-container {
+    margin: 20px 0;
+    width: 100%;
+    overflow-x: auto;
+  }
+  .timeline {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding-top: 12px;
+  }
+  /* Linha conectora */
+  .timeline::before {
+    content: "";
+    position: absolute;
+    top: 24px; /* Metade da altura do círculo */
+    left: 12px; /* Metade da largura do círculo */
+    right: 12px; /* Metade da largura do círculo */
+    height: 2px;
+    background-color: #e0e0e0;
+    z-index: 0;
+  }
+  .timeline-step {
+    flex: 1;
+    position: relative;
+    text-align: center;
+    padding: 0 5px;
+    min-width: 80px;
+  }
+  .timeline-circle {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    border: 2px solid #e0e0e0;
+    background-color: #fff;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  /* Estados dos círculos */
+  .timeline-step-completed .timeline-circle {
+    background-color: #4caf50;
+    border-color: #4caf50;
+  }
+  .timeline-step-completed .timeline-circle::after {
+    content: "✓";
+    color: white;
+    font-weight: bold;
+    font-size: 14px;
+  }
+  .timeline-step-current .timeline-circle {
+    background-color: #2196f3;
+    border-color: #2196f3;
+  }
+  .timeline-step-current .timeline-circle::after {
+    content: "";
+    display: block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: white;
+  }
+  .timeline-step-warning .timeline-circle {
+    background-color: #ffc107;
+    border-color: #ffc107;
+  }
+  .timeline-step-warning .timeline-circle::after {
+    content: "✓";
+    color: white;
+    font-weight: bold;
+    font-size: 14px;
+  }
+  .timeline-step-warning .timeline-label,
+  .timeline-step-warning .timeline-text {
+    color: #ffc107;
+    font-weight: bold;
+  }
+  .timeline-step-future .timeline-circle {
+    background-color: #fff;
+    border-color: #e0e0e0;
+  }
+  /* Textos da timeline */
+  .timeline-label {
+    display: block;
+    font-size: 10px;
+    margin-top: 10px;
+    word-wrap: break-word;
+  }
+  .timeline-text {
+    max-width: 100px;
+    margin: 0 auto;
+    text-align: center;
+    font-size: 9px;
+    color: #666;
+  }
+  /* Cores dos textos baseadas no estado */
+  .timeline-step-completed .timeline-label,
+  .timeline-step-completed .timeline-text {
+    color: #333; /* Ajustado para melhor leitura */
+    /* font-weight: bold; */ /* Removido negrito para não competir com atual */
+  }
+  .timeline-step-current .timeline-label,
+  .timeline-step-current .timeline-text {
+    color: #2196f3;
+    font-weight: bold;
+  }
+  .timeline-step-future .timeline-label,
+  .timeline-step-future .timeline-text {
+    color: #999;
+  }
+
+  /* --- NOVOS ESTILOS PARA CONEXÃO --- */
+  .timeline-split-wrapper {
+    position: relative;
+  }
+  .timeline-split-wrapper .timeline-row {
+    padding-top: 10px;
+    padding-bottom: 10px;
+  }
+  .timeline-split-wrapper .timeline-row + .timeline-row {
+    margin-top: 20px; /* Espaço vertical entre linhas = 40px total */
+  }
+  /* O conector vertical */
+  .timeline-step-split-end .timeline-circle::after {
+    content: "";
+    position: absolute;
+    /* Ajuste 'bottom': -(margin-top (20) + padding-bottom (10) + padding-top (10) + metade_linha(1)) = -41px */
+    /* Ou -(altura_conector(40) + metade_linha(1)) = -41px */
+    bottom: -41px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 2px;
+    height: 40px; /* Deve corresponder ao espaço vertical total entre os centros dos círculos */
+    background-color: #e0e0e0;
+    z-index: 0;
+    /* Remove estilos de ícone herdados */
+    display: block;
+    border-radius: 0;
+    color: transparent;
+  }
+
+  /* Sobrescreve o ::after dos estados normais QUANDO for o ponto de conexão */
+  .timeline-step-split-end.timeline-step-completed .timeline-circle::after,
+  .timeline-step-split-end.timeline-step-current .timeline-circle::after,
+  .timeline-step-split-end.timeline-step-warning .timeline-circle::after {
+    /* Apenas garante que as propriedades do conector sejam aplicadas */
+    content: "";
+    position: absolute;
+    bottom: -41px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 2px;
+    height: 40px;
+    background-color: #e0e0e0;
+    z-index: 0;
+    display: block;
+    border-radius: 0;
+    color: transparent;
+  }
+</style>
