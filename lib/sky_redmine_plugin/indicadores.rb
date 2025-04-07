@@ -332,7 +332,7 @@ module SkyRedminePlugin
           nil
         else
           prefixo_num = prefixos_situacoes[situacao_atual]
-          "#{prefixo_tag}#{prefixo_num}_#{situacao_atual}"
+          "#{prefixo_tag}#{prefixo_num}_#{situacao_atual.gsub('RETORNO_TESTES', 'RT')}"
         end
         
         Rails.logger.info ">>> Nova tag a ser definida: #{nova_tag || 'Nenhuma (VERSAO_LIBERADA)'}"
