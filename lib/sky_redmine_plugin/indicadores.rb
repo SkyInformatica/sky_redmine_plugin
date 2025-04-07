@@ -307,11 +307,33 @@ module SkyRedminePlugin
       begin
         Rails.logger.info ">>> Atualizando tags das tarefas com situação atual: #{situacao_atual}"
         
+        # Mapeamento de situações para prefixos numéricos
+        prefixos_situacoes = {
+          SkyRedminePlugin::Constants::SituacaoAtual::ESTOQUE_DEVEL => "01",
+          SkyRedminePlugin::Constants::SituacaoAtual::EM_ANDAMENTO_DEVEL => "02",
+          SkyRedminePlugin::Constants::SituacaoAtual::AGUARDANDO_ENCAMINHAR_QS => "03",
+          SkyRedminePlugin::Constants::SituacaoAtual::ESTOQUE_QS => "04",
+          SkyRedminePlugin::Constants::SituacaoAtual::EM_ANDAMENTO_QS => "05",
+          SkyRedminePlugin::Constants::SituacaoAtual::AGUARDANDO_VERSAO => "06",
+          SkyRedminePlugin::Constants::SituacaoAtual::AGUARDANDO_RETORNO_TESTES => "07",
+          SkyRedminePlugin::Constants::SituacaoAtual::ESTOQUE_DEVEL_RETORNO_TESTES => "01",
+          SkyRedminePlugin::Constants::SituacaoAtual::EM_ANDAMENTO_DEVEL_RETORNO_TESTES => "02",
+          SkyRedminePlugin::Constants::SituacaoAtual::AGUARDANDO_ENCAMINHAR_QS_RETORNO_TESTES => "03",
+          SkyRedminePlugin::Constants::SituacaoAtual::ESTOQUE_QS_RETORNO_TESTES => "04",
+          SkyRedminePlugin::Constants::SituacaoAtual::EM_ANDAMENTO_QS_RETORNO_TESTES => "05",
+          SkyRedminePlugin::Constants::SituacaoAtual::AGUARDANDO_VERSAO_RETORNO_TESTES => "06"
+        }
+        
         # Prefixo padrão para as tags de situação
         prefixo_tag = "SkyRP_"
         
         # Criar a nova tag baseada na situação atual, exceto para VERSAO_LIBERADA
-        nova_tag = situacao_atual == SkyRedminePlugin::Constants::SituacaoAtual::VERSAO_LIBERADA ? nil : "#{prefixo_tag}#{situacao_atual.gsub('RETORNO_TESTES', 'RT')}"
+        nova_tag = if situacao_atual == SkyRedminePlugin::Constants::SituacaoAtual::VERSAO_LIBERADA
+          nil
+        else
+          prefixo_num = prefixos_situacoes[situacao_atual]
+          "#{prefixo_tag}#{prefixo_num}_#{situacao_atual}"
+        end
         
         Rails.logger.info ">>> Nova tag a ser definida: #{nova_tag || 'Nenhuma (VERSAO_LIBERADA)'}"
         
