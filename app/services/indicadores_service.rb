@@ -43,7 +43,7 @@ class IndicadoresService
     scope_fechadas = scope.where(equipe_responsavel_atual: SkyRedminePlugin::Constants::EquipeResponsavel::FECHADA)
 
     # Buscar quantidade de tarefas por retorno de testes (apenas fechadas)
-    tarefas_por_retorno_testes = scope_fechadas.group(:qtd_retorno_testes).count
+    tarefas_por_retorno_testes = scope_fechadas.group(:qtd_retorno_testes_qs).count
 
     # Buscar quantidade de tarefas fechadas sem testes (apenas fechadas)
     tarefas_fechadas_sem_testes = scope_fechadas.group(:tarefa_fechada_sem_testes).count
