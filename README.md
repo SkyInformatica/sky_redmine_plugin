@@ -23,7 +23,7 @@ bundle exec rake redmine:plugins:migrate RAILS_ENV=production
 
 ## 2025.04.06.1
 
-- Nova tabela de indicadores no fluxo das tarefas (individual por tarefa)
+- Cards com indicadores no fluxo das tarefas (individual por tarefa) com a contabilização do tempo entre de cada situação.
 - Timeline das etapas de desenvolvimento no fluxo das tarefas
 - Nova página de Indicadores em cada um dos projetos para um resumo geral da situacao atual envolvendo todas as tarefas do projeto.
 - Novas tags SkyRP\_ para marcar as tarefas de DEVEL com sua situacao atual da sua etapa de desenvolvimento.
