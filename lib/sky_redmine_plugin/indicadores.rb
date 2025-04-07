@@ -311,7 +311,7 @@ module SkyRedminePlugin
         prefixos_situacoes = {
           SkyRedminePlugin::Constants::SituacaoAtual::ESTOQUE_DEVEL => "01",
           SkyRedminePlugin::Constants::SituacaoAtual::EM_ANDAMENTO_DEVEL => "02",
-          SkyRedminePlugin::Constants::SituacaoAtual::AGUARDANDO_ENCAMINHAR_RETORNO_TESTES => "03",
+          SkyRedminePlugin::Constants::SituacaoAtual::AGUARDANDO_ENCAMINHAR_QS => "03",
           SkyRedminePlugin::Constants::SituacaoAtual::ESTOQUE_QS => "04",
           SkyRedminePlugin::Constants::SituacaoAtual::EM_ANDAMENTO_QS => "05",
           SkyRedminePlugin::Constants::SituacaoAtual::AGUARDANDO_VERSAO => "06",
