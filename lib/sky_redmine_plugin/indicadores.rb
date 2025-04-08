@@ -324,28 +324,26 @@ module SkyRedminePlugin
           SkyRedminePlugin::Constants::SituacaoAtual::AGUARDANDO_VERSAO_RETORNO_TESTES => "06"
         }
         
-        # Prefixo padrão para as tags de situação
-        prefixo_tag = "SkyRP_"
-        
         # Criar a nova tag baseada na situação atual, exceto para VERSAO_LIBERADA
         nova_tag = if situacao_atual == SkyRedminePlugin::Constants::SituacaoAtual::VERSAO_LIBERADA
           nil
         else
           prefixo_num = prefixos_situacoes[situacao_atual]
-          "#{prefixo_tag}#{prefixo_num}_#{situacao_atual.gsub('RETORNO_TESTES', 'RT')}"
+          situacao_formatada = situacao_atual.gsub('RETORNO_TESTES', 'RT').gsub('AGUARDANDO', 'AGUARDA')
+          "E#{prefixo_num}_#{situacao_formatada}"
         end
         
         Rails.logger.info ">>> Nova tag a ser definida: #{nova_tag || 'Nenhuma (VERSAO_LIBERADA)'}"
         
         # Primeiro, remover todas as tags antigas de todas as tarefas DEVEL
         tarefas_devel.each do |tarefa|
-          atualizar_tag_tarefa(tarefa, prefixo_tag, nil)
+          atualizar_tag_tarefa(tarefa, nil)
         end
         
         # Depois, se existir uma nova tag para definir, definir apenas na última tarefa DEVEL
         if nova_tag.present? && !tarefas_devel.empty?
           ultima_tarefa_devel = tarefas_devel.last
-          atualizar_tag_tarefa(ultima_tarefa_devel, prefixo_tag, nova_tag)
+          atualizar_tag_tarefa(ultima_tarefa_devel, nova_tag)
         end
         
         Rails.logger.info ">>> Tags atualizadas com sucesso"
@@ -356,7 +354,7 @@ module SkyRedminePlugin
     end
     
     # Método auxiliar para atualizar tags de uma tarefa específica
-    def self.atualizar_tag_tarefa(tarefa, prefixo_tag, nova_tag)
+    def self.atualizar_tag_tarefa(tarefa, nova_tag)
       begin
         # Verificar se a tarefa tem o método tag_list (alguns plugins de tagging podem não estar instalados)
         return unless tarefa.respond_to?(:tag_list)
@@ -366,8 +364,8 @@ module SkyRedminePlugin
         # Obter lista atual de tags da tarefa
         tags_atuais = tarefa.tag_list.dup
         
-        # Remover tags antigas que começam com o prefixo
-        tags_filtradas = tags_atuais.reject { |tag| tag.start_with?(prefixo_tag) }
+        # Remover tags antigas que começam com o prefixo E seguido de dois dígitos e underscore
+        tags_filtradas = tags_atuais.reject { |tag| tag =~ /^E\d{2}_/ }
         
         # Adicionar a nova tag se não for nil
         tags_filtradas << nova_tag if nova_tag.present?

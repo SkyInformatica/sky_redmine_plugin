@@ -44,14 +44,14 @@ class ProcessarIndicadoresController < ApplicationController
     redirect_to admin_plugins_path
   end
 
-  def limpar_tags_skyrp
-    Rails.logger.info ">>> Iniciando limpeza de todas as tags SkyRP_"
+  def limpar_tags_indicadores
+    Rails.logger.info ">>> Iniciando limpeza de todas as tags E##_"
     
-    # Buscar todas as tags que começam com SkyRP_
-    tags_skyrp = ActsAsTaggableOn::Tag.where("name LIKE ?", "SkyRP_%")
+    # Buscar todas as tags que começam com E seguido de dois dígitos e underscore
+    tags_skyrp = ActsAsTaggableOn::Tag.where("name REGEXP ?", "^E[0-9]{2}_")
     
     if tags_skyrp.any?
-      Rails.logger.info ">>> Encontradas #{tags_skyrp.count} tags SkyRP_ para remover"
+      Rails.logger.info ">>> Encontradas #{tags_skyrp.count} tags E##_ para remover"
       
       # Remover as tags de todas as tarefas
       tags_skyrp.each do |tag|
@@ -68,7 +68,7 @@ class ProcessarIndicadoresController < ApplicationController
       end
     end
 
-    flash[:notice] = "Todas as tags SkyRP_ foram removidas com sucesso."
+    flash[:notice] = "Todas as tags E##_ foram removidas com sucesso."
     redirect_to admin_plugins_path
   end
 end
