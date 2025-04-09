@@ -96,11 +96,11 @@ class EncaminharQsController < ApplicationController
 
   def criar_nova_tarefa(usar_sprint_atual = false)
     if SkyRedminePlugin::Constants::Projects::REGISTRAL_PROJECTS.include?(@issue.project.name)
-      qs_project = SkyRedminePlugin::Constants::Projects::REGISTRAL_QS
+      qs_project_name = SkyRedminePlugin::Constants::Projects::REGISTRAL_QS
     elsif SkyRedminePlugin::Constants::Projects::NOTARIAL_PROJECTS.include?(@issue.project.name)
-      qs_project = SkyRedminePlugin::Constants::Projects::NOTARIAL_QS
+      qs_project_name = SkyRedminePlugin::Constants::Projects::NOTARIAL_QS
     end
-    qs_project = Project.find_by(name: qs_project)
+    qs_project = Project.find_by(name: qs_project_name)
 
     tempo_gasto_total = obter_tempo_gasto
     new_issue = @issue.copy(project: qs_project)
@@ -124,7 +124,9 @@ class EncaminharQsController < ApplicationController
     new_issue.tag_list.add(obter_nome_tag(@issue, sufixo_tag))
 
     if usar_sprint_atual
+      Rails.logger.info ">>> encaminhar_qs -> criar_nova_tarefa -> usar_sprint_atual"
       sprint = encontrar_sprint_atual(qs_project)
+      Rails.logger.info ">>> sprint #{sprint.to_json}"
       if sprint.nil?
         sprint = Version.find_by(name: SkyRedminePlugin::Constants::Sprints::TAREFAS_PARA_TESTAR, project: qs_project)
         if sprint.nil?
