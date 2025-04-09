@@ -4,7 +4,8 @@ class EncaminharQsController < ApplicationController
   before_action :find_issue, only: [:encaminhar_qs]
   before_action :find_issues, only: [:encaminhar_qs_lote]
 
-  def encaminhar_qs(is_batch_call = false, usar_sprint_atual = false)
+  def encaminhar_qs(is_batch_call = false)
+    usar_sprint_atual = params[:usar_sprint_atual].present?
     Rails.logger.info ">>> encaminhar_qs #{@issue.id} - is_batch_call #{is_batch_call} usar_sprint_atual #{usar_sprint_atual}"
 
     # Check if the issue is not in QS projects and its status is "Resolvida"
