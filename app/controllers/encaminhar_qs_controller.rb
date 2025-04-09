@@ -5,7 +5,7 @@ class EncaminharQsController < ApplicationController
   before_action :find_issues, only: [:encaminhar_qs_lote]
 
   def encaminhar_qs(is_batch_call = false, usar_sprint_atual = false)
-    Rails.logger.info ">>> encaminhar_qs #{@issue.id}"
+    Rails.logger.info ">>> encaminhar_qs #{@issue.id} - is_batch_call #{is_batch_call} usar_sprint_atual #{usar_sprint_atual}"
 
     # Check if the issue is not in QS projects and its status is "Resolvida"
     if (!SkyRedminePlugin::Constants::Projects::QS_PROJECTS.include?(@issue.project.name)) && (@issue.status.name == SkyRedminePlugin::Constants::IssueStatus::RESOLVIDA)
@@ -95,6 +95,7 @@ class EncaminharQsController < ApplicationController
   end
 
   def criar_nova_tarefa(usar_sprint_atual = false)
+    Rails.logger.info ">>> criar_nova_tarefa usar_sprint_atual #{usar_sprint_atual}"
     if SkyRedminePlugin::Constants::Projects::REGISTRAL_PROJECTS.include?(@issue.project.name)
       qs_project_name = SkyRedminePlugin::Constants::Projects::REGISTRAL_QS
     elsif SkyRedminePlugin::Constants::Projects::NOTARIAL_PROJECTS.include?(@issue.project.name)
