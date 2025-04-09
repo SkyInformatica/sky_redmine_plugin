@@ -4,7 +4,7 @@ class EncaminharQsController < ApplicationController
   before_action :find_issue, only: [:encaminhar_qs]
   before_action :find_issues, only: [:encaminhar_qs_lote]
 
-  def encaminhar_qs(is_batch_call = false)
+  def encaminhar_qs(is_batch_call = false, usar_sprint_atual = false)
     Rails.logger.info ">>> encaminhar_qs #{@issue.id}"
 
     # Check if the issue is not in QS projects and its status is "Resolvida"
@@ -22,7 +22,7 @@ class EncaminharQsController < ApplicationController
         return
       end
 
-      new_issue = criar_nova_tarefa
+      new_issue = criar_nova_tarefa(usar_sprint_atual)
       @issue.init_journal(User.current, "[SkyRedminePlugin] Encaminhada para QS")
       if custom_field = IssueCustomField.find_by(name: SkyRedminePlugin::Constants::CustomFields::TESTE_QS)
         @issue.custom_field_values = { custom_field.id => SkyRedminePlugin::Constants::IssueStatus::NOVA }
@@ -94,7 +94,7 @@ class EncaminharQsController < ApplicationController
     @processed_issues = []
   end
 
-  def criar_nova_tarefa
+  def criar_nova_tarefa(usar_sprint_atual = false)
     if SkyRedminePlugin::Constants::Projects::REGISTRAL_PROJECTS.include?(@issue.project.name)
       qs_project = SkyRedminePlugin::Constants::Projects::REGISTRAL_QS
     elsif SkyRedminePlugin::Constants::Projects::NOTARIAL_PROJECTS.include?(@issue.project.name)
@@ -123,14 +123,24 @@ class EncaminharQsController < ApplicationController
 
     new_issue.tag_list.add(obter_nome_tag(@issue, sufixo_tag))
 
-    sprint = Version.find_by(name: SkyRedminePlugin::Constants::Sprints::TAREFAS_PARA_TESTAR, project: qs_project)
-    if sprint.nil?
-      # Caso a versão não exista, cria uma nova versão
-      sprint = Version.new(name: SkyRedminePlugin::Constants::Sprints::TAREFAS_PARA_TESTAR, project: qs_project)
-      sprint.save
+    if usar_sprint_atual
+      sprint = encontrar_sprint_atual(qs_project)
+      if sprint.nil?
+        sprint = Version.find_by(name: SkyRedminePlugin::Constants::Sprints::TAREFAS_PARA_TESTAR, project: qs_project)
+        if sprint.nil?
+          sprint = Version.new(name: SkyRedminePlugin::Constants::Sprints::TAREFAS_PARA_TESTAR, project: qs_project)
+          sprint.save
+        end
+      end
+    else
+      sprint = Version.find_by(name: SkyRedminePlugin::Constants::Sprints::TAREFAS_PARA_TESTAR, project: qs_project)
+      if sprint.nil?
+        sprint = Version.new(name: SkyRedminePlugin::Constants::Sprints::TAREFAS_PARA_TESTAR, project: qs_project)
+        sprint.save
+      end
     end
-    new_issue.fixed_version = sprint
 
+    new_issue.fixed_version = sprint
     new_issue.save
     new_issue
   end

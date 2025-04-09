@@ -15,7 +15,13 @@
   <%= link_to "Encaminhar para QS",
               encaminhar_qs_path(:id => @issue.id),
               method: :post,
-              class: "icon icon-copy" %>              
+              class: "icon icon-copy" %>
+  <% if (@issue.tracker.name == SkyRedminePlugin::Constants::Trackers::RETORNO_TESTES) %>
+    <%= link_to "Encaminhar para QS na sprint atual",
+                encaminhar_qs_path(:id => @issue.id, :usar_sprint_atual => true),
+                method: :post,
+                class: "icon icon-copy" %>
+  <% end %>
 <% end %>
 <% if ["Nova", "Em andamento", "Interrompida"].include?(@issue.status.name) %>
   <%= link_to "Continua na próxima sprint",

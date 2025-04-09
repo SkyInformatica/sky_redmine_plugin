@@ -1,4 +1,6 @@
 class TestarTarefaController < ApplicationController
+  include CriarTarefasHelper
+  include CriarTarefasHelper
   before_action :find_issue, only: [:testar_tarefa]
 
   def testar_tarefa
@@ -86,31 +88,5 @@ class TestarTarefaController < ApplicationController
     tarefa_testes
   end
 
-  def encontrar_sprint_atual(project)
-    hoje = Date.current
 
-    # Busca todas as versões (sprints) do projeto
-    project.versions.find do |version|
-      next unless version.name.match?(/^\d{4}-\d{2}\s+\(\d{2}\/\d{2}\s+a\s+\d{2}\/\d{2}\)$/)
-
-      # Extrai as datas do nome da sprint
-      if version.name =~ /(\d{4})-\d{2}\s+\((\d{2})\/(\d{2})\s+a\s+(\d{2})\/(\d{2})\)/
-        ano = $1.to_i
-        mes_inicio = $3.to_i
-        dia_inicio = $2.to_i
-        mes_fim = $5.to_i
-        dia_fim = $4.to_i
-
-        # Ajusta o ano para o mês final se necessário
-        ano_fim = ano
-        ano_fim += 1 if mes_fim < mes_inicio # Se o mês final for menor que o inicial, é porque virou o ano
-
-        data_inicio = Date.new(ano, mes_inicio, dia_inicio)
-        data_fim = Date.new(ano_fim, mes_fim, dia_fim)
-
-        # Verifica se a data atual está dentro do período da sprint
-        hoje >= data_inicio && hoje <= data_fim
-      end
-    end
-  end
 end
