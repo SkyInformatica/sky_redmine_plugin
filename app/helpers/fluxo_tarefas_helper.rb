@@ -249,7 +249,6 @@ module FluxoTarefasHelper
     css << "  color: #666;"
     css << "  cursor: help;"
     css << "  font-size: 14px;"
-    css << "}"
     css.join("\n")
   end
 
@@ -503,7 +502,7 @@ module FluxoTarefasHelper
 
     html << "</div>"
     html << "</div>"
-    
+
     # Cards QS
     html << "<div class='indicadores-grupo'>"
     tempo_gasto_qs = format("%.2f", indicadores.tempo_gasto_qs.to_f)
@@ -516,14 +515,14 @@ module FluxoTarefasHelper
       else
         "testes ainda não encaminhados"
       end
-    
+
     # Adicionar o tempo total desde a criação até conclusão dos testes
     tempo_desde_criacao = if indicadores.tempo_total_devel_concluir_testes
-        " (desde a criação da tarefa até conclusão testes: #{indicadores.tempo_total_devel_concluir_testes} #{indicadores.tempo_total_devel_concluir_testes == 1 ? 'dia' : 'dias'})"
+        " (desde a criação da tarefa até conclusão testes: #{indicadores.tempo_total_devel_concluir_testes} #{indicadores.tempo_total_devel_concluir_testes == 1 ? "dia" : "dias"})"
       else
         ""
       end
-    
+
     html << "<div class='indicadores-titulo'>QS - Tempo gasto total: #{tempo_gasto_qs}h - #{tempo_total_testes}#{tempo_desde_criacao}</div>"
     html << "<div class='indicadores-cards'>"
 
@@ -553,7 +552,7 @@ module FluxoTarefasHelper
 
     html << "</div>"
     html << "</div>"
-    
+
     # Cards Liberar versão
     html << "<div class='indicadores-grupo'>"
     tempo_gasto_devel = format("%.2f", indicadores.tempo_gasto_devel.to_f)
@@ -584,7 +583,7 @@ module FluxoTarefasHelper
                         "Tempo entre tarefa de desenvolvimento estar concluída e ser fechada (entre estes tempos existe o tempo das tarefas do QS)")
     html << "</div>"
     html << "</div>"
-    
+
     # Timeline de situação atual
     # Verificar se há uma situação atual e quantidade de retornos de testes
     tem_retorno_testes = indicadores.qtd_retorno_testes_qs.to_i > 0 || indicadores.qtd_retorno_testes_devel.to_i > 0
@@ -595,49 +594,49 @@ module FluxoTarefasHelper
     html << "</div>"
     html.join("\n")
   end
-  
+
   # Método para renderizar a timeline da situação atual
   def render_timeline_situacao_atual(situacao_atual, tem_retorno_testes, indicadores)
     return "" unless situacao_atual
-    
+
     # Determinar qual fluxo usar baseado em se teve retornos de testes
-    fluxo = tem_retorno_testes ? 
-      SkyRedminePlugin::Constants::SituacaoAtual::FLUXO_RETORNO_TESTES : 
+    fluxo = tem_retorno_testes ?
+      SkyRedminePlugin::Constants::SituacaoAtual::FLUXO_RETORNO_TESTES :
       SkyRedminePlugin::Constants::SituacaoAtual::FLUXO_IDEAL
-    
+
     # Encontrar o índice da situação atual no fluxo
     indice_atual = fluxo.index(situacao_atual)
     return "" unless indice_atual
-    
+
     # Preparar HTML
     html = "<div class='indicadores-grupo'>"
     html << "<div class='indicadores-titulo'>Progresso</div>"
     html << "<div class='timeline-container'>"
-    
+
     if tem_retorno_testes
       # Ponto de divisão - índice do AGUARDANDO_ENCAMINHAR_RETORNO_TESTES
       ponto_divisao = fluxo.index(SkyRedminePlugin::Constants::SituacaoAtual::AGUARDANDO_ENCAMINHAR_RETORNO_TESTES)
-      
+
       # Se o ponto de divisão não for encontrado, usar o fluxo normal
       if ponto_divisao.nil?
         return render_timeline_normal(fluxo, indice_atual, indicadores)
       end
-      
+
       # Dividir o fluxo em duas partes
       primeira_parte = fluxo[0..ponto_divisao]
-      segunda_parte = fluxo[(ponto_divisao+1)..-1]
-      
+      segunda_parte = fluxo[(ponto_divisao + 1)..-1]
+
       # Determinar em qual parte está a situação atual
       esta_na_primeira_parte = indice_atual <= ponto_divisao
-      
+
       # Renderizar a primeira linha da timeline
       html << "<div class='timeline-row'>"
       html << render_timeline_steps(primeira_parte, indice_atual, indicadores, esta_na_primeira_parte)
       html << "</div>"
-      
+
       # Adicionar espaçamento entre as linhas
       html << "<div style='height: 30px;'></div>"
-      
+
       # Renderizar a segunda linha da timeline
       html << "<div class='timeline-row'>"
       html << render_timeline_steps(segunda_parte, indice_atual - primeira_parte.length, indicadores, !esta_na_primeira_parte, primeira_parte.length)
@@ -646,13 +645,13 @@ module FluxoTarefasHelper
       # Fluxo normal sem retorno de testes
       html << render_timeline_normal(fluxo, indice_atual, indicadores)
     end
-    
+
     html << "</div>"
     html << "</div>"
-    
+
     html
   end
-  
+
   # Método auxiliar para renderizar uma timeline simples de uma linha
   def render_timeline_normal(fluxo, indice_atual, indicadores)
     "<div class='timeline-row'>" + render_timeline_steps(fluxo, indice_atual, indicadores) + "</div>"
@@ -661,33 +660,41 @@ module FluxoTarefasHelper
   # Método auxiliar para renderizar os passos da timeline
   def render_timeline_steps(fluxo, indice_atual, indicadores, esta_na_parte_atual = true, offset = 0)
     html = "<div class='timeline'>"
-    
+
     fluxo.each_with_index do |situacao, i|
       i_ajustado = i + offset
       eh_ultima_etapa = i == fluxo.length - 1
       eh_fechada = indicadores&.equipe_responsavel_atual == SkyRedminePlugin::Constants::EquipeResponsavel::FECHADA
       eh_versao_liberada = situacao == SkyRedminePlugin::Constants::SituacaoAtual::VERSAO_LIBERADA
-      
+
       estado = if !esta_na_parte_atual || i < indice_atual
-        "completed"
-      elsif eh_versao_liberada && i == indice_atual
-        "completed"  # Se é VERSAO_LIBERADA e é a etapa atual, mostra como concluída
-      elsif i == indice_atual && esta_na_parte_atual
-        "current"
-      elsif eh_ultima_etapa && eh_fechada && indicadores.situacao_atual != SkyRedminePlugin::Constants::SituacaoAtual::VERSAO_LIBERADA
-        "warning"
-      else
-        "future"
-      end
-      
+          "completed"
+        elsif eh_versao_liberada && i == indice_atual
+          "completed"  # Se é VERSAO_LIBERADA e é a etapa atual, mostra como concluída
+        elsif i == indice_atual && esta_na_parte_atual
+          "current"
+        elsif eh_ultima_etapa && eh_fechada && indicadores.situacao_atual != SkyRedminePlugin::Constants::SituacaoAtual::VERSAO_LIBERADA
+          "warning"
+        else
+          "future"
+        end
+
       texto_situacao = situacao.gsub("_", " ")
-      
+
+      # Adicionar o contador de retornos se for ESTOQUE_DEVEL_RETORNO_TESTES
+      contador_retornos = if situacao == SkyRedminePlugin::Constants::SituacaoAtual::ESTOQUE_DEVEL_RETORNO_TESTES &&
+                             indicadores&.qtd_retorno_testes_qs.to_i > 0
+          "<br><span class='timeline-text'>#{indicadores.qtd_retorno_testes_qs}x</span>"
+        else
+          ""
+        end
+
       html << "<div class='timeline-step timeline-step-#{estado}'>"
       html << "<div class='timeline-circle'></div>"
-      html << "<div class='timeline-label'><div class='timeline-text'>#{texto_situacao}</div></div>"
+      html << "<div class='timeline-label'><div class='timeline-text'>#{texto_situacao}#{contador_retornos}</div></div>"
       html << "</div>"
     end
-    
+
     html << "</div>"
     html
   end
