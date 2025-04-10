@@ -3,6 +3,12 @@
               retorno_testes_qs_path(:id => @issue.id),
               method: :post,
               class: "icon icon-copy" %>
+  <% if [SkyRedminePlugin::Constants::Projects::NOTARIAL_QS].include?(@issue.project.name) %>
+    <%= link_to "Criar retorno de testes na sprint atual",
+                retorno_testes_qs_path(:id => @issue.id, :usar_sprint_atual => true),
+                method: :post,
+                class: "icon icon-copy" %>
+  <% end %>
 <% elsif (@issue.status.name == "Resolvida") && !["Notarial - QS", "Registral - QS"].include?(@issue.project.name) %>
   <%= link_to "Testar tarefa",
               testar_tarefa_path(:id => @issue.id),
@@ -29,7 +35,7 @@
               method: :post,
               class: "icon icon-copy" %>
 <% end %>
-            
+
 
 
 

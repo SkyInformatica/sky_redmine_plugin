@@ -47,7 +47,7 @@ class RetornoTestesController < ApplicationController
         end
       end
 
-      new_issue = criar_nova_tarefa(@issue.project.id)
+      new_issue = criar_nova_tarefa(@issue.project, nil, false)
       @issue.init_journal(User.current, "[SkyRedminePlugin] Encaminhado retorno de testes do desenvolvimento")
       if fechada_cont_retorno_testes_status = IssueStatus.find_by(name: SkyRedminePlugin::Constants::IssueStatus::FECHADA_CONTINUA_RETORNO_TESTES)
         @issue.status = fechada_cont_retorno_testes_status
@@ -79,6 +79,7 @@ class RetornoTestesController < ApplicationController
   def retorno_testes_qs(is_batch_call = false)
     Rails.logger.info ">>> retorno_testes_qs #{@issue.id}"
     @origem_retorno_teste = ORIGEM_RETORNO_TESTE_QS
+    usar_sprint_atual = params[:usar_sprint_atual].present?
 
     # Verificar se a tarefa pertence aos projetos permitidos e se o status é "Teste NOK"
     if (SkyRedminePlugin::Constants::Projects::QS_PROJECTS.include?(@issue.project.name) && (@issue.status.name == SkyRedminePlugin::Constants::IssueStatus::TESTE_NOK))
@@ -100,7 +101,7 @@ class RetornoTestesController < ApplicationController
 
       if devel_issue
         # Criar nova tarefa com a categoria da tarefa de desenvolvimento
-        new_issue = criar_nova_tarefa(devel_issue.project.id, devel_issue.category_id)
+        new_issue = criar_nova_tarefa(devel_issue.project, devel_issue.category_id, usar_sprint_atual)
 
         # atualizar o status da tarefa de devel para fechada continua retorno de testes e o campo Teste QS para Teste NOK - Fechada
         if fechada_continua_retorno_testes_status = IssueStatus.find_by(name: SkyRedminePlugin::Constants::IssueStatus::FECHADA_CONTINUA_RETORNO_TESTES)
@@ -170,9 +171,9 @@ class RetornoTestesController < ApplicationController
     @processed_issues = []
   end
 
-  def criar_nova_tarefa(project_id, category_id = nil)
+  def criar_nova_tarefa(project, category_id = nil, usar_sprint_atual = false)
     Rails.logger.info ">>> criar_nova_tarefa"
-    new_issue = @issue.copy(project_id: project_id)
+    new_issue = @issue.copy(project_id: project.id)
 
     # Preservar o campo versao teste apenas para retornos do QS
     versao_teste = nil
@@ -210,10 +211,14 @@ class RetornoTestesController < ApplicationController
 
     new_issue.subject = definir_titulo_tarefa_incrementando_numero_copia(@issue.subject)
 
-    sprint = Version.find_by(name: SkyRedminePlugin::Constants::Sprints::APTAS_PARA_DESENVOLVIMENTO, project_id: project_id)
+    if usar_sprint_atual
+      sprint = encontrar_sprint_atual(project)
+    else
+      sprint = Version.find_by(name: SkyRedminePlugin::Constants::Sprints::APTAS_PARA_DESENVOLVIMENTO, project_id: project.id)
+    end
+
     if sprint.nil?
-      # Caso a versão não exista, cria uma nova versão
-      sprint = Version.new(name: SkyRedminePlugin::Constants::Sprints::APTAS_PARA_DESENVOLVIMENTO, project_id: project_id)
+      sprint = Version.new(name: SkyRedminePlugin::Constants::Sprints::APTAS_PARA_DESENVOLVIMENTO, project_id: project.id)
       sprint.save
     end
     new_issue.fixed_version = sprint
