@@ -384,7 +384,7 @@ module SkyRedminePlugin
     # Método para determinar a situação atual com base no status das tarefas
     def self.determinar_situacao_atual(tarefas_relacionadas, tarefas_devel, tarefas_qs, ciclos_devel, ciclos_qs)
       # Primeiro verificar se é uma situação DESCONHECIDA
-      situacao = verificar_situacao_desconhecida(tarefas_relacionadas, tarefas_devel)
+      situacao = verificar_situacao_desconhecida(tarefas_relacionadas, tarefas_devel, ciclos_devel)
       return situacao if situacao == SkyRedminePlugin::Constants::SituacaoAtual::DESCONHECIDA
 
       # Obter a última tarefa DEVEL
@@ -573,7 +573,7 @@ module SkyRedminePlugin
     end
 
     # Método para verificar se a situação é DESCONHECIDA
-    def self.verificar_situacao_desconhecida(tarefas_relacionadas, tarefas_devel)
+    def self.verificar_situacao_desconhecida(tarefas_relacionadas, tarefas_devel, ciclos_devel)
       # Regra 1: Verificar se a última tarefa do último ciclo DEVEL é FECHADA_CONTINUA_RETORNO_TESTES
       ultima_tarefa_devel = tarefas_devel.last
       if ultima_tarefa_devel.status.name == SkyRedminePlugin::Constants::IssueStatus::FECHADA_CONTINUA_RETORNO_TESTES
@@ -585,6 +585,18 @@ module SkyRedminePlugin
       if ultima_tarefa_ciclo.equipe_responsavel == SkyRedminePlugin::Constants::EquipeResponsavel::QS &&
          ultima_tarefa_ciclo.status.name == SkyRedminePlugin::Constants::IssueStatus::TESTE_NOK_FECHADA
         return SkyRedminePlugin::Constants::SituacaoAtual::DESCONHECIDA
+      end
+
+      # Regra 3: Verificar se há algum ciclo de continuidade onde as tarefas DEVEL não são do tipo RETORNO_TESTES
+      if ciclos_devel.size > 1
+        # Verificar todos os ciclos de continuidade (após o primeiro ciclo)
+        ciclos_devel[1..-1].each do |ciclo|
+          ciclo.each do |tarefa|
+            if tarefa.tracker.name != SkyRedminePlugin::Constants::Trackers::RETORNO_TESTES
+              return SkyRedminePlugin::Constants::SituacaoAtual::DESCONHECIDA
+            end
+          end
+        end
       end
 
       # Se não atende nenhuma condição de DESCONHECIDA, retorna nil para continuar a verificação
