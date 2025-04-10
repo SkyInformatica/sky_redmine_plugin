@@ -173,7 +173,22 @@ class RetornoTestesController < ApplicationController
   def criar_nova_tarefa(project_id, category_id = nil)
     Rails.logger.info ">>> criar_nova_tarefa"
     new_issue = @issue.copy(project_id: project_id)
+
+    # Preservar o campo versao teste apenas para retornos do QS
+    versao_teste = nil
+    if @origem_retorno_teste == ORIGEM_RETORNO_TESTE_QS
+      if custom_field = IssueCustomField.find_by(name: "Versão teste")
+        versao_teste = new_issue.custom_field_value(custom_field.id)
+      end
+    end
+
     limpar_campos_nova_tarefa(new_issue, CriarTarefasHelper::TipoCriarNovaTarefa::RETORNO_TESTES)
+
+    # Restaurar o campo versao teste após a limpeza
+    if @origem_retorno_teste == ORIGEM_RETORNO_TESTE_QS && versao_teste && custom_field
+      new_issue.custom_field_values = { custom_field.id => versao_teste }
+    end
+
     new_issue.tracker = Tracker.find_by_name(SkyRedminePlugin::Constants::Trackers::RETORNO_TESTES)
     new_issue.tag_list = []
     new_issue.estimated_hours = 1
