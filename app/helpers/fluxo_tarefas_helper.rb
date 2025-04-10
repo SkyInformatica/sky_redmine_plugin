@@ -207,6 +207,19 @@ module FluxoTarefasHelper
     css << "  color: #999;"
     css << "  font-size: 9px;"
     css << "}"
+    css << "/* Estilos específicos para a timeline desconhecida */"
+    css << ".timeline-desconhecida {"
+    css << "  width: 200px;"
+    css << "  margin-left: 20px;"
+    css << "}"
+    css << ".timeline-desconhecida::before {"
+    css << "  right: auto;"
+    css << "  width: 50px;"
+    css << "}"
+    css << ".timeline-desconhecida .timeline-step {"
+    css << "  flex: 0 0 auto;"
+    css << "  min-width: 120px;"
+    css << "}"
     css.join("\n")
   end
 
@@ -672,7 +685,7 @@ module FluxoTarefasHelper
     html << "<div class='indicadores-titulo'>Progresso</div>"
     html << "<div class='timeline-container'>"
     html << "<div class='timeline-row'>"
-    html << "<div class='timeline'>"
+    html << "<div class='timeline timeline-desconhecida'>"
     html << "<div class='timeline-step timeline-step-error'>"
     html << "<div class='timeline-circle'></div>"
     html << "<div class='timeline-label'><div class='timeline-text'>Situação Desconhecida</div></div>"
