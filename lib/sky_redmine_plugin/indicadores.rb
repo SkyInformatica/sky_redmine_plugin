@@ -196,7 +196,7 @@ module SkyRedminePlugin
         end
 
         # Determinar a situação atual do desenvolvimento
-        indicador.situacao_atual = determinar_situacao_atual(tarefas_devel, tarefas_qs, ultima_tarefa_devel, ciclos_devel)
+        indicador.situacao_atual = determinar_situacao_atual(tarefas_relacionadas, tarefas_devel, tarefas_qs, ciclos_devel, ciclos_qs)
 
         # Determinar se a tarefa foi fechada sem testes
         if indicador.data_fechamento_ultima_tarefa_devel.present?
@@ -382,27 +382,15 @@ module SkyRedminePlugin
     end
 
     # Método para determinar a situação atual com base no status das tarefas
-    def self.determinar_situacao_atual(tarefas_devel, tarefas_qs, ultima_tarefa_devel, ciclos_devel)
+    def self.determinar_situacao_atual(tarefas_relacionadas, tarefas_devel, tarefas_qs, ciclos_devel, ciclos_qs)
+      # Primeiro verificar se é uma situação DESCONHECIDA
+      situacao = verificar_situacao_desconhecida(tarefas_relacionadas, tarefas_devel)
+      return situacao if situacao == SkyRedminePlugin::Constants::SituacaoAtual::DESCONHECIDA
+
+      # Obter a última tarefa DEVEL
+      ultima_tarefa_devel = tarefas_devel.last
       # Verificar se a tarefa atual é retorno de testes
       eh_retorno_testes = ultima_tarefa_devel.tracker.name == SkyRedminePlugin::Constants::Trackers::RETORNO_TESTES
-      
-      # Verificar condições para situação DESCONHECIDA
-      # 1. Se a última tarefa DEVEL é FECHADA_CONTINUA_RETORNO_TESTES, deve existir uma tarefa de RETORNO_TESTES
-      if ultima_tarefa_devel.status.name == SkyRedminePlugin::Constants::IssueStatus::FECHADA_CONTINUA_RETORNO_TESTES
-        # Verificar se existe uma tarefa de RETORNO_TESTES após a última tarefa DEVEL
-        tarefa_retorno_testes = tarefas_devel.find { |t| t.tracker.name == SkyRedminePlugin::Constants::Trackers::RETORNO_TESTES && t.id > ultima_tarefa_devel.id }
-        return SkyRedminePlugin::Constants::SituacaoAtual::DESCONHECIDA unless tarefa_retorno_testes
-      end
-
-      # 2. Se a última tarefa QS é TESTE_NOK_FECHADA, deve existir uma tarefa de RETORNO_TESTES
-      if !tarefas_qs.empty?
-        ultima_tarefa_qs = tarefas_qs.last
-        if ultima_tarefa_qs.status.name == SkyRedminePlugin::Constants::IssueStatus::TESTE_NOK_FECHADA
-          # Verificar se existe uma tarefa de RETORNO_TESTES após a última tarefa QS
-          tarefa_retorno_testes = tarefas_devel.find { |t| t.tracker.name == SkyRedminePlugin::Constants::Trackers::RETORNO_TESTES && t.id > ultima_tarefa_qs.id }
-          return SkyRedminePlugin::Constants::SituacaoAtual::DESCONHECIDA unless tarefa_retorno_testes
-        end
-      end
       
       # Verificar o status da última tarefa DEVEL
       if tarefas_qs.empty?
@@ -582,6 +570,25 @@ module SkyRedminePlugin
 
       # Caso padrão se nenhuma condição for atendida
       return SkyRedminePlugin::Constants::SituacaoAtual::ESTOQUE_DEVEL
+    end
+
+    # Método para verificar se a situação é DESCONHECIDA
+    def self.verificar_situacao_desconhecida(tarefas_relacionadas, tarefas_devel)
+      # Regra 1: Verificar se a última tarefa do último ciclo DEVEL é FECHADA_CONTINUA_RETORNO_TESTES
+      ultima_tarefa_devel = tarefas_devel.last
+      if ultima_tarefa_devel.status.name == SkyRedminePlugin::Constants::IssueStatus::FECHADA_CONTINUA_RETORNO_TESTES
+        return SkyRedminePlugin::Constants::SituacaoAtual::DESCONHECIDA
+      end
+
+      # Regra 2: Verificar se a última tarefa de todo o ciclo é TESTE_NOK_FECHADA
+      ultima_tarefa_ciclo = tarefas_relacionadas.last
+      if ultima_tarefa_ciclo.equipe_responsavel == SkyRedminePlugin::Constants::EquipeResponsavel::QS &&
+         ultima_tarefa_ciclo.status.name == SkyRedminePlugin::Constants::IssueStatus::TESTE_NOK_FECHADA
+        return SkyRedminePlugin::Constants::SituacaoAtual::DESCONHECIDA
+      end
+
+      # Se não atende nenhuma condição de DESCONHECIDA, retorna nil para continuar a verificação
+      nil
     end
   end
 end
