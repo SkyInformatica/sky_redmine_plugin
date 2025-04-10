@@ -308,6 +308,7 @@ module SkyRedminePlugin
 
         # Mapeamento de situações para prefixos numéricos
         prefixos_situacoes = {
+          SkyRedminePlugin::Constants::SituacaoAtual::DESCONHECIDA => "99",
           SkyRedminePlugin::Constants::SituacaoAtual::ESTOQUE_DEVEL => "01",
           SkyRedminePlugin::Constants::SituacaoAtual::EM_ANDAMENTO_DEVEL => "02",
           SkyRedminePlugin::Constants::SituacaoAtual::AGUARDANDO_ENCAMINHAR_QS => "03",
@@ -384,7 +385,25 @@ module SkyRedminePlugin
     def self.determinar_situacao_atual(tarefas_devel, tarefas_qs, ultima_tarefa_devel, ciclos_devel)
       # Verificar se a tarefa atual é retorno de testes
       eh_retorno_testes = ultima_tarefa_devel.tracker.name == SkyRedminePlugin::Constants::Trackers::RETORNO_TESTES
+      
+      # Verificar condições para situação DESCONHECIDA
+      # 1. Se a última tarefa DEVEL é FECHADA_CONTINUA_RETORNO_TESTES, deve existir uma tarefa de RETORNO_TESTES
+      if ultima_tarefa_devel.status.name == SkyRedminePlugin::Constants::IssueStatus::FECHADA_CONTINUA_RETORNO_TESTES
+        # Verificar se existe uma tarefa de RETORNO_TESTES após a última tarefa DEVEL
+        tarefa_retorno_testes = tarefas_devel.find { |t| t.tracker.name == SkyRedminePlugin::Constants::Trackers::RETORNO_TESTES && t.id > ultima_tarefa_devel.id }
+        return SkyRedminePlugin::Constants::SituacaoAtual::DESCONHECIDA unless tarefa_retorno_testes
+      end
 
+      # 2. Se a última tarefa QS é TESTE_NOK_FECHADA, deve existir uma tarefa de RETORNO_TESTES
+      if !tarefas_qs.empty?
+        ultima_tarefa_qs = tarefas_qs.last
+        if ultima_tarefa_qs.status.name == SkyRedminePlugin::Constants::IssueStatus::TESTE_NOK_FECHADA
+          # Verificar se existe uma tarefa de RETORNO_TESTES após a última tarefa QS
+          tarefa_retorno_testes = tarefas_devel.find { |t| t.tracker.name == SkyRedminePlugin::Constants::Trackers::RETORNO_TESTES && t.id > ultima_tarefa_qs.id }
+          return SkyRedminePlugin::Constants::SituacaoAtual::DESCONHECIDA unless tarefa_retorno_testes
+        end
+      end
+      
       # Verificar o status da última tarefa DEVEL
       if tarefas_qs.empty?
         # Não há tarefas de QS, apenas DEVEL
