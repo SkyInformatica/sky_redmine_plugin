@@ -68,36 +68,40 @@ module SkyRedminePlugin
       DEVEL = "DEVEL"
       QS = "QS"
     end
-    
+
     module SituacaoAtual
+      # Situação desconhecida
+      DESCONHECIDA = "DESCONHECIDA"
+
       # Situações de desenvolvimento inicial
       ESTOQUE_DEVEL = "ESTOQUE_DEVEL"
       EM_ANDAMENTO_DEVEL = "EM_ANDAMENTO_DEVEL"
       AGUARDANDO_ENCAMINHAR_QS = "AGUARDANDO_ENCAMINHAR_QS"
-      
+
       # Situações de QS inicial
       ESTOQUE_QS = "ESTOQUE_QS"
       EM_ANDAMENTO_QS = "EM_ANDAMENTO_QS"
-      
+
       # Situações após aprovação de QS
       AGUARDANDO_VERSAO = "AGUARDANDO_VERSAO"
       VERSAO_LIBERADA = "VERSAO_LIBERADA"
-      
+
       # Situações de retorno de testes
       AGUARDANDO_ENCAMINHAR_RETORNO_TESTES = "AGUARDANDO_ENCAMINHAR_RETORNO_TESTES"
-      
+
       # Situações de desenvolvimento em retorno de testes
       ESTOQUE_DEVEL_RETORNO_TESTES = "ESTOQUE_DEVEL_RETORNO_TESTES"
       EM_ANDAMENTO_DEVEL_RETORNO_TESTES = "EM_ANDAMENTO_DEVEL_RETORNO_TESTES"
       AGUARDANDO_ENCAMINHAR_QS_RETORNO_TESTES = "AGUARDANDO_ENCAMINHAR_QS_RETORNO_TESTES"
-      
+
       # Situações de QS em retorno de testes
       ESTOQUE_QS_RETORNO_TESTES = "ESTOQUE_QS_RETORNO_TESTES"
       EM_ANDAMENTO_QS_RETORNO_TESTES = "EM_ANDAMENTO_QS_RETORNO_TESTES"
       AGUARDANDO_VERSAO_RETORNO_TESTES = "AGUARDANDO_VERSAO_RETORNO_TESTES"
-      
+
       # Lista de todas as situações em ordem cronológica
       TODAS_SITUACOES = [
+        DESCONHECIDA,    # Adicionando DESCONHECIDA como primeira situação da lista
         ESTOQUE_DEVEL,
         EM_ANDAMENTO_DEVEL,
         AGUARDANDO_ENCAMINHAR_QS,
@@ -111,9 +115,9 @@ module SkyRedminePlugin
         AGUARDANDO_ENCAMINHAR_QS_RETORNO_TESTES,
         ESTOQUE_QS_RETORNO_TESTES,
         EM_ANDAMENTO_QS_RETORNO_TESTES,
-        AGUARDANDO_VERSAO_RETORNO_TESTES
+        AGUARDANDO_VERSAO_RETORNO_TESTES,
       ]
-      
+
       # Fluxo de situações ideal (sem retorno de testes)
       FLUXO_IDEAL = [
         ESTOQUE_DEVEL,
@@ -122,16 +126,16 @@ module SkyRedminePlugin
         ESTOQUE_QS,
         EM_ANDAMENTO_QS,
         AGUARDANDO_VERSAO,
-        VERSAO_LIBERADA
+        VERSAO_LIBERADA,
       ]
-      
+
       # Fluxo de situações com retorno de testes
       FLUXO_RETORNO_TESTES = [
         ESTOQUE_DEVEL,
         EM_ANDAMENTO_DEVEL,
         AGUARDANDO_ENCAMINHAR_QS,
         ESTOQUE_QS,
-        EM_ANDAMENTO_QS,        
+        EM_ANDAMENTO_QS,
         AGUARDANDO_ENCAMINHAR_RETORNO_TESTES,
         ESTOQUE_DEVEL_RETORNO_TESTES,
         EM_ANDAMENTO_DEVEL_RETORNO_TESTES,
@@ -139,7 +143,7 @@ module SkyRedminePlugin
         ESTOQUE_QS_RETORNO_TESTES,
         EM_ANDAMENTO_QS_RETORNO_TESTES,
         AGUARDANDO_VERSAO_RETORNO_TESTES,
-        VERSAO_LIBERADA
+        VERSAO_LIBERADA,
       ]
     end
   end

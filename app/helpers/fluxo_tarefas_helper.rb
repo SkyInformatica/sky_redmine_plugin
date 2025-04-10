@@ -667,11 +667,12 @@ module FluxoTarefasHelper
       eh_fechada = indicadores&.equipe_responsavel_atual == SkyRedminePlugin::Constants::EquipeResponsavel::FECHADA
       eh_versao_liberada = situacao == SkyRedminePlugin::Constants::SituacaoAtual::VERSAO_LIBERADA
 
-      estado = if !esta_na_parte_atual || i < indice_atual
+      # Corrigido o cálculo do estado para considerar o offset quando não está na parte atual
+      estado = if (!esta_na_parte_atual && i_ajustado < indice_atual) || (esta_na_parte_atual && i < indice_atual)
           "completed"
-        elsif eh_versao_liberada && i == indice_atual
+        elsif eh_versao_liberada && i_ajustado == indice_atual
           "completed"  # Se é VERSAO_LIBERADA e é a etapa atual, mostra como concluída
-        elsif i == indice_atual && esta_na_parte_atual
+        elsif i_ajustado == indice_atual && esta_na_parte_atual
           "current"
         elsif eh_ultima_etapa && eh_fechada && indicadores.situacao_atual != SkyRedminePlugin::Constants::SituacaoAtual::VERSAO_LIBERADA
           "warning"
