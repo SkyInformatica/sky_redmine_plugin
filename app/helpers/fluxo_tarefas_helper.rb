@@ -155,6 +155,15 @@ module FluxoTarefasHelper
     css << "  background-color: #fff;"
     css << "  border-color: #e0e0e0;"
     css << "}"
+    css << ".timeline-step-error .timeline-circle {"
+    css << "  background-color: #f44336;"
+    css << "  border-color: #f44336;"
+    css << "}"
+    css << ".timeline-step-error .timeline-label,"
+    css << ".timeline-step-error .timeline-text {"
+    css << "  color: #f44336;"
+    css << "  font-weight: bold;"
+    css << "}"
     css << "/* Textos da timeline */"
     css << ".timeline-label {"
     css << "  display: block;"
@@ -599,6 +608,11 @@ module FluxoTarefasHelper
   def render_timeline_situacao_atual(situacao_atual, tem_retorno_testes, indicadores)
     return "" unless situacao_atual
 
+    # Se a situação for DESCONHECIDA, renderizar a timeline específica
+    if situacao_atual == SkyRedminePlugin::Constants::SituacaoAtual::DESCONHECIDA
+      return render_timeline_desconhecida
+    end
+
     # Determinar qual fluxo usar baseado em se teve retornos de testes
     fluxo = tem_retorno_testes ?
       SkyRedminePlugin::Constants::SituacaoAtual::FLUXO_RETORNO_TESTES :
@@ -652,6 +666,25 @@ module FluxoTarefasHelper
     html
   end
 
+  # Método para renderizar a timeline da situação DESCONHECIDA
+  def render_timeline_desconhecida
+    html = "<div class='indicadores-grupo'>"
+    html << "<div class='indicadores-titulo'>Progresso</div>"
+    html << "<div class='timeline-container'>"
+    html << "<div class='timeline-row'>"
+    html << "<div class='timeline'>"
+    html << "<div class='timeline-step timeline-step-error'>"
+    html << "<div class='timeline-circle'></div>"
+    html << "<div class='timeline-label'><div class='timeline-text'>Situação Desconhecida</div></div>"
+    html << "</div>"
+    html << "</div>"
+    html << "</div>"
+    html << "</div>"
+    html << "</div>"
+
+    html
+  end
+
   # Método auxiliar para renderizar uma timeline simples de uma linha
   def render_timeline_normal(fluxo, indice_atual, indicadores)
     "<div class='timeline-row'>" + render_timeline_steps(fluxo, indice_atual, indicadores) + "</div>"
@@ -685,7 +718,7 @@ module FluxoTarefasHelper
       # Adicionar o contador de retornos se for ESTOQUE_DEVEL_RETORNO_TESTES
       contador_retornos = if situacao == SkyRedminePlugin::Constants::SituacaoAtual::ESTOQUE_DEVEL_RETORNO_TESTES &&
                              indicadores&.qtd_retorno_testes_qs.to_i > 0
-          "<br><span class='timeline-text'>#{indicadores.qtd_retorno_testes_qs}x</span>"
+          
         else
           ""
         end
