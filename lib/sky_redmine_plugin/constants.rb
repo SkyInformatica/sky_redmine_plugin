@@ -15,6 +15,9 @@ module SkyRedminePlugin
       TESTE_NOK = "Teste NOK"
       TESTE_OK_FECHADA = "Teste OK - Fechada"
       TESTE_NOK_FECHADA = "Teste NOK - Fechada"
+      INTERROMPIDA = "Interrompida"
+      INTERROMPIDA_ANALISE = "Interrompida para analise"
+      FECHADA_SEM_DESENVOLVIMENTO = "Fechada - sem desenvolvimento"
     end
 
     module Sprints
@@ -50,6 +53,10 @@ module SkyRedminePlugin
       SISTEMA = "Sistema"
       TESTE_NO_DESENVOLVIMENTO = "Teste no desenvolvimento"
       RESULTADO_TESTE_NOK = "Resultado Teste NOK"
+    end
+
+    module CustomFieldsValues
+      NÃO_NECESSITA_TESTE = "Não necessita teste"
     end
 
     module Tags

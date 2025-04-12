@@ -109,6 +109,20 @@ module SkyRedminePlugin
           data_fechada = nil
         end
 
+        teste_qs = obter_valor_campo_personalizado(tarefa, SkyRedminePlugin::Constants::CustomFields::TESTE_QS)
+        if (teste_qs.present? && (teste_qs != SkyRedminePlugin::Constants::CustomFieldsValues::NÃO_NECESSITA_TESTE))
+          teste_qs = ""
+        end
+        tarefa.instance_variable_set(:@teste_qs, teste_qs)
+        tarefa.define_singleton_method(:teste_qs) { @teste_qs }
+        
+
+        teste_no_desenvolvimento = obter_valor_campo_personalizado(tarefa, SkyRedminePlugin::Consntants::CustomFields::TESTE_NO_DESENVOLVIMENTO)        
+        tarefa.instance_variable_set(:@teste_no_desenvolvimento, teste_no_desenvolvimento)
+        tarefa.define_singleton_method(:teste_no_desenvolvimento) { @teste_no_desenvolvimento }
+        
+        
+
         tarefa.instance_variable_set(:@equipe_responsavel, equipe_responsavel)
         tarefa.instance_variable_set(:@data_atendimento, data_atendimento&.to_date)
         tarefa.instance_variable_set(:@data_criacao, data_criacao&.to_date)
