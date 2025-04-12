@@ -121,6 +121,24 @@ module SkyRedminePlugin
         tarefa.instance_variable_set(:@teste_no_desenvolvimento, teste_no_desenvolvimento)
         tarefa.define_singleton_method(:teste_no_desenvolvimento) { @teste_no_desenvolvimento }
         
+        tipos_complementares = [
+          SkyRedminePlugin::Constants::Trackers::TESTE,
+          SkyRedminePlugin::Constants::Trackers::VIDEOS,
+          SkyRedminePlugin::Constants::Trackers::DOCUMENTACAO,
+          SkyRedminePlugin::Constants::Trackers::PLANEJAMENTO,
+          SkyRedminePlugin::Constants::Trackers::SUPORTE
+        ]
+
+        tarefa_complementar = if tipos_complementares.include?(tarefa.tracker.name)
+                                "SIM"
+                              elsif tarefa.tracker.name == SkyRedminePlugin::Constants::Trackers::DEFEITO && tarefa.subject.start_with?(SkyRedminePlugin::Constants::TarefasComplementares::TAREFA_NAO_PLANEJADA)
+                                SkyRedminePlugin::Constants::TarefasComplementares::TAREFA_NAO_PLANEJADA
+                              else
+                                "NAO"
+                              end
+
+        tarefa.instance_variable_set(:@tarefa_complementar, tarefa_complementar)
+        tarefa.define_singleton_method(:tarefa_complementar) { @tarefa_complementar }
         
 
         tarefa.instance_variable_set(:@equipe_responsavel, equipe_responsavel)

@@ -46,6 +46,10 @@ module SkyRedminePlugin
       FUNCIONALIDADE = "Funcionalidade"
       TESTE = "Teste"
       TESTE_ID = 9
+      SUPORTE = "Suporte"
+      PLANEJAMENTO = "Planejamento"
+      DOCUMENTACAO = "Documentação"
+      VIDEOS = "Videos"      
     end
 
     module CustomFields
@@ -70,16 +74,20 @@ module SkyRedminePlugin
       TODAS_TAGS_AUTOMATIZADAS = [TESTAR, PRONTO, REVER, REUNIAO, RETESTAR]
     end
 
-    module EquipeResponsavel
+    module EquipeResponsavel      
       FECHADA = "FECHADA"
       DEVEL = "DEVEL"
       QS = "QS"
     end
 
+    module TarefasComplementares
+      TAREFA_NAO_PLANEJADA = "Tarefa não planejada"      
+    end
+
     module SituacaoAtual
       # Situação desconhecida
       DESCONHECIDA = "DESCONHECIDA"
-
+      
       # Situações de desenvolvimento inicial
       ESTOQUE_DEVEL = "ESTOQUE_DEVEL"
       EM_ANDAMENTO_DEVEL = "EM_ANDAMENTO_DEVEL"

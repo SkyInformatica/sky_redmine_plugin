@@ -103,6 +103,11 @@ DEVEL Tarefa ID 100 NOVA -> DEVEL Tarefa ID 100 EM_ANDAMENTO -> DEVEL Tarefa ID 
 
 - Uma tarefa de DEVEL quando não necessita de desenvolvimento não é encaminhada para QS. Isso acontece sempre no primeiro ciclo de desenvolvimento. Portanto a sequência de situação desta tarefa é NOVA -> EM_ANDAMENTO -> RESOLVIDA -> FECHADA_SEM_DESENVOLVIMENTO. Neste caso é usado o FLUXO_SEM_QS especial de tarefas que não são encaminhadas para o QS.
 
+### Tarefa complementar
+
+- Existem tarefas que não são de desenvolvimento. O campo "tarefa_complementar" vai estar definido como SIM neste casos. As tarefas complementares são tarefas auxiliares
+  para registrar tempo de envolvimento com "planejamento", "documentação", "vídeos" e "suporte". Neste caso é usado o FLUXO_SEM_QS especial de taerfas que não são encaminhadas para o QS.
+
 # Detalhes técnicos do código fonte do projeto
 
 - Para determinar se a tarefa é do DEVEL ou QS deve-se avaliar o nome do projeto e ver se pertence a constante SkyRedminePlugin::Constants::Projects::QS_PROJECTS

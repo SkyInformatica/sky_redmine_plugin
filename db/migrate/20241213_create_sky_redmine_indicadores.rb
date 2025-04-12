@@ -9,6 +9,7 @@ class CreateSkyRedmineIndicadores < ActiveRecord::Migration[5.2]
       t.string :projeto_primeira_tarefa_devel
       t.string :sprint_primeira_tarefa_devel
       t.string :sprint_ultima_tarefa_devel
+      t.string :tarefa_complementar
       t.float :tempo_estimado_devel
       t.float :tempo_gasto_devel
       t.string :origem_primeira_tarefa_devel
