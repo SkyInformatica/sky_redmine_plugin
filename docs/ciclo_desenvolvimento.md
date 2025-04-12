@@ -107,6 +107,42 @@ DEVEL Tarefa ID 100 NOVA -> DEVEL Tarefa ID 100 EM_ANDAMENTO -> DEVEL Tarefa ID 
 
 - Existem tarefas que não são de desenvolvimento. O campo "tarefa_complementar" vai estar definido como SIM neste casos. As tarefas complementares são tarefas auxiliares
   para registrar tempo de envolvimento com "planejamento", "documentação", "vídeos" e "suporte". Neste caso é usado o FLUXO_SEM_QS especial de taerfas que não são encaminhadas para o QS.
+- Em especial tem tambem a tarefa complementar com TAREFA_NAO_PLANEJADA que é apenas uma tarefa para reservar horas na sprint para tarefas que possam surgir durante a execução da sprint de tarefas que devem ser resolvidas de forma imediata. Portanto, o campo "tarefa_complementar" vai estar definido com TAREFA_NAO_PLANEJADA nestes casos.
+
+# Fluxos das situações das tarefas.
+
+## FLUXO_SEM_QS: define o fluxo das tarefas DEVEL que não são encaminhadas para QS
+
+- ESTOQUE_DEVEL: Tarefa que está no estoque, uma tarefa DEVEL com a situação NOVA
+- EM_ANDAMENTO_DEVEL: Tarefa que está em desenvolvimento, uma tarefa DEVEL com a situação EM_ANDAMENTO
+- AGUARDANDO_VERSAO: Está com testes concluídos com situação TESTE_OK e aguardando liberação da versão
+- VERSAO_LIBERADA: A versão foi liberada, a tarefa de DEVEL está com situação FECHADA
+
+## FLUXO_IDEAL: define o fluxo ideal das tarefas de DEVEL que devem ir para QS, ou seja, não possuem retorno de testes
+
+- ESTOQUE_DEVEL: Tarefa que está no estoque, uma tarefa DEVEL com a situação NOVA
+- EM_ANDAMENTO_DEVEL: Tarefa que está em desenvolvimento, uma tarefa DEVEL com a situação EM_ANDAMENTO
+- AGUARDANDO_ENCAMINHAR_QS: Tarefa DEVEL que está com a situação RESOLVIDA e aguardando na fila para encaminhar para o QS
+- ESTOQUE_QS: Foi encaminhada para QS e está no estoque do QS, uma tarefa QS com a situação NOVA
+- EM_ANDAMENTO_QS: Está em testes, uma tarefa do QS com a situação EM_ANDAMENTO
+- AGUARDANDO_VERSAO: Está com testes concluídos com situação TESTE_OK e aguardando liberação da versão
+- VERSAO_LIBERADA: A versão foi liberada, a tarefa de DEVEL está com situação FECHADA
+
+## FLUXO_RETORNO_TESTES: define o fluxo quando há retorno de testes das tarefas de DEVEL que devem ir para QS.
+
+- ESTOQUE_DEVEL: Tarefa que está no estoque, uma tarefa DEVEL com a situação NOVA
+- EM_ANDAMENTO_DEVEL: Tarefa que está em desenvolvimento, uma tarefa DEVEL com a situação EM_ANDAMENTO
+- AGUARDANDO_ENCAMINHAR_QS: Tarefa DEVEL que está com a situação RESOLVIDA e aguardando na fila para encaminhar para o QS
+- ESTOQUE_QS: Foi encaminhada para QS e está no estoque do QS, uma tarefa QS com a situação NOVA
+- EM_ANDAMENTO_QS: Está em testes, uma tarefa do QS com a situação EM_ANDAMENTO
+- AGUARDANDO_ENCAMINHAR_RETORNO_TESTES: Está com os testes concluídos com situação TESTE_NOK e aguardando encaminhar a tarefa do tipo RETORNO_TESTES
+- ESTOQUE_DEVEL_RETORNO_TESTES: Tarefa que retornou do QS com tipo RETORNO_TESTES que está no estoque, uma tarefa DEVEL com a situação NOVA
+- EM_ANDAMENTO_DEVEL_RETORNO_TESTES: Tarefa que retornou do QS com tipo RETORNO_TESTES que está em desenvolvimento, uma tarefa DEVEL com situação EM_ANDAMENTO
+- AGUARDANDO_ENCAMINHAR_QS_RETORNO_TESTES: Tarefa que retornou do QS com tipo RETORNO_TESTES que está com a situação RESOLVIDA e aguardando na fila para encaminhar para o QS
+- ESTOQUE_QS_RETORNO_TESTES: Tarefa que retornou do QS com tipo RETORNO_TESTES que foi encaminhada para QS e está no estoque do QS, uma tarefa QS com a situação NOVA
+- EM_ANDAMENTO_QS_RETORNO_TESTES: Tarefa que retornou do QS com tipo RETORNO_TESTES que está em testes, uma tarefa do QS com a situação EM_ANDAMENTO
+- AGUARDANDO_VERSAO_RETORNO_TESTES: Tarefa que retornou do QS com tipo RETORNO_TESTES que está com testes concluídos com situação TESTE_OK e aguardando liberação da versão
+- VERSAO_LIBERADA: A versão foi liberada, a tarefa de DEVEL está com situação FECHADA
 
 # Detalhes técnicos do código fonte do projeto
 
@@ -116,34 +152,7 @@ DEVEL Tarefa ID 100 NOVA -> DEVEL Tarefa ID 100 EM_ANDAMENTO -> DEVEL Tarefa ID 
 - A constante SkyRedminePlugin::Constants::EquipeResponsavel define as constantes DEVEL, QS e FECHADA para definir a equipe responsável pelo momento atual que a tarefa se encontra.
 - A constante SkyRedminePlugin::Constants::IssueStatus define as situações possíveis das tarefas.
 - A constante SkyRedminePlugin::Constants::Trackers define os tipos de tarefas
-- A constante SkyRedminePlugin::Constants::SituacaoAtual::FLUXO_SEM_QS define o fluxo das tarefas DEVEL que não são encaminhadas para QS
-  - ESTOQUE_DEVEL: Tarefa que está no estoque, uma tarefa DEVEL com a situação NOVA
-  - EM_ANDAMENTO_DEVEL: Tarefa que está em desenvolvimento, uma tarefa DEVEL com a situação EM_ANDAMENTO
-  - AGUARDANDO_VERSAO: Está com testes concluídos com situação TESTE_OK e aguardando liberação da versão
-  - VERSAO_LIBERADA: A versão foi liberada, a tarefa de DEVEL está com situação FECHADA
-- A constante SkyRedminePlugin::Constants::SituacaoAtual::FLUXO_IDEAL define o fluxo ideal das tarefas de DEVEL que devem ir para QS, ou seja, não possuem retorno de testes
-  - ESTOQUE_DEVEL: Tarefa que está no estoque, uma tarefa DEVEL com a situação NOVA
-  - EM_ANDAMENTO_DEVEL: Tarefa que está em desenvolvimento, uma tarefa DEVEL com a situação EM_ANDAMENTO
-  - AGUARDANDO_ENCAMINHAR_QS: Tarefa DEVEL que está com a situação RESOLVIDA e aguardando na fila para encaminhar para o QS
-  - ESTOQUE_QS: Foi encaminhada para QS e está no estoque do QS, uma tarefa QS com a situação NOVA
-  - EM_ANDAMENTO_QS: Está em testes, uma tarefa do QS com a situação EM_ANDAMENTO
-  - AGUARDANDO_VERSAO: Está com testes concluídos com situação TESTE_OK e aguardando liberação da versão
-  - VERSAO_LIBERADA: A versão foi liberada, a tarefa de DEVEL está com situação FECHADA
-- A constante SkyRedminePlugin::Constants::SituacaoAtual::FLUXO_RETORNO_TESTES define o fluxo quando há retorno de testes das tarefas de DEVEL que devem ir para QS.
-  - ESTOQUE_DEVEL: Tarefa que está no estoque, uma tarefa DEVEL com a situação NOVA
-  - EM_ANDAMENTO_DEVEL: Tarefa que está em desenvolvimento, uma tarefa DEVEL com a situação EM_ANDAMENTO
-  - AGUARDANDO_ENCAMINHAR_QS: Tarefa DEVEL que está com a situação RESOLVIDA e aguardando na fila para encaminhar para o QS
-  - ESTOQUE_QS: Foi encaminhada para QS e está no estoque do QS, uma tarefa QS com a situação NOVA
-  - EM_ANDAMENTO_QS: Está em testes, uma tarefa do QS com a situação EM_ANDAMENTO
-  - AGUARDANDO_ENCAMINHAR_RETORNO_TESTES: Está com os testes concluídos com situação TESTE_NOK e aguardando encaminhar a tarefa do tipo RETORNO_TESTES
-  - ESTOQUE_DEVEL_RETORNO_TESTES: Tarefa que retornou do QS com tipo RETORNO_TESTES que está no estoque, uma tarefa DEVEL com a situação NOVA
-  - EM_ANDAMENTO_DEVEL_RETORNO_TESTES: Tarefa que retornou do QS com tipo RETORNO_TESTES que está em desenvolvimento, uma tarefa DEVEL com situação EM_ANDAMENTO
-  - AGUARDANDO_ENCAMINHAR_QS_RETORNO_TESTES: Tarefa que retornou do QS com tipo RETORNO_TESTES que está com a situação RESOLVIDA e aguardando na fila para encaminhar para o QS
-  - ESTOQUE_QS_RETORNO_TESTES: Tarefa que retornou do QS com tipo RETORNO_TESTES que foi encaminhada para QS e está no estoque do QS, uma tarefa QS com a situação NOVA
-  - EM_ANDAMENTO_QS_RETORNO_TESTES: Tarefa que retornou do QS com tipo RETORNO_TESTES que está em testes, uma tarefa do QS com a situação EM_ANDAMENTO
-  - AGUARDANDO_VERSAO_RETORNO_TESTES: Tarefa que retornou do QS com tipo RETORNO_TESTES que está com testes concluídos com situação TESTE_OK e aguardando liberação da versão
-  - VERSAO_LIBERADA: A versão foi liberada, a tarefa de DEVEL está com situação FECHADA
-- A função SkyRedminePlugin::Indicadores.processar_indicadores processa e define os indicadores das tarefas que são definidas na entidade SkyRedmineIndicadores pela tabela sky_redmine_indicadores.
+- As constantes SkyRedminePlugin::Constants::SituacaoAtual define as possiveis situacoes e os fluxos das situacoes que são esperados
 - A função SkyRedminePlugin::Indicadores.determinar_situacao_atual define a situação atual avaliando o fluxo e em qual situação a tarefa se encontra no momento.
 - A classe SkyRedmineIndicadorer cria a entidade para definir os Indicadores da tarefa. O conteúdo dos indicadores é definido pela função SkyRedminePlugin::Indicadores::processar_indicadores. Alguns indicadores importantes
   - “equipe_responsavel_atual”: DEVEL: se o ciclo está com a responsabilidade da equipe de DEVEL, QS se o ciclo atual está com a responsabilidade da equipe de QS e FECHADA quando todos os ciclos estão concluídos
