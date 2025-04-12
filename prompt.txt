@@ -2,7 +2,7 @@
 
 
 - escrever o codigo funcao "determinar_sitaucao_atual" que já foi iniciado em indicadores.rb
-- essa funcao somente é para tarefas nao complementares, e já está sendo chamada pela funcao processar_indicadores
+- essa funcao somente é para tarefas de desenvolvimento, ou seja nao vai ser executado para tarefas complementares, e já está sendo chamada pela funcao processar_indicadores ou seja quando indicador.tarefa_complementar == "NAO"
 - avaliar quando a funcao "determinar_sitaucao_atual" está sendo chamada
 - primeira avaliacao da funcao é determinar a situacao DESCONHECIDA, que já está implementado
 - se a situacao nao for DESCONHECIDA ela deve ser definida
