@@ -399,6 +399,5 @@ module SkyRedminePlugin
       return situacao if situacao == SkyRedminePlugin::Constants::SituacaoAtual::DESCONHECIDA
       
     end
-
-
+  end
 end
