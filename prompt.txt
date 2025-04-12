@@ -9,3 +9,5 @@
 - a situacao deve primeiro descobrir qual é o FLUXO que está acontecendo com o ciclos das tarefas e definir no indicadores no campo "fluxo_das_tarefas" qual dos fluxos que aconteceu
 - a situacao atual também pode usar como apoio auxiliar se necessario para a sua construcao da logica os campos dos indicadores que já foram processados que sao “equipe_responsavel_atual”, “qtd_retorno_testes_qs”, “qtd_retorno_testes_devel”, “tarefa_fechada_sem_testes”
 - considerar os casos especiais que foram descritos no ciclo do desenvolvimento para o campo do indicador teste_no_desenvolvimento 
+- nao altere codigo fonte que nao está relacionado com a tarefa que solicitei.
+- em especial, nao mexa na funcao determinar_situacao_atual_OBSOLETO(). Nao use esse codigo. Apenas nao remova este codigo. Nao quero apagar ele no momento. Este codigo deve ser desconsiderado em sua analise
