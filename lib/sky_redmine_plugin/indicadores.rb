@@ -57,6 +57,7 @@ module SkyRedminePlugin
         indicador.sprint_primeira_tarefa_devel = primeira_tarefa_devel.fixed_version.present? ? primeira_tarefa_devel.fixed_version.name : nil
         indicador.sprint_ultima_tarefa_devel = ultima_tarefa_devel.fixed_version.present? ? ultima_tarefa_devel.fixed_version.name : nil
         indicador.tarefa_complementar = primeira_tarefa_devel.tarefa_complementar
+        indicador.teste_no_desenvolvimento = primeira_tarefa_devel.teste_no_desenvolvimento
         indicador.tempo_estimado_devel = tarefas_devel.sum { |t| t.estimated_hours.to_f }
         indicador.tempo_gasto_devel = tarefas_devel.sum { |t| t.spent_hours.to_f }
         indicador.origem_primeira_tarefa_devel = SkyRedminePlugin::TarefasRelacionadas.obter_valor_campo_personalizado(primeira_tarefa_devel, "Origem")
@@ -196,8 +197,7 @@ module SkyRedminePlugin
           end
         end
 
-        # Determinar a situação atual do desenvolvimento
-        indicador.situacao_atual = determinar_situacao_atual(tarefas_relacionadas, tarefas_devel, tarefas_qs, ciclos_devel, ciclos_qs)
+        
 
         # Determinar se a tarefa foi fechada sem testes
         if indicador.data_fechamento_ultima_tarefa_devel.present?
@@ -243,10 +243,16 @@ module SkyRedminePlugin
           indicador.tempo_total_devel_concluir_testes = (indicador.data_resolvida_ultima_tarefa_qs.to_date - indicador.data_criacao_ou_atendimento_primeira_tarefa_devel.to_date).to_i
         end
 
-        indicador.save(validate: false)
+       
 
-        # Atualizar as tags das tarefas com a situação atual
-        atualizar_tags_situacao_atual(tarefas_devel, tarefas_qs, indicador.situacao_atual)
+        if indicador.tarefa_complementar == "NAO"
+          # Atualizar as tags das tarefas com a situação atual
+          atualizar_tags_situacao_atual(tarefas_devel, tarefas_qs, indicador.situacao_atual)
+          # Determinar a situação atual do desenvolvimento
+          indicador.situacao_atual = determinar_situacao_atual(indicador, tarefas_relacionadas, tarefas_devel, tarefas_qs, ciclos_devel, ciclos_qs)
+        end
+
+        indicador.save(validate: false)
       end
     end
 
@@ -261,6 +267,7 @@ module SkyRedminePlugin
       indicador.sprint_primeira_tarefa_devel = nil
       indicador.sprint_ultima_tarefa_devel = nil
       indicador.tarefa_complementar = nil
+      indicador.teste_no_desenvolvimento = nil
       indicador.tempo_estimado_devel = nil
       indicador.tempo_gasto_devel = nil
       indicador.origem_primeira_tarefa_devel = nil
@@ -301,6 +308,8 @@ module SkyRedminePlugin
       indicador.equipe_responsavel_atual = nil
       indicador.tarefa_fechada_sem_testes = nil
       indicador.situacao_atual = nil
+      indicador.fluxo_das_tarefas = nil
+
     end
 
     # Método para atualizar as tags das tarefas com a situação atual
@@ -384,7 +393,16 @@ module SkyRedminePlugin
     end
 
     # Método para determinar a situação atual com base no status das tarefas
-    def self.determinar_situacao_atual(tarefas_relacionadas, tarefas_devel, tarefas_qs, ciclos_devel, ciclos_qs)
+    def self.determinar_situacao_atual(indicador, tarefas_relacionadas, tarefas_devel, tarefas_qs, ciclos_devel, ciclos_qs)
+      # Primeiro verificar se é uma situação DESCONHECIDA
+      situacao = verificar_situacao_desconhecida(tarefas_relacionadas, tarefas_devel, ciclos_devel)
+      return situacao if situacao == SkyRedminePlugin::Constants::SituacaoAtual::DESCONHECIDA
+      
+    end
+
+
+    # Método para determinar a situação atual com base no status das tarefas - OBSOLETO
+    def self.determinar_situacao_atual_OBSOLETO(indicador,tarefas_relacionadas, tarefas_devel, tarefas_qs, ciclos_devel, ciclos_qs)
       # Primeiro verificar se é uma situação DESCONHECIDA
       situacao = verificar_situacao_desconhecida(tarefas_relacionadas, tarefas_devel, ciclos_devel)
       return situacao if situacao == SkyRedminePlugin::Constants::SituacaoAtual::DESCONHECIDA

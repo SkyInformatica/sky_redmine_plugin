@@ -1,0 +1,11 @@
+# deteterminar situacao atual
+
+
+- escrever o codigo funcao "determinar_sitaucao_atual" que já foi iniciado em indicadores.rb
+- essa funcao somente é para tarefas nao complementares, e já está sendo chamada pela funcao processar_indicadores
+- avaliar quando a funcao "determinar_sitaucao_atual" está sendo chamada
+- primeira avaliacao da funcao é determinar a situacao DESCONHECIDA, que já está implementado
+- se a situacao nao for DESCONHECIDA ela deve ser definida
+- a situacao deve primeiro descobrir qual é o FLUXO que está acontecendo com o ciclos das tarefas e definir no indicadores no campo "fluxo_das_tarefas" qual dos fluxos que aconteceu
+- a situacao atual também pode usar como apoio auxiliar se necessario para a sua construcao da logica os campos dos indicadores que já foram processados que sao “equipe_responsavel_atual”, “qtd_retorno_testes_qs”, “qtd_retorno_testes_devel”, “tarefa_fechada_sem_testes”
+- considerar os casos especiais que foram descritos no ciclo do desenvolvimento para o campo do indicador teste_no_desenvolvimento 

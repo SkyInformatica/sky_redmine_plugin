@@ -144,6 +144,21 @@ DEVEL Tarefa ID 100 NOVA -> DEVEL Tarefa ID 100 EM_ANDAMENTO -> DEVEL Tarefa ID 
 - AGUARDANDO_VERSAO_RETORNO_TESTES: Tarefa que retornou do QS com tipo RETORNO_TESTES que está com testes concluídos com situação TESTE_OK e aguardando liberação da versão
 - VERSAO_LIBERADA: A versão foi liberada, a tarefa de DEVEL está com situação FECHADA
 
+# Fluxo com teste no desenvolvimento
+
+Essa sao situacoes opcionais que irão ocorrer no primeiro ciclo do desenvolvimento antes de encaminhar para o QS. O campo "teste_no_desenvolvimento" estiver NAO_NECESSITA_TESTE entao estas situações nao irão ocorrer.
+
+- AGUARDANDO_TESTES_DEVEL: depois da tarefa DEVEL estar com situação RESOLVIDA ela deve ser testada entre os pares de desenvolvedores antes de encaminhar para o QS. Então essa situação irá ocorrer entre EM_ANDAMENTO e AGUARDANDO_ENCAMINHAR_QS. Neste caso o campo "teste_no_desenvolvimento" vai estar definido com NAO_TESTADA
+- AGUARDANDO_ENCAMINHAR_RETORNO_TESTES_DEVEL: depois da tarefa DEVEL estar testada entre os pares do desenvolvedores pode-se encontrar um TESTE_NOK no campo "teste_no_desenvolvimento" e uma tarefa de RETORNO_TESTES será criada para resolver o problema. A tarefa vai estar nesta situação sempre que o teste do desenvolvimento
+  foi concluido e o resultado foi TESTE_NOK no campo "teste_no_desenvolvimento". Se o teste tiver o resultado TESTE_OK então vai estar AGUARDANDO_ENCAMINHAR_QS
+- Neste caso existem dois novos fluxos para representar quando há teste no desenvolvimento no primeiro ciclo que sao FLUXO_IDEAL_COM_TESTE_NO_DESENVOLVIMENTO e FLUXO_RETORNO_TESTES_COM_TESTE_NO_DESENVOLVIMENTO
+
+# Situações que devem ser tratadas como exceção e definir situação DESCONHECIDO
+
+- A última tarefa do último ciclo do DEVEL não pode ser FECHADA_CONTINUA_RETORNO_TESTES. Se uma tarefa está com essa situação espera-se que exista uma cópia de continuidade do desenvolvimento no RETORNO_TESTES
+- A última tarefa de todo ciclo se for do QS ela não pode ser TESTE_NOK_FECHADA. Se a tarefa do QS for TESTE_NOK_FECHADA então espera-se que exista uma tarefa de continuidade do desenvolvimento no RETORNO_TESTES.
+- Ciclos de continuidade da tarefa de RETORNO_TESTES. Sempre que houver mais de um ciclo de tarefas DEVEL a partir do segundo CICLO a tarefa deve ser sempre do tipo RETORNO_TESTES.
+
 # Detalhes técnicos do código fonte do projeto
 
 - Para determinar se a tarefa é do DEVEL ou QS deve-se avaliar o nome do projeto e ver se pertence a constante SkyRedminePlugin::Constants::Projects::QS_PROJECTS
@@ -159,9 +174,3 @@ DEVEL Tarefa ID 100 NOVA -> DEVEL Tarefa ID 100 EM_ANDAMENTO -> DEVEL Tarefa ID 
   - “qtd_retorno_testes_qs”: quantidade de vezes que houve retorno de testes que foram originados pelos testes do QS
   - “qtd_retorno_testes_devel”: quantidade de vezes que houve retorno de testes que foram originados pelos testes do DEVEL
   - “tarefa_fechada_sem_testes”: vai ser definido SIM se a tarefa de DEVEL foi fechada antes dos testes estarem concluídos com TESTE_OK, caso contrário vai ser NAO. Em outras palavras o normal esperado é que a tarefa somente seja fechada após os testes. Então estar SIM neste indicador não é o desejado. Assim sendo, a data de resolvida da tarefa de QS com situação TESTE_OK tem que ser maior que a data de fechada da última tarefa de DEVEL. Portanto, se a tarefa de DEVEL foi fechada antes da tarefa de QS ser concluída o teste com TESTE_OK então esse campo vai estar definido como SIM caso contrário vai ser NAO.
-
-# Situações que devem ser tratadas como exceção e definir situação DESCONHECIDO
-
-- A última tarefa do último ciclo do DEVEL não pode ser FECHADA_CONTINUA_RETORNO_TESTES. Se uma tarefa está com essa situação espera-se que exista uma cópia de continuidade do desenvolvimento no RETORNO_TESTES
-- A última tarefa de todo ciclo se for do QS ela não pode ser TESTE_NOK_FECHADA. Se a tarefa do QS for TESTE_NOK_FECHADA então espera-se que exista uma tarefa de continuidade do desenvolvimento no RETORNO_TESTES.
-- Ciclos de continuidade da tarefa de RETORNO_TESTES. Sempre que houver mais de um ciclo de tarefas DEVEL a partir do segundo CICLO a tarefa deve ser sempre do tipo RETORNO_TESTES.

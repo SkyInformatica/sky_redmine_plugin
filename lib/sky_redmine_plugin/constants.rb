@@ -61,6 +61,7 @@ module SkyRedminePlugin
 
     module CustomFieldsValues
       NÃO_NECESSITA_TESTE = "Não necessita teste"
+      NAO_TESTADA = "Não testada"
     end
 
     module Tags
@@ -84,6 +85,12 @@ module SkyRedminePlugin
       TAREFA_NAO_PLANEJADA = "Tarefa não planejada"      
     end
 
+    module FluxoDasTarefas
+      FLUXO_IDEAL = "FLUXO_IDEAL"
+      FLUXO_RETORNO_TESTES = "FLUXO_RETORNO_TESTES"
+      FLUXO_SEM_QS = "FLUXO_SEM_QS"
+    end
+
     module SituacaoAtual
       # Situação desconhecida
       DESCONHECIDA = "DESCONHECIDA"
@@ -91,6 +98,8 @@ module SkyRedminePlugin
       # Situações de desenvolvimento inicial
       ESTOQUE_DEVEL = "ESTOQUE_DEVEL"
       EM_ANDAMENTO_DEVEL = "EM_ANDAMENTO_DEVEL"
+      AGUARDANDO_TESTES_DEVEL = "AGUARDANDO_TESTES_DEVEL"
+      AGUARDANDO_ENCAMINHAR_RETORNO_TESTES_DEVEL = "AGUARDANDO_ENCAMINHAR_RETORNO_TESTES_DEVEL"
       AGUARDANDO_ENCAMINHAR_QS = "AGUARDANDO_ENCAMINHAR_QS"
 
       # Situações de QS inicial
@@ -116,9 +125,11 @@ module SkyRedminePlugin
 
       # Lista de todas as situações em ordem cronológica
       TODAS_SITUACOES = [
-        DESCONHECIDA,    # Adicionando DESCONHECIDA como primeira situação da lista
+        DESCONHECIDA,    
         ESTOQUE_DEVEL,
         EM_ANDAMENTO_DEVEL,
+        AGUARDANDO_TESTES_DEVEL,
+        AGUARDANDO_ENCAMINHAR_RETORNO_TESTES_DEVEL,
         AGUARDANDO_ENCAMINHAR_QS,
         ESTOQUE_QS,
         EM_ANDAMENTO_QS,
@@ -141,7 +152,7 @@ module SkyRedminePlugin
         ESTOQUE_QS,
         EM_ANDAMENTO_QS,
         AGUARDANDO_VERSAO,
-        VERSAO_LIBERADA,
+        VERSAO_LIBERADA
       ]
 
       # Fluxo de situações com retorno de testes
@@ -168,6 +179,38 @@ module SkyRedminePlugin
         AGUARDANDO_VERSAO,
         VERSAO_LIBERADA,
       ]
+
+      FLUXO_IDEAL_COM_TESTE_NO_DESENVOLVIMENTO = [
+        ESTOQUE_DEVEL,
+        EM_ANDAMENTO_DEVEL,
+        AGUARDANDO_TESTES_DEVEL,
+        AGUARDANDO_ENCAMINHAR_RETORNO_TESTES_DEVEL,
+        AGUARDANDO_ENCAMINHAR_QS,
+        ESTOQUE_QS,
+        EM_ANDAMENTO_QS,
+        AGUARDANDO_VERSAO,
+        VERSAO_LIBERADA
+      ]
+
+      FLUXO_RETORNO_TESTES_COM_TESTE_NO_DESENVOLVIMENTO = [
+        ESTOQUE_DEVEL,
+        EM_ANDAMENTO_DEVEL,
+        AGUARDANDO_TESTES_DEVEL,
+        AGUARDANDO_ENCAMINHAR_RETORNO_TESTES_DEVEL,
+        AGUARDANDO_ENCAMINHAR_QS,
+        ESTOQUE_QS,
+        EM_ANDAMENTO_QS,
+        AGUARDANDO_ENCAMINHAR_RETORNO_TESTES,
+        ESTOQUE_DEVEL_RETORNO_TESTES,
+        EM_ANDAMENTO_DEVEL_RETORNO_TESTES,
+        AGUARDANDO_ENCAMINHAR_QS_RETORNO_TESTES,
+        ESTOQUE_QS_RETORNO_TESTES,
+        EM_ANDAMENTO_QS_RETORNO_TESTES,
+        AGUARDANDO_VERSAO_RETORNO_TESTES,
+        VERSAO_LIBERADA,
+      ]
+
+
     end
   end
 end
