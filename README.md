@@ -12,12 +12,13 @@ Este plugin é exclusivo para a organização da gestão de tarefas de desenvolv
 bundle exec rake redmine:plugins:migrate RAILS_ENV=production
 ```
 
-# Funcionalidades
+# Funcionalidades, recursos e documentação
 
 - [Criar retorno de testes](docs/retorno_testes/criar_retorno_testes.md)
 - [Encaminhar para o QS](docs/encaminhar_qs/encaminhar_qs.md)
 - [Continua na próxima sprint](docs/continua_proxima_sprint/continua_proxima_sprint.md)
 - [Ações automatizadas na gestão do fluxo das tarefas](docs/acoes_automatizadas_fluxo_tarefas.md)
+- [Ciclo do desenvolvimento das tarefas](docs/ciclo_desenvolvimento.md)
 
 # O que há de novo?
 

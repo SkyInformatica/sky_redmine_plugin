@@ -145,6 +145,14 @@ module SkyRedminePlugin
         AGUARDANDO_VERSAO_RETORNO_TESTES,
         VERSAO_LIBERADA,
       ]
+
+      # Fluxo de situações das tarefas que não passam por QS
+      FLUXO_SEM_QS = [
+        ESTOQUE_DEVEL,
+        EM_ANDAMENTO_DEVEL,        
+        AGUARDANDO_VERSAO,
+        VERSAO_LIBERADA,
+      ]
     end
   end
 end
