@@ -1,6 +1,6 @@
 
-    # Método para determinar a situação atual com base no status das tarefas - OBSOLETO
-    def self.determinar_situacao_atual_OBSOLETO(indicador,tarefas_relacionadas, tarefas_devel, tarefas_qs, ciclos_devel, ciclos_qs)
+    
+    
       # Primeiro verificar se é uma situação DESCONHECIDA
       situacao = verificar_situacao_desconhecida(tarefas_relacionadas, tarefas_devel, ciclos_devel)
       return situacao if situacao == SkyRedminePlugin::Constants::SituacaoAtual::DESCONHECIDA
@@ -220,4 +220,4 @@
       # Se não atende nenhuma condição de DESCONHECIDA, retorna nil para continuar a verificação
       nil
     end
-  end
+  

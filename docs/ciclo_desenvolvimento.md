@@ -162,7 +162,7 @@ Essa sao situacoes opcionais que irão ocorrer no primeiro ciclo do desenvolvime
 # Detalhes técnicos do código fonte do projeto
 
 - Para determinar se a tarefa é do DEVEL ou QS deve-se avaliar o nome do projeto e ver se pertence a constante SkyRedminePlugin::Constants::Projects::QS_PROJECTS
-- A função SkyRedminePlugin::TarefasRelacionadas.obter_lista_tarefas_relacionadas retorna a lista de tarefas que estão relacionadas por cópia na ordem cronológica delas
+- A função SkyRedminePlugin::TarefasRelacionadas.obter_lista_tarefas_relacionadas retorna a lista de tarefas que estão relacionadas por cópia na ordem cronológica delas. Essa funcao cria campos auxiliares na lista das tarefas para ajudar no processamento dos indicadores que sao: teste_qs, teste_no_desenvolvimento, tarefa_complementar, equipe_responsavel, data_atendimento, data_andamento, data_resolvida e data_fechada.
 - As funções SkyRedminePlugin::TarefasRelacionadas.separar_ciclos_devel e SkyRedminePlugin::TarefasRelacionadas.separar_ciclos_qs separam os ciclos de desenvolvimento do DEVEL e QS
 - A constante SkyRedminePlugin::Constants::EquipeResponsavel define as constantes DEVEL, QS e FECHADA para definir a equipe responsável pelo momento atual que a tarefa se encontra.
 - A constante SkyRedminePlugin::Constants::IssueStatus define as situações possíveis das tarefas.
