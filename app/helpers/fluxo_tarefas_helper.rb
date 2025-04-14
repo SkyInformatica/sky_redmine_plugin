@@ -481,6 +481,7 @@ module FluxoTarefasHelper
     html << render_card(
       "Etapa atual",
       indicadores.situacao_atual,
+      "",
       "Etapa atual da tarefa"
     )
 
