@@ -1,14 +1,16 @@
-# deteterminar situacao atual
 
+# tarefa que deve ser implementada
 
+- Utilize o contexto acima e faça o que está descrito abaixo
 - escrever o codigo funcao "determinar_sitaucao_atual" que já foi iniciado em indicadores.rb
-- essa funcao somente é para tarefas de desenvolvimento, ou seja nao vai ser executado para tarefas complementares, e já está sendo chamada pela funcao processar_indicadores ou seja quando indicador.tarefa_complementar == "NAO"
-- avaliar quando a funcao "determinar_sitaucao_atual" está sendo chamada
+- a funcao irá processar e avaliar e determinar o conteudo do campo "situacao_atual"
+- para o campo "situacao_atual" a logica deve prever todas as situacoes possiveis definidas pela constante SkyRedminePlugin::Constants::SituacaoAtual em constants.rb
+- essa funcao somente é para tarefas de desenvolvimento, ou seja nao vai ser executado para tarefas complementares, 
+  e já está sendo chamada pela funcao processar_indicadores ou seja quando indicador.tarefa_complementar == "NAO"
 - primeira avaliacao da funcao é determinar a situacao DESCONHECIDA, que já está implementado
-- se a situacao nao for DESCONHECIDA ela deve ser definida
-- a situacao deve primeiro descobrir qual é o FLUXO que está acontecendo com o ciclos das tarefas e definir no indicadores no campo "fluxo_das_tarefas" qual dos fluxos que aconteceu
+- se a situacao nao for DESCONHECIDA entao deve prosseguir e detectar qual situacao se encontra o ciclo de tarefas
 - a situacao atual também pode usar como apoio auxiliar se necessario para a sua construcao da logica os campos dos indicadores que já foram processados que sao “equipe_responsavel_atual”, “qtd_retorno_testes_qs”, “qtd_retorno_testes_devel”, “tarefa_fechada_sem_testes”
 - considerar os casos especiais que foram descritos no ciclo do desenvolvimento para o campo do indicador teste_no_desenvolvimento 
 - se precisar, use os campos auxiliares já pre-processados das tarefas que estao na lista de tarefas e foi definido pela funcao obter_lista_tarefas_relacionadas que sao Essa funcao cria campos auxiliares na lista das tarefas para ajudar no processamento dos indicadores que sao: teste_qs, teste_no_desenvolvimento, tarefa_complementar, equipe_responsavel, data_atendimento, data_andamento, data_resolvida e data_fechada.
 - nao altere codigo fonte que nao está relacionado com a tarefa que solicitei.
-- a funcao deve ter o tratamento para todas as situacoes previstas na constante SituacaoAtual
+- IMPORTANTE: ainda estou desenvolvendo e nao foi implementado a definicao do indicador.fluxo_das_tarefas. Nao utilize esse campo na sua logica porque ele nao está definido ainda.

@@ -27,35 +27,33 @@ bundle exec rake redmine:plugins:migrate RAILS_ENV=production
 - Cards com indicadores no fluxo das tarefas (individual por tarefa) com a contabilização do tempo entre de cada situação.
 - Timeline das etapas de desenvolvimento no fluxo das tarefas
 - Nova página de Indicadores em cada um dos projetos para um resumo geral da situacao atual envolvendo todas as tarefas do projeto.
-- Novas tags SkyRP\_ para marcar as tarefas de DEVEL com sua situacao atual da sua etapa de desenvolvimento.
+- Novas tags Exx\_ para marcar as tarefas de DEVEL com sua situacao atual da sua etapa de desenvolvimento.
 
-  Fluxo sem retorno de testes do QS:
-  | Status (Tag) | Descrição |  
-   |----------------------------------|---------------------------------------------------------------------------------|  
-   | `SkyRP_ESTOQUE_DEVEL` | Está na fila do estoque do desenvolvimento, uma tarefa nova |  
-   | `SkyRP_EM_ANDAMENTO_DEVEL` | Está em desenvolvimento |  
-   | `SkyRP_AGUARDANDO_ENCAMINHAR_QS`| Está resolvida e na fila para encaminhar para o QS |  
-   | `SkyRP_ESTOQUE_QS` | Foi encaminhada para QS e está no estoque do QS, uma tarefa nova |  
-   | `SkyRP_EM_ANDAMENTO_QS` | Está em testes |  
-   | `SkyRP_AGUARDANDO_VERSAO` | Está com TESTE_OK e aguardando liberação da versão |  
-   | `SkyRP_VERSAO_LIBERADA` | Versão liberada (tarefa fechada) |
+Fluxo sem retorno de testes: define o fluxo ideal das tarefas de DEVEL que devem ir para QS, ou seja, não possuem retorno de testes
+| Tag | Descrição |
+| ---------------------------- | --------------------------------------------------------------------------------------------- |
+| E01_ESTOQUE_DEVEL | Tarefa que está no estoque, uma tarefa DEVEL com a situação NOVA |
+| E02_EM_ANDAMENTO_DEVEL | Tarefa que está em desenvolvimento, uma tarefa DEVEL com a situação EM_ANDAMENTO |
+| E03_AGUARDANDO_ENCAMINHAR_QS | Tarefa DEVEL que está com a situação RESOLVIDA e aguardando na fila para encaminhar para o QS |
+| E05_ESTOQUE_QS | Foi encaminhada para QS e está no estoque do QS, uma tarefa QS com a situação NOVA |
+| E06_EM_ANDAMENTO_QS | Está em testes, uma tarefa do QS com a situação EM_ANDAMENTO |
+| E07_AGUARDANDO_VERSAO | Está com testes concluídos com situação TESTE_OK e aguardando liberação da versão |
 
-  Fluxo com retorno de testes do QS:
-  | Status (Tag) | Descrição |  
-  |------------------------------------------|---------------------------------------------------------------------------------|  
-  | `SkyRP_ESTOQUE_DEVEL` | Está na fila do estoque do desenvolvimento, uma tarefa nova |  
-  | `SkyRP_EM_ANDAMENTO_DEVEL` | Está em desenvolvimento |  
-  | `SkyRP_AGUARDANDO_ENCAMINHAR_QS` | Está resolvida e na fila para encaminhar para o QS |  
-  | `SkyRP_ESTOQUE_QS` | Foi encaminhada para QS e está no estoque do QS, uma tarefa nova |  
-  | `SkyRP_EM_ANDAMENTO_QS` | Está em testes |  
-  | `SkyRP_AGUARDANDO_ENCAMINHAR_RETORNO_TESTES` | O resultado do teste foi TESTE_NOK e está aguardando criar o retorno de testes |  
-  | `SkyRP_ESTOQUE_DEVEL_RETORNO_TESTES` | O retorno de testes foi criado e a tarefa está no estoque do desenvolvimento, uma tarefa para ser desenvolvida |  
-  | `SkyRP_EM_ANDAMENTO_DEVEL_RETORNO_TESTES` | Retorno de testes está em desenvolvimento |  
-  | `SkyRP_AGUARDANDO_ENCAMINHAR_QS_RETORNO_TESTES` | O retorno de testes está resolvido e na fila para encaminhar para o QS |  
-  | `SkyRP_ESTOQUE_QS_RETORNO_TESTES` | O retorno de testes foi encaminhado para o QS e está no estoque do QS, uma tarefa para ser testada |  
-  | `SkyRP_EM_ANDAMENTO_QS_RETORNO_TESTES` | Retorno de testes está em testes |  
-  | `SkyRP_AGUARDANDO_VERSAO_RETORNO_TESTES` | Retorno de testes está com TESTE_OK e aguardando liberação da versão |  
-  | `SkyRP_VERSAO_LIBERADA` | Versão liberada (tarefa fechada) |
+Fluxo com retorno de testes: define o fluxo quando há retorno de testes das tarefas de DEVEL que devem ir para QS.
+| Tag | Descrição |
+| ------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| E01_ESTOQUE_DEVEL | Tarefa que está no estoque, uma tarefa DEVEL com a situação NOVA |
+| E02_EM_ANDAMENTO_DEVEL | Tarefa que está em desenvolvimento, uma tarefa DEVEL com a situação EM_ANDAMENTO |
+| E03_AGUARDANDO_ENCAMINHAR_QS | Tarefa DEVEL que está com a situação RESOLVIDA e aguardando na fila para encaminhar para o QS |
+| E04_ESTOQUE_QS | Foi encaminhada para QS e está no estoque do QS, uma tarefa QS com a situação NOVA |
+| E05_EM_ANDAMENTO_QS | Está em testes, uma tarefa do QS com a situação EM_ANDAMENTO |
+| E06_AGUARDANDO_ENCAMINHAR_RT | Está com os testes concluídos com situação TESTE_NOK e aguardando encaminhar a tarefa do tipo RETORNO_TESTES |
+| E01_ESTOQUE_DEVEL_RT | Tarefa que retornou do QS com tipo RETORNO_TESTES que está no estoque, uma tarefa DEVEL com a situação NOVA |
+| E02_EM_ANDAMENTO_DEVEL_RT | Tarefa que retornou do QS com tipo RETORNO_TESTES que está em desenvolvimento, uma tarefa DEVEL com situação EM_ANDAMENTO |
+| E03_AGUARDANDO_ENCAMINHAR_QS_RT | Tarefa que retornou do QS com tipo RETORNO_TESTES que está com a situação RESOLVIDA e aguardando na fila para encaminhar para o QS |
+| E04_ESTOQUE_QS_RT | Tarefa que retornou do QS com tipo RETORNO_TESTES que foi encaminhada para QS e está no estoque do QS, uma tarefa QS com a situação NOVA |
+| E05_EM_ANDAMENTO_QS_RT | Tarefa que retornou do QS com tipo RETORNO_TESTES que está em testes, uma tarefa do QS com a situação EM_ANDAMENTO |
+| E12_AGUARDANDO_VERSAO_RT | Tarefa que retornou do QS com tipo RETORNO_TESTES que está com testes concluídos com situação TESTE_OK e aguardando liberação da versão |
 
 ## 2025.01.06.1
 
