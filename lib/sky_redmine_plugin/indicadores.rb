@@ -362,6 +362,7 @@ module SkyRedminePlugin
     # Método auxiliar para atualizar tags de uma tarefa específica
     def self.atualizar_tag_tarefa(tarefa, nova_tag)
       begin
+        tarefa = Issue.find(tarefa.id)
         # Verificar se a tarefa tem o método tag_list (alguns plugins de tagging podem não estar instalados)
         return unless tarefa.respond_to?(:tag_list)
 
