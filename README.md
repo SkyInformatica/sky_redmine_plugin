@@ -35,9 +35,9 @@ Fluxo sem retorno de testes: define o fluxo ideal das tarefas de DEVEL que devem
 | E01_ESTOQUE_DEVEL | Tarefa que está no estoque, uma tarefa DEVEL com a situação NOVA |
 | E02_EM_ANDAMENTO_DEVEL | Tarefa que está em desenvolvimento, uma tarefa DEVEL com a situação EM_ANDAMENTO |
 | E03_AGUARDANDO_ENCAMINHAR_QS | Tarefa DEVEL que está com a situação RESOLVIDA e aguardando na fila para encaminhar para o QS |
-| E05_ESTOQUE_QS | Foi encaminhada para QS e está no estoque do QS, uma tarefa QS com a situação NOVA |
-| E06_EM_ANDAMENTO_QS | Está em testes, uma tarefa do QS com a situação EM_ANDAMENTO |
-| E07_AGUARDANDO_VERSAO | Está com testes concluídos com situação TESTE_OK e aguardando liberação da versão |
+| E04_ESTOQUE_QS | Foi encaminhada para QS e está no estoque do QS, uma tarefa QS com a situação NOVA |
+| E05_EM_ANDAMENTO_QS | Está em testes, uma tarefa do QS com a situação EM_ANDAMENTO |
+| E06_AGUARDANDO_VERSAO | Está com testes concluídos com situação TESTE_OK e aguardando liberação da versão |
 
 Fluxo com retorno de testes: define o fluxo quando há retorno de testes das tarefas de DEVEL que devem ir para QS.
 | Tag | Descrição |
@@ -53,7 +53,7 @@ Fluxo com retorno de testes: define o fluxo quando há retorno de testes das tar
 | E03_AGUARDANDO_ENCAMINHAR_QS_RT | Tarefa que retornou do QS com tipo RETORNO_TESTES que está com a situação RESOLVIDA e aguardando na fila para encaminhar para o QS |
 | E04_ESTOQUE_QS_RT | Tarefa que retornou do QS com tipo RETORNO_TESTES que foi encaminhada para QS e está no estoque do QS, uma tarefa QS com a situação NOVA |
 | E05_EM_ANDAMENTO_QS_RT | Tarefa que retornou do QS com tipo RETORNO_TESTES que está em testes, uma tarefa do QS com a situação EM_ANDAMENTO |
-| E12_AGUARDANDO_VERSAO_RT | Tarefa que retornou do QS com tipo RETORNO_TESTES que está com testes concluídos com situação TESTE_OK e aguardando liberação da versão |
+| E06_AGUARDANDO_VERSAO_RT | Tarefa que retornou do QS com tipo RETORNO_TESTES que está com testes concluídos com situação TESTE_OK e aguardando liberação da versão |
 
 ## 2025.01.06.1
 
