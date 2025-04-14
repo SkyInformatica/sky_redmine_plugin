@@ -485,6 +485,13 @@ module FluxoTarefasHelper
       "Etapa atual da tarefa"
     )
 
+    html << render_card(
+      "Tarefa complementar",
+      indicadores.tarefa_complementar,
+      "",
+      "Tarefa complementar são tarefas de suporte, planejamento, documentação, videos, etc"
+    )
+
     html << "</div>"
 
     # Cards DEVEL
