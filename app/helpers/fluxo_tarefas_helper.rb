@@ -478,6 +478,12 @@ module FluxoTarefasHelper
       "A versão foi liberada antes da conclusão dos testes"
     )
 
+    html << render_card(
+      "Etapa atual",
+      indicadores.situacao_atual,
+      "Etapa atual da tarefa"
+    )
+
     html << "</div>"
 
     # Cards DEVEL
