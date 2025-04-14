@@ -27,39 +27,13 @@ namespace :sky_redmine_plugin do
     puts "\nTestes concluídos!"
   end
   
-  # Cenário 1: Criar uma tarefa nova
-  def criar_tarefa_nova
-    puts "\n=== Cenário 1: Criar uma tarefa nova ==="
+  # Função auxiliar para criar uma tarefa
+  def criar_tarefa(subject)
     issue = Issue.new(
       project: @project,
       tracker: @tracker,
       status: @status_nova,
-      subject: "Teste Cenário 1 - Tarefa Nova",
-      description: "Tarefa para testar o cenário 1 - apenas tarefa nova",
-      author: @author,
-      assigned_to: @author
-    )
-    
-    if issue.save
-      puts "✓ Tarefa nova criada com sucesso (ID: #{issue.id})"
-      
-      # Processar indicadores
-      SkyRedminePlugin::Indicadores.processar_indicadores(issue)
-      puts "✓ Indicadores processados para a tarefa nova"
-    else
-      puts "✗ Falha ao criar a tarefa nova: #{issue.errors.full_messages.join(', ')}"
-    end
-  end
-  
-  # Cenário 2: Criar uma tarefa nova e depois colocá-la em andamento
-  def criar_tarefa_nova_em_andamento
-    puts "\n=== Cenário 2: Criar uma tarefa nova e depois colocá-la em andamento ==="
-    issue = Issue.new(
-      project: @project,
-      tracker: @tracker,
-      status: @status_nova,
-      subject: "Teste Cenário 2 - Tarefa Nova para Em Andamento",
-      description: "Tarefa para testar o cenário 2 - nova e depois em andamento",
+      subject: subject,
       author: @author,
       assigned_to: @author
     )
@@ -71,85 +45,62 @@ namespace :sky_redmine_plugin do
       SkyRedminePlugin::Indicadores.processar_indicadores(issue)
       puts "✓ Indicadores processados para a tarefa nova"
       
-      # Recarregar a tarefa para evitar StaleObjectError
-      issue = Issue.find(issue.id)
-      
-      # Inicializar o journal antes de alterar o status
-      issue.init_journal(@author, "[SkyRedminePlugin] Status alterado para Em andamento")
-      
-      # Atualizar para em andamento
-      issue.status = @status_em_andamento
-      if issue.save
-        puts "✓ Tarefa atualizada para em andamento com sucesso"
-        
-        # Processar indicadores novamente
-        SkyRedminePlugin::Indicadores.processar_indicadores(issue)
-        puts "✓ Indicadores processados para a tarefa em andamento"
-      else
-        puts "✗ Falha ao atualizar a tarefa para em andamento: #{issue.errors.full_messages.join(', ')}"
-      end
+      return issue
     else
       puts "✗ Falha ao criar a tarefa nova: #{issue.errors.full_messages.join(', ')}"
+      return nil
+    end
+  end
+  
+  # Função auxiliar para trocar o status de uma tarefa
+  def trocar_status(issue, novo_status, mensagem)
+    # Recarregar a tarefa para evitar StaleObjectError
+    issue = Issue.find(issue.id)
+    
+    # Inicializar o journal antes de alterar o status
+    issue.init_journal(@author, "[SkyRedminePlugin] #{mensagem}")
+    
+    # Atualizar o status
+    issue.status = novo_status
+    if issue.save
+      puts "✓ Tarefa atualizada para #{mensagem.downcase} com sucesso"
+      
+      # Processar indicadores
+      SkyRedminePlugin::Indicadores.processar_indicadores(issue)
+      puts "✓ Indicadores processados para a tarefa #{mensagem.downcase}"
+      
+      return true
+    else
+      puts "✗ Falha ao atualizar a tarefa para #{mensagem.downcase}: #{issue.errors.full_messages.join(', ')}"
+      return false
+    end
+  end
+  
+  # Cenário 1: Criar uma tarefa nova
+  def criar_tarefa_nova
+    puts "\n=== Cenário 1: Criar uma tarefa nova ==="
+    criar_tarefa("Teste Cenário 1 - Tarefa Nova")
+  end
+  
+  # Cenário 2: Criar uma tarefa nova e depois colocá-la em andamento
+  def criar_tarefa_nova_em_andamento
+    puts "\n=== Cenário 2: Criar uma tarefa nova e depois colocá-la em andamento ==="
+    issue = criar_tarefa("Teste Cenário 2 - Tarefa Nova para Em Andamento")
+    
+    if issue
+      trocar_status(issue, @status_em_andamento, "Status alterado para Em andamento")
     end
   end
   
   # Cenário 3: Criar uma tarefa nova, colocá-la em andamento e depois resolvida
   def criar_tarefa_nova_em_andamento_resolvida
     puts "\n=== Cenário 3: Criar uma tarefa nova, colocá-la em andamento e depois resolvida ==="
-    issue = Issue.new(
-      project: @project,
-      tracker: @tracker,
-      status: @status_nova,
-      subject: "Teste Cenário 3 - Tarefa Nova para Em Andamento para Resolvida",
-      description: "Tarefa para testar o cenário 3 - nova, em andamento e resolvida",
-      author: @author,
-      assigned_to: @author
-    )
+    issue = criar_tarefa("Teste Cenário 3 - Tarefa Nova para Em Andamento para Resolvida")
     
-    if issue.save
-      puts "✓ Tarefa nova criada com sucesso (ID: #{issue.id})"
-      
-      # Processar indicadores para a tarefa nova
-      SkyRedminePlugin::Indicadores.processar_indicadores(issue)
-      puts "✓ Indicadores processados para a tarefa nova"
-      
-      # Recarregar a tarefa para evitar StaleObjectError
-      issue = Issue.find(issue.id)
-      
-      # Inicializar o journal antes de alterar o status
-      issue.init_journal(@author, "[SkyRedminePlugin] Status alterado para Em andamento")
-      
-      # Atualizar para em andamento
-      issue.status = @status_em_andamento
-      if issue.save
-        puts "✓ Tarefa atualizada para em andamento com sucesso"
-        
-        # Processar indicadores para em andamento
-        SkyRedminePlugin::Indicadores.processar_indicadores(issue)
-        puts "✓ Indicadores processados para a tarefa em andamento"
-        
-        # Recarregar a tarefa novamente para evitar StaleObjectError
-        issue = Issue.find(issue.id)
-        
-        # Inicializar o journal antes de alterar o status
-        issue.init_journal(@author, "[SkyRedminePlugin] Status alterado para Resolvida")
-        
-        # Atualizar para resolvida
-        issue.status = @status_resolvida
-        if issue.save
-          puts "✓ Tarefa atualizada para resolvida com sucesso"
-          
-          # Processar indicadores para resolvida
-          SkyRedminePlugin::Indicadores.processar_indicadores(issue)
-          puts "✓ Indicadores processados para a tarefa resolvida"
-        else
-          puts "✗ Falha ao atualizar a tarefa para resolvida: #{issue.errors.full_messages.join(', ')}"
-        end
-      else
-        puts "✗ Falha ao atualizar a tarefa para em andamento: #{issue.errors.full_messages.join(', ')}"
+    if issue
+      if trocar_status(issue, @status_em_andamento, "Status alterado para Em andamento")
+        trocar_status(issue, @status_resolvida, "Status alterado para Resolvida")
       end
-    else
-      puts "✗ Falha ao criar a tarefa nova: #{issue.errors.full_messages.join(', ')}"
     end
   end
 end 
