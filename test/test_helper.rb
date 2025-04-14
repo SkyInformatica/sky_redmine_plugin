@@ -11,12 +11,6 @@ ActiveRecord::Base.connection.execute("SET SQL_MODE='NO_AUTO_VALUE_ON_ZERO'")
 # Desabilitar transações para evitar problemas com o banco de produção
 class ActiveSupport::TestCase
   self.use_transactional_tests = false
-  
-  # Limpar dados após cada teste
-  def teardown
-    super
-    SkyRedmineIndicadores.delete_all
-  end
 end
 
 # Configurar o ambiente de teste para usar o banco de produção
