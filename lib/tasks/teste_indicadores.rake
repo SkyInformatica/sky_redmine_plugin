@@ -81,17 +81,17 @@ namespace :sky_redmine_plugin do
     puts "\n=== Verificação do Indicador para a Tarefa ##{issue_id} ==="
     
     # Buscar o indicador pelo número da tarefa
-    indicador = SkyRedminePlugin::Indicador.find_by(issue_id: issue_id)
+    indicador = SkyRedmineIndicadores.find_by(primeira_tarefa_devel_id: issue_id)
     
     if indicador
       puts "✓ Indicador encontrado"
       
       # Imprimir os dados do indicador
       puts "  Situação Atual: #{indicador.situacao_atual}"
-      puts "  Responsável Atual: #{indicador.responsavel_atual}"
-      puts "  Qtde Retorno Testes QS: #{indicador.qtde_retorno_testes_qs}"
-      puts "  Qtde Retorno Testes Devel: #{indicador.qtde_retorno_testes_devel}"
-      puts "  Versão Liberada Antes dos Testes: #{indicador.versao_liberada_antes_testes}"
+      puts "  Responsável Atual: #{indicador.equipe_responsavel_atual}"
+      puts "  Qtde Retorno Testes QS: #{indicador.qtd_retorno_testes_qs}"
+      puts "  Qtde Retorno Testes Devel: #{indicador.qtd_retorno_testes_devel}"
+      puts "  Versão Liberada Antes dos Testes: #{indicador.tarefa_complementar}"
       puts "  Tarefa Complementar: #{indicador.tarefa_complementar}"
       
       # Verificar se a situação atual está correta
