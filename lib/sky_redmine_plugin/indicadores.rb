@@ -241,11 +241,11 @@ module SkyRedminePlugin
           indicador.tempo_total_devel_concluir_testes = (indicador.data_resolvida_ultima_tarefa_qs.to_date - indicador.data_criacao_ou_atendimento_primeira_tarefa_devel.to_date).to_i
         end
 
-        if indicador.tarefa_complementar == "NAO"
-          # Atualizar as tags das tarefas com a situação atual
-          atualizar_tags_situacao_atual(tarefas_devel, tarefas_qs, indicador.situacao_atual)
+        if indicador.tarefa_complementar == "NAO"          
           # Determinar a situação atual do desenvolvimento
           indicador.situacao_atual = determinar_situacao_atual(indicador, tarefas_relacionadas, tarefas_devel, tarefas_qs, ciclos_devel, ciclos_qs)
+          # Atualizar as tags das tarefas com a situação atual
+          atualizar_tags_situacao_atual(tarefas_devel, tarefas_qs, indicador.situacao_atual)
         end
 
         indicador.save(validate: false)
