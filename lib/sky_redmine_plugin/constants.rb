@@ -59,7 +59,7 @@ module SkyRedminePlugin
     end
 
     module CustomFieldsValues
-      NÃO_NECESSITA_TESTE = "Não necessita teste"
+      NAO_NECESSITA_TESTE = "Não necessita teste"
       NAO_TESTADA = "Não testada"
       TESTE_OK = "Teste OK"
       TESTE_NOK = "Teste NOK"
