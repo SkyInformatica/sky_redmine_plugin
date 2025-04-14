@@ -117,7 +117,7 @@ module SkyRedminePlugin
         tarefa.define_singleton_method(:teste_qs) { @teste_qs }
         
 
-        teste_no_desenvolvimento = obter_valor_campo_personalizado(tarefa, SkyRedminePlugin::Consntants::CustomFields::TESTE_NO_DESENVOLVIMENTO)        
+        teste_no_desenvolvimento = obter_valor_campo_personalizado(tarefa, SkyRedminePlugin::Constants::CustomFields::TESTE_NO_DESENVOLVIMENTO)        
         tarefa.instance_variable_set(:@teste_no_desenvolvimento, teste_no_desenvolvimento)
         tarefa.define_singleton_method(:teste_no_desenvolvimento) { @teste_no_desenvolvimento }
         

@@ -15,7 +15,6 @@ module SkyRedminePlugin
       TESTE_NOK = "Teste NOK"
       TESTE_OK_FECHADA = "Teste OK - Fechada"
       TESTE_NOK_FECHADA = "Teste NOK - Fechada"
-      INTERROMPIDA = "Interrompida"
       INTERROMPIDA_ANALISE = "Interrompida para analise"
       FECHADA_SEM_DESENVOLVIMENTO = "Fechada - sem desenvolvimento"
     end
