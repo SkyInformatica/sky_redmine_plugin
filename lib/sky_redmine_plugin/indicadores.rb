@@ -443,7 +443,7 @@ module SkyRedminePlugin
                    SkyRedminePlugin::Constants::SituacaoAtual::AGUARDANDO_ENCAMINHAR_QS_RETORNO_TESTES :
                    SkyRedminePlugin::Constants::SituacaoAtual::AGUARDANDO_ENCAMINHAR_QS
         end
-        
+
       when SkyRedminePlugin::Constants::EquipeResponsavel::QS
         is_retorno_testes = ultima_tarefa.tracker.name == SkyRedminePlugin::Constants::Trackers::RETORNO_TESTES
 
@@ -467,6 +467,37 @@ module SkyRedminePlugin
 
       # Se nenhuma situação foi identificada, retornar DESCONHECIDA
       SkyRedminePlugin::Constants::SituacaoAtual::DESCONHECIDA
+    end
+
+    # Método para verificar se a situação é DESCONHECIDA
+    def self.verificar_situacao_desconhecida(tarefas_relacionadas, tarefas_devel, ciclos_devel)
+      # Regra 1: Verificar se a última tarefa do último ciclo DEVEL é FECHADA_CONTINUA_RETORNO_TESTES
+      ultima_tarefa_devel = tarefas_devel.last
+      if ultima_tarefa_devel.status.name == SkyRedminePlugin::Constants::IssueStatus::FECHADA_CONTINUA_RETORNO_TESTES
+        return SkyRedminePlugin::Constants::SituacaoAtual::DESCONHECIDA
+      end
+
+      # Regra 2: Verificar se a última tarefa de todo o ciclo é TESTE_NOK_FECHADA
+      ultima_tarefa_ciclo = tarefas_relacionadas.last
+      if ultima_tarefa_ciclo.equipe_responsavel == SkyRedminePlugin::Constants::EquipeResponsavel::QS &&
+         ultima_tarefa_ciclo.status.name == SkyRedminePlugin::Constants::IssueStatus::TESTE_NOK_FECHADA
+        return SkyRedminePlugin::Constants::SituacaoAtual::DESCONHECIDA
+      end
+
+      # Regra 3: Verificar se há algum ciclo de continuidade onde as tarefas DEVEL não são do tipo RETORNO_TESTES
+      if ciclos_devel.size > 1
+        # Verificar todos os ciclos de continuidade (após o primeiro ciclo)
+        ciclos_devel[1..-1].each do |ciclo|
+          ciclo.each do |tarefa|
+            if tarefa.tracker.name != SkyRedminePlugin::Constants::Trackers::RETORNO_TESTES
+              return SkyRedminePlugin::Constants::SituacaoAtual::DESCONHECIDA
+            end
+          end
+        end
+      end
+
+      # Se não atende nenhuma condição de DESCONHECIDA, retorna nil para continuar a verificação
+      nil
     end
   end
 end
