@@ -1,14 +1,29 @@
 require File.expand_path('../../test_helper', __FILE__)
 
 class TestIndicadores < ActiveSupport::TestCase
-  fixtures :projects, :issues, :issue_statuses, :trackers, :custom_fields, :custom_values
+  fixtures :projects, :issues, :issue_statuses, :trackers, :custom_fields, :custom_values, :users, :members, :member_roles, :roles
 
   def setup
+    # Configuração básica
     @project = Project.find_by(name: "Equipe Notar")
     @tracker = Tracker.first
     @status_nova = IssueStatus.find_by(name: "Nova")
     @status_em_andamento = IssueStatus.find_by(name: "Em andamento")
     @status_resolvida = IssueStatus.find_by(name: "Resolvida")
+    
+    # Verificar se os status existem
+    assert_not_nil @status_nova, "Status 'Nova' não encontrado"
+    assert_not_nil @status_em_andamento, "Status 'Em andamento' não encontrado"
+    assert_not_nil @status_resolvida, "Status 'Resolvida' não encontrado"
+    
+    # Verificar se o projeto existe
+    assert_not_nil @project, "Projeto 'Equipe Notar' não encontrado"
+    
+    # Verificar se o tracker existe
+    assert_not_nil @tracker, "Nenhum tracker encontrado"
+    
+    # Em ambiente isolado, podemos limpar todos os indicadores para evitar conflitos
+    SkyRedmineIndicadores.delete_all
   end
 
   def test_cenario_1_tarefa_nova
@@ -18,7 +33,8 @@ class TestIndicadores < ActiveSupport::TestCase
       tracker: @tracker,
       status: @status_nova,
       subject: "Teste Cenário 1 - Tarefa Nova",
-      description: "Tarefa para testar o cenário 1 - apenas tarefa nova"
+      description: "Tarefa para testar o cenário 1 - apenas tarefa nova",
+      author: User.first
     )
     assert issue.save, "Falha ao salvar a tarefa nova: #{issue.errors.full_messages.join(', ')}"
     
@@ -38,7 +54,8 @@ class TestIndicadores < ActiveSupport::TestCase
       tracker: @tracker,
       status: @status_nova,
       subject: "Teste Cenário 2 - Tarefa Nova para Em Andamento",
-      description: "Tarefa para testar o cenário 2 - nova e depois em andamento"
+      description: "Tarefa para testar o cenário 2 - nova e depois em andamento",
+      author: User.first
     )
     assert issue.save, "Falha ao salvar a tarefa nova: #{issue.errors.full_messages.join(', ')}"
     
@@ -65,7 +82,8 @@ class TestIndicadores < ActiveSupport::TestCase
       tracker: @tracker,
       status: @status_nova,
       subject: "Teste Cenário 3 - Tarefa Nova para Em Andamento para Resolvida",
-      description: "Tarefa para testar o cenário 3 - nova, em andamento e resolvida"
+      description: "Tarefa para testar o cenário 3 - nova, em andamento e resolvida",
+      author: User.first
     )
     assert issue.save, "Falha ao salvar a tarefa nova: #{issue.errors.full_messages.join(', ')}"
     
