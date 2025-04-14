@@ -10,6 +10,14 @@ namespace :sky_redmine_plugin do
     @status_nova = IssueStatus.find_by(name: "Nova")
     @status_em_andamento = IssueStatus.find_by(name: "Em andamento")
     @status_resolvida = IssueStatus.find_by(name: "Resolvida")
+    @author = User.find_by(login: "maglan")
+    
+    if @author.nil?
+      puts "✗ Usuário 'maglan' não encontrado. Verifique se o usuário existe no sistema."
+      return
+    end
+    
+    puts "✓ Usuário 'maglan' encontrado (ID: #{@author.id})"
     
     # Executar os cenários
     criar_tarefa_nova
@@ -28,7 +36,7 @@ namespace :sky_redmine_plugin do
       status: @status_nova,
       subject: "Teste Cenário 1 - Tarefa Nova",
       description: "Tarefa para testar o cenário 1 - apenas tarefa nova",
-      author: User.first
+      author: @author
     )
     
     if issue.save
@@ -51,7 +59,7 @@ namespace :sky_redmine_plugin do
       status: @status_nova,
       subject: "Teste Cenário 2 - Tarefa Nova para Em Andamento",
       description: "Tarefa para testar o cenário 2 - nova e depois em andamento",
-      author: User.first
+      author: @author
     )
     
     if issue.save
@@ -86,7 +94,7 @@ namespace :sky_redmine_plugin do
       status: @status_nova,
       subject: "Teste Cenário 3 - Tarefa Nova para Em Andamento para Resolvida",
       description: "Tarefa para testar o cenário 3 - nova, em andamento e resolvida",
-      author: User.first
+      author: @author
     )
     
     if issue.save
