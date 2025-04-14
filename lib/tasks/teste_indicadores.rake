@@ -78,7 +78,7 @@ namespace :sky_redmine_plugin do
   
   # Função para imprimir os dados do indicador e verificar a situação atual
   def verificar_indicador(issue_id, situacao_esperada)
-    puts "\n=== Verificação do Indicador para a Tarefa ##{issue_id} ==="
+    puts "\n>> Verificação do Indicador para a Tarefa ##{issue_id}"
     
     # Buscar o indicador pelo número da tarefa
     indicador = SkyRedmineIndicadores.find_by(primeira_tarefa_devel_id: issue_id)
@@ -129,7 +129,7 @@ namespace :sky_redmine_plugin do
   
   # Cenário 3: Criar uma tarefa nova, colocá-la em andamento e depois resolvida
   def criar_tarefa_nova_em_andamento_resolvida
-    puts "\n=== Cenário 3: Criar uma tarefa nova, colocá-la em andamento e depois resolvida ==="
+    puts "\n\n=== Cenário 3: Criar uma tarefa nova, colocá-la em andamento e depois resolvida ==="
     issue = criar_tarefa("Teste Cenário 3 - Tarefa Nova para Em Andamento para Resolvida")
     
     if issue
