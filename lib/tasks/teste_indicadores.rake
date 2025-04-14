@@ -74,9 +74,11 @@ namespace :sky_redmine_plugin do
       # Recarregar a tarefa para evitar StaleObjectError
       issue = Issue.find(issue.id)
       
+      # Inicializar o journal antes de alterar o status
+      issue.init_journal(@author, "[SkyRedminePlugin] Status alterado para Em andamento")
+      
       # Atualizar para em andamento
       issue.status = @status_em_andamento
-      issue.init_journal(@author, "[SkyRedminePlugin] Status alterado para Em andamento")
       if issue.save
         puts "✓ Tarefa atualizada para em andamento com sucesso"
         
@@ -114,9 +116,11 @@ namespace :sky_redmine_plugin do
       # Recarregar a tarefa para evitar StaleObjectError
       issue = Issue.find(issue.id)
       
+      # Inicializar o journal antes de alterar o status
+      issue.init_journal(@author, "[SkyRedminePlugin] Status alterado para Em andamento")
+      
       # Atualizar para em andamento
       issue.status = @status_em_andamento
-      issue.init_journal(@author, "[SkyRedminePlugin] Status alterado para Em andamento")
       if issue.save
         puts "✓ Tarefa atualizada para em andamento com sucesso"
         
@@ -127,9 +131,11 @@ namespace :sky_redmine_plugin do
         # Recarregar a tarefa novamente para evitar StaleObjectError
         issue = Issue.find(issue.id)
         
+        # Inicializar o journal antes de alterar o status
+        issue.init_journal(@author, "[SkyRedminePlugin] Status alterado para Resolvida")
+        
         # Atualizar para resolvida
         issue.status = @status_resolvida
-        issue.init_journal(@author, "[SkyRedminePlugin] Status alterado para Resolvida")
         if issue.save
           puts "✓ Tarefa atualizada para resolvida com sucesso"
           
