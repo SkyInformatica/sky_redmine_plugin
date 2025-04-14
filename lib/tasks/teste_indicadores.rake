@@ -111,7 +111,7 @@ namespace :sky_redmine_plugin do
     issue = criar_tarefa("Teste Cenário 1 - Tarefa Nova")
     
     if issue
-      verificar_indicador(issue.id, SkyRedminePlugin::SituacaoAtual::ESTOQUE_DEVEL)
+      verificar_indicador(issue.id, SkyRedminePlugin::Constants::SituacaoAtual::ESTOQUE_DEVEL)
     end
   end
   
@@ -122,7 +122,7 @@ namespace :sky_redmine_plugin do
     
     if issue
       if trocar_status(issue, @status_em_andamento, "Status alterado para Em andamento")
-        verificar_indicador(issue.id, SkyRedminePlugin::SituacaoAtual::EM_ANDAMENTO_DEVEL)
+        verificar_indicador(issue.id, SkyRedminePlugin::Constants::SituacaoAtual::EM_ANDAMENTO_DEVEL)
       end
     end
   end
@@ -135,7 +135,7 @@ namespace :sky_redmine_plugin do
     if issue
       if trocar_status(issue, @status_em_andamento, "Status alterado para Em andamento")
         if trocar_status(issue, @status_resolvida, "Status alterado para Resolvida")
-          verificar_indicador(issue.id, SkyRedminePlugin::SituacaoAtual::AGUARDANDO_TESTES_DEVEL)
+          verificar_indicador(issue.id, SkyRedminePlugin::Constants::SituacaoAtual::AGUARDANDO_TESTES_DEVEL)
         end
       end
     end
