@@ -1,6 +1,7 @@
+#RAILS_ENV=production rake sky_redmine_plugin:teste_indicadores
 namespace :sky_redmine_plugin do
   desc "Executa os testes de indicadores no ambiente especificado"
-  task :test_indicadores => :environment do
+  task :teste_indicadores => :environment do
     puts "Iniciando testes de indicadores..."
     
     # Configuração básica
