@@ -49,7 +49,7 @@ module SkyRedminePlugin
       SUPORTE = "Suporte"
       PLANEJAMENTO = "Planejamento"
       DOCUMENTACAO = "Documentação"
-      VIDEOS = "Videos"      
+      VIDEOS = "Videos"
     end
 
     module CustomFields
@@ -62,6 +62,8 @@ module SkyRedminePlugin
     module CustomFieldsValues
       NÃO_NECESSITA_TESTE = "Não necessita teste"
       NAO_TESTADA = "Não testada"
+      TESTE_OK = "Teste OK"
+      TESTE_NOK = "Teste NOK"
     end
 
     module Tags
@@ -75,14 +77,14 @@ module SkyRedminePlugin
       TODAS_TAGS_AUTOMATIZADAS = [TESTAR, PRONTO, REVER, REUNIAO, RETESTAR]
     end
 
-    module EquipeResponsavel      
+    module EquipeResponsavel
       FECHADA = "FECHADA"
       DEVEL = "DEVEL"
       QS = "QS"
     end
 
     module TarefasComplementares
-      TAREFA_NAO_PLANEJADA = "Tarefa não planejada"      
+      TAREFA_NAO_PLANEJADA = "Tarefa não planejada"
     end
 
     module FluxoDasTarefas
@@ -94,7 +96,7 @@ module SkyRedminePlugin
     module SituacaoAtual
       # Situação desconhecida
       DESCONHECIDA = "DESCONHECIDA"
-      
+
       # Situações de desenvolvimento inicial
       ESTOQUE_DEVEL = "ESTOQUE_DEVEL"
       EM_ANDAMENTO_DEVEL = "EM_ANDAMENTO_DEVEL"
@@ -125,7 +127,7 @@ module SkyRedminePlugin
 
       # Lista de todas as situações em ordem cronológica
       TODAS_SITUACOES = [
-        DESCONHECIDA,    
+        DESCONHECIDA,
         ESTOQUE_DEVEL,
         EM_ANDAMENTO_DEVEL,
         AGUARDANDO_TESTES_DEVEL,
@@ -152,7 +154,7 @@ module SkyRedminePlugin
         ESTOQUE_QS,
         EM_ANDAMENTO_QS,
         AGUARDANDO_VERSAO,
-        VERSAO_LIBERADA
+        VERSAO_LIBERADA,
       ]
 
       # Fluxo de situações com retorno de testes
@@ -175,7 +177,7 @@ module SkyRedminePlugin
       # Fluxo de situações das tarefas que não passam por QS
       FLUXO_SEM_QS = [
         ESTOQUE_DEVEL,
-        EM_ANDAMENTO_DEVEL,        
+        EM_ANDAMENTO_DEVEL,
         AGUARDANDO_VERSAO,
         VERSAO_LIBERADA,
       ]
@@ -189,7 +191,7 @@ module SkyRedminePlugin
         ESTOQUE_QS,
         EM_ANDAMENTO_QS,
         AGUARDANDO_VERSAO,
-        VERSAO_LIBERADA
+        VERSAO_LIBERADA,
       ]
 
       FLUXO_RETORNO_TESTES_COM_TESTE_NO_DESENVOLVIMENTO = [
@@ -209,8 +211,6 @@ module SkyRedminePlugin
         AGUARDANDO_VERSAO_RETORNO_TESTES,
         VERSAO_LIBERADA,
       ]
-
-
     end
   end
 end

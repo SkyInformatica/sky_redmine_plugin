@@ -11,3 +11,4 @@
 - considerar os casos especiais que foram descritos no ciclo do desenvolvimento para o campo do indicador teste_no_desenvolvimento 
 - se precisar, use os campos auxiliares já pre-processados das tarefas que estao na lista de tarefas e foi definido pela funcao obter_lista_tarefas_relacionadas que sao Essa funcao cria campos auxiliares na lista das tarefas para ajudar no processamento dos indicadores que sao: teste_qs, teste_no_desenvolvimento, tarefa_complementar, equipe_responsavel, data_atendimento, data_andamento, data_resolvida e data_fechada.
 - nao altere codigo fonte que nao está relacionado com a tarefa que solicitei.
+- a funcao deve ter o tratamento para todas as situacoes previstas na constante SituacaoAtual

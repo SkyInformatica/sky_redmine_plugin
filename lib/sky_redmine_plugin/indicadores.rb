@@ -197,8 +197,6 @@ module SkyRedminePlugin
           end
         end
 
-        
-
         # Determinar se a tarefa foi fechada sem testes
         if indicador.data_fechamento_ultima_tarefa_devel.present?
           if tarefas_qs.empty?
@@ -242,8 +240,6 @@ module SkyRedminePlugin
         if indicador.data_criacao_ou_atendimento_primeira_tarefa_devel && indicador.data_resolvida_ultima_tarefa_qs
           indicador.tempo_total_devel_concluir_testes = (indicador.data_resolvida_ultima_tarefa_qs.to_date - indicador.data_criacao_ou_atendimento_primeira_tarefa_devel.to_date).to_i
         end
-
-       
 
         if indicador.tarefa_complementar == "NAO"
           # Atualizar as tags das tarefas com a situação atual
@@ -309,7 +305,6 @@ module SkyRedminePlugin
       indicador.tarefa_fechada_sem_testes = nil
       indicador.situacao_atual = nil
       indicador.fluxo_das_tarefas = nil
-
     end
 
     # Método para atualizar as tags das tarefas com a situação atual
@@ -397,7 +392,81 @@ module SkyRedminePlugin
       # Primeiro verificar se é uma situação DESCONHECIDA
       situacao = verificar_situacao_desconhecida(tarefas_relacionadas, tarefas_devel, ciclos_devel)
       return situacao if situacao == SkyRedminePlugin::Constants::SituacaoAtual::DESCONHECIDA
-      
+
+      ultima_tarefa = tarefas_relacionadas.last
+      ultima_tarefa_devel = tarefas_devel.last
+
+      # Se a última tarefa DEVEL está com situação FECHADA, a versão foi liberada
+      if ultima_tarefa_devel.status.name == SkyRedminePlugin::Constants::IssueStatus::FECHADA
+        return SkyRedminePlugin::Constants::SituacaoAtual::VERSAO_LIBERADA
+      end
+
+      # Verificar se é uma tarefa que não necessita de QS
+      if ultima_tarefa_devel.teste_qs == SkyRedminePlugin::Constants::CustomFieldsValues::NAO_NECESSITA_TESTE
+        case ultima_tarefa_devel.status.name
+        when SkyRedminePlugin::Constants::IssueStatus::NOVA
+          return SkyRedminePlugin::Constants::SituacaoAtual::ESTOQUE_DEVEL
+        when SkyRedminePlugin::Constants::IssueStatus::EM_ANDAMENTO
+          return SkyRedminePlugin::Constants::SituacaoAtual::EM_ANDAMENTO_DEVEL
+        when SkyRedminePlugin::Constants::IssueStatus::RESOLVIDA
+          return SkyRedminePlugin::Constants::SituacaoAtual::AGUARDANDO_VERSAO
+        end
+      end
+
+      # Verificar se está no primeiro ciclo com teste no desenvolvimento
+      if ciclos_devel.size == 1 && ultima_tarefa_devel.teste_no_desenvolvimento != SkyRedminePlugin::Constants::CustomFieldsValues::NAO_NECESSITA_TESTE
+        if ultima_tarefa_devel.status.name == SkyRedminePlugin::Constants::IssueStatus::RESOLVIDA
+          if ultima_tarefa_devel.teste_no_desenvolvimento == SkyRedminePlugin::Constants::CustomFieldsValues::NAO_TESTADA
+            return SkyRedminePlugin::Constants::SituacaoAtual::AGUARDANDO_TESTES_DEVEL
+          elsif ultima_tarefa_devel.teste_no_desenvolvimento == SkyRedminePlugin::Constants::CustomFieldsValues::TESTE_NOK
+            return SkyRedminePlugin::Constants::SituacaoAtual::AGUARDANDO_ENCAMINHAR_RETORNO_TESTES_DEVEL
+          end
+        end
+      end
+
+      # Verificar situações baseadas na última tarefa
+      case ultima_tarefa.equipe_responsavel
+      when SkyRedminePlugin::Constants::EquipeResponsavel::DEVEL
+        is_retorno_testes = ultima_tarefa.tracker.name == SkyRedminePlugin::Constants::Trackers::RETORNO_TESTES
+
+        case ultima_tarefa.status.name
+        when SkyRedminePlugin::Constants::IssueStatus::NOVA
+          return is_retorno_testes ?
+                   SkyRedminePlugin::Constants::SituacaoAtual::ESTOQUE_DEVEL_RETORNO_TESTES :
+                   SkyRedminePlugin::Constants::SituacaoAtual::ESTOQUE_DEVEL
+        when SkyRedminePlugin::Constants::IssueStatus::EM_ANDAMENTO
+          return is_retorno_testes ?
+                   SkyRedminePlugin::Constants::SituacaoAtual::EM_ANDAMENTO_DEVEL_RETORNO_TESTES :
+                   SkyRedminePlugin::Constants::SituacaoAtual::EM_ANDAMENTO_DEVEL
+        when SkyRedminePlugin::Constants::IssueStatus::RESOLVIDA
+          return is_retorno_testes ?
+                   SkyRedminePlugin::Constants::SituacaoAtual::AGUARDANDO_ENCAMINHAR_QS_RETORNO_TESTES :
+                   SkyRedminePlugin::Constants::SituacaoAtual::AGUARDANDO_ENCAMINHAR_QS
+        end
+        
+      when SkyRedminePlugin::Constants::EquipeResponsavel::QS
+        is_retorno_testes = ultima_tarefa.tracker.name == SkyRedminePlugin::Constants::Trackers::RETORNO_TESTES
+
+        case ultima_tarefa.status.name
+        when SkyRedminePlugin::Constants::IssueStatus::NOVA
+          return is_retorno_testes ?
+                   SkyRedminePlugin::Constants::SituacaoAtual::ESTOQUE_QS_RETORNO_TESTES :
+                   SkyRedminePlugin::Constants::SituacaoAtual::ESTOQUE_QS
+        when SkyRedminePlugin::Constants::IssueStatus::EM_ANDAMENTO
+          return is_retorno_testes ?
+                   SkyRedminePlugin::Constants::SituacaoAtual::EM_ANDAMENTO_QS_RETORNO_TESTES :
+                   SkyRedminePlugin::Constants::SituacaoAtual::EM_ANDAMENTO_QS
+        when SkyRedminePlugin::Constants::IssueStatus::TESTE_OK
+          return is_retorno_testes ?
+                   SkyRedminePlugin::Constants::SituacaoAtual::AGUARDANDO_VERSAO_RETORNO_TESTES :
+                   SkyRedminePlugin::Constants::SituacaoAtual::AGUARDANDO_VERSAO
+        when SkyRedminePlugin::Constants::IssueStatus::TESTE_NOK
+          return SkyRedminePlugin::Constants::SituacaoAtual::AGUARDANDO_ENCAMINHAR_RETORNO_TESTES
+        end
+      end
+
+      # Se nenhuma situação foi identificada, retornar DESCONHECIDA
+      SkyRedminePlugin::Constants::SituacaoAtual::DESCONHECIDA
     end
   end
 end
