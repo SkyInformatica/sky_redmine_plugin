@@ -36,7 +36,8 @@ namespace :sky_redmine_plugin do
       status: @status_nova,
       subject: "Teste Cenário 1 - Tarefa Nova",
       description: "Tarefa para testar o cenário 1 - apenas tarefa nova",
-      author: @author
+      author: @author,
+      assigned_to: @author
     )
     
     if issue.save
@@ -59,7 +60,8 @@ namespace :sky_redmine_plugin do
       status: @status_nova,
       subject: "Teste Cenário 2 - Tarefa Nova para Em Andamento",
       description: "Tarefa para testar o cenário 2 - nova e depois em andamento",
-      author: @author
+      author: @author,
+      assigned_to: @author
     )
     
     if issue.save
@@ -94,7 +96,8 @@ namespace :sky_redmine_plugin do
       status: @status_nova,
       subject: "Teste Cenário 3 - Tarefa Nova para Em Andamento para Resolvida",
       description: "Tarefa para testar o cenário 3 - nova, em andamento e resolvida",
-      author: @author
+      author: @author,
+      assigned_to: @author
     )
     
     if issue.save
