@@ -641,8 +641,10 @@ module FluxoTarefasHelper
       return render_timeline_desconhecida
     end
 
-    tem_retorno_testes_qs = indicadores.qtd_retorno_testes_qs.to_i > 0
-    tem_retorno_testes_devel = indicadores.qtd_retorno_testes_devel.to_i > 0
+    tem_retorno_testes_qs = indicadores.qtd_retorno_testes_qs.to_i > 0 || 
+                           situacao_atual == SkyRedminePlugin::Constants::SituacaoAtual::AGUARDANDO_ENCAMINHAR_RETORNO_TESTES
+    tem_retorno_testes_devel = indicadores.qtd_retorno_testes_devel.to_i > 0 || 
+                              situacao_atual == SkyRedminePlugin::Constants::SituacaoAtual::AGUARDANDO_ENCAMINHAR_RETORNO_TESTES_DEVEL
 
     # Determinar qual fluxo usar baseado em se teve retornos de testes
     fluxo = if tem_retorno_testes_qs
