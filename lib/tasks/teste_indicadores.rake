@@ -11,6 +11,7 @@ namespace :sky_redmine_plugin do
     @status_em_andamento = IssueStatus.find_by(name: "Em andamento")
     @status_resolvida = IssueStatus.find_by(name: "Resolvida")
     @author = User.find_by(login: "maglan")
+    @cf_teste_no_desenvolvimento = CustomField.find_by(name: SkyRedminePlugin::Constants::CustomFields::TESTE_NO_DESENVOLVIMENTO)
     
     if @author.nil?
       puts "✗ Usuário 'maglan' não encontrado. Verifique se o usuário existe no sistema."
@@ -23,6 +24,7 @@ namespace :sky_redmine_plugin do
     criar_tarefa_nova
     criar_tarefa_nova_em_andamento
     criar_tarefa_nova_em_andamento_resolvida
+    criar_tarefa_nao_necessita_teste
     
     puts "\nTestes concluídos!"
   end
@@ -138,6 +140,39 @@ namespace :sky_redmine_plugin do
           verificar_indicador(issue.id, SkyRedminePlugin::Constants::SituacaoAtual::AGUARDANDO_TESTES_DEVEL)
         end
       end
+    end
+  end
+  
+  # Cenário 4: Criar uma tarefa, colocá-la em andamento, resolvida e marcar como 'Não necessita teste'
+  def criar_tarefa_nao_necessita_teste
+    puts "\n=== Cenário 4: Criar uma tarefa, colocá-la em andamento, resolvida e marcar como 'Não necessita teste' ==="
+    issue = criar_tarefa("Teste Cenário 4 - Tarefa Não Necessita Teste")
+    
+    if issue
+      if trocar_status(issue, @status_em_andamento, "Status alterado para Em andamento")
+        if trocar_status(issue, @status_resolvida, "Status alterado para Resolvida")
+          if atualizar_campo_personalizado(issue, @cf_teste_no_desenvolvimento, SkyRedminePlugin::Constants::CustomFieldsValues::NAO_NECESSITA_TESTE, "Campo '#{SkyRedminePlugin::Constants::CustomFields::TESTE_NO_DESENVOLVIMENTO}' alterado para '#{SkyRedminePlugin::Constants::CustomFieldsValues::NAO_NECESSITA_TESTE}'")
+            verificar_indicador(issue.id, SkyRedminePlugin::Constants::SituacaoAtual::AGUARDANDO_ENCAMINHAR_QS)
+          end
+        end
+      end
+    end
+  end
+  
+  # Função auxiliar para atualizar um campo personalizado
+  def atualizar_campo_personalizado(issue, custom_field, valor, mensagem)
+    issue = Issue.find(issue.id)
+    issue.init_journal(@author, "[SkyRedminePlugin] #{mensagem}")
+    issue.custom_field_values = { custom_field.id => valor }
+    
+    if issue.save
+      puts "✓ Campo personalizado atualizado com sucesso: #{mensagem}"
+      SkyRedminePlugin::Indicadores.processar_indicadores(issue)
+      puts "✓ Indicadores processados após atualização do campo personalizado"
+      return true
+    else
+      puts "✗ Falha ao atualizar campo personalizado: #{issue.errors.full_messages.join(', ')}"
+      return false
     end
   end
 end 
