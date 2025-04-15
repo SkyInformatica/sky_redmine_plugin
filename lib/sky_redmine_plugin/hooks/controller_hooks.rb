@@ -17,8 +17,9 @@ module SkyRedminePlugin
         new_status_name = IssueStatus.find_by(id: new_status_id)&.name
         return unless new_status_name
 
-        Rails.logger.info ">>> new_status_name: #{new_status_name}"
+        Rails.logger.info ">>> new_status_name: #{new_status_name}"        
         processar_tarefa(issue, new_status_name)
+        SkyRedminePlugin::Indicadores.processar_indicadores(issue)
       end
 
       def controller_issues_edit_after_save(context = {})
@@ -34,6 +35,7 @@ module SkyRedminePlugin
           new_status_name = IssueStatus.find_by(id: status_detail.value).name
           processar_tarefa(issue, new_status_name)
         end
+        SkyRedminePlugin::Indicadores.processar_indicadores(issue)
       end
 
       def controller_issues_new_after_save(context = {})
@@ -64,10 +66,7 @@ module SkyRedminePlugin
         fechar_tarefa_qs(issue, new_status_name)
 
         # Atualizar status tarefa QS na tarefa de desenvolvimento
-        atualizar_status_tarefa_qs_tarefa_devel(issue, new_status_name)
-
-        # Processar e atualizar SkyRedmineIndicadores
-        SkyRedminePlugin::Indicadores.processar_indicadores(issue)
+        atualizar_status_tarefa_qs_tarefa_devel(issue, new_status_name)       
       end
 
       def atualizar_status_tarefa_qs_tarefa_devel(issue, new_status_name)
