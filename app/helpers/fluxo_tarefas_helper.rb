@@ -624,7 +624,7 @@ module FluxoTarefasHelper
     # Verificar se há uma situação atual e quantidade de retornos de testes
    
     if indicadores.situacao_atual.present?
-      html << render_timeline_situacao_atual(indicadores.situacao_atual, indicadores)
+      html << render_timeline_situacao_atual(indicadores)
     end
 
     html << "</div>"
@@ -632,7 +632,8 @@ module FluxoTarefasHelper
   end
 
   # Método para renderizar a timeline da situação atual
-  def render_timeline_situacao_atual(situacao_atual, indicadores)
+  def render_timeline_situacao_atual(indicadores)
+    situacao_atual = indicadores.situacao_atual
     return "" unless situacao_atual
 
     # Se a situação for DESCONHECIDA, renderizar a timeline específica
@@ -640,12 +641,19 @@ module FluxoTarefasHelper
       return render_timeline_desconhecida
     end
 
-    tem_retorno_testes = indicadores.qtd_retorno_testes_qs.to_i > 0 
+    tem_retorno_testes_qs = indicadores.qtd_retorno_testes_qs.to_i > 0
+    tem_retorno_testes_devel = indicadores.qtd_retorno_testes_devel.to_i > 0
 
     # Determinar qual fluxo usar baseado em se teve retornos de testes
-    fluxo = tem_retorno_testes ?
-      SkyRedminePlugin::Constants::SituacaoAtual::FLUXO_RETORNO_TESTES :
-      SkyRedminePlugin::Constants::SituacaoAtual::FLUXO_IDEAL
+    fluxo = if tem_retorno_testes_qs
+              tem_retorno_testes_devel ? 
+                SkyRedminePlugin::Constants::SituacaoAtual::FLUXO_RETORNO_TESTES_COM_RETORNO_TESTES_NO_DESENVOLVIMENTO :
+                SkyRedminePlugin::Constants::SituacaoAtual::FLUXO_RETORNO_TESTES
+            else
+              tem_retorno_testes_devel ? 
+                SkyRedminePlugin::Constants::SituacaoAtual::FLUXO_IDEAL_COM_RETORNO_TESTES_NO_DESENVOLVIMENTO :
+                SkyRedminePlugin::Constants::SituacaoAtual::FLUXO_IDEAL
+            end
 
     # Encontrar o índice da situação atual no fluxo
     indice_atual = fluxo.index(situacao_atual)
@@ -656,7 +664,7 @@ module FluxoTarefasHelper
     html << "<div class='indicadores-titulo'>Progresso</div>"
     html << "<div class='timeline-container'>"
 
-    if tem_retorno_testes
+    if tem_retorno_testes_qs
       # Ponto de divisão - índice do AGUARDANDO_ENCAMINHAR_RETORNO_TESTES
       ponto_divisao = fluxo.index(SkyRedminePlugin::Constants::SituacaoAtual::AGUARDANDO_ENCAMINHAR_RETORNO_TESTES)
 
