@@ -622,9 +622,9 @@ module FluxoTarefasHelper
 
     # Timeline de situação atual
     # Verificar se há uma situação atual e quantidade de retornos de testes
-    tem_retorno_testes = indicadores.qtd_retorno_testes_qs.to_i > 0 || indicadores.qtd_retorno_testes_devel.to_i > 0
+   
     if indicadores.situacao_atual.present?
-      html << render_timeline_situacao_atual(indicadores.situacao_atual, tem_retorno_testes, indicadores)
+      html << render_timeline_situacao_atual(indicadores.situacao_atual, indicadores)
     end
 
     html << "</div>"
@@ -632,13 +632,15 @@ module FluxoTarefasHelper
   end
 
   # Método para renderizar a timeline da situação atual
-  def render_timeline_situacao_atual(situacao_atual, tem_retorno_testes, indicadores)
+  def render_timeline_situacao_atual(situacao_atual, indicadores)
     return "" unless situacao_atual
 
     # Se a situação for DESCONHECIDA, renderizar a timeline específica
     if situacao_atual == SkyRedminePlugin::Constants::SituacaoAtual::DESCONHECIDA
       return render_timeline_desconhecida
     end
+
+    tem_retorno_testes = indicadores.qtd_retorno_testes_qs.to_i > 0 
 
     # Determinar qual fluxo usar baseado em se teve retornos de testes
     fluxo = tem_retorno_testes ?
