@@ -428,39 +428,38 @@ module SkyRedminePlugin
       end
 
       # Verificar situações baseadas na última tarefa
+      # Usar o indicador já calculado para determinar se é um retorno do QS
+      is_retorno_do_qs = indicador.qtd_retorno_testes_qs > 0
+
       case ultima_tarefa.equipe_responsavel
       when SkyRedminePlugin::Constants::EquipeResponsavel::DEVEL
-        is_retorno_testes = ultima_tarefa.tracker.name == SkyRedminePlugin::Constants::Trackers::RETORNO_TESTES
-
         case ultima_tarefa.status.name
         when SkyRedminePlugin::Constants::IssueStatus::NOVA
-          return is_retorno_testes ?
+          return is_retorno_do_qs ?
                    SkyRedminePlugin::Constants::SituacaoAtual::ESTOQUE_DEVEL_RETORNO_TESTES :
                    SkyRedminePlugin::Constants::SituacaoAtual::ESTOQUE_DEVEL
         when SkyRedminePlugin::Constants::IssueStatus::EM_ANDAMENTO
-          return is_retorno_testes ?
+          return is_retorno_do_qs ?
                    SkyRedminePlugin::Constants::SituacaoAtual::EM_ANDAMENTO_DEVEL_RETORNO_TESTES :
                    SkyRedminePlugin::Constants::SituacaoAtual::EM_ANDAMENTO_DEVEL
         when SkyRedminePlugin::Constants::IssueStatus::RESOLVIDA
-          return is_retorno_testes ?
+          return is_retorno_do_qs ?
                    SkyRedminePlugin::Constants::SituacaoAtual::AGUARDANDO_ENCAMINHAR_QS_RETORNO_TESTES :
                    SkyRedminePlugin::Constants::SituacaoAtual::AGUARDANDO_ENCAMINHAR_QS
         end
 
       when SkyRedminePlugin::Constants::EquipeResponsavel::QS
-        is_retorno_testes = ultima_tarefa.tracker.name == SkyRedminePlugin::Constants::Trackers::RETORNO_TESTES
-
         case ultima_tarefa.status.name
         when SkyRedminePlugin::Constants::IssueStatus::NOVA
-          return is_retorno_testes ?
+          return is_retorno_do_qs ?
                    SkyRedminePlugin::Constants::SituacaoAtual::ESTOQUE_QS_RETORNO_TESTES :
                    SkyRedminePlugin::Constants::SituacaoAtual::ESTOQUE_QS
         when SkyRedminePlugin::Constants::IssueStatus::EM_ANDAMENTO
-          return is_retorno_testes ?
+          return is_retorno_do_qs ?
                    SkyRedminePlugin::Constants::SituacaoAtual::EM_ANDAMENTO_QS_RETORNO_TESTES :
                    SkyRedminePlugin::Constants::SituacaoAtual::EM_ANDAMENTO_QS
         when SkyRedminePlugin::Constants::IssueStatus::TESTE_OK
-          return is_retorno_testes ?
+          return is_retorno_do_qs ?
                    SkyRedminePlugin::Constants::SituacaoAtual::AGUARDANDO_VERSAO_RETORNO_TESTES :
                    SkyRedminePlugin::Constants::SituacaoAtual::AGUARDANDO_VERSAO
         when SkyRedminePlugin::Constants::IssueStatus::TESTE_NOK

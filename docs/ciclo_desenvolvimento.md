@@ -118,7 +118,7 @@ DEVEL Tarefa ID 100 NOVA -> DEVEL Tarefa ID 100 EM_ANDAMENTO -> DEVEL Tarefa ID 
 - AGUARDANDO_VERSAO: Está com testes concluídos com situação TESTE_OK e aguardando liberação da versão
 - VERSAO_LIBERADA: A versão foi liberada, a tarefa de DEVEL está com situação FECHADA
 
-## FLUXO_IDEAL: define o fluxo ideal das tarefas de DEVEL que devem ir para QS, ou seja, não possuem retorno de testes
+## FLUXO_IDEAL: define o fluxo ideal das tarefas que não possuem retorno de testes do QS
 
 - ESTOQUE_DEVEL: Tarefa que está no estoque, uma tarefa DEVEL com a situação NOVA
 - EM_ANDAMENTO_DEVEL: Tarefa que está em desenvolvimento, uma tarefa DEVEL com a situação EM_ANDAMENTO
@@ -128,7 +128,7 @@ DEVEL Tarefa ID 100 NOVA -> DEVEL Tarefa ID 100 EM_ANDAMENTO -> DEVEL Tarefa ID 
 - AGUARDANDO_VERSAO: Está com testes concluídos com situação TESTE_OK e aguardando liberação da versão
 - VERSAO_LIBERADA: A versão foi liberada, a tarefa de DEVEL está com situação FECHADA
 
-## FLUXO_RETORNO_TESTES: define o fluxo quando há retorno de testes das tarefas de DEVEL que devem ir para QS.
+## FLUXO_RETORNO_TESTES: define o fluxo quando há retorno de testes do QS
 
 - ESTOQUE_DEVEL: Tarefa que está no estoque, uma tarefa DEVEL com a situação NOVA
 - EM_ANDAMENTO_DEVEL: Tarefa que está em desenvolvimento, uma tarefa DEVEL com a situação EM_ANDAMENTO
