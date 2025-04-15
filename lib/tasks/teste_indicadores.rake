@@ -25,6 +25,8 @@ namespace :sky_redmine_plugin do
     criar_tarefa_nova_em_andamento
     criar_tarefa_nova_em_andamento_resolvida
     criar_tarefa_nao_necessita_teste
+    criar_tarefa_teste_ok
+    criar_tarefa_teste_nok
     
     puts "\nTestes concluídos!"
   end
@@ -173,6 +175,38 @@ namespace :sky_redmine_plugin do
     else
       puts "✗ Falha ao atualizar campo personalizado: #{issue.errors.full_messages.join(', ')}"
       return false
+    end
+  end
+  
+  # Cenário 5: Criar uma tarefa, colocá-la em andamento, resolvida e marcar como 'Teste OK'
+  def criar_tarefa_teste_ok
+    puts "\n=== Cenário 5: Criar uma tarefa, colocá-la em andamento, resolvida e marcar como 'Teste OK' ==="
+    issue = criar_tarefa("Teste Cenário 5 - Tarefa Teste OK")
+    
+    if issue
+      if trocar_status(issue, @status_em_andamento, "Status alterado para Em andamento")
+        if trocar_status(issue, @status_resolvida, "Status alterado para Resolvida")
+          if atualizar_campo_personalizado(issue, @cf_teste_no_desenvolvimento, SkyRedminePlugin::Constants::CustomFieldsValues::TESTE_OK, "Campo '#{SkyRedminePlugin::Constants::CustomFields::TESTE_NO_DESENVOLVIMENTO}' alterado para '#{SkyRedminePlugin::Constants::CustomFieldsValues::TESTE_OK}'")
+            verificar_indicador(issue.id, SkyRedminePlugin::Constants::SituacaoAtual::AGUARDANDO_ENCAMINHAR_QS)
+          end
+        end
+      end
+    end
+  end
+  
+  # Cenário 6: Criar uma tarefa, colocá-la em andamento, resolvida e marcar como 'Teste NOK'
+  def criar_tarefa_teste_nok
+    puts "\n=== Cenário 6: Criar uma tarefa, colocá-la em andamento, resolvida e marcar como 'Teste NOK' ==="
+    issue = criar_tarefa("Teste Cenário 6 - Tarefa Teste NOK")
+    
+    if issue
+      if trocar_status(issue, @status_em_andamento, "Status alterado para Em andamento")
+        if trocar_status(issue, @status_resolvida, "Status alterado para Resolvida")
+          if atualizar_campo_personalizado(issue, @cf_teste_no_desenvolvimento, SkyRedminePlugin::Constants::CustomFieldsValues::TESTE_NOK, "Campo '#{SkyRedminePlugin::Constants::CustomFields::TESTE_NO_DESENVOLVIMENTO}' alterado para '#{SkyRedminePlugin::Constants::CustomFieldsValues::TESTE_NOK}'")
+            verificar_indicador(issue.id, SkyRedminePlugin::Constants::SituacaoAtual::AGUARDANDO_ENCAMINHAR_RETORNO_TESTES_DEVEL)
+          end
+        end
+      end
     end
   end
 end 
