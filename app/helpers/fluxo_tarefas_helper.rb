@@ -699,7 +699,7 @@ module FluxoTarefasHelper
       # Se está na segunda parte, ajustar o índice atual para a posição relativa na segunda parte
       indice_segunda_parte = esta_na_primeira_parte ? -1 : indice_atual - (ponto_divisao + 1)
       Rails.logger.info(">>>> indice_segunda_parte: #{indice_segunda_parte} - indice_atual: #{indice_atual} - esta_na_primeira_parte: #{esta_na_primeira_parte} - ponto_divisao: #{ponto_divisao}")
-      html << render_timeline_steps(segunda_parte, indice_segunda_parte, indicadores, !esta_na_primeira_parte, ponto_divisao + 1)
+      html << render_timeline_steps(segunda_parte, indice_segunda_parte, indicadores, !esta_na_primeira_parte)
       html << "</div>"
     else
       # Fluxo normal sem retorno de testes
@@ -737,24 +737,23 @@ module FluxoTarefasHelper
   end
 
   # Método auxiliar para renderizar os passos da timeline
-  def render_timeline_steps(fluxo, indice_atual, indicadores, esta_na_parte_atual = true, offset = 0)
-    Rails.logger.info(">>>> render_timeline_steps: fluxo: #{fluxo} - indice_atual: #{indice_atual} - esta_na_parte_atual: #{esta_na_parte_atual} - offset: #{offset}")
+  def render_timeline_steps(fluxo, indice_atual, indicadores, esta_na_parte_atual = true)
+    Rails.logger.info(">>>> render_timeline_steps: fluxo: #{fluxo} - indice_atual: #{indice_atual} - esta_na_parte_atual: #{esta_na_parte_atual}")
     html = "<div class='timeline'>"
 
     fluxo.each_with_index do |situacao, i|
-      i_ajustado = i + offset
       eh_ultima_etapa = i == fluxo.length - 1
       eh_fechada = indicadores&.equipe_responsavel_atual == SkyRedminePlugin::Constants::EquipeResponsavel::FECHADA
       eh_versao_liberada = situacao == SkyRedminePlugin::Constants::SituacaoAtual::VERSAO_LIBERADA
 
-      Rails.logger.info(">>>> i_ajustado: #{i_ajustado} - eh_ultima_etapa: #{eh_ultima_etapa} - eh_fechada: #{eh_fechada} - eh_versao_liberada: #{eh_versao_liberada}")
-      Rails.logger.info(">>>> if (!esta_na_parte_atual && i_ajustado < indice_atual) || (esta_na_parte_atual && i < indice_atual): #{(!esta_na_parte_atual && i_ajustado < indice_atual) || (esta_na_parte_atual && i < indice_atual)}")
-      Rails.logger.info(">>>> elsif i_ajustado == indice_atual && esta_na_parte_atual: #{i_ajustado == indice_atual && esta_na_parte_atual}")
-      estado = if (!esta_na_parte_atual && i_ajustado < indice_atual) || (esta_na_parte_atual && i < indice_atual)
+      Rails.logger.info(">>>> i: #{i} - eh_ultima_etapa: #{eh_ultima_etapa} - eh_fechada: #{eh_fechada} - eh_versao_liberada: #{eh_versao_liberada}")
+      Rails.logger.info(">>>> if (!esta_na_parte_atual && i < indice_atual) || (esta_na_parte_atual && i < indice_atual): #{(!esta_na_parte_atual && i < indice_atual) || (esta_na_parte_atual && i < indice_atual)}")
+      Rails.logger.info(">>>> elsif i == indice_atual && esta_na_parte_atual: #{i == indice_atual && esta_na_parte_atual}")
+      estado = if (!esta_na_parte_atual && i < indice_atual) || (esta_na_parte_atual && i < indice_atual)
           "completed"
-        elsif eh_versao_liberada && i_ajustado == indice_atual
+        elsif eh_versao_liberada && i == indice_atual
           "completed"  # Se é VERSAO_LIBERADA e é a etapa atual, mostra como concluída
-        elsif i_ajustado == indice_atual && esta_na_parte_atual
+        elsif i == indice_atual && esta_na_parte_atual
           "current"
         elsif eh_ultima_etapa && eh_fechada && indicadores.situacao_atual != SkyRedminePlugin::Constants::SituacaoAtual::VERSAO_LIBERADA
           "warning"
