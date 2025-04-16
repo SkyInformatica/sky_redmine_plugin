@@ -289,8 +289,8 @@ module FluxoTarefasHelper
     indicadores = SkyRedmineIndicadores.find_by(primeira_tarefa_devel_id: tarefas_relacionadas.first.id)
    
     # Gerar HTML dos cards de indicadores
-    cards_html = []
-    #cards_html << obter_css_completo
+    cards_html = ""
+    cards_html << obter_css_completo
     # Adicionar título e link para processar indicadores   
     cards_html << "<div class='description'>"
     cards_html << "<hr>"
