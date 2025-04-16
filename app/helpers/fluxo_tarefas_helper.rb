@@ -289,31 +289,16 @@ module FluxoTarefasHelper
     indicadores = SkyRedmineIndicadores.find_by(primeira_tarefa_devel_id: tarefas_relacionadas.first.id)
    
     # Gerar HTML dos cards de indicadores
-    cards_html = ""
-    cards_html << obter_css_completo
-    # Adicionar título e link para processar indicadores   
-    cards_html << "<div class='description'>"
-    cards_html << "<hr>"
-    cards_html << "<p>"
-    cards_html << "<strong>Indicadores</strong>"
-    cards_html << " ("
-    cards_html << link_to("Processar",
-                          processar_indicadores_tarefa_path(tarefas_relacionadas.first),
-                          method: :post)
-    cards_html << ")"
-    cards_html << "</p>"
-    
+    html = ""
+    html << obter_css_completo
     # Adicionar cards se houver indicadores
-    cards_html << (indicadores ? render_cards_indicadores(indicadores, tarefas_relacionadas) : "")
-
-    # Fechar div description se tiver primeira tarefa
-    cards_html << "</div>" 
+    html << render_cards_indicadores(indicadores, tarefas_relacionadas)
 
     # Gerar HTML do fluxo de tarefas
-    texto_fluxo = gerar_texto_fluxo_html(tarefas_relacionadas, issue.id)
+    html << gerar_texto_fluxo_html(tarefas_relacionadas, issue.id)
 
     # Combinar os dois HTMLs
-    (cards_html + texto_fluxo).html_safe
+    html.html_safe
   end
 
   def gerar_texto_fluxo_html(tarefas, tarefa_atual_id)
@@ -350,11 +335,17 @@ module FluxoTarefasHelper
     secoes << { nome: secao_atual, tarefas: secao_tarefas } unless secao_tarefas.empty?
 
     # Gerar o texto final
-    linhas = []
-    linhas << "<div class='description'>"
-    linhas << "<hr>"
-    linhas << "<p><strong>Fluxo das tarefas</strong></b></p>"
-    #linhas << obter_css_completo
+    html = []
+    html << "<div class='description'>"
+    html << "<hr>"
+    html << "<p>"
+    html << "<p><strong>Fluxo das tarefas</strong>"
+    html << " ("
+    html << link_to("Processar indicadores",
+                          processar_indicadores_tarefa_path(tarefas.first),
+                          method: :post)
+    html << ")"
+    html << "<p>"    
 
     secoes.each do |secao|
       # Calcular tempo total gasto na seção
@@ -362,9 +353,9 @@ module FluxoTarefasHelper
       total_tempo_formatado = format("%.2f", total_tempo)
 
       # Adicionar cabeçalho da seção com tempo total
-      linhas << "<p class='titulo-secao'>#{secao[:nome]} (Tempo gasto: #{total_tempo_formatado}h)</p>"
-      linhas << "<table class='tabela-fluxo-tarefas'>"
-      linhas << "<tr>  
+      html << "<p class='titulo-secao'>#{secao[:nome]} (Tempo gasto: #{total_tempo_formatado}h)</p>"
+      html << "<table class='tabela-fluxo-tarefas'>"
+      html << "<tr>  
         <th>Título</th>  
         <th>Situação</th>  
         <th>Atribuído</th>  
@@ -380,16 +371,16 @@ module FluxoTarefasHelper
       # Adicionar as tarefas
       secao[:tarefas].each do |tarefa|
         linha = formatar_linha_tarefa_html(tarefa, numero_sequencial, tarefa_atual_id)
-        linhas << linha
+        html << linha
         numero_sequencial += 1
       end
 
-      linhas << "</table>"
-      linhas << "<br>"
+      html << "</table>"
+      html << "<br>"
     end
-    linhas << "</div>"
+    html << "</div>" # description
 
-    linhas.join("\n")
+    html.join("\n")
   end
 
   def formatar_linha_tarefa_html(tarefa, numero_sequencial, tarefa_atual_id)
@@ -441,7 +432,22 @@ module FluxoTarefasHelper
   def render_cards_indicadores(indicadores, tarefas_relacionadas)
     # Gerar HTML dos cards
     html = []
-    #html << obter_css_completo
+
+    linhas << "<div class='description'>"
+    linhas << "<hr>"
+    linhas << "<p>"
+    linhas << "<p><strong>Indicadores</strong>"
+    linhas << " ("
+    linhas << link_to("Processar indicadores",
+                          processar_indicadores_tarefa_path(tarefas.first),
+                          method: :post)
+                          linhas << ")"
+    linhas << "<p>"  
+    
+    if indicadores.nil?
+      linhas << "</div>" # description
+      return linhas.join("\n")
+    end
 
     if ((indicadores.tarefa_complementar == "SIM") || (indicadores.tarefa_complementar == SkyRedminePlugin::Constants::TarefasComplementares::TAREFA_NAO_PLANEJADA))
       html << "<div class='indicadores-container'>"
@@ -451,6 +457,8 @@ module FluxoTarefasHelper
         indicadores.tarefa_complementar, 
         "", 
         "Tarefa complementar são tarefas de suporte, planejamento, documentação, videos, etc")
+      html << "</div>" # indicadores-cards
+      html << "</div>" # indicadores-container
     else
       html << "<div class='indicadores-container'>"
       html << "<div class='indicadores-cards'>"
@@ -484,7 +492,7 @@ module FluxoTarefasHelper
           "A versão foi liberada antes da conclusão dos testes"
         )              
       end
-      html << "</div>"
+      html << "</div>" # indicadores-cards
 
       # Cards DEVEL
       html << "<div class='indicadores-grupo'>"
@@ -529,8 +537,8 @@ module FluxoTarefasHelper
         html << render_card("Encaminhar QS", valor_encaminhar, detalhe_encaminhar,
                             "Tempo entre tarefa de desenvolvimento estar resolvida e a tarefa de QS ser encaminhada (considerando somente o primeiro ciclo de desenvolvimento)")
       end
-      html << "</div>"
-      html << "</div>"
+      html << "</div>" # indicadores-cards
+      html << "</div>" # indicadores-grupo
 
       if indicadores.tipo_primeira_tarefa_devel != SkyRedminePlugin::Constants::Trackers::CONVERSAO
         # Cards QS
@@ -580,8 +588,8 @@ module FluxoTarefasHelper
         html << render_card("Fechar testes", valor_fechamento_qs, detalhe_fechamento_qs,
                             "Tempo entre a tarefa de QS ser concluída (TESTE OK) e ser fechada (TESTE OK - FECHADA)")
 
-        html << "</div>"
-        html << "</div>"
+        html << "</div>" # indicadores-cards
+        html << "</div>" # indicadores-grupo
 
         # Cards Liberar versão
         html << "<div class='indicadores-grupo'>"
@@ -611,21 +619,19 @@ module FluxoTarefasHelper
         valor_fechamento = formatar_dias(indicadores.tempo_fechamento_devel)
         html << render_card("Liberar versão após concluir o desenvolvimento", valor_fechamento, detalhe_fechamento,
                             "Tempo entre tarefa de desenvolvimento estar concluída e ser fechada (entre estes tempos existe o tempo das tarefas do QS)")
-        
-        
-        
-        
-       
+      
+        html << "</div>" # indicadores-cards
+        html << "</div>" # indicadores-grupo
       end
-      html << "</div>"
-      html << "</div>"
+      
        # Timeline de situação atual       
       if indicadores.situacao_atual.present?
         html << render_timeline_situacao_atual(indicadores)
       end
 
-      html << "</div>"
+      html << "</div>" # indicadores-container
     end
+    html << "</div>" # description
     html.join("\n")
   end
 
