@@ -433,20 +433,20 @@ module FluxoTarefasHelper
     # Gerar HTML dos cards
     html = []
 
-    linhas << "<div class='description'>"
-    linhas << "<hr>"
-    linhas << "<p>"
-    linhas << "<p><strong>Indicadores</strong>"
-    linhas << " ("
-    linhas << link_to("Processar indicadores",
+    html << "<div class='description'>"
+    html << "<hr>"
+    html << "<p>"
+    html << "<p><strong>Indicadores</strong>"
+    html << " ("
+    html << link_to("Processar indicadores",
                           processar_indicadores_tarefa_path(tarefas.first),
                           method: :post)
-                          linhas << ")"
-    linhas << "<p>"  
+    html << ")"
+    html << "<p>"  
     
     if indicadores.nil?
-      linhas << "</div>" # description
-      return linhas.join("\n")
+      html << "</div>" # description
+      return html.join("\n")
     end
 
     if ((indicadores.tarefa_complementar == "SIM") || (indicadores.tarefa_complementar == SkyRedminePlugin::Constants::TarefasComplementares::TAREFA_NAO_PLANEJADA))
