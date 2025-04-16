@@ -433,6 +433,10 @@ module FluxoTarefasHelper
     # Gerar HTML dos cards
     html = []
 
+    if tarefas_relacionadas.first.tarefa_complementar == SkyRedminePlugin::Constants::TarefasComplementares::TAREFA_NAO_PLANEJADA)
+      return
+    end
+
     html << "<div class='description'>"    
     html << "<p>"
     html << "<p><strong>Indicadores</strong>"
@@ -449,7 +453,8 @@ module FluxoTarefasHelper
     end
 
     html << "<div class='indicadores-container'>"
-    if ((tarefas_relacionadas.first.tarefa_complementar == "SIM") || (tarefas_relacionadas.first.tarefa_complementar == SkyRedminePlugin::Constants::TarefasComplementares::TAREFA_NAO_PLANEJADA))      
+    if tarefas_relacionadas.first.tarefa_complementar == "SIM"
+      
       html << "<div class='indicadores-grupo'>"
       html << "<div class='indicadores-cards'>"
   
