@@ -698,6 +698,7 @@ module FluxoTarefasHelper
       html << "<div class='timeline-row'>"
       # Se está na segunda parte, ajustar o índice atual para a posição relativa na segunda parte
       indice_segunda_parte = esta_na_primeira_parte ? -1 : indice_atual - (ponto_divisao + 1)
+      Rails.logger.info(">>>> indice_segunda_parte: #{indice_segunda_parte} - indice_atual: #{indice_atual} - esta_na_primeira_parte: #{esta_na_primeira_parte} - ponto_divisao: #{ponto_divisao}")
       html << render_timeline_steps(segunda_parte, indice_segunda_parte, indicadores, !esta_na_primeira_parte, ponto_divisao + 1)
       html << "</div>"
     else
