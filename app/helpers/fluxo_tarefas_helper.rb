@@ -633,6 +633,7 @@ module FluxoTarefasHelper
 
   # Método para renderizar a timeline da situação atual
   def render_timeline_situacao_atual(indicadores)
+    Rails.logger.info(">>>> render_timeline_situacao_atual: #{indicadores.situacao_atual}")
     situacao_atual = indicadores.situacao_atual
     return "" unless situacao_atual
 
@@ -660,6 +661,9 @@ module FluxoTarefasHelper
     # Encontrar o índice da situação atual no fluxo
     indice_atual = fluxo.index(situacao_atual)
     return "" unless indice_atual
+
+    Rails.logger.info(">>>> fluxo: #{fluxo}")
+    Rails.logger.info(">>>> indice_atual: #{indice_atual}")
 
     # Preparar HTML
     html = "<div class='indicadores-grupo'>"
@@ -731,6 +735,7 @@ module FluxoTarefasHelper
 
   # Método auxiliar para renderizar os passos da timeline
   def render_timeline_steps(fluxo, indice_atual, indicadores, esta_na_parte_atual = true, offset = 0)
+    Rails.logger.info(">>>> render_timeline_steps: #{fluxo} - #{indice_atual} - #{indicadores} - #{esta_na_parte_atual} - #{offset}")
     html = "<div class='timeline'>"
 
     fluxo.each_with_index do |situacao, i|
@@ -752,6 +757,7 @@ module FluxoTarefasHelper
           "future"
         end
 
+      Rails.logger.info(">>>> situacao: #{situacao} - estado: #{estado}")
       texto_situacao = situacao.gsub("_", " ")
 
       # Adicionar o contador de retornos se for ESTOQUE_DEVEL_RETORNO_TESTES
