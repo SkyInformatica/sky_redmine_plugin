@@ -318,7 +318,7 @@ module SkyRedminePlugin
           SkyRedminePlugin::Constants::SituacaoAtual::ESTOQUE_DEVEL => "01",
           SkyRedminePlugin::Constants::SituacaoAtual::EM_ANDAMENTO_DEVEL => "02",
           SkyRedminePlugin::Constants::SituacaoAtual::AGUARDANDO_TESTES_DEVEL => "03",
-          SkyRedminePlugin::Constants::SituacaoAtual::AGUARDANDO_ENCAMINHAR_RETORNO_TESTES_DEVEL => "03.1",
+          SkyRedminePlugin::Constants::SituacaoAtual::AGUARDANDO_ENCAMINHAR_RETORNO_TESTES_DEVEL => "03",
           SkyRedminePlugin::Constants::SituacaoAtual::AGUARDANDO_ENCAMINHAR_QS => "04",
           SkyRedminePlugin::Constants::SituacaoAtual::ESTOQUE_QS => "05",
           SkyRedminePlugin::Constants::SituacaoAtual::EM_ANDAMENTO_QS => "06",
