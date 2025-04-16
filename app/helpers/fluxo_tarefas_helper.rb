@@ -434,7 +434,7 @@ module FluxoTarefasHelper
     html = []
 
     if tarefas_relacionadas.first.tarefa_complementar == SkyRedminePlugin::Constants::TarefasComplementares::TAREFA_NAO_PLANEJADA)
-      return
+      return html.join("\n")
     end
 
     html << "<div class='description'>"    
