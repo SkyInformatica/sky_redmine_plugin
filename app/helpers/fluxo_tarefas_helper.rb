@@ -613,11 +613,12 @@ module FluxoTarefasHelper
                             "Tempo entre tarefa de desenvolvimento estar concluída e ser fechada (entre estes tempos existe o tempo das tarefas do QS)")
         
         
-        html << "</div>"
-        html << "</div>"
+        
         
        
       end
+      html << "</div>"
+      html << "</div>"
        # Timeline de situação atual       
       if indicadores.situacao_atual.present?
         html << render_timeline_situacao_atual(indicadores)
