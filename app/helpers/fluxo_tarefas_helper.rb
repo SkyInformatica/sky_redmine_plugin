@@ -696,7 +696,7 @@ module FluxoTarefasHelper
 
       # Renderizar a segunda linha da timeline
       html << "<div class='timeline-row'>"
-      html << render_timeline_steps(segunda_parte, indice_atual, indicadores, !esta_na_primeira_parte, primeira_parte.length)
+      html << render_timeline_steps(segunda_parte, indice_atual - primeira_parte.length, indicadores, !esta_na_primeira_parte, primeira_parte.length)
       html << "</div>"
     else
       # Fluxo normal sem retorno de testes
@@ -746,6 +746,7 @@ module FluxoTarefasHelper
 
       Rails.logger.info(">>>> i_ajustado: #{i_ajustado} - eh_ultima_etapa: #{eh_ultima_etapa} - eh_fechada: #{eh_fechada} - eh_versao_liberada: #{eh_versao_liberada}")
       Rails.logger.info(">>>> if (!esta_na_parte_atual && i_ajustado < indice_atual) || (esta_na_parte_atual && i < indice_atual): #{(!esta_na_parte_atual && i_ajustado < indice_atual) || (esta_na_parte_atual && i < indice_atual)}")
+      Rails.logger.info(">>>> elsif i_ajustado == indice_atual && esta_na_parte_atual: #{i_ajustado == indice_atual && esta_na_parte_atual}")
       estado = if (!esta_na_parte_atual && i_ajustado < indice_atual) || (esta_na_parte_atual && i < indice_atual)
           "completed"
         elsif eh_versao_liberada && i_ajustado == indice_atual
