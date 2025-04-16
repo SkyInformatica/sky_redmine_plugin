@@ -433,8 +433,7 @@ module FluxoTarefasHelper
     # Gerar HTML dos cards
     html = []
 
-    html << "<div class='description'>"
-    html << "<hr>"
+    html << "<div class='description'>"    
     html << "<p>"
     html << "<p><strong>Indicadores</strong>"
     html << " ("
@@ -449,8 +448,10 @@ module FluxoTarefasHelper
       return html.join("\n")
     end
 
+    html << "<div class='indicadores-container'>"
     if ((indicadores.tarefa_complementar == "SIM") || (indicadores.tarefa_complementar == SkyRedminePlugin::Constants::TarefasComplementares::TAREFA_NAO_PLANEJADA))
-      html << "<div class='indicadores-container'>"
+      
+      html << "<div class='indicadores-grupo'>"
       html << "<div class='indicadores-cards'>"
   
       html << render_card("Tarefa complementar", 
@@ -458,9 +459,9 @@ module FluxoTarefasHelper
         "", 
         "Tarefa complementar são tarefas de suporte, planejamento, documentação, videos, etc")
       html << "</div>" # indicadores-cards
-      html << "</div>" # indicadores-container
-    else
-      html << "<div class='indicadores-container'>"
+      html << "</div>" # indicadores-grupo      
+    else      
+      html << "<div class='indicadores-grupo'>"
       html << "<div class='indicadores-cards'>"
   
         # Informações gerais
@@ -493,6 +494,7 @@ module FluxoTarefasHelper
         )              
       end
       html << "</div>" # indicadores-cards
+      html << "</div>" # indicadores-grupo
 
       # Cards DEVEL
       html << "<div class='indicadores-grupo'>"
@@ -628,9 +630,8 @@ module FluxoTarefasHelper
       if indicadores.situacao_atual.present?
         html << render_timeline_situacao_atual(indicadores)
       end
-
-      html << "</div>" # indicadores-container
     end
+    html << "</div>" # indicadores-container
     html << "</div>" # description
     html.join("\n")
   end
