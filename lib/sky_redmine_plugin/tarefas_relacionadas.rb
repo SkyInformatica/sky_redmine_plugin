@@ -110,7 +110,7 @@ module SkyRedminePlugin
         end
 
         teste_qs = obter_valor_campo_personalizado(tarefa, SkyRedminePlugin::Constants::CustomFields::TESTE_QS)
-        if (teste_qs.present? && (teste_qs != SkyRedminePlugin::Constants::CustomFieldsValues::NO_NECESSITA_TESTE))
+        if (teste_qs.present? && (teste_qs != SkyRedminePlugin::Constants::CustomFieldsValues::NAO_NECESSITA_TESTE))
           teste_qs = ""
         end
         tarefa.instance_variable_set(:@teste_qs, teste_qs)
