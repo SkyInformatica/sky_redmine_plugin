@@ -466,7 +466,7 @@ module FluxoTarefasHelper
         # Informações gerais
       html << render_card("Responsável atual", 
         indicadores.equipe_responsavel_atual, 
-        "", 
+        indicadores.situacao_atual, 
         "Equipe responsável pela tarefa")
 
       # Card de retorno de testes
@@ -489,21 +489,7 @@ module FluxoTarefasHelper
         "Versão liberada antes dos testes",
         indicadores.tarefa_fechada_sem_testes || "NAO", "",
         "A versão foi liberada antes da conclusão dos testes"
-      )
-
-      html << render_card(
-        "Etapa atual",
-        indicadores.situacao_atual,
-        "",
-        "Etapa atual da tarefa"
-      )
-
-      html << render_card(
-        "Tarefa complementar",
-        indicadores.tarefa_complementar,
-        "",
-        "Tarefa complementar são tarefas de suporte, planejamento, documentação, videos, etc"
-      )
+      )      
 
       html << "</div>"
 
