@@ -83,7 +83,7 @@ module SkyRedminePlugin
     end
 
     module TarefasComplementares
-      TAREFA_NAO_PLANEJADA = "Tarefa não planejada"
+      TAREFA_NAO_PLANEJADA = "Tarefas nao planejadas"
     end
 
     module FluxoDasTarefas

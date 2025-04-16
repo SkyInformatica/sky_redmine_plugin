@@ -43,6 +43,10 @@ module SkyRedminePlugin
         primeira_tarefa_devel = tarefas_devel.first
         ultima_tarefa_devel = tarefas_devel.last
 
+        if primeira_tarefa_devel.tarefa_complementar == SkyRedminePlugin::Constants::TarefasComplementares::TAREFA_NAO_PLANEJADA
+          return
+        end
+
         # Encontrar ou inicializar o indicador
         indicador = SkyRedmineIndicadores.find_or_initialize_by(primeira_tarefa_devel_id: primeira_tarefa_devel.id)
 
@@ -62,186 +66,185 @@ module SkyRedminePlugin
         indicador.tempo_gasto_devel = tarefas_devel.sum { |t| t.spent_hours.to_f }
         indicador.origem_primeira_tarefa_devel = SkyRedminePlugin::TarefasRelacionadas.obter_valor_campo_personalizado(primeira_tarefa_devel, "Origem")
         indicador.skynet_primeira_tarefa_devel = SkyRedminePlugin::TarefasRelacionadas.obter_valor_campo_personalizado(primeira_tarefa_devel, "Sky.NET")
-
-        # Contar retornos de testes baseado no fluxo entre projetos
-        qtd_retorno_testes_qs = 0
-        qtd_retorno_testes_devel = 0
-        tarefas_relacionadas.each_with_index do |tarefa, index|
-          next if index == 0 # Pula a primeira tarefa
-
-          # Se a tarefa atual é DEVEL e a anterior era QS, é um retorno de testes do QS
-          if tarefa.equipe_responsavel == SkyRedminePlugin::Constants::EquipeResponsavel::DEVEL &&
-             tarefas_relacionadas[index - 1].equipe_responsavel == SkyRedminePlugin::Constants::EquipeResponsavel::QS
-            qtd_retorno_testes_qs += 1
-          end
-
-          # Se a tarefa atual é DEVEL e é um retorno de testes, e a anterior foi fechada com FECHADA_CONTINUA_RETORNO_TESTES
-          if tarefa.equipe_responsavel == SkyRedminePlugin::Constants::EquipeResponsavel::DEVEL &&
-             tarefa.tracker.name == SkyRedminePlugin::Constants::Trackers::RETORNO_TESTES &&
-             tarefas_relacionadas[index - 1].status.name == SkyRedminePlugin::Constants::IssueStatus::FECHADA_CONTINUA_RETORNO_TESTES
-            qtd_retorno_testes_devel += 1
-          end
-        end
-        indicador.qtd_retorno_testes_qs = qtd_retorno_testes_qs
-        indicador.qtd_retorno_testes_devel = qtd_retorno_testes_devel
-
-        # Usar as datas já calculadas pela função obter_lista_tarefas_relacionadas
         indicador.data_criacao_ou_atendimento_primeira_tarefa_devel = primeira_tarefa_devel.data_criacao
         indicador.data_resolvida_ultima_tarefa_devel = ultima_tarefa_devel.data_resolvida
         indicador.data_fechamento_ultima_tarefa_devel = ultima_tarefa_devel.data_fechada
 
-        # Separar tarefas DEVEL em ciclos de desenvolvimento
-        ciclos_devel = SkyRedminePlugin::TarefasRelacionadas.separar_ciclos_devel(tarefas_relacionadas)
-        primeiro_ciclo_devel = ciclos_devel.first
+        if indicador.tarefa_complementar == 'NAO'
+          # Contar retornos de testes baseado no fluxo entre projetos
+          qtd_retorno_testes_qs = 0
+          qtd_retorno_testes_devel = 0
+          tarefas_relacionadas.each_with_index do |tarefa, index|
+            next if index == 0 # Pula a primeira tarefa
 
-        # Processar data de início em andamento usando apenas o primeiro ciclo
-        data_andamento = nil
-        primeiro_ciclo_devel.each do |tarefa|
-          if tarefa.data_em_andamento.present?
-            data_andamento = tarefa.data_em_andamento
-            break
+            # Se a tarefa atual é DEVEL e a anterior era QS, é um retorno de testes do QS
+            if tarefa.equipe_responsavel == SkyRedminePlugin::Constants::EquipeResponsavel::DEVEL &&
+              tarefas_relacionadas[index - 1].equipe_responsavel == SkyRedminePlugin::Constants::EquipeResponsavel::QS
+              qtd_retorno_testes_qs += 1
+            end
+
+            # Se a tarefa atual é DEVEL e é um retorno de testes, e a anterior foi fechada com FECHADA_CONTINUA_RETORNO_TESTES
+            if tarefa.equipe_responsavel == SkyRedminePlugin::Constants::EquipeResponsavel::DEVEL &&
+              tarefa.tracker.name == SkyRedminePlugin::Constants::Trackers::RETORNO_TESTES &&
+              tarefas_relacionadas[index - 1].status.name == SkyRedminePlugin::Constants::IssueStatus::FECHADA_CONTINUA_RETORNO_TESTES
+              qtd_retorno_testes_devel += 1
+            end
           end
-        end
-        indicador.data_andamento_primeira_tarefa_devel = data_andamento
+          indicador.qtd_retorno_testes_qs = qtd_retorno_testes_qs
+          indicador.qtd_retorno_testes_devel = qtd_retorno_testes_devel
 
-        # Calcular tempos DEVEL
-        if indicador.data_criacao_ou_atendimento_primeira_tarefa_devel.present? && indicador.data_andamento_primeira_tarefa_devel.present?
-          indicador.tempo_andamento_devel = (indicador.data_andamento_primeira_tarefa_devel - indicador.data_criacao_ou_atendimento_primeira_tarefa_devel).to_i
-        end
+          # Separar tarefas DEVEL em ciclos de desenvolvimento
+          ciclos_devel = SkyRedminePlugin::TarefasRelacionadas.separar_ciclos_devel(tarefas_relacionadas)
+          primeiro_ciclo_devel = ciclos_devel.first
 
-        if indicador.data_andamento_primeira_tarefa_devel.present? && indicador.data_resolvida_ultima_tarefa_devel.present?
-          indicador.tempo_resolucao_devel = (indicador.data_resolvida_ultima_tarefa_devel - indicador.data_andamento_primeira_tarefa_devel).to_i
-        end
-
-        if indicador.data_resolvida_ultima_tarefa_devel.present? && indicador.data_fechamento_ultima_tarefa_devel.present?
-          indicador.tempo_fechamento_devel = (indicador.data_fechamento_ultima_tarefa_devel - indicador.data_resolvida_ultima_tarefa_devel).to_i
-        end
-
-        # Processar dados QS
-        unless tarefas_qs.empty?
-          primeira_tarefa_qs = tarefas_qs.first
-          ultima_tarefa_qs = tarefas_qs.last
-
-          indicador.primeira_tarefa_qs_id = primeira_tarefa_qs.id
-          indicador.ultima_tarefa_qs_id = ultima_tarefa_qs.id
-          indicador.sprint_primeira_tarefa_qs = primeira_tarefa_qs.fixed_version.present? ? primeira_tarefa_qs.fixed_version.name : nil
-          indicador.sprint_ultima_tarefa_qs = ultima_tarefa_qs.fixed_version.present? ? ultima_tarefa_qs.fixed_version.name : nil
-          indicador.projeto_primeira_tarefa_qs = primeira_tarefa_qs.project.name
-
-          indicador.tempo_estimado_qs = tarefas_qs.sum { |t| t.estimated_hours.to_f }
-          indicador.tempo_gasto_qs = tarefas_qs.sum { |t| t.spent_hours.to_f }
-          indicador.status_ultima_tarefa_qs = ultima_tarefa_qs.status.name
-          indicador.houve_teste_nok = tarefas_qs.any? { |t| [SkyRedminePlugin::Constants::IssueStatus::TESTE_NOK, SkyRedminePlugin::Constants::IssueStatus::TESTE_NOK_FECHADA].include?(t.status.name) }
-          indicador.data_criacao_primeira_tarefa_qs = primeira_tarefa_qs.created_on.to_date
-
-          # Separar tarefas QS em ciclos de teste
-          ciclos_qs = SkyRedminePlugin::TarefasRelacionadas.separar_ciclos_qs(tarefas_relacionadas)
-          primeiro_ciclo_qs = ciclos_qs.first
-
-          # Processar data de início em andamento QS usando apenas o primeiro ciclo
-          data_andamento_qs = nil
-          primeiro_ciclo_qs.each do |tarefa|
+          # Processar data de início em andamento usando apenas o primeiro ciclo
+          data_andamento = nil
+          primeiro_ciclo_devel.each do |tarefa|
             if tarefa.data_em_andamento.present?
-              data_andamento_qs = tarefa.data_em_andamento
+              data_andamento = tarefa.data_em_andamento
               break
             end
           end
-          indicador.data_andamento_primeira_tarefa_qs = data_andamento_qs
+          indicador.data_andamento_primeira_tarefa_devel = data_andamento
 
-          # Usar as datas já calculadas pela função obter_lista_tarefas_relacionadas
-          indicador.data_resolvida_ultima_tarefa_qs = ultima_tarefa_qs.data_resolvida
-          indicador.data_fechamento_ultima_tarefa_qs = ultima_tarefa_qs.data_fechada
-
-          # Calcular tempos QS
-          if indicador.data_criacao_primeira_tarefa_qs.present? && indicador.data_andamento_primeira_tarefa_qs.present?
-            indicador.tempo_andamento_qs = (indicador.data_andamento_primeira_tarefa_qs - indicador.data_criacao_primeira_tarefa_qs).to_i
+          # Calcular tempos DEVEL
+          if indicador.data_criacao_ou_atendimento_primeira_tarefa_devel.present? && indicador.data_andamento_primeira_tarefa_devel.present?
+            indicador.tempo_andamento_devel = (indicador.data_andamento_primeira_tarefa_devel - indicador.data_criacao_ou_atendimento_primeira_tarefa_devel).to_i
           end
 
-          if indicador.data_andamento_primeira_tarefa_qs.present? && indicador.data_resolvida_ultima_tarefa_qs.present?
-            indicador.tempo_resolucao_qs = (indicador.data_resolvida_ultima_tarefa_qs - indicador.data_andamento_primeira_tarefa_qs).to_i
+          if indicador.data_andamento_primeira_tarefa_devel.present? && indicador.data_resolvida_ultima_tarefa_devel.present?
+            indicador.tempo_resolucao_devel = (indicador.data_resolvida_ultima_tarefa_devel - indicador.data_andamento_primeira_tarefa_devel).to_i
           end
 
-          if indicador.data_resolvida_ultima_tarefa_qs.present? && indicador.data_fechamento_ultima_tarefa_qs.present?
-            indicador.tempo_fechamento_qs = (indicador.data_fechamento_ultima_tarefa_qs - indicador.data_resolvida_ultima_tarefa_qs).to_i
+          if indicador.data_resolvida_ultima_tarefa_devel.present? && indicador.data_fechamento_ultima_tarefa_devel.present?
+            indicador.tempo_fechamento_devel = (indicador.data_fechamento_ultima_tarefa_devel - indicador.data_resolvida_ultima_tarefa_devel).to_i
           end
 
-          # Calcular tempo para encaminhar para QS (apenas no primeiro ciclo)
-          if primeiro_ciclo_devel.last.data_resolvida.present? && indicador.data_criacao_primeira_tarefa_qs.present?
-            indicador.tempo_para_encaminhar_qs = indicador.data_criacao_primeira_tarefa_qs - primeiro_ciclo_devel.last.data_resolvida
-          end
-
-          # Calcular tempo entre conclusão dos testes e liberação da versão
-          if indicador.data_resolvida_ultima_tarefa_qs.present? && indicador.data_fechamento_ultima_tarefa_devel.present?
-            indicador.tempo_concluido_testes_versao_liberada = (indicador.data_fechamento_ultima_tarefa_devel - indicador.data_resolvida_ultima_tarefa_qs).to_i
-          end
-        end
-
-        # Determinar o local atual da tarefa
-        # Se a última tarefa DEVEL está fechada, está FECHADA
-        ultima_tarefa_devel = tarefas_devel.last
-        if [SkyRedminePlugin::Constants::IssueStatus::FECHADA].include?(ultima_tarefa_devel.status.name)
-          indicador.equipe_responsavel_atual = SkyRedminePlugin::Constants::EquipeResponsavel::FECHADA
-        else
-          if tarefas_qs.empty?
-            # Se não existe tarefa QS, está no DEVEL
-            indicador.equipe_responsavel_atual = SkyRedminePlugin::Constants::EquipeResponsavel::DEVEL
-          else
+          # Processar dados QS
+          unless tarefas_qs.empty?
+            primeira_tarefa_qs = tarefas_qs.first
             ultima_tarefa_qs = tarefas_qs.last
-            if [SkyRedminePlugin::Constants::IssueStatus::TESTE_OK, SkyRedminePlugin::Constants::IssueStatus::TESTE_NOK,
-                SkyRedminePlugin::Constants::IssueStatus::TESTE_OK_FECHADA, SkyRedminePlugin::Constants::IssueStatus::TESTE_NOK_FECHADA].include?(ultima_tarefa_qs.status.name)
+
+            indicador.primeira_tarefa_qs_id = primeira_tarefa_qs.id
+            indicador.ultima_tarefa_qs_id = ultima_tarefa_qs.id
+            indicador.sprint_primeira_tarefa_qs = primeira_tarefa_qs.fixed_version.present? ? primeira_tarefa_qs.fixed_version.name : nil
+            indicador.sprint_ultima_tarefa_qs = ultima_tarefa_qs.fixed_version.present? ? ultima_tarefa_qs.fixed_version.name : nil
+            indicador.projeto_primeira_tarefa_qs = primeira_tarefa_qs.project.name
+
+            indicador.tempo_estimado_qs = tarefas_qs.sum { |t| t.estimated_hours.to_f }
+            indicador.tempo_gasto_qs = tarefas_qs.sum { |t| t.spent_hours.to_f }
+            indicador.status_ultima_tarefa_qs = ultima_tarefa_qs.status.name
+            indicador.houve_teste_nok = tarefas_qs.any? { |t| [SkyRedminePlugin::Constants::IssueStatus::TESTE_NOK, SkyRedminePlugin::Constants::IssueStatus::TESTE_NOK_FECHADA].include?(t.status.name) }
+            indicador.data_criacao_primeira_tarefa_qs = primeira_tarefa_qs.created_on.to_date
+
+            # Separar tarefas QS em ciclos de teste
+            ciclos_qs = SkyRedminePlugin::TarefasRelacionadas.separar_ciclos_qs(tarefas_relacionadas)
+            primeiro_ciclo_qs = ciclos_qs.first
+
+            # Processar data de início em andamento QS usando apenas o primeiro ciclo
+            data_andamento_qs = nil
+            primeiro_ciclo_qs.each do |tarefa|
+              if tarefa.data_em_andamento.present?
+                data_andamento_qs = tarefa.data_em_andamento
+                break
+              end
+            end
+            indicador.data_andamento_primeira_tarefa_qs = data_andamento_qs
+
+            # Usar as datas já calculadas pela função obter_lista_tarefas_relacionadas
+            indicador.data_resolvida_ultima_tarefa_qs = ultima_tarefa_qs.data_resolvida
+            indicador.data_fechamento_ultima_tarefa_qs = ultima_tarefa_qs.data_fechada
+
+            # Calcular tempos QS
+            if indicador.data_criacao_primeira_tarefa_qs.present? && indicador.data_andamento_primeira_tarefa_qs.present?
+              indicador.tempo_andamento_qs = (indicador.data_andamento_primeira_tarefa_qs - indicador.data_criacao_primeira_tarefa_qs).to_i
+            end
+
+            if indicador.data_andamento_primeira_tarefa_qs.present? && indicador.data_resolvida_ultima_tarefa_qs.present?
+              indicador.tempo_resolucao_qs = (indicador.data_resolvida_ultima_tarefa_qs - indicador.data_andamento_primeira_tarefa_qs).to_i
+            end
+
+            if indicador.data_resolvida_ultima_tarefa_qs.present? && indicador.data_fechamento_ultima_tarefa_qs.present?
+              indicador.tempo_fechamento_qs = (indicador.data_fechamento_ultima_tarefa_qs - indicador.data_resolvida_ultima_tarefa_qs).to_i
+            end
+
+            # Calcular tempo para encaminhar para QS (apenas no primeiro ciclo)
+            if primeiro_ciclo_devel.last.data_resolvida.present? && indicador.data_criacao_primeira_tarefa_qs.present?
+              indicador.tempo_para_encaminhar_qs = indicador.data_criacao_primeira_tarefa_qs - primeiro_ciclo_devel.last.data_resolvida
+            end
+
+            # Calcular tempo entre conclusão dos testes e liberação da versão
+            if indicador.data_resolvida_ultima_tarefa_qs.present? && indicador.data_fechamento_ultima_tarefa_devel.present?
+              indicador.tempo_concluido_testes_versao_liberada = (indicador.data_fechamento_ultima_tarefa_devel - indicador.data_resolvida_ultima_tarefa_qs).to_i
+            end
+          end
+
+          # Determinar o local atual da tarefa
+          # Se a última tarefa DEVEL está fechada, está FECHADA
+          ultima_tarefa_devel = tarefas_devel.last
+          if [SkyRedminePlugin::Constants::IssueStatus::FECHADA].include?(ultima_tarefa_devel.status.name)
+            indicador.equipe_responsavel_atual = SkyRedminePlugin::Constants::EquipeResponsavel::FECHADA
+          else
+            if tarefas_qs.empty?
+              # Se não existe tarefa QS, está no DEVEL
               indicador.equipe_responsavel_atual = SkyRedminePlugin::Constants::EquipeResponsavel::DEVEL
             else
-              # Se existe tarefa QS e não está fechada, está no QS
-              indicador.equipe_responsavel_atual = SkyRedminePlugin::Constants::EquipeResponsavel::QS
-            end
-          end
-        end
-
-        # Determinar se a tarefa foi fechada sem testes
-        if indicador.data_fechamento_ultima_tarefa_devel.present?
-          if tarefas_qs.empty?
-            # Se não existe tarefa QS e a última tarefa DEVEL está fechada
-            indicador.tarefa_fechada_sem_testes = "SIM"
-          else
-            # Se existe tarefa QS, verificar se a tarefa DEVEL foi fechada antes da tarefa QS
-            if indicador.data_fechamento_ultima_tarefa_qs.present?
-              if indicador.data_fechamento_ultima_tarefa_devel < indicador.data_fechamento_ultima_tarefa_qs
-                # Se a tarefa DEVEL foi fechada antes da tarefa QS
-                indicador.tarefa_fechada_sem_testes = "SIM"
+              ultima_tarefa_qs = tarefas_qs.last
+              if [SkyRedminePlugin::Constants::IssueStatus::TESTE_OK, SkyRedminePlugin::Constants::IssueStatus::TESTE_NOK,
+                  SkyRedminePlugin::Constants::IssueStatus::TESTE_OK_FECHADA, SkyRedminePlugin::Constants::IssueStatus::TESTE_NOK_FECHADA].include?(ultima_tarefa_qs.status.name)
+                indicador.equipe_responsavel_atual = SkyRedminePlugin::Constants::EquipeResponsavel::DEVEL
               else
-                # Se a tarefa DEVEL foi fechada depois da tarefa QS
-                indicador.tarefa_fechada_sem_testes = "NAO"
+                # Se existe tarefa QS e não está fechada, está no QS
+                indicador.equipe_responsavel_atual = SkyRedminePlugin::Constants::EquipeResponsavel::QS
               end
-            else
-              # Se a tarefa QS ainda não foi fechada
-              indicador.tarefa_fechada_sem_testes = "SIM"
             end
           end
-        end
 
-        # Calcular tempo total para liberar versão
-        if indicador.data_criacao_ou_atendimento_primeira_tarefa_devel && indicador.data_fechamento_ultima_tarefa_devel
-          indicador.tempo_total_liberar_versao = (indicador.data_fechamento_ultima_tarefa_devel - indicador.data_criacao_ou_atendimento_primeira_tarefa_devel).to_i
-        end
+          # Determinar se a tarefa foi fechada sem testes
+          if indicador.data_fechamento_ultima_tarefa_devel.present?
+            if tarefas_qs.empty?
+              # Se não existe tarefa QS e a última tarefa DEVEL está fechada
+              indicador.tarefa_fechada_sem_testes = "SIM"
+            else
+              # Se existe tarefa QS, verificar se a tarefa DEVEL foi fechada antes da tarefa QS
+              if indicador.data_fechamento_ultima_tarefa_qs.present?
+                if indicador.data_fechamento_ultima_tarefa_devel < indicador.data_fechamento_ultima_tarefa_qs
+                  # Se a tarefa DEVEL foi fechada antes da tarefa QS
+                  indicador.tarefa_fechada_sem_testes = "SIM"
+                else
+                  # Se a tarefa DEVEL foi fechada depois da tarefa QS
+                  indicador.tarefa_fechada_sem_testes = "NAO"
+                end
+              else
+                # Se a tarefa QS ainda não foi fechada
+                indicador.tarefa_fechada_sem_testes = "SIM"
+              end
+            end
+          end
 
-        # Calcular tempo total de desenvolvimento
-        if indicador.data_criacao_ou_atendimento_primeira_tarefa_devel && indicador.data_resolvida_ultima_tarefa_devel
-          indicador.tempo_total_devel = (indicador.data_resolvida_ultima_tarefa_devel - indicador.data_criacao_ou_atendimento_primeira_tarefa_devel).to_i
-        end
+          # Calcular tempo total para liberar versão
+          if indicador.data_criacao_ou_atendimento_primeira_tarefa_devel && indicador.data_fechamento_ultima_tarefa_devel
+            indicador.tempo_total_liberar_versao = (indicador.data_fechamento_ultima_tarefa_devel - indicador.data_criacao_ou_atendimento_primeira_tarefa_devel).to_i
+          end
 
-        # Calcular tempo total de testes
-        if indicador.data_criacao_primeira_tarefa_qs && indicador.data_resolvida_ultima_tarefa_qs &&
-           [SkyRedminePlugin::Constants::IssueStatus::TESTE_OK,
-            SkyRedminePlugin::Constants::IssueStatus::TESTE_OK_FECHADA].include?(ultima_tarefa_qs.status.name)
-          indicador.tempo_total_testes = (indicador.data_resolvida_ultima_tarefa_qs - indicador.data_criacao_primeira_tarefa_qs).to_i
-        end
+          # Calcular tempo total de desenvolvimento
+          if indicador.data_criacao_ou_atendimento_primeira_tarefa_devel && indicador.data_resolvida_ultima_tarefa_devel
+            indicador.tempo_total_devel = (indicador.data_resolvida_ultima_tarefa_devel - indicador.data_criacao_ou_atendimento_primeira_tarefa_devel).to_i
+          end
 
-        # Calcular tempo total desde a criação da tarefa até a conclusão dos testes
-        if indicador.data_criacao_ou_atendimento_primeira_tarefa_devel && indicador.data_resolvida_ultima_tarefa_qs
-          indicador.tempo_total_devel_concluir_testes = (indicador.data_resolvida_ultima_tarefa_qs.to_date - indicador.data_criacao_ou_atendimento_primeira_tarefa_devel.to_date).to_i
-        end
+          # Calcular tempo total de testes
+          if indicador.data_criacao_primeira_tarefa_qs && indicador.data_resolvida_ultima_tarefa_qs &&
+            [SkyRedminePlugin::Constants::IssueStatus::TESTE_OK,
+              SkyRedminePlugin::Constants::IssueStatus::TESTE_OK_FECHADA].include?(ultima_tarefa_qs.status.name)
+            indicador.tempo_total_testes = (indicador.data_resolvida_ultima_tarefa_qs - indicador.data_criacao_primeira_tarefa_qs).to_i
+          end
 
-        if indicador.tarefa_complementar == "NAO"          
+          # Calcular tempo total desde a criação da tarefa até a conclusão dos testes
+          if indicador.data_criacao_ou_atendimento_primeira_tarefa_devel && indicador.data_resolvida_ultima_tarefa_qs
+            indicador.tempo_total_devel_concluir_testes = (indicador.data_resolvida_ultima_tarefa_qs.to_date - indicador.data_criacao_ou_atendimento_primeira_tarefa_devel.to_date).to_i
+          end
+
+        
           # Determinar a situação atual do desenvolvimento
           indicador.situacao_atual = determinar_situacao_atual(indicador, tarefas_relacionadas, tarefas_devel, tarefas_qs, ciclos_devel, ciclos_qs)
           # Atualizar as tags das tarefas com a situação atual
