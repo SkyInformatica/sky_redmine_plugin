@@ -696,7 +696,7 @@ module FluxoTarefasHelper
 
       # Renderizar a segunda linha da timeline
       html << "<div class='timeline-row'>"
-      html << render_timeline_steps(segunda_parte, indice_atual - primeira_parte.length, indicadores, !esta_na_primeira_parte, primeira_parte.length)
+      html << render_timeline_steps(segunda_parte, indice_atual, indicadores, !esta_na_primeira_parte, primeira_parte.length)
       html << "</div>"
     else
       # Fluxo normal sem retorno de testes
