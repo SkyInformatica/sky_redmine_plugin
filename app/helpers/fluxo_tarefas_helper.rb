@@ -764,17 +764,20 @@ module FluxoTarefasHelper
       Rails.logger.info(">>>> situacao: #{situacao} - estado: #{estado}")
       texto_situacao = situacao.gsub("_", " ")
 
-      # Adicionar o contador de retornos se for ESTOQUE_DEVEL_RETORNO_TESTES
-      contador_retornos = if situacao == SkyRedminePlugin::Constants::SituacaoAtual::ESTOQUE_DEVEL_RETORNO_TESTES &&
-                             indicadores&.qtd_retorno_testes_qs.to_i > 0
-          
-        else
-          ""
-        end
+      # Adicionar o contador de retornos se for ESTOQUE_DEVEL_RETORNO_TESTES ou AGUARDANDO_ENCAMINHAR_RETORNO_TESTES_DEVEL
+      if situacao == SkyRedminePlugin::Constants::SituacaoAtual::ESTOQUE_DEVEL_RETORNO_TESTES &&
+         indicadores&.qtd_retorno_testes_qs.to_i > 0
+        texto_situacao += " (#{indicadores.qtd_retorno_testes_qs}x)"
+      elsif situacao == SkyRedminePlugin::Constants::SituacaoAtual::AGUARDANDO_ENCAMINHAR_RETORNO_TESTES_DEVEL &&
+            indicadores&.qtd_retorno_testes_devel.to_i > 0
+        texto_situacao += " (#{indicadores.qtd_retorno_testes_devel}x)"
+      end
 
       html << "<div class='timeline-step timeline-step-#{estado}'>"
       html << "<div class='timeline-circle'></div>"
-      html << "<div class='timeline-label'><div class='timeline-text'>#{texto_situacao}#{contador_retornos}</div></div>"
+      html << "<div class='timeline-label'>"
+      html << "<div class='timeline-text'>#{texto_situacao}</div>"
+      html << "</div>"
       html << "</div>"
     end
 
