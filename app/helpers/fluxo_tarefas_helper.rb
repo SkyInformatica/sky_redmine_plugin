@@ -767,10 +767,10 @@ module FluxoTarefasHelper
       # Adicionar o contador de retornos se for ESTOQUE_DEVEL_RETORNO_TESTES ou AGUARDANDO_ENCAMINHAR_RETORNO_TESTES_DEVEL
       if situacao == SkyRedminePlugin::Constants::SituacaoAtual::ESTOQUE_DEVEL_RETORNO_TESTES &&
          indicadores&.qtd_retorno_testes_qs.to_i > 0
-        texto_situacao += " (#{indicadores.qtd_retorno_testes_qs}x)"
+        texto_situacao += "<br>(#{indicadores.qtd_retorno_testes_qs}x)"
       elsif situacao == SkyRedminePlugin::Constants::SituacaoAtual::AGUARDANDO_ENCAMINHAR_RETORNO_TESTES_DEVEL &&
             indicadores&.qtd_retorno_testes_devel.to_i > 0
-        texto_situacao += " (#{indicadores.qtd_retorno_testes_devel}x)"
+        texto_situacao += "<br>(#{indicadores.qtd_retorno_testes_devel}x)"
       end
 
       html << "<div class='timeline-step timeline-step-#{estado}'>"
