@@ -449,8 +449,7 @@ module FluxoTarefasHelper
     end
 
     html << "<div class='indicadores-container'>"
-    if ((indicadores.tarefa_complementar == "SIM") || (indicadores.tarefa_complementar == SkyRedminePlugin::Constants::TarefasComplementares::TAREFA_NAO_PLANEJADA))
-      
+    if ((tarefas_relacionadas.first.tarefa_complementar == "SIM") || (tarefas_relacionadas.first.tarefa_complementar == SkyRedminePlugin::Constants::TarefasComplementares::TAREFA_NAO_PLANEJADA))      
       html << "<div class='indicadores-grupo'>"
       html << "<div class='indicadores-cards'>"
   
