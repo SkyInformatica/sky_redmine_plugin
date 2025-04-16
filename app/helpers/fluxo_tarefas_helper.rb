@@ -744,7 +744,7 @@ module FluxoTarefasHelper
       eh_fechada = indicadores&.equipe_responsavel_atual == SkyRedminePlugin::Constants::EquipeResponsavel::FECHADA
       eh_versao_liberada = situacao == SkyRedminePlugin::Constants::SituacaoAtual::VERSAO_LIBERADA
 
-      Rails.logger.info(">>>> eh_ultima_etapa: #{eh_ultima_etapa} - eh_fechada: #{eh_fechada} - eh_versao_liberada: #{eh_versao_liberada}")
+      Rails.logger.info(">>>> i_ajustado: #{i_ajustado} - eh_ultima_etapa: #{eh_ultima_etapa} - eh_fechada: #{eh_fechada} - eh_versao_liberada: #{eh_versao_liberada}")
       Rails.logger.info(">>>> if (!esta_na_parte_atual && i_ajustado < indice_atual) || (esta_na_parte_atual && i < indice_atual): #{(!esta_na_parte_atual && i_ajustado < indice_atual) || (esta_na_parte_atual && i < indice_atual)}")
       estado = if (!esta_na_parte_atual && i_ajustado < indice_atual) || (esta_na_parte_atual && i < indice_atual)
           "completed"
