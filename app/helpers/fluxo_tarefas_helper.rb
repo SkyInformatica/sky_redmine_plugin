@@ -659,11 +659,11 @@ module FluxoTarefasHelper
             end
 
     # Encontrar o índice da situação atual no fluxo
-    indice_atual = fluxo.index(situacao_atual)
-    return "" unless indice_atual
-
+    indice_atual = fluxo.index(situacao_atual)    
+    Rails.logger.info(">>>> tem_retorno_testes_qs: #{tem_retorno_testes_qs} - tem_retorno_testes_devel: #{tem_retorno_testes_devel}")
     Rails.logger.info(">>>> fluxo: #{fluxo}")
     Rails.logger.info(">>>> indice_atual: #{indice_atual}")
+    return "" unless indice_atual
 
     # Preparar HTML
     html = "<div class='indicadores-grupo'>"
