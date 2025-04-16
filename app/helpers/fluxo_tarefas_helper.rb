@@ -482,9 +482,9 @@ module FluxoTarefasHelper
           "Versão liberada antes dos testes",
           indicadores.tarefa_fechada_sem_testes || "NAO", "",
           "A versão foi liberada antes da conclusão dos testes"
-        )      
-        html << "</div>"
+        )              
       end
+      html << "</div>"
 
       # Cards DEVEL
       html << "<div class='indicadores-grupo'>"
