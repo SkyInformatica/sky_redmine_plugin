@@ -735,7 +735,7 @@ module FluxoTarefasHelper
 
   # Método auxiliar para renderizar os passos da timeline
   def render_timeline_steps(fluxo, indice_atual, indicadores, esta_na_parte_atual = true, offset = 0)
-    Rails.logger.info(">>>> render_timeline_steps: #{fluxo} - #{indice_atual} - #{indicadores} - #{esta_na_parte_atual} - #{offset}")
+    Rails.logger.info(">>>> render_timeline_steps: fluxo: #{fluxo} - indice_atual: #{indice_atual} - esta_na_parte_atual: #{esta_na_parte_atual} - offset: #{offset}")
     html = "<div class='timeline'>"
 
     fluxo.each_with_index do |situacao, i|
@@ -744,7 +744,8 @@ module FluxoTarefasHelper
       eh_fechada = indicadores&.equipe_responsavel_atual == SkyRedminePlugin::Constants::EquipeResponsavel::FECHADA
       eh_versao_liberada = situacao == SkyRedminePlugin::Constants::SituacaoAtual::VERSAO_LIBERADA
 
-      # Corrigido o cálculo do estado para considerar o offset quando não está na parte atual
+      Rails.logger.info(">>>> eh_ultima_etapa: #{eh_ultima_etapa} - eh_fechada: #{eh_fechada} - eh_versao_liberada: #{eh_versao_liberada}")
+      Rails.logger.info(">>>> if (!esta_na_parte_atual && i_ajustado < indice_atual) || (esta_na_parte_atual && i < indice_atual): #{(!esta_na_parte_atual && i_ajustado < indice_atual) || (esta_na_parte_atual && i < indice_atual)}")
       estado = if (!esta_na_parte_atual && i_ajustado < indice_atual) || (esta_na_parte_atual && i < indice_atual)
           "completed"
         elsif eh_versao_liberada && i_ajustado == indice_atual
