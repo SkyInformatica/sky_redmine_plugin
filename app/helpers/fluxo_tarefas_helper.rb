@@ -433,7 +433,7 @@ module FluxoTarefasHelper
     # Gerar HTML dos cards
     html = []
 
-    if tarefas_relacionadas.first.tarefa_complementar == SkyRedminePlugin::Constants::TarefasComplementares::TAREFA_NAO_PLANEJADA)
+    if tarefas_relacionadas.first.tarefa_complementar == SkyRedminePlugin::Constants::TarefasComplementares::TAREFA_NAO_PLANEJADA
       return html.join("\n")
     end
 
