@@ -12,7 +12,8 @@ namespace :sky_redmine_plugin do
     @status_resolvida = IssueStatus.find_by(name: "Resolvida")
     @author = User.find_by(login: "maglan")
     @cf_teste_no_desenvolvimento = CustomField.find_by(name: SkyRedminePlugin::Constants::CustomFields::TESTE_NO_DESENVOLVIMENTO)
-    
+    @cf_teste_qs = CustomField.find_by(name: SkyRedminePlugin::Constants::CustomFields::TESTE_QS)
+
     if @author.nil?
       puts "✗ Usuário 'maglan' não encontrado. Verifique se o usuário existe no sistema."
       return
@@ -24,9 +25,10 @@ namespace :sky_redmine_plugin do
     criar_tarefa_nova
     criar_tarefa_nova_em_andamento
     criar_tarefa_nova_em_andamento_resolvida
-    criar_tarefa_nao_necessita_teste
-    criar_tarefa_teste_ok
-    criar_tarefa_teste_nok
+    criar_tarefa_teste_no_desenvolvimento_nao_necessita_teste
+    criar_tarefa_teste_no_desenvolvimento_ok
+    criar_tarefa_teste_no_desenvolvimento_nok
+    criar_tarefa_qs_nao_necessita_teste
     
     puts "\nTestes concluídos!"
   end
@@ -76,6 +78,23 @@ namespace :sky_redmine_plugin do
       return true
     else
       puts "✗ Falha ao atualizar a tarefa para #{mensagem.downcase}: #{issue.errors.full_messages.join(', ')}"
+      return false
+    end
+  end
+
+  # Função auxiliar para atualizar um campo personalizado
+  def atualizar_campo_personalizado(issue, custom_field, valor, mensagem)
+    issue = Issue.find(issue.id)
+    issue.init_journal(@author, "[SkyRedminePlugin] #{mensagem}")
+    issue.custom_field_values = { custom_field.id => valor }
+    
+    if issue.save
+      puts "✓ Campo personalizado atualizado com sucesso: #{mensagem}"
+      SkyRedminePlugin::Indicadores.processar_indicadores(issue)
+      puts "✓ Indicadores processados após atualização do campo personalizado"
+      return true
+    else
+      puts "✗ Falha ao atualizar campo personalizado: #{issue.errors.full_messages.join(', ')}"
       return false
     end
   end
@@ -146,9 +165,9 @@ namespace :sky_redmine_plugin do
   end
   
   # Cenário 4: Criar uma tarefa, colocá-la em andamento, resolvida e marcar como 'Não necessita teste'
-  def criar_tarefa_nao_necessita_teste
+  def criar_tarefa_teste_no_desenvolvimento_nao_necessita_teste
     puts "\n=== Cenário 4: Criar uma tarefa, colocá-la em andamento, resolvida e marcar como 'Não necessita teste' ==="
-    issue = criar_tarefa("Teste Cenário 4 - Tarefa Não Necessita Teste")
+    issue = criar_tarefa("Teste Cenário 4 - Tarefa Teste DEVEL Não Necessita Teste")
     
     if issue
       if trocar_status(issue, @status_em_andamento, "Status alterado para Em andamento")
@@ -161,27 +180,12 @@ namespace :sky_redmine_plugin do
     end
   end
   
-  # Função auxiliar para atualizar um campo personalizado
-  def atualizar_campo_personalizado(issue, custom_field, valor, mensagem)
-    issue = Issue.find(issue.id)
-    issue.init_journal(@author, "[SkyRedminePlugin] #{mensagem}")
-    issue.custom_field_values = { custom_field.id => valor }
-    
-    if issue.save
-      puts "✓ Campo personalizado atualizado com sucesso: #{mensagem}"
-      SkyRedminePlugin::Indicadores.processar_indicadores(issue)
-      puts "✓ Indicadores processados após atualização do campo personalizado"
-      return true
-    else
-      puts "✗ Falha ao atualizar campo personalizado: #{issue.errors.full_messages.join(', ')}"
-      return false
-    end
-  end
+  
   
   # Cenário 5: Criar uma tarefa, colocá-la em andamento, resolvida e marcar como 'Teste OK'
-  def criar_tarefa_teste_ok
+  def criar_tarefa_teste_no_desenvolvimento_ok
     puts "\n=== Cenário 5: Criar uma tarefa, colocá-la em andamento, resolvida e marcar como 'Teste OK' ==="
-    issue = criar_tarefa("Teste Cenário 5 - Tarefa Teste OK")
+    issue = criar_tarefa("Teste Cenário 5 - Tarefa Teste DEVEL Teste OK")
     
     if issue
       if trocar_status(issue, @status_em_andamento, "Status alterado para Em andamento")
@@ -195,15 +199,31 @@ namespace :sky_redmine_plugin do
   end
   
   # Cenário 6: Criar uma tarefa, colocá-la em andamento, resolvida e marcar como 'Teste NOK'
-  def criar_tarefa_teste_nok
+  def criar_tarefa_teste_no_desenvolvimento_nok
     puts "\n=== Cenário 6: Criar uma tarefa, colocá-la em andamento, resolvida e marcar como 'Teste NOK' ==="
-    issue = criar_tarefa("Teste Cenário 6 - Tarefa Teste NOK")
+    issue = criar_tarefa("Teste Cenário 6 - Tarefa Teste DEVEL Teste NOK")
     
     if issue
       if trocar_status(issue, @status_em_andamento, "Status alterado para Em andamento")
         if trocar_status(issue, @status_resolvida, "Status alterado para Resolvida")
           if atualizar_campo_personalizado(issue, @cf_teste_no_desenvolvimento, SkyRedminePlugin::Constants::CustomFieldsValues::TESTE_NOK, "Campo '#{SkyRedminePlugin::Constants::CustomFields::TESTE_NO_DESENVOLVIMENTO}' alterado para '#{SkyRedminePlugin::Constants::CustomFieldsValues::TESTE_NOK}'")
             verificar_indicador(issue.id, SkyRedminePlugin::Constants::SituacaoAtual::AGUARDANDO_ENCAMINHAR_RETORNO_TESTES_DEVEL)
+          end
+        end
+      end
+    end
+  end
+
+  # Cenário 7: Criar uma tarefa, colocá-la em andamento, resolvida e marcar Teste QS como 'Não necessita teste'
+  def criar_tarefa_qs_nao_necessita_teste
+    puts "\n=== Cenário 7: Criar uma tarefa, colocá-la em andamento, resolvida e marcar Teste QS como 'Não necessita teste' ==="
+    issue = criar_tarefa("Teste Cenário 7 - Tarefa Teste QS não necessita teste")
+    
+    if issue
+      if trocar_status(issue, @status_em_andamento, "Status alterado para Em andamento")
+        if trocar_status(issue, @status_resolvida, "Status alterado para Resolvida")
+          if atualizar_campo_personalizado(issue, @cf_teste_qs, SkyRedminePlugin::Constants::CustomFieldsValues::NAO_NECESSITA_TESTE, "Campo '#{SkyRedminePlugin::Constants::CustomFields::TESTE_QS}' alterado para '#{SkyRedminePlugin::Constants::CustomFieldsValues::NAO_NECESSITA_TESTE}'")
+            verificar_indicador(issue.id, SkyRedminePlugin::Constants::SituacaoAtual::AGUARDANDO_VERSAO)
           end
         end
       end
