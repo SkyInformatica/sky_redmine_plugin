@@ -338,7 +338,15 @@ module SkyRedminePlugin
           else
             prefixo_num = prefixos_situacoes[situacao_atual]
             situacao_formatada = situacao_atual.gsub("RETORNO_TESTES", "RT").gsub("AGUARDANDO", "AGUARDA")
-            "E#{prefixo_num}_#{situacao_formatada}"
+            
+            # Adicionar sufixo _APTAS se for ESTOQUE_DEVEL e estiver na sprint "Aptas para desenvolvimento"
+            if situacao_atual == SkyRedminePlugin::Constants::SituacaoAtual::ESTOQUE_DEVEL &&
+               !tarefas_devel.empty? &&
+               tarefas_devel.last.fixed_version&.name == SkyRedminePlugin::Constants::Sprints::APTAS_PARA_DESENVOLVIMENTO
+              "E#{prefixo_num}_#{situacao_formatada}_APTAS"
+            else
+              "E#{prefixo_num}_#{situacao_formatada}"
+            end
           end
 
         Rails.logger.info ">>> Nova tag a ser definida: #{nova_tag || "Nenhuma (VERSAO_LIBERADA)"}"
