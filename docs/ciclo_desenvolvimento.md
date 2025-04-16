@@ -97,7 +97,9 @@ DEVEL Tarefa ID 100 NOVA -> DEVEL Tarefa ID 100 EM_ANDAMENTO -> DEVEL Tarefa ID 
 
 ### Tarefa de DEVEL que não vai ser encaminhada para QS
 
-- Uma tarefa de DEVEL quando for definido no campo "teste_qs" o conteúdo NAO_NECESSITA_TESTE essa tarefa não se espera que seja encaminhada para o QS. Ou seja, a sequência de situações dela é NOVA -> EM_ANDAMENTO -> RESOLVIDA -> FECHADA. Neste caso é usado o FLUXO_SEM_QS especial de tarefas que não são encaminhadas para o QS,
+- Uma tarefa de DEVEL quando for definido no campo "teste_qs" o conteúdo NAO_NECESSITA_TESTE essa tarefa não se espera que seja encaminhada para o QS.
+- Caso ainda não tenha sido encaminhado para o QS: A sequência de situações dela é NOVA -> EM_ANDAMENTO -> RESOLVIDA -> FECHADA. Neste caso depois de Resolvida vai direto para a situação AGUARDANDO_VERSAO.
+- Caso já tenha sido encaminhado para o QS anteriormente e agora é um RETORNO_TESTES que veio do QS: neste caso pode ir direto para AGUARDANDO_VERSAO_RETORNO_TESTES.
 
 ### Tarefa de DEVEL que não necessita desenvolvimento
 

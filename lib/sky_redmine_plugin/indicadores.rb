@@ -406,13 +406,27 @@ module SkyRedminePlugin
 
       # Verificar se é uma tarefa que não necessita de QS
       if ultima_tarefa_devel.teste_qs == SkyRedminePlugin::Constants::CustomFieldsValues::NAO_NECESSITA_TESTE
-        case ultima_tarefa_devel.status.name
-        when SkyRedminePlugin::Constants::IssueStatus::NOVA
-          return SkyRedminePlugin::Constants::SituacaoAtual::ESTOQUE_DEVEL
-        when SkyRedminePlugin::Constants::IssueStatus::EM_ANDAMENTO
-          return SkyRedminePlugin::Constants::SituacaoAtual::EM_ANDAMENTO_DEVEL
-        when SkyRedminePlugin::Constants::IssueStatus::RESOLVIDA
-          return SkyRedminePlugin::Constants::SituacaoAtual::AGUARDANDO_VERSAO
+        # Verificar se é um retorno de testes que já passou pelo QS anteriormente
+        if ultima_tarefa_devel.tracker.name == SkyRedminePlugin::Constants::Trackers::RETORNO_TESTES && 
+           tarefas_qs.any?
+          case ultima_tarefa_devel.status.name
+          when SkyRedminePlugin::Constants::IssueStatus::NOVA
+            return SkyRedminePlugin::Constants::SituacaoAtual::ESTOQUE_DEVEL_RETORNO_TESTES
+          when SkyRedminePlugin::Constants::IssueStatus::EM_ANDAMENTO
+            return SkyRedminePlugin::Constants::SituacaoAtual::EM_ANDAMENTO_DEVEL_RETORNO_TESTES
+          when SkyRedminePlugin::Constants::IssueStatus::RESOLVIDA
+            return SkyRedminePlugin::Constants::SituacaoAtual::AGUARDANDO_VERSAO_RETORNO_TESTES
+          end
+        else
+          # Caso ainda não tenha sido encaminhado para QS
+          case ultima_tarefa_devel.status.name
+          when SkyRedminePlugin::Constants::IssueStatus::NOVA
+            return SkyRedminePlugin::Constants::SituacaoAtual::ESTOQUE_DEVEL
+          when SkyRedminePlugin::Constants::IssueStatus::EM_ANDAMENTO
+            return SkyRedminePlugin::Constants::SituacaoAtual::EM_ANDAMENTO_DEVEL
+          when SkyRedminePlugin::Constants::IssueStatus::RESOLVIDA
+            return SkyRedminePlugin::Constants::SituacaoAtual::AGUARDANDO_VERSAO
+          end
         end
       end
 
