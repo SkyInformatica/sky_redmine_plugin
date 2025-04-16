@@ -298,7 +298,7 @@ module FluxoTarefasHelper
     cards_html << "<strong>Indicadores</strong>"
     cards_html << " ("
     cards_html << link_to("Processar",
-                          processar_indicadores_tarefa_path(primeira_tarefa),
+                          processar_indicadores_tarefa_path(tarefas_relacionadas.first),
                           method: :post)
     cards_html << ")"
     cards_html << "</p>"
