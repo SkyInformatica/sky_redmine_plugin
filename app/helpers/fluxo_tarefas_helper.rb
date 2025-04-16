@@ -290,7 +290,7 @@ module FluxoTarefasHelper
    
     # Gerar HTML dos cards de indicadores
     cards_html = ""
-    #cards_html << obter_css_completo
+    cards_html << obter_css_completo
     # Adicionar título e link para processar indicadores   
     cards_html << "<div class='description'>"
     cards_html << "<hr>"
@@ -354,7 +354,7 @@ module FluxoTarefasHelper
     linhas << "<div class='description'>"
     linhas << "<hr>"
     linhas << "<p><strong>Fluxo das tarefas</strong></b></p>"
-    linhas << obter_css_completo
+    #linhas << obter_css_completo
 
     secoes.each do |secao|
       # Calcular tempo total gasto na seção
@@ -441,7 +441,7 @@ module FluxoTarefasHelper
   def render_cards_indicadores(indicadores, tarefas_relacionadas)
     # Gerar HTML dos cards
     html = []
-    html << obter_css_completo
+    #html << obter_css_completo
 
     if ((indicadores.tarefa_complementar == "SIM") || (indicadores.tarefa_complementar == SkyRedminePlugin::Constants::TarefasComplementares::TAREFA_NAO_PLANEJADA))
       html << "<div class='indicadores-container'>"
