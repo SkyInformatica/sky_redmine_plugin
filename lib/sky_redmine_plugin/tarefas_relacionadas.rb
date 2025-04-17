@@ -268,7 +268,11 @@ module SkyRedminePlugin
         # Avança para a próxima tarefa
         current_issue = next_issue
       end
-      Rails.logger.info ">>> retornando last_qs_issue #{last_qs_issue.id}"
+      if last_qs_issue
+        Rails.logger.info ">>> retornando last_qs_issue #{last_qs_issue.id}"
+      else
+        Rails.logger.info ">>> não encontrou last_qs_issue"
+      end
   
       last_qs_issue
     end
