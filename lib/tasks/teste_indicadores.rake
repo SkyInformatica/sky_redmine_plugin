@@ -239,9 +239,7 @@ namespace :sky_redmine_plugin do
     if issue
       if trocar_status(issue, @status_em_andamento, "Status alterado para Em andamento")
         if trocar_status(issue, @status_resolvida, "Status alterado para Resolvida")
-          # Verificar se a tarefa está pronta para ser encaminhada para QS
-          verificar_indicador(issue.id, SkyRedminePlugin::Constants::SituacaoAtual::AGUARDANDO_TESTES_DEVEL)
-          
+          issue = Issue.find(issue.id)
           # Encaminhar para QS usando o controller
           puts "Encaminhando tarefa ##{issue.id} para QS..."
           
