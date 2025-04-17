@@ -16,6 +16,7 @@ class EncaminharQsController < ApplicationController
 
       # Se existir uma cópia da tarefa para o QS
       if copied_to_qs_issue
+        Rails.logger.info ">>> tarefa já foi encaminhada para o QS #{copied_to_qs_issue.id}"
         # A tarefa já foi encaminhada para QS
         flash[:warning] = "A tarefa já foi encaminhada para o QS em  #{view_context.link_to "#{copied_to_qs_issue.tracker.name} ##{copied_to_qs_issue.id}", issue_path(copied_to_qs_issue)} e está com status #{copied_to_qs_issue.status.name}." unless is_batch_call
         @processed_issues << "[NOK] #{view_context.link_to "#{@issue.tracker.name} ##{@issue.id}", issue_path(@issue)} - #{@issue.subject} - tarefa já foi encaminhada para o QS em  #{view_context.link_to "#{copied_to_qs_issue.tracker.name} ##{copied_to_qs_issue.id}", issue_path(copied_to_qs_issue)} e está com status #{copied_to_qs_issue.status.name}"
@@ -96,7 +97,7 @@ class EncaminharQsController < ApplicationController
   end
 
   def criar_nova_tarefa(usar_sprint_atual = false)
-    Rails.logger.info ">>> criar_nova_tarefa usar_sprint_atual #{usar_sprint_atual}"
+    Rails.logger.info ">>> criar_nova_tarefa para encaminhar_qs usar_sprint_atual #{usar_sprint_atual}"
     if SkyRedminePlugin::Constants::Projects::REGISTRAL_PROJECTS.include?(@issue.project.name)
       qs_project_name = SkyRedminePlugin::Constants::Projects::REGISTRAL_QS
     elsif SkyRedminePlugin::Constants::Projects::NOTARIAL_PROJECTS.include?(@issue.project.name)
@@ -146,6 +147,8 @@ class EncaminharQsController < ApplicationController
 
     new_issue.fixed_version = sprint
     new_issue.save
+
+    Rails.logger.info ">>> criar_nova_tarefa para encaminhar_qs retornando new_issue #{new_issue.id}"
     new_issue
   end
 
