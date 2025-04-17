@@ -257,6 +257,7 @@ namespace :sky_redmine_plugin do
           # Executar o método encaminhar_qs
           controller.encaminhar_qs(true)
           
+          Rails.logger.info ">>> depois de controller.encaminhar_qs #{issue.id}"
           # Verificar se a tarefa foi encaminhada com sucesso
           copied_to_qs_issue = SkyRedminePlugin::TarefasRelacionadas.localizar_tarefa_copiada_qs(issue)
           
