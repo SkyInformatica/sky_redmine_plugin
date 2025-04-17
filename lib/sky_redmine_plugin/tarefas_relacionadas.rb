@@ -241,6 +241,7 @@ module SkyRedminePlugin
     end
 
     def self.localizar_tarefa_copiada_qs(issue)
+      Rails.logger.info ">>> localizar_tarefa_copiada_qs #{issue.id}"
       # Verificar se já existe uma cópia da tarefa nos projetos QS
       # retorna a ultima tarefa do QS na possivel sequencia de copias de continua na proxima sprint
       current_issue = issue
@@ -267,6 +268,7 @@ module SkyRedminePlugin
         # Avança para a próxima tarefa
         current_issue = next_issue
       end
+      Rails.logger.info ">>> retornando last_qs_issue #{last_qs_issue.id}"
   
       last_qs_issue
     end
