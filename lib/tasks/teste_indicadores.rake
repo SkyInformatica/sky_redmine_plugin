@@ -22,13 +22,14 @@ namespace :sky_redmine_plugin do
     puts "✓ Usuário 'maglan' encontrado (ID: #{@author.id})"
     
     # Executar os cenários
-    criar_tarefa_nova
-    criar_tarefa_nova_em_andamento
-    criar_tarefa_nova_em_andamento_resolvida
-    criar_tarefa_teste_no_desenvolvimento_nao_necessita_teste
-    criar_tarefa_teste_no_desenvolvimento_ok
-    criar_tarefa_teste_no_desenvolvimento_nok
-    criar_tarefa_qs_nao_necessita_teste
+    #criar_tarefa_nova
+    #criar_tarefa_nova_em_andamento
+    #criar_tarefa_nova_em_andamento_resolvida
+    #criar_tarefa_teste_no_desenvolvimento_nao_necessita_teste
+    #criar_tarefa_teste_no_desenvolvimento_ok
+    #criar_tarefa_teste_no_desenvolvimento_nok
+    #criar_tarefa_qs_nao_necessita_teste
+    criar_tarefa_encaminhar_para_qs
     
     puts "\nTestes concluídos!"
   end
@@ -224,6 +225,51 @@ namespace :sky_redmine_plugin do
         if trocar_status(issue, @status_resolvida, "Status alterado para Resolvida")
           if atualizar_campo_personalizado(issue, @cf_teste_qs, SkyRedminePlugin::Constants::CustomFieldsValues::NAO_NECESSITA_TESTE, "Campo '#{SkyRedminePlugin::Constants::CustomFields::TESTE_QS}' alterado para '#{SkyRedminePlugin::Constants::CustomFieldsValues::NAO_NECESSITA_TESTE}'")
             verificar_indicador(issue.id, SkyRedminePlugin::Constants::SituacaoAtual::AGUARDANDO_VERSAO)
+          end
+        end
+      end
+    end
+  end
+  
+  # Cenário 8: Criar uma tarefa, colocá-la em andamento, resolvida e encaminhar para QS
+  def criar_tarefa_encaminhar_para_qs
+    puts "\n=== Cenário 8: Criar uma tarefa, colocá-la em andamento, resolvida e encaminhar para QS ==="
+    issue = criar_tarefa("Teste Cenário 8 - Tarefa para Encaminhar para QS")
+    
+    if issue
+      if trocar_status(issue, @status_em_andamento, "Status alterado para Em andamento")
+        if trocar_status(issue, @status_resolvida, "Status alterado para Resolvida")
+          # Verificar se a tarefa está pronta para ser encaminhada para QS
+          verificar_indicador(issue.id, SkyRedminePlugin::Constants::SituacaoAtual::AGUARDANDO_TESTES_DEVEL)
+          
+          # Encaminhar para QS usando o controller
+          puts "Encaminhando tarefa ##{issue.id} para QS..."
+          
+          # Configurar o controller para simular a chamada
+          controller = EncaminharQsController.new
+          controller.instance_variable_set(:@issue, issue)
+          controller.instance_variable_set(:@processed_issues, [])
+          
+          # Simular o parâmetro de usar sprint atual (opcional)
+          params = { usar_sprint_atual: false }
+          controller.params = params
+          
+          # Executar o método encaminhar_qs
+          controller.encaminhar_qs(true)
+          
+          # Verificar se a tarefa foi encaminhada com sucesso
+          copied_to_qs_issue = SkyRedminePlugin::TarefasRelacionadas.localizar_tarefa_copiada_qs(issue)
+          
+          if copied_to_qs_issue
+            puts "✓ Tarefa ##{issue.id} encaminhada com sucesso para QS (ID: #{copied_to_qs_issue.id})"
+            puts "  Projeto QS: #{copied_to_qs_issue.project.name}"
+            puts "  Sprint: #{copied_to_qs_issue.fixed_version.name}"
+            puts "  Tempo estimado: #{copied_to_qs_issue.estimated_hours} horas"
+            
+            # Verificar o indicador após o encaminhamento
+            verificar_indicador(issue.id, SkyRedminePlugin::Constants::SituacaoAtual::AGUARDANDO_TESTES_QS)
+          else
+            puts "✗ Falha ao encaminhar a tarefa ##{issue.id} para QS"
           end
         end
       end
