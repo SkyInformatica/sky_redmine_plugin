@@ -24,7 +24,9 @@ class EncaminharQsController < ApplicationController
         return
       end
 
-      new_issue = criar_nova_tarefa(usar_sprint_atual)
+      Rails.logger.info ">>> criar_nova_tarefa para encaminhar_qs"
+      new_issue = criar_nova_tarefa(usar_sprint_atual)      
+      Rails.logger.info ">>> inicializando journal da tarefa #{@issue.id}"
       @issue.init_journal(User.current, "[SkyRedminePlugin] Encaminhada para QS")
       if custom_field = IssueCustomField.find_by(name: SkyRedminePlugin::Constants::CustomFields::TESTE_QS)
         @issue.custom_field_values = { custom_field.id => SkyRedminePlugin::Constants::IssueStatus::NOVA }
