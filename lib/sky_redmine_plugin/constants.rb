@@ -98,6 +98,7 @@ module SkyRedminePlugin
       INTERROMPIDA = "INTERROMPIDA"
       INTERROMPIDA_ANALISE = "INTERROMPIDA_ANALISE"
       CANCELADA = "CANCELADA" 
+      FECHADA_SEM_DESENVOLVIMENTO = "FECHADA_SEM_DESENVOLVIMENTO"
 
       # Situações de desenvolvimento inicial
       ESTOQUE_DEVEL = "ESTOQUE_DEVEL"
@@ -130,6 +131,10 @@ module SkyRedminePlugin
       # Lista de todas as situações em ordem cronológica
       TODAS_SITUACOES = [
         DESCONHECIDA,
+        INTERROMPIDA,
+        INTERROMPIDA_ANALISE,
+        CANCELADA,
+        FECHADA_SEM_DESENVOLVIMENTO,
         ESTOQUE_DEVEL,
         EM_ANDAMENTO_DEVEL,
         AGUARDANDO_TESTES_DEVEL,
@@ -184,7 +189,17 @@ module SkyRedminePlugin
         EM_ANDAMENTO_DEVEL,
         AGUARDANDO_VERSAO,
         VERSAO_LIBERADA,
+        FECHADA_SEM_DESENVOLVIMENTO,
       ]
+
+      # Fluxo de situações das tarefas que não passam por QS
+      FLUXO_SEM_QS_FECHADA_SEM_DESENVOLVIMENTO = [
+        ESTOQUE_DEVEL,
+        EM_ANDAMENTO_DEVEL,
+        AGUARDANDO_VERSAO,
+        FECHADA_SEM_DESENVOLVIMENTO,
+      ]
+
 
       FLUXO_IDEAL_COM_RETORNO_TESTES_NO_DESENVOLVIMENTO = [
         ESTOQUE_DEVEL,

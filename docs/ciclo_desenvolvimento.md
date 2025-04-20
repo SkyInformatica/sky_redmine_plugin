@@ -103,7 +103,9 @@ DEVEL Tarefa ID 100 NOVA -> DEVEL Tarefa ID 100 EM_ANDAMENTO -> DEVEL Tarefa ID 
 
 ### Tarefa de DEVEL que não necessita desenvolvimento
 
-- Uma tarefa de DEVEL quando não necessita de desenvolvimento não é encaminhada para QS. Isso acontece sempre no primeiro ciclo de desenvolvimento. Portanto a sequência de situação desta tarefa é NOVA -> EM_ANDAMENTO -> RESOLVIDA -> FECHADA_SEM_DESENVOLVIMENTO. Neste caso é usado o FLUXO_SEM_QS especial de tarefas que não são encaminhadas para o QS.
+- Uma tarefa de DEVEL quando não necessita de desenvolvimento não é encaminhada para QS. Isso acontece sempre no primeiro ciclo de desenvolvimento. Portanto a sequência de situação desta tarefa é NOVA -> EM_ANDAMENTO -> RESOLVIDA -> FECHADA_SEM_DESENVOLVIMENTO. Neste caso é usado o FLUXO_SEM_QS_FECHADA_DESENVOLVIMENTO especial de tarefas que sao fechadas sem desenvolvimento e não são encaminhadas para o QS.
+- Definir a situacao atual como FECHADA_SEM_DESENVOLVIMENTO nestes casos.
+- Somente pode acontecer no primeiro ciclo do desenvolvimento antes de ir para o QS.
 
 ### Tarefa complementar
 
@@ -168,12 +170,14 @@ Essa sao situacoes opcionais que irão ocorrer no primeiro ciclo do desenvolvime
 - uma tarefa é INTERROMPIDA por um periodo determinado.
 - uma tarefa INTERROMPIDA espera-se que vá ter sua continuidade em desenvolvimento, por isso em breve ela deve voltar para EM_ANDAMENTO.
 - portanto é uma situacao especial e temporaria e não iremos ter tarefas permanentes nesta situação.
+- tanta a tarefa DEVEL quanto QS podem usar essa situação
 
 ## Situacao CANCELADA
 
 - uma tarefa é CANCELADA quando decide-se que nao irá mais ser desenvolvida
 - essa é uma situacao permanente
 - tarefas canceladas não irão ter continuidade de desenvolvimento
+- tanto tarefa DEVEL quanto QS podem usar essa situação
 
 # Detalhes técnicos do código fonte do projeto
 

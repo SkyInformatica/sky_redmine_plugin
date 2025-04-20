@@ -474,7 +474,8 @@ module FluxoTarefasHelper
         indicadores.situacao_atual, 
         "Equipe responsável pela tarefa")
 
-      if indicadores.tipo_primeira_tarefa_devel != SkyRedminePlugin::Constants::Trackers::CONVERSAO
+      if (indicadores.tipo_primeira_tarefa_devel != SkyRedminePlugin::Constants::Trackers::CONVERSAO) && 
+         (indicadores.situacao_atual != SkyRedminePlugin::Constants::SituacaoAtual::FECHADA_SEM_DESENVOLVIMENTO)
         # Card de retorno de testes
         retornos = []
         if indicadores.qtd_retorno_testes_qs.to_i > 0
@@ -532,7 +533,8 @@ module FluxoTarefasHelper
                           valor_resolucao, detalhe_resolucao,
                           "Tempo entre a tarefa de desenvolvimento ser colocada em andamento e sua situação ser resolvida (considerando o todos os ciclos incluindo os retornos de testes)")
 
-      if indicadores.tipo_primeira_tarefa_devel != SkyRedminePlugin::Constants::Trackers::CONVERSAO
+      if (indicadores.tipo_primeira_tarefa_devel != SkyRedminePlugin::Constants::Trackers::CONVERSAO) && 
+        (indicadores.situacao_atual != SkyRedminePlugin::Constants::SituacaoAtual::FECHADA_SEM_DESENVOLVIMENTO)
         # Para encaminhar QS
         ciclos_devel = SkyRedminePlugin::TarefasRelacionadas.separar_ciclos_devel(tarefas_relacionadas)
         primeiro_ciclo_devel = ciclos_devel.first
@@ -546,8 +548,9 @@ module FluxoTarefasHelper
       html << "</div>" # indicadores-cards
       html << "</div>" # indicadores-grupo
 
-      if indicadores.tipo_primeira_tarefa_devel != SkyRedminePlugin::Constants::Trackers::CONVERSAO
-        # Cards QS
+      if (indicadores.tipo_primeira_tarefa_devel != SkyRedminePlugin::Constants::Trackers::CONVERSAO) && 
+        (indicadores.situacao_atual != SkyRedminePlugin::Constants::SituacaoAtual::FECHADA_SEM_DESENVOLVIMENTO)
+       # Cards QS
         html << "<div class='indicadores-grupo'>"
         tempo_gasto_qs = format("%.2f", indicadores.tempo_gasto_qs.to_f)
         tempo_total_testes = if indicadores.tempo_total_testes
@@ -652,6 +655,13 @@ module FluxoTarefasHelper
        situacao_atual == SkyRedminePlugin::Constants::SituacaoAtual::INTERROMPIDA_ANALISE ||
        situacao_atual == SkyRedminePlugin::Constants::SituacaoAtual::CANCELADA
       return render_timeline_desconhecida(situacao_atual)
+    end
+
+    # Verificar se é uma tarefa que não necessita desenvolvimento
+    if situacao_atual == SkyRedminePlugin::Constants::SituacaoAtual::FECHADA_SEM_DESENVOLVIMENTO
+      fluxo = SkyRedminePlugin::Constants::SituacaoAtual::FLUXO_SEM_QS_FECHADA_SEM_DESENVOLVIMENTO
+      indice_atual = fluxo.index(situacao_atual)
+      return render_timeline_normal(fluxo, indice_atual, indicadores)
     end
 
     tem_retorno_testes_qs = indicadores.qtd_retorno_testes_qs.to_i > 0 || 

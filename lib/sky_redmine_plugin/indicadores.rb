@@ -406,7 +406,6 @@ module SkyRedminePlugin
 
     # Método para determinar a situação atual com base no status das tarefas
     def self.determinar_situacao_atual(indicador, tarefas_relacionadas, tarefas_devel, tarefas_qs, ciclos_devel, ciclos_qs)
-      Rails.logger.info ">>> Determinando situação atual para a tarefa #{indicador.primeira_tarefa_devel_id}"
       # Primeiro verificar se é uma situação DESCONHECIDA
       situacao = verificar_situacao_desconhecida(tarefas_relacionadas, tarefas_devel, ciclos_devel)
       return situacao if situacao == SkyRedminePlugin::Constants::SituacaoAtual::DESCONHECIDA
@@ -414,6 +413,10 @@ module SkyRedminePlugin
       # Verificar se a última tarefa está nas situações INTERROMPIDA ou CANCELADA
       situacao_especial = verificar_situacao_interrompida_ou_cancelada(tarefas_relacionadas)
       return situacao_especial if situacao_especial
+
+      # Verificar se é uma tarefa que não necessita desenvolvimento
+      situacao_sem_desenvolvimento = verificar_situacao_sem_desenvolvimento(tarefas_relacionadas, tarefas_devel, ciclos_devel)
+      return situacao_sem_desenvolvimento if situacao_sem_desenvolvimento
 
       ultima_tarefa = tarefas_relacionadas.last
       ultima_tarefa_devel = tarefas_devel.last
@@ -507,7 +510,6 @@ module SkyRedminePlugin
     # Verifica se a última tarefa está nas situações INTERROMPIDA ou CANCELADA
     # Retorna a situação correspondente ou nil se não estiver em nenhuma dessas situações
     def self.verificar_situacao_interrompida_ou_cancelada(tarefas_relacionadas)
-      Rails.logger.info ">>> Verificando situação interrompida ou cancelada para a tarefa #{tarefas_relacionadas.last.id}"
       return nil if tarefas_relacionadas.empty?
 
       ultima_tarefa = tarefas_relacionadas.last
@@ -519,7 +521,24 @@ module SkyRedminePlugin
       when SkyRedminePlugin::Constants::IssueStatus::CANCELADA
         return SkyRedminePlugin::Constants::SituacaoAtual::CANCELADA
       end
-      Rails.logger.info ">>> Não atende nenhuma condição de INTERROMPIDA ou CANCELADA"
+      
+      nil
+    end
+
+    # Verifica se a tarefa não necessita desenvolvimento
+    # Retorna a situação correspondente ou nil se não for o caso
+    def self.verificar_situacao_sem_desenvolvimento(tarefas_relacionadas, tarefas_devel, ciclos_devel)
+      return nil if tarefas_relacionadas.empty? || tarefas_devel.empty?
+
+      # Verificar se está no primeiro ciclo de desenvolvimento
+      return nil if ciclos_devel.size > 1
+
+      ultima_tarefa_devel = tarefas_devel.last
+      
+      # Verificar se a última tarefa DEVEL está com situação FECHADA_SEM_DESENVOLVIMENTO
+      if ultima_tarefa_devel.status.name == SkyRedminePlugin::Constants::IssueStatus::FECHADA_SEM_DESENVOLVIMENTO
+        return SkyRedminePlugin::Constants::SituacaoAtual::FECHADA_SEM_DESENVOLVIMENTO
+      end
       
       nil
     end
