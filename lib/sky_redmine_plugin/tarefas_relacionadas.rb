@@ -68,6 +68,7 @@ module SkyRedminePlugin
 
           status_fechada = [
             SkyRedminePlugin::Constants::IssueStatus::FECHADA,
+            SkyRedminePlugin::Constants::IssueStatus::FECHADA_SEM_DESENVOLVIMENTO,
             SkyRedminePlugin::Constants::IssueStatus::CONTINUA_PROXIMA_SPRINT,
             SkyRedminePlugin::Constants::IssueStatus::FECHADA_CONTINUA_RETORNO_TESTES,
           ]
