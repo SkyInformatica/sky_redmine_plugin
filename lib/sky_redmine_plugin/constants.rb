@@ -96,6 +96,7 @@ module SkyRedminePlugin
       # Situação desconhecida
       DESCONHECIDA = "DESCONHECIDA"
       INTERROMPIDA = "INTERROMPIDA"
+      INTERROMPIDA_ANALISE = "INTERROMPIDA_ANALISE"
       CANCELADA = "CANCELADA" 
 
       # Situações de desenvolvimento inicial
