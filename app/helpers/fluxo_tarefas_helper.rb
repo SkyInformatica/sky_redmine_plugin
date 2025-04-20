@@ -647,8 +647,11 @@ module FluxoTarefasHelper
     return "" unless situacao_atual
 
     # Se a situação for DESCONHECIDA, renderizar a timeline específica
-    if situacao_atual == SkyRedminePlugin::Constants::SituacaoAtual::DESCONHECIDA
-      return render_timeline_desconhecida
+    if situacao_atual == SkyRedminePlugin::Constants::SituacaoAtual::DESCONHECIDA ||
+       situacao_atual == SkyRedminePlugin::Constants::SituacaoAtual::INTERROMPIDA ||
+       situacao_atual == SkyRedminePlugin::Constants::SituacaoAtual::INTERROMPIDA_ANALISE ||
+       situacao_atual == SkyRedminePlugin::Constants::SituacaoAtual::CANCELADA
+      return render_timeline_desconhecida(situacao_atual)
     end
 
     tem_retorno_testes_qs = indicadores.qtd_retorno_testes_qs.to_i > 0 || 
@@ -722,7 +725,7 @@ module FluxoTarefasHelper
   end
 
   # Método para renderizar a timeline da situação DESCONHECIDA
-  def render_timeline_desconhecida
+  def render_timeline_desconhecida(situacao_atual)
     html = "<div class='indicadores-grupo'>"
     html << "<div class='indicadores-titulo'>Progresso</div>"
     html << "<div class='timeline-container'>"
@@ -730,13 +733,12 @@ module FluxoTarefasHelper
     html << "<div class='timeline timeline-desconhecida'>"
     html << "<div class='timeline-step timeline-step-error'>"
     html << "<div class='timeline-circle'></div>"
-    html << "<div class='timeline-label'><div class='timeline-text'>DESCONHECIDA</div></div>"
+    html << "<div class='timeline-label'><div class='timeline-text'>#{situacao_atual}</div></div>"
     html << "</div>"
     html << "</div>"
     html << "</div>"
     html << "</div>"
     html << "</div>"
-
     html
   end
 

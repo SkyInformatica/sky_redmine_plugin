@@ -95,6 +95,8 @@ module SkyRedminePlugin
     module SituacaoAtual
       # Situação desconhecida
       DESCONHECIDA = "DESCONHECIDA"
+      INTERROMPIDA = "INTERROMPIDA"
+      CANCELADA = "CANCELADA" 
 
       # Situações de desenvolvimento inicial
       ESTOQUE_DEVEL = "ESTOQUE_DEVEL"

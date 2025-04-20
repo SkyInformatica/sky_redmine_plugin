@@ -161,6 +161,20 @@ Essa sao situacoes opcionais que irão ocorrer no primeiro ciclo do desenvolvime
 - A última tarefa de todo ciclo se for do QS ela não pode ser TESTE_NOK_FECHADA. Se a tarefa do QS for TESTE_NOK_FECHADA então espera-se que exista uma tarefa de continuidade do desenvolvimento no RETORNO_TESTES.
 - Ciclos de continuidade da tarefa de RETORNO_TESTES. Sempre que houver mais de um ciclo de tarefas DEVEL a partir do segundo CICLO a tarefa deve ser sempre do tipo RETORNO_TESTES.
 
+# Situações que devem ser tratadas como exceção e definir situacao INTERROMPIDA ou CANCELADA
+
+## Situacao INTERROMPIDA
+
+- uma tarefa é INTERROMPIDA por um periodo determinado.
+- uma tarefa INTERROMPIDA espera-se que vá ter sua continuidade em desenvolvimento, por isso em breve ela deve voltar para EM_ANDAMENTO.
+- portanto é uma situacao especial e temporaria e não iremos ter tarefas permanentes nesta situação.
+
+## Situacao CANCELADA
+
+- uma tarefa é CANCELADA quando decide-se que nao irá mais ser desenvolvida
+- essa é uma situacao permanente
+- tarefas canceladas não irão ter continuidade de desenvolvimento
+
 # Detalhes técnicos do código fonte do projeto
 
 - Para determinar se a tarefa é do DEVEL ou QS deve-se avaliar o nome do projeto e ver se pertence a constante SkyRedminePlugin::Constants::Projects::QS_PROJECTS
