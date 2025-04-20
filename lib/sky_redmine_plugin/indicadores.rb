@@ -406,6 +406,7 @@ module SkyRedminePlugin
 
     # Método para determinar a situação atual com base no status das tarefas
     def self.determinar_situacao_atual(indicador, tarefas_relacionadas, tarefas_devel, tarefas_qs, ciclos_devel, ciclos_qs)
+      Rails.logger.info ">>> Determinando situação atual para a tarefa #{indicador.issue.id}"
       # Primeiro verificar se é uma situação DESCONHECIDA
       situacao = verificar_situacao_desconhecida(tarefas_relacionadas, tarefas_devel, ciclos_devel)
       return situacao if situacao == SkyRedminePlugin::Constants::SituacaoAtual::DESCONHECIDA
@@ -506,6 +507,7 @@ module SkyRedminePlugin
     # Verifica se a última tarefa está nas situações INTERROMPIDA ou CANCELADA
     # Retorna a situação correspondente ou nil se não estiver em nenhuma dessas situações
     def self.verificar_situacao_interrompida_ou_cancelada(tarefas_relacionadas)
+      Rails.logger.info ">>> Verificando situação interrompida ou cancelada para a tarefa #{tarefas_relacionadas.last.id}"
       return nil if tarefas_relacionadas.empty?
 
       ultima_tarefa = tarefas_relacionadas.last
@@ -517,12 +519,14 @@ module SkyRedminePlugin
       when SkyRedminePlugin::Constants::IssueStatus::CANCELADA
         return SkyRedminePlugin::Constants::SituacaoAtual::CANCELADA
       end
+      Rails.logger.info ">>> Não atende nenhuma condição de INTERROMPIDA ou CANCELADA"
       
       nil
     end
 
     # Método para verificar se a situação é DESCONHECIDA
     def self.verificar_situacao_desconhecida(tarefas_relacionadas, tarefas_devel, ciclos_devel)
+      Rails.logger.info ">>> Verificando situação desconhecida para a tarefa #{tarefas_relacionadas.last.id}"
       # Regra 1: Verificar se a última tarefa do último ciclo DEVEL é FECHADA_CONTINUA_RETORNO_TESTES
       ultima_tarefa_devel = tarefas_devel.last
       if ultima_tarefa_devel.status.name == SkyRedminePlugin::Constants::IssueStatus::FECHADA_CONTINUA_RETORNO_TESTES
@@ -547,7 +551,7 @@ module SkyRedminePlugin
           end
         end
       end
-
+      Rails.logger.info ">>> Não atende nenhuma condição de DESCONHECIDA"
       # Se não atende nenhuma condição de DESCONHECIDA, retorna nil para continuar a verificação
       nil
     end
