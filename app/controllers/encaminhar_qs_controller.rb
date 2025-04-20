@@ -10,7 +10,6 @@ class EncaminharQsController < ApplicationController
 
     # Check if the issue is not in QS projects and its status is "Resolvida"
     if (!SkyRedminePlugin::Constants::Projects::QS_PROJECTS.include?(@issue.project.name)) && (@issue.status.name == SkyRedminePlugin::Constants::IssueStatus::RESOLVIDA)
-
       # Verificar se já existe uma cópia da tarefa nos projetos QS
       copied_to_qs_issue = SkyRedminePlugin::TarefasRelacionadas.localizar_tarefa_copiada_qs(@issue)
 
@@ -35,8 +34,10 @@ class EncaminharQsController < ApplicationController
 
       SkyRedminePlugin::Indicadores.processar_indicadores(@issue)
 
-      flash[:notice] = "Tarefa #{view_context.link_to "#{new_issue.tracker.name} ##{new_issue.id}", issue_path(new_issue)} foi encaminhada para o QS no projeto #{view_context.link_to new_issue.project.name, project_path(new_issue.project)} na sprint #{view_context.link_to new_issue.fixed_version.name, version_path(new_issue.fixed_version)} com tempo estimado de #{new_issue.estimated_hours}" unless is_batch_call
-      @processed_issues << "[OK] #{view_context.link_to "#{@issue.tracker.name} ##{@issue.id}", issue_path(@issue)} - #{@issue.subject} - encaminhar para QS em #{view_context.link_to "#{new_issue.tracker.name} ##{new_issue.id}", issue_path(new_issue)} "
+      if view_context.present? 
+        flash[:notice] = "Tarefa #{view_context.link_to "#{new_issue.tracker.name} ##{new_issue.id}", issue_path(new_issue)} foi encaminhada para o QS no projeto #{view_context.link_to new_issue.project.name, project_path(new_issue.project)} na sprint #{view_context.link_to new_issue.fixed_version.name, version_path(new_issue.fixed_version)} com tempo estimado de #{new_issue.estimated_hours}" unless is_batch_call
+        @processed_issues << "[OK] #{view_context.link_to "#{@issue.tracker.name} ##{@issue.id}", issue_path(@issue)} - #{@issue.subject} - encaminhar para QS em #{view_context.link_to "#{new_issue.tracker.name} ##{new_issue.id}", issue_path(new_issue)} "
+      end
     else
       Rails.logger.info ">>> tarefa não pode ser encaminhada para o QS #{@issue.id} - Somente pode encaminhar para o QS tarefas do desenvolvimento com status 'Resolvida'. Status atual: #{@issue.status.name}"
       flash[:warning] = "Somente pode encaminhar para o QS tarefas do desenvolvimento com status 'Resolvida'." unless is_batch_call
