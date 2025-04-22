@@ -319,8 +319,10 @@ module SkyRedminePlugin
         prefixos_situacoes = {
           SkyRedminePlugin::Constants::SituacaoAtual::DESCONHECIDA => "99",
           SkyRedminePlugin::Constants::SituacaoAtual::INTERROMPIDA => "99",
-          SkyRedminePlugin::Constants::SituacaoAtual::INTERROMPIDA_ANALISE => "99",
-          SkyRedminePlugin::Constants::SituacaoAtual::CANCELADA => "99",
+          SkyRedminePlugin::Constants::SituacaoAtual::INTERROMPIDA_ANALISE => "99",     
+
+          SkyRedminePlugin::Constants::SituacaoAtual::CANCELADA => "08",
+          SkyRedminePlugin::Constants::SituacaoAtual::FECHADA_SEM_DESENVOLVIMENTO => "08",
           SkyRedminePlugin::Constants::SituacaoAtual::ESTOQUE_DEVEL => "01",
           SkyRedminePlugin::Constants::SituacaoAtual::EM_ANDAMENTO_DEVEL => "02",
           SkyRedminePlugin::Constants::SituacaoAtual::AGUARDANDO_TESTES_DEVEL => "03",

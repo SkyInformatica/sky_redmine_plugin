@@ -266,7 +266,7 @@ namespace :sky_redmine_plugin do
             puts "  Tempo estimado: #{copied_to_qs_issue.estimated_hours} horas"
             
             # Verificar o indicador após o encaminhamento
-            verificar_indicador(issue.id, SkyRedminePlugin::Constants::SituacaoAtual::AGUARDANDO_VERSAO)
+            verificar_indicador(issue.id, SkyRedminePlugin::Constants::SituacaoAtual::ESTOQUE_QS)
           else
             puts "✗ Falha ao encaminhar a tarefa ##{issue.id} para QS"
           end
