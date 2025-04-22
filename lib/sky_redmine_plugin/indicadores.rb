@@ -320,7 +320,6 @@ module SkyRedminePlugin
           SkyRedminePlugin::Constants::SituacaoAtual::DESCONHECIDA => "99",
           SkyRedminePlugin::Constants::SituacaoAtual::INTERROMPIDA => "99",
           SkyRedminePlugin::Constants::SituacaoAtual::INTERROMPIDA_ANALISE => "99",     
-
           SkyRedminePlugin::Constants::SituacaoAtual::CANCELADA => "08",
           SkyRedminePlugin::Constants::SituacaoAtual::FECHADA_SEM_DESENVOLVIMENTO => "08",
           SkyRedminePlugin::Constants::SituacaoAtual::ESTOQUE_DEVEL => "01",
