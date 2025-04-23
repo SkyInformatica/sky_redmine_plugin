@@ -438,6 +438,7 @@ module SkyRedminePlugin
 
     # Método para determinar a situação atual com base no status das tarefas
     def self.determinar_situacao_atual(indicador, tarefas_relacionadas, tarefas_devel, tarefas_qs, ciclos_devel, ciclos_qs)
+      Rails.logger.info ">>> Determinando situação atual da tarefa"
       # Primeiro verificar se é uma situação DESCONHECIDA
       situacao = verificar_situacao_desconhecida(tarefas_relacionadas, tarefas_devel, ciclos_devel)
       return situacao if situacao
