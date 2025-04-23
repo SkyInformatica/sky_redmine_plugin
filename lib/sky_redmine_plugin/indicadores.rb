@@ -534,6 +534,7 @@ module SkyRedminePlugin
     end
 
     def self.verificar_situacao_cancelada(tarefas_relacionadas)
+      Rails.logger.info ">>> Verificando situação cancelada para a tarefa #{tarefas_relacionadas.last.id} - #{tarefas_relacionadas.last.status.name}"
       return nil if tarefas_relacionadas.empty?
 
       ultima_tarefa = tarefas_relacionadas.last
