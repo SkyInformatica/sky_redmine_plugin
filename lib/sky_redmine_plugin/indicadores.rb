@@ -189,13 +189,39 @@ module SkyRedminePlugin
               # Se não existe tarefa QS, está no DEVEL
               indicador.equipe_responsavel_atual = SkyRedminePlugin::Constants::EquipeResponsavel::DEVEL
             else
-              ultima_tarefa_qs = tarefas_qs.last
               if [SkyRedminePlugin::Constants::IssueStatus::TESTE_OK, SkyRedminePlugin::Constants::IssueStatus::TESTE_NOK,
                   SkyRedminePlugin::Constants::IssueStatus::TESTE_OK_FECHADA, SkyRedminePlugin::Constants::IssueStatus::TESTE_NOK_FECHADA].include?(ultima_tarefa_qs.status.name)
                 indicador.equipe_responsavel_atual = SkyRedminePlugin::Constants::EquipeResponsavel::DEVEL
               else
                 # Se existe tarefa QS e não está fechada, está no QS
                 indicador.equipe_responsavel_atual = SkyRedminePlugin::Constants::EquipeResponsavel::QS
+              end
+            end
+          end
+
+          # Determinar se a tarefa foi fechada sem testes
+          if indicador.data_fechamento_ultima_tarefa_devel.present?
+            if tarefas_qs.empty?
+              # Se não existe tarefa QS e a última tarefa DEVEL está fechada
+              indicador.tarefa_fechada_sem_testes = "SIM"
+
+              # Verificar se a última tarefa QS está CANCELADA
+              if ultima_tarefa_qs.status.name == SkyRedminePlugin::Constants::IssueStatus::CANCELADA
+                indicador.tarefa_fechada_sem_testes = "NAO"
+              else
+                # Se existe tarefa QS, verificar se a tarefa DEVEL foi fechada antes da tarefa QS
+                if indicador.data_fechamento_ultima_tarefa_qs.present?
+                  if indicador.data_fechamento_ultima_tarefa_devel < indicador.data_fechamento_ultima_tarefa_qs
+                    # Se a tarefa DEVEL foi fechada antes da tarefa QS
+                    indicador.tarefa_fechada_sem_testes = "SIM"
+                  else
+                    # Se a tarefa DEVEL foi fechada depois da tarefa QS
+                    indicador.tarefa_fechada_sem_testes = "NAO"
+                  end
+                else
+                  # Se a tarefa QS ainda não foi fechada
+                  indicador.tarefa_fechada_sem_testes = "SIM"
+                end
               end
             end
           end
