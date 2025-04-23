@@ -408,7 +408,7 @@ module SkyRedminePlugin
     def self.determinar_situacao_atual(indicador, tarefas_relacionadas, tarefas_devel, tarefas_qs, ciclos_devel, ciclos_qs)
       # Primeiro verificar se é uma situação DESCONHECIDA
       situacao = verificar_situacao_desconhecida(tarefas_relacionadas, tarefas_devel, ciclos_devel)
-      return situacao if situacao == SkyRedminePlugin::Constants::SituacaoAtual::DESCONHECIDA
+      return situacao if situacao
 
       # Verificar se a última tarefa está nas situações INTERROMPIDA
       situacao_especial = verificar_situacao_interrompida(tarefas_relacionadas)
@@ -511,13 +511,15 @@ module SkyRedminePlugin
         end
       end
 
+      Rails.logger.info ">>> Nenhuma situação identificada para a tarefa #{ultima_tarefa.id} - #{ultima_tarefa.status.name}, retornando DESCONHECIDA"
       # Se nenhuma situação foi identificada, retornar DESCONHECIDA
       SkyRedminePlugin::Constants::SituacaoAtual::DESCONHECIDA
     end
 
-    # Verifica se a última tarefa está nas situações INTERROMPIDA ou CANCELADA
+    # Verifica se a última tarefa está nas situações INTERROMPIDA
     # Retorna a situação correspondente ou nil se não estiver em nenhuma dessas situações
     def self.verificar_situacao_interrompida(tarefas_relacionadas)
+      Rails.logger.info ">>> Verificando situação interrompida para a tarefa #{tarefas_relacionadas.last.id} - #{tarefas_relacionadas.last.status.name}"
       return nil if tarefas_relacionadas.empty?
 
       ultima_tarefa = tarefas_relacionadas.last
@@ -533,6 +535,8 @@ module SkyRedminePlugin
       nil
     end
 
+    # Verifica se a última tarefa está nas situações CANCELADA
+    # Retorna a situação correspondente ou nil se não estiver em nenhuma dessas situações
     def self.verificar_situacao_cancelada(tarefas_relacionadas)
       Rails.logger.info ">>> Verificando situação cancelada para a tarefa #{tarefas_relacionadas.last.id} - #{tarefas_relacionadas.last.status.name}"
       return nil if tarefas_relacionadas.empty?
@@ -550,6 +554,7 @@ module SkyRedminePlugin
     # Verifica se a tarefa não necessita desenvolvimento
     # Retorna a situação correspondente ou nil se não for o caso
     def self.verificar_situacao_sem_desenvolvimento(tarefas_relacionadas, tarefas_devel, ciclos_devel)
+      Rails.logger.info ">>> Verificando situação sem desenvolvimento para a tarefa #{tarefas_relacionadas.last.id} - #{tarefas_relacionadas.last.status.name}"
       return nil if tarefas_relacionadas.empty? || tarefas_devel.empty?
 
       # Verificar se está no primeiro ciclo de desenvolvimento
