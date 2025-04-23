@@ -410,8 +410,12 @@ module SkyRedminePlugin
       situacao = verificar_situacao_desconhecida(tarefas_relacionadas, tarefas_devel, ciclos_devel)
       return situacao if situacao == SkyRedminePlugin::Constants::SituacaoAtual::DESCONHECIDA
 
-      # Verificar se a última tarefa está nas situações INTERROMPIDA ou CANCELADA
-      situacao_especial = verificar_situacao_interrompida_ou_cancelada(tarefas_relacionadas)
+      # Verificar se a última tarefa está nas situações INTERROMPIDA
+      situacao_especial = verificar_situacao_interrompida(tarefas_relacionadas)
+      return situacao_especial if situacao_especial
+
+      # Verificar se a última tarefa está nas situações CANCELADA
+      situacao_especial = verificar_situacao_cancelada(tarefas_devel)
       return situacao_especial if situacao_especial
 
       # Verificar se é uma tarefa que não necessita desenvolvimento
@@ -427,7 +431,8 @@ module SkyRedminePlugin
       end
 
       # Verificar se é uma tarefa que não necessita de QS
-      if ultima_tarefa_devel.teste_qs == SkyRedminePlugin::Constants::CustomFieldsValues::NAO_NECESSITA_TESTE
+      if ultima_tarefa_devel.teste_qs == SkyRedminePlugin::Constants::CustomFieldsValues::NAO_NECESSITA_TESTE ||
+         (tarefas_qs.any? && tarefas_qs.last.status.name == SkyRedminePlugin::Constants::IssueStatus::CANCELADA)
         # Verificar se é um retorno de testes que já passou pelo QS anteriormente
         if ultima_tarefa_devel.tracker.name == SkyRedminePlugin::Constants::Trackers::RETORNO_TESTES &&
            tarefas_qs.any?
@@ -512,7 +517,7 @@ module SkyRedminePlugin
 
     # Verifica se a última tarefa está nas situações INTERROMPIDA ou CANCELADA
     # Retorna a situação correspondente ou nil se não estiver em nenhuma dessas situações
-    def self.verificar_situacao_interrompida_ou_cancelada(tarefas_relacionadas)
+    def self.verificar_situacao_interrompida(tarefas_relacionadas)
       return nil if tarefas_relacionadas.empty?
 
       ultima_tarefa = tarefas_relacionadas.last
@@ -521,6 +526,19 @@ module SkyRedminePlugin
       when SkyRedminePlugin::Constants::IssueStatus::INTERROMPIDA,
            SkyRedminePlugin::Constants::IssueStatus::INTERROMPIDA_ANALISE
         return SkyRedminePlugin::Constants::SituacaoAtual::INTERROMPIDA
+      when SkyRedminePlugin::Constants::IssueStatus::CANCELADA
+        return SkyRedminePlugin::Constants::SituacaoAtual::CANCELADA
+      end
+
+      nil
+    end
+
+    def self.verificar_situacao_cancelada(tarefas_relacionadas)
+      return nil if tarefas_relacionadas.empty?
+
+      ultima_tarefa = tarefas_relacionadas.last
+
+      case ultima_tarefa.status.name
       when SkyRedminePlugin::Constants::IssueStatus::CANCELADA
         return SkyRedminePlugin::Constants::SituacaoAtual::CANCELADA
       end
