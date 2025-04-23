@@ -97,7 +97,7 @@ module SkyRedminePlugin
       DESCONHECIDA = "DESCONHECIDA"
       INTERROMPIDA = "INTERROMPIDA"
       INTERROMPIDA_ANALISE = "INTERROMPIDA_ANALISE"
-      CANCELADA = "CANCELADA" 
+      CANCELADA = "CANCELADA"
       FECHADA_SEM_DESENVOLVIMENTO = "FECHADA_SEM_DESENVOLVIMENTO"
 
       # Situações de desenvolvimento inicial
@@ -128,68 +128,12 @@ module SkyRedminePlugin
       EM_ANDAMENTO_QS_RETORNO_TESTES = "EM_ANDAMENTO_QS_RETORNO_TESTES"
       AGUARDANDO_VERSAO_RETORNO_TESTES = "AGUARDANDO_VERSAO_RETORNO_TESTES"
 
-      # Lista de todas as situações em ordem cronológica
-      TODAS_SITUACOES = [
-        DESCONHECIDA,
-        INTERROMPIDA,
-        INTERROMPIDA_ANALISE,
-        CANCELADA,
-        FECHADA_SEM_DESENVOLVIMENTO,
-        ESTOQUE_DEVEL,
-        EM_ANDAMENTO_DEVEL,
-        AGUARDANDO_TESTES_DEVEL,
-        AGUARDANDO_ENCAMINHAR_RETORNO_TESTES_DEVEL,
-        AGUARDANDO_ENCAMINHAR_QS,
-        ESTOQUE_QS,
-        EM_ANDAMENTO_QS,
-        AGUARDANDO_VERSAO,
-        VERSAO_LIBERADA,
-        AGUARDANDO_ENCAMINHAR_RETORNO_TESTES,
-        ESTOQUE_DEVEL_RETORNO_TESTES,
-        EM_ANDAMENTO_DEVEL_RETORNO_TESTES,
-        AGUARDANDO_ENCAMINHAR_QS_RETORNO_TESTES,
-        ESTOQUE_QS_RETORNO_TESTES,
-        EM_ANDAMENTO_QS_RETORNO_TESTES,
-        AGUARDANDO_VERSAO_RETORNO_TESTES,
-      ]
-
-      # Fluxo de situações ideal (sem retorno de testes)
-      FLUXO_IDEAL = [
-        ESTOQUE_DEVEL,
-        EM_ANDAMENTO_DEVEL,
-        AGUARDANDO_TESTES_DEVEL,
-        AGUARDANDO_ENCAMINHAR_QS,
-        ESTOQUE_QS,
-        EM_ANDAMENTO_QS,
-        AGUARDANDO_VERSAO,
-        VERSAO_LIBERADA,
-      ]
-
-      # Fluxo de situações com retorno de testes
-      FLUXO_RETORNO_TESTES = [
-        ESTOQUE_DEVEL,
-        EM_ANDAMENTO_DEVEL,
-        AGUARDANDO_TESTES_DEVEL,
-        AGUARDANDO_ENCAMINHAR_QS,
-        ESTOQUE_QS,
-        EM_ANDAMENTO_QS,
-        AGUARDANDO_ENCAMINHAR_RETORNO_TESTES,
-        ESTOQUE_DEVEL_RETORNO_TESTES,
-        EM_ANDAMENTO_DEVEL_RETORNO_TESTES,
-        AGUARDANDO_ENCAMINHAR_QS_RETORNO_TESTES,
-        ESTOQUE_QS_RETORNO_TESTES,
-        EM_ANDAMENTO_QS_RETORNO_TESTES,
-        AGUARDANDO_VERSAO_RETORNO_TESTES,
-        VERSAO_LIBERADA,
-      ]
-
       # Fluxo de situações das tarefas que não passam por QS
       FLUXO_SEM_QS = [
         ESTOQUE_DEVEL,
         EM_ANDAMENTO_DEVEL,
         AGUARDANDO_VERSAO,
         VERSAO_LIBERADA,
-        FECHADA_SEM_DESENVOLVIMENTO,
       ]
 
       # Fluxo de situações das tarefas que não passam por QS
@@ -200,8 +144,8 @@ module SkyRedminePlugin
         FECHADA_SEM_DESENVOLVIMENTO,
       ]
 
-
-      FLUXO_IDEAL_COM_RETORNO_TESTES_NO_DESENVOLVIMENTO = [
+      # Fluxo de situações das tarefas que não tem retorno de testes do QS
+      FLUXO_SEM_RETORNO_TESTES = [
         ESTOQUE_DEVEL,
         EM_ANDAMENTO_DEVEL,
         AGUARDANDO_TESTES_DEVEL,
@@ -213,7 +157,8 @@ module SkyRedminePlugin
         VERSAO_LIBERADA,
       ]
 
-      FLUXO_RETORNO_TESTES_COM_RETORNO_TESTES_NO_DESENVOLVIMENTO = [
+      # Fluxo de situações das tarefas que possuem retorno de testes do QS
+      FLUXO_COM_RETORNO_TESTES = [
         ESTOQUE_DEVEL,
         EM_ANDAMENTO_DEVEL,
         AGUARDANDO_TESTES_DEVEL,

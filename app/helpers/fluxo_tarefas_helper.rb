@@ -287,7 +287,7 @@ module FluxoTarefasHelper
   def render_fluxo_tarefas_html(issue)
     tarefas_relacionadas = SkyRedminePlugin::TarefasRelacionadas.obter_lista_tarefas_relacionadas(issue)
     indicadores = SkyRedmineIndicadores.find_by(primeira_tarefa_devel_id: tarefas_relacionadas.first.id)
-   
+
     # Gerar HTML dos cards de indicadores
     html = ""
     html << obter_css_completo
@@ -342,10 +342,10 @@ module FluxoTarefasHelper
     html << "<p><strong>Fluxo das tarefas</strong>"
     html << " ("
     html << link_to("Processar indicadores",
-                          processar_indicadores_tarefa_path(tarefas.first),
-                          method: :post)
+                    processar_indicadores_tarefa_path(tarefas.first),
+                    method: :post)
     html << ")"
-    html << "<p>"    
+    html << "<p>"
 
     secoes.each do |secao|
       # Calcular tempo total gasto na seção
@@ -437,16 +437,16 @@ module FluxoTarefasHelper
       return html.join("\n")
     end
 
-    html << "<div class='description'>"    
+    html << "<div class='description'>"
     html << "<p>"
     html << "<p><strong>Indicadores</strong>"
     html << " ("
     html << link_to("Processar indicadores",
-                          processar_indicadores_tarefa_path(tarefas_relacionadas.first),
-                          method: :post)
+                    processar_indicadores_tarefa_path(tarefas_relacionadas.first),
+                    method: :post)
     html << ")"
-    html << "<p>"  
-    
+    html << "<p>"
+
     if indicadores.nil?
       html << "</div>" # description
       return html.join("\n")
@@ -454,27 +454,26 @@ module FluxoTarefasHelper
 
     html << "<div class='indicadores-container'>"
     if tarefas_relacionadas.first.tarefa_complementar == "SIM"
-      
       html << "<div class='indicadores-grupo'>"
       html << "<div class='indicadores-cards'>"
-  
-      html << render_card("Tarefa complementar", 
-        indicadores.tarefa_complementar, 
-        "", 
-        "Tarefa complementar são tarefas de suporte, planejamento, documentação, videos, etc")
-      html << "</div>" # indicadores-cards
-      html << "</div>" # indicadores-grupo      
-    else      
-      html << "<div class='indicadores-grupo'>"
-      html << "<div class='indicadores-cards'>"
-  
-        # Informações gerais
-      html << render_card("Responsável atual", 
-        indicadores.equipe_responsavel_atual, 
-        indicadores.situacao_atual, 
-        "Equipe responsável pela tarefa")
 
-      if (indicadores.tipo_primeira_tarefa_devel != SkyRedminePlugin::Constants::Trackers::CONVERSAO) && 
+      html << render_card("Tarefa complementar",
+                          indicadores.tarefa_complementar,
+                          "",
+                          "Tarefa complementar são tarefas de suporte, planejamento, documentação, videos, etc")
+      html << "</div>" # indicadores-cards
+      html << "</div>" # indicadores-grupo
+    else
+      html << "<div class='indicadores-grupo'>"
+      html << "<div class='indicadores-cards'>"
+
+      # Informações gerais
+      html << render_card("Responsável atual",
+                          indicadores.equipe_responsavel_atual,
+                          indicadores.situacao_atual,
+                          "Equipe responsável pela tarefa")
+
+      if (indicadores.tipo_primeira_tarefa_devel != SkyRedminePlugin::Constants::Trackers::CONVERSAO) &&
          (indicadores.situacao_atual != SkyRedminePlugin::Constants::SituacaoAtual::FECHADA_SEM_DESENVOLVIMENTO)
         # Card de retorno de testes
         retornos = []
@@ -496,7 +495,7 @@ module FluxoTarefasHelper
           "Versão liberada antes dos testes",
           indicadores.tarefa_fechada_sem_testes || "NAO", "",
           "A versão foi liberada antes da conclusão dos testes"
-        )              
+        )
       end
       html << "</div>" # indicadores-cards
       html << "</div>" # indicadores-grupo
@@ -533,8 +532,8 @@ module FluxoTarefasHelper
                           valor_resolucao, detalhe_resolucao,
                           "Tempo entre a tarefa de desenvolvimento ser colocada em andamento e sua situação ser resolvida (considerando o todos os ciclos incluindo os retornos de testes)")
 
-      if (indicadores.tipo_primeira_tarefa_devel != SkyRedminePlugin::Constants::Trackers::CONVERSAO) && 
-        (indicadores.situacao_atual != SkyRedminePlugin::Constants::SituacaoAtual::FECHADA_SEM_DESENVOLVIMENTO)
+      if (indicadores.tipo_primeira_tarefa_devel != SkyRedminePlugin::Constants::Trackers::CONVERSAO) &&
+         (indicadores.situacao_atual != SkyRedminePlugin::Constants::SituacaoAtual::FECHADA_SEM_DESENVOLVIMENTO)
         # Para encaminhar QS
         ciclos_devel = SkyRedminePlugin::TarefasRelacionadas.separar_ciclos_devel(tarefas_relacionadas)
         primeiro_ciclo_devel = ciclos_devel.first
@@ -548,9 +547,9 @@ module FluxoTarefasHelper
       html << "</div>" # indicadores-cards
       html << "</div>" # indicadores-grupo
 
-      if (indicadores.tipo_primeira_tarefa_devel != SkyRedminePlugin::Constants::Trackers::CONVERSAO) && 
-        (indicadores.situacao_atual != SkyRedminePlugin::Constants::SituacaoAtual::FECHADA_SEM_DESENVOLVIMENTO)
-       # Cards QS
+      if (indicadores.tipo_primeira_tarefa_devel != SkyRedminePlugin::Constants::Trackers::CONVERSAO) &&
+         (indicadores.situacao_atual != SkyRedminePlugin::Constants::SituacaoAtual::FECHADA_SEM_DESENVOLVIMENTO)
+        # Cards QS
         html << "<div class='indicadores-grupo'>"
         tempo_gasto_qs = format("%.2f", indicadores.tempo_gasto_qs.to_f)
         tempo_total_testes = if indicadores.tempo_total_testes
@@ -628,12 +627,12 @@ module FluxoTarefasHelper
         valor_fechamento = formatar_dias(indicadores.tempo_fechamento_devel)
         html << render_card("Liberar versão após concluir o desenvolvimento", valor_fechamento, detalhe_fechamento,
                             "Tempo entre tarefa de desenvolvimento estar concluída e ser fechada (entre estes tempos existe o tempo das tarefas do QS)")
-      
+
         html << "</div>" # indicadores-cards
         html << "</div>" # indicadores-grupo
       end
-      
-       # Timeline de situação atual       
+
+      # Timeline de situação atual
       if indicadores.situacao_atual.present?
         html << render_timeline_situacao_atual(indicadores)
       end
@@ -664,27 +663,17 @@ module FluxoTarefasHelper
       return render_timeline_normal(fluxo, indice_atual, indicadores)
     end
 
-    tem_retorno_testes_qs = indicadores.qtd_retorno_testes_qs.to_i > 0 || 
-                           situacao_atual == SkyRedminePlugin::Constants::SituacaoAtual::AGUARDANDO_ENCAMINHAR_RETORNO_TESTES
-    tem_retorno_testes_devel = indicadores.qtd_retorno_testes_devel.to_i > 0 || 
-                              situacao_atual == SkyRedminePlugin::Constants::SituacaoAtual::AGUARDANDO_ENCAMINHAR_RETORNO_TESTES_DEVEL
+    tem_retorno_testes_qs = indicadores.qtd_retorno_testes_qs.to_i > 0 ||
+                            situacao_atual == SkyRedminePlugin::Constants::SituacaoAtual::AGUARDANDO_ENCAMINHAR_RETORNO_TESTES
 
     # Determinar qual fluxo usar baseado em se teve retornos de testes
-    fluxo = if tem_retorno_testes_qs
-              tem_retorno_testes_devel ? 
-                SkyRedminePlugin::Constants::SituacaoAtual::FLUXO_RETORNO_TESTES_COM_RETORNO_TESTES_NO_DESENVOLVIMENTO :
-                SkyRedminePlugin::Constants::SituacaoAtual::FLUXO_RETORNO_TESTES
-            else
-              tem_retorno_testes_devel ? 
-                SkyRedminePlugin::Constants::SituacaoAtual::FLUXO_IDEAL_COM_RETORNO_TESTES_NO_DESENVOLVIMENTO :
-                SkyRedminePlugin::Constants::SituacaoAtual::FLUXO_IDEAL
-            end
+    fluxo = tem_retorno_testes_qs ?
+      SkyRedminePlugin::Constants::SituacaoAtual::FLUXO_COM_RETORNO_TESTES :
+      SkyRedminePlugin::Constants::SituacaoAtual::FLUXO_SEM_RETORNO_TESTES
 
     # Encontrar o índice da situação atual no fluxo
-    indice_atual = fluxo.index(situacao_atual)    
-    Rails.logger.info(">>>> tem_retorno_testes_qs: #{tem_retorno_testes_qs} - tem_retorno_testes_devel: #{tem_retorno_testes_devel}")
-    Rails.logger.info(">>>> fluxo: #{fluxo}")
-    Rails.logger.info(">>>> indice_atual: #{indice_atual}")
+    indice_atual = fluxo.index(situacao_atual)
+
     return "" unless indice_atual
 
     # Preparar HTML
@@ -720,7 +709,6 @@ module FluxoTarefasHelper
       html << "<div class='timeline-row'>"
       # Se está na segunda parte, ajustar o índice atual para a posição relativa na segunda parte
       indice_segunda_parte = esta_na_primeira_parte ? -1 : indice_atual - (ponto_divisao + 1)
-      Rails.logger.info(">>>> indice_segunda_parte: #{indice_segunda_parte} - indice_atual: #{indice_atual} - esta_na_primeira_parte: #{esta_na_primeira_parte} - ponto_divisao: #{ponto_divisao}")
       html << render_timeline_steps(segunda_parte, indice_segunda_parte, indicadores, !esta_na_primeira_parte)
       html << "</div>"
     else
@@ -759,7 +747,6 @@ module FluxoTarefasHelper
 
   # Método auxiliar para renderizar os passos da timeline
   def render_timeline_steps(fluxo, indice_atual, indicadores, esta_na_parte_atual = true)
-    Rails.logger.info(">>>> render_timeline_steps: fluxo: #{fluxo} - indice_atual: #{indice_atual} - esta_na_parte_atual: #{esta_na_parte_atual}")
     html = "<div class='timeline'>"
 
     fluxo.each_with_index do |situacao, i|
@@ -767,9 +754,6 @@ module FluxoTarefasHelper
       eh_fechada = indicadores&.equipe_responsavel_atual == SkyRedminePlugin::Constants::EquipeResponsavel::FECHADA
       eh_versao_liberada = situacao == SkyRedminePlugin::Constants::SituacaoAtual::VERSAO_LIBERADA
 
-      Rails.logger.info(">>>> i: #{i} - eh_ultima_etapa: #{eh_ultima_etapa} - eh_fechada: #{eh_fechada} - eh_versao_liberada: #{eh_versao_liberada}")
-      Rails.logger.info(">>>> if (!esta_na_parte_atual && i < indice_atual) || (esta_na_parte_atual && i < indice_atual): #{(!esta_na_parte_atual && i < indice_atual) || (esta_na_parte_atual && i < indice_atual)}")
-      Rails.logger.info(">>>> elsif i == indice_atual && esta_na_parte_atual: #{i == indice_atual && esta_na_parte_atual}")
       estado = if (!esta_na_parte_atual && i < indice_atual) || (esta_na_parte_atual && i < indice_atual)
           "completed"
         elsif eh_versao_liberada && i == indice_atual
@@ -782,7 +766,6 @@ module FluxoTarefasHelper
           "future"
         end
 
-      Rails.logger.info(">>>> situacao: #{situacao} - estado: #{estado}")
       texto_situacao = situacao.gsub("_", " ")
 
       # Adicionar o contador de retornos se for ESTOQUE_DEVEL_RETORNO_TESTES ou AGUARDANDO_ENCAMINHAR_RETORNO_TESTES_DEVEL
