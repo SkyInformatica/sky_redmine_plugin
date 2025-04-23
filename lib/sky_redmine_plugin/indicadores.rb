@@ -200,12 +200,13 @@ module SkyRedminePlugin
           end
 
           # Determinar se a tarefa foi fechada sem testes
+          Rails.logger.info ">>> Verificando se a tarefa foi fechada sem testes"
           if indicador.data_fechamento_ultima_tarefa_devel.present?
             if tarefas_qs.empty?
               # Se não existe tarefa QS e a última tarefa DEVEL está fechada
               indicador.tarefa_fechada_sem_testes = "SIM"
             else
-
+              Rails.logger.info ">>> Verificando se a ultima tarefa QS está CANCELADA #{ultima_tarefa_qs.id} - #{ultima_tarefa_qs.status.name}"
               # Verificar se a última tarefa QS está CANCELADA
               if ultima_tarefa_qs.status.name == SkyRedminePlugin::Constants::IssueStatus::CANCELADA
                 indicador.tarefa_fechada_sem_testes = "NAO"
@@ -213,13 +214,16 @@ module SkyRedminePlugin
                 # Se existe tarefa QS, verificar se a tarefa DEVEL foi fechada antes da tarefa QS
                 if indicador.data_fechamento_ultima_tarefa_qs.present?
                   if indicador.data_fechamento_ultima_tarefa_devel < indicador.data_fechamento_ultima_tarefa_qs
+                    Rails.logger.info ">>> A tarefa DEVEL foi fechada antes da tarefa QS"
                     # Se a tarefa DEVEL foi fechada antes da tarefa QS
                     indicador.tarefa_fechada_sem_testes = "SIM"
                   else
+                    Rails.logger.info ">>> A tarefa DEVEL não foi fechada antes da tarefa QS"
                     # Se a tarefa DEVEL foi fechada depois da tarefa QS
                     indicador.tarefa_fechada_sem_testes = "NAO"
                   end
                 else
+                  Rails.logger.info ">>> A tarefa QS ainda não foi fechada"
                   # Se a tarefa QS ainda não foi fechada
                   indicador.tarefa_fechada_sem_testes = "SIM"
                 end
