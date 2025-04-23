@@ -70,7 +70,7 @@ module SkyRedminePlugin
         indicador.data_resolvida_ultima_tarefa_devel = ultima_tarefa_devel.data_resolvida
         indicador.data_fechamento_ultima_tarefa_devel = ultima_tarefa_devel.data_fechada
 
-        if indicador.tarefa_complementar == 'NAO'
+        if indicador.tarefa_complementar == "NAO"
           # Contar retornos de testes baseado no fluxo entre projetos
           qtd_retorno_testes_qs = 0
           qtd_retorno_testes_devel = 0
@@ -79,14 +79,14 @@ module SkyRedminePlugin
 
             # Se a tarefa atual é DEVEL e a anterior era QS, é um retorno de testes do QS
             if tarefa.equipe_responsavel == SkyRedminePlugin::Constants::EquipeResponsavel::DEVEL &&
-              tarefas_relacionadas[index - 1].equipe_responsavel == SkyRedminePlugin::Constants::EquipeResponsavel::QS
+               tarefas_relacionadas[index - 1].equipe_responsavel == SkyRedminePlugin::Constants::EquipeResponsavel::QS
               qtd_retorno_testes_qs += 1
             end
 
             # Se a tarefa atual é DEVEL e é um retorno de testes, e a anterior foi fechada com FECHADA_CONTINUA_RETORNO_TESTES
             if tarefa.equipe_responsavel == SkyRedminePlugin::Constants::EquipeResponsavel::DEVEL &&
-              tarefa.tracker.name == SkyRedminePlugin::Constants::Trackers::RETORNO_TESTES &&
-              tarefas_relacionadas[index - 1].status.name == SkyRedminePlugin::Constants::IssueStatus::FECHADA_CONTINUA_RETORNO_TESTES
+               tarefa.tracker.name == SkyRedminePlugin::Constants::Trackers::RETORNO_TESTES &&
+               tarefas_relacionadas[index - 1].status.name == SkyRedminePlugin::Constants::IssueStatus::FECHADA_CONTINUA_RETORNO_TESTES
               qtd_retorno_testes_devel += 1
             end
           end
@@ -234,7 +234,7 @@ module SkyRedminePlugin
 
           # Calcular tempo total de testes
           if indicador.data_criacao_primeira_tarefa_qs && indicador.data_resolvida_ultima_tarefa_qs &&
-            [SkyRedminePlugin::Constants::IssueStatus::TESTE_OK,
+             [SkyRedminePlugin::Constants::IssueStatus::TESTE_OK,
               SkyRedminePlugin::Constants::IssueStatus::TESTE_OK_FECHADA].include?(ultima_tarefa_qs.status.name)
             indicador.tempo_total_testes = (indicador.data_resolvida_ultima_tarefa_qs - indicador.data_criacao_primeira_tarefa_qs).to_i
           end
@@ -244,7 +244,6 @@ module SkyRedminePlugin
             indicador.tempo_total_devel_concluir_testes = (indicador.data_resolvida_ultima_tarefa_qs.to_date - indicador.data_criacao_ou_atendimento_primeira_tarefa_devel.to_date).to_i
           end
 
-        
           # Determinar a situação atual do desenvolvimento
           indicador.situacao_atual = determinar_situacao_atual(indicador, tarefas_relacionadas, tarefas_devel, tarefas_qs, ciclos_devel, ciclos_qs)
           # Atualizar as tags das tarefas com a situação atual
@@ -319,7 +318,7 @@ module SkyRedminePlugin
         prefixos_situacoes = {
           SkyRedminePlugin::Constants::SituacaoAtual::DESCONHECIDA => "99",
           SkyRedminePlugin::Constants::SituacaoAtual::INTERROMPIDA => "99",
-          SkyRedminePlugin::Constants::SituacaoAtual::INTERROMPIDA_ANALISE => "99",     
+          SkyRedminePlugin::Constants::SituacaoAtual::INTERROMPIDA_ANALISE => "99",
           SkyRedminePlugin::Constants::SituacaoAtual::CANCELADA => "08",
           SkyRedminePlugin::Constants::SituacaoAtual::FECHADA_SEM_DESENVOLVIMENTO => "08",
           SkyRedminePlugin::Constants::SituacaoAtual::ESTOQUE_DEVEL => "01",
@@ -345,7 +344,7 @@ module SkyRedminePlugin
           else
             prefixo_num = prefixos_situacoes[situacao_atual]
             situacao_formatada = situacao_atual.gsub("RETORNO_TESTES", "RT").gsub("AGUARDANDO", "AGUARDA")
-            
+
             # Adicionar sufixo _APTAS se for ESTOQUE_DEVEL e estiver na sprint "Aptas para desenvolvimento"
             if situacao_atual == SkyRedminePlugin::Constants::SituacaoAtual::ESTOQUE_DEVEL &&
                !tarefas_devel.empty? &&
@@ -430,7 +429,7 @@ module SkyRedminePlugin
       # Verificar se é uma tarefa que não necessita de QS
       if ultima_tarefa_devel.teste_qs == SkyRedminePlugin::Constants::CustomFieldsValues::NAO_NECESSITA_TESTE
         # Verificar se é um retorno de testes que já passou pelo QS anteriormente
-        if ultima_tarefa_devel.tracker.name == SkyRedminePlugin::Constants::Trackers::RETORNO_TESTES && 
+        if ultima_tarefa_devel.tracker.name == SkyRedminePlugin::Constants::Trackers::RETORNO_TESTES &&
            tarefas_qs.any?
           case ultima_tarefa_devel.status.name
           when SkyRedminePlugin::Constants::IssueStatus::NOVA
@@ -455,7 +454,11 @@ module SkyRedminePlugin
 
       # Verificar se está no primeiro ciclo com teste no desenvolvimento
       if ciclos_devel.size == 1 && ultima_tarefa_devel.teste_no_desenvolvimento != SkyRedminePlugin::Constants::CustomFieldsValues::NAO_NECESSITA_TESTE
-        if ultima_tarefa_devel.status.name == SkyRedminePlugin::Constants::IssueStatus::RESOLVIDA
+        # Adicionar verificação se já existe tarefa de QS
+        ja_tem_tarefa_qs = !tarefas_qs.empty?
+
+        # Se já tem tarefa QS, ignorar o teste no desenvolvimento
+        if !ja_tem_tarefa_qs && ultima_tarefa_devel.status.name == SkyRedminePlugin::Constants::IssueStatus::RESOLVIDA
           if ultima_tarefa_devel.teste_no_desenvolvimento == SkyRedminePlugin::Constants::CustomFieldsValues::NAO_TESTADA
             return SkyRedminePlugin::Constants::SituacaoAtual::AGUARDANDO_TESTES_DEVEL
           elsif ultima_tarefa_devel.teste_no_desenvolvimento == SkyRedminePlugin::Constants::CustomFieldsValues::TESTE_NOK
@@ -484,7 +487,6 @@ module SkyRedminePlugin
                    SkyRedminePlugin::Constants::SituacaoAtual::AGUARDANDO_ENCAMINHAR_QS_RETORNO_TESTES :
                    SkyRedminePlugin::Constants::SituacaoAtual::AGUARDANDO_ENCAMINHAR_QS
         end
-
       when SkyRedminePlugin::Constants::EquipeResponsavel::QS
         case ultima_tarefa.status.name
         when SkyRedminePlugin::Constants::IssueStatus::NOVA
@@ -514,15 +516,15 @@ module SkyRedminePlugin
       return nil if tarefas_relacionadas.empty?
 
       ultima_tarefa = tarefas_relacionadas.last
-      
+
       case ultima_tarefa.status.name
-      when SkyRedminePlugin::Constants::IssueStatus::INTERROMPIDA, 
+      when SkyRedminePlugin::Constants::IssueStatus::INTERROMPIDA,
            SkyRedminePlugin::Constants::IssueStatus::INTERROMPIDA_ANALISE
         return SkyRedminePlugin::Constants::SituacaoAtual::INTERROMPIDA
       when SkyRedminePlugin::Constants::IssueStatus::CANCELADA
         return SkyRedminePlugin::Constants::SituacaoAtual::CANCELADA
       end
-      
+
       nil
     end
 
@@ -535,12 +537,12 @@ module SkyRedminePlugin
       return nil if ciclos_devel.size > 1
 
       ultima_tarefa_devel = tarefas_devel.last
-      
+
       # Verificar se a última tarefa DEVEL está com situação FECHADA_SEM_DESENVOLVIMENTO
       if ultima_tarefa_devel.status.name == SkyRedminePlugin::Constants::IssueStatus::FECHADA_SEM_DESENVOLVIMENTO
         return SkyRedminePlugin::Constants::SituacaoAtual::FECHADA_SEM_DESENVOLVIMENTO
       end
-      
+
       nil
     end
 

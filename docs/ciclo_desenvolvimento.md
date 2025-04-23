@@ -11,7 +11,7 @@
 ## Ciclo normal de uma tarefa de desenvolvimento quando não há retorno de testes
 
 - As situações esperadas para as tarefas de DEVEL são, na ordem cronológica, NOVA (quando criadas) -> EM_ANDAMENTO -> RESOLVIDA -> FECHADA
-- Entre a situação RESOLVIDA e FECHADA as tarefas são encaminhadas para o QS.
+- Entre a situação RESOLVIDA e FECHADA as tarefas são encaminhadas para os testes, primeiro pela equipe de DEVEL (testes entre os pares) e depois para o QS.
 - No QS as tarefas são NOVA (quando criadas) -> EM_ANDAMENTO -> TESTE_OK -> TESTE_OK_FECHADA.
 
 ## Situação CONTINUA_PROXIMA_SPRINT
@@ -155,7 +155,9 @@ Essa sao situacoes opcionais que irão ocorrer no primeiro ciclo do desenvolvime
 - AGUARDANDO_TESTES_DEVEL: depois da tarefa DEVEL estar com situação RESOLVIDA ela deve ser testada entre os pares de desenvolvedores antes de encaminhar para o QS. Então essa situação irá ocorrer entre EM_ANDAMENTO e AGUARDANDO_ENCAMINHAR_QS. Neste caso o campo "teste_no_desenvolvimento" vai estar definido com NAO_TESTADA
 - AGUARDANDO_ENCAMINHAR_RETORNO_TESTES_DEVEL: depois da tarefa DEVEL estar testada entre os pares do desenvolvedores pode-se encontrar um TESTE_NOK no campo "teste_no_desenvolvimento" e uma tarefa de RETORNO_TESTES será criada para resolver o problema. A tarefa vai estar nesta situação sempre que o teste do desenvolvimento
   foi concluido e o resultado foi TESTE_NOK no campo "teste_no_desenvolvimento". Se o teste tiver o resultado TESTE_OK então vai estar AGUARDANDO_ENCAMINHAR_QS
+- Observacao importante: mesmo se a tarefa estiver com o campo "teste_no_desenvolvimento" coo NAO_TESTADA e a tarefa do QS já foi encaminhada entao considerar que os testes no desenvolvimento nao serao feitos, ou seja, a mesma coisa que é usado no NAO_NECESSITA_TESTE
 - Neste caso existem dois novos fluxos para representar quando há teste no desenvolvimento no primeiro ciclo que sao FLUXO_IDEAL_COM_TESTE_NO_DESENVOLVIMENTO e FLUXO_RETORNO_TESTES_COM_TESTE_NO_DESENVOLVIMENTO
+-
 
 # Situações que devem ser tratadas como exceção e definir situação DESCONHECIDO
 
