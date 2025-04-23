@@ -528,8 +528,6 @@ module SkyRedminePlugin
       when SkyRedminePlugin::Constants::IssueStatus::INTERROMPIDA,
            SkyRedminePlugin::Constants::IssueStatus::INTERROMPIDA_ANALISE
         return SkyRedminePlugin::Constants::SituacaoAtual::INTERROMPIDA
-      when SkyRedminePlugin::Constants::IssueStatus::CANCELADA
-        return SkyRedminePlugin::Constants::SituacaoAtual::CANCELADA
       end
 
       nil
