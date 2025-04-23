@@ -209,6 +209,7 @@ module SkyRedminePlugin
               Rails.logger.info ">>> Verificando se a ultima tarefa QS está CANCELADA #{ultima_tarefa_qs.id} - #{ultima_tarefa_qs.status.name}"
               # Verificar se a última tarefa QS está CANCELADA
               if ultima_tarefa_qs.status.name == SkyRedminePlugin::Constants::IssueStatus::CANCELADA
+                Rails.logger.info ">>> A tarefa QS está CANCELADA"
                 indicador.tarefa_fechada_sem_testes = "NAO"
               else
                 # Se existe tarefa QS, verificar se a tarefa DEVEL foi fechada antes da tarefa QS
