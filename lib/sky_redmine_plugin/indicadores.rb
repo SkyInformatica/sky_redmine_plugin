@@ -204,6 +204,7 @@ module SkyRedminePlugin
             if tarefas_qs.empty?
               # Se não existe tarefa QS e a última tarefa DEVEL está fechada
               indicador.tarefa_fechada_sem_testes = "SIM"
+            else
 
               # Verificar se a última tarefa QS está CANCELADA
               if ultima_tarefa_qs.status.name == SkyRedminePlugin::Constants::IssueStatus::CANCELADA
