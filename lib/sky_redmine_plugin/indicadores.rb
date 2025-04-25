@@ -5,6 +5,11 @@ module SkyRedminePlugin
     def self.processar_indicadores(issue, is_exclusao = false)
       Rails.logger.info ">>> inicio processar_indicadores issue.id: #{issue.id}, is_exclusao: #{is_exclusao}"
 
+      # Verifica se o projeto da tarefa está na lista de projetos relevantes, se nao estiver, nao continua o processamento
+      if !SkyRedminePlugin::Constants::Projects::TODOS_PROJETOS.include?(issue.project.name)
+        return
+      end
+
       # Se é uma exclusão, procurar o indicador por qualquer um dos campos de ID
       if is_exclusao
         indicador = SkyRedmineIndicadores.find_by(

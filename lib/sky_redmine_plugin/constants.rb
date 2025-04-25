@@ -36,6 +36,16 @@ module SkyRedminePlugin
       QS_PROJECTS = [NOTARIAL_QS, REGISTRAL_QS]
       REGISTRAL_PROJECTS = [CIVIL, TED, IMOVEIS]
       NOTARIAL_PROJECTS = [NOTAR, PROTESTO, FINANCEIRO]
+      TODOS_PROJETOS = [
+        NOTARIAL_QS,
+        REGISTRAL_QS,
+        NOTAR,
+        PROTESTO,
+        FINANCEIRO,
+        TED,
+        CIVIL,
+        IMOVEIS,
+      ]
     end
 
     module Trackers

@@ -3,7 +3,6 @@ module SkyRedminePlugin
     class ControllerHooks < Redmine::Hook::Listener
       include CriarTarefasHelper
       include FluxoTarefasHelper
-   
 
       def controller_issues_bulk_edit_before_save(context = {})
         Rails.logger.info ">>> controller_issues_bulk_edit_before_save"
@@ -17,7 +16,7 @@ module SkyRedminePlugin
         new_status_name = IssueStatus.find_by(id: new_status_id)&.name
         return unless new_status_name
 
-        Rails.logger.info ">>> new_status_name: #{new_status_name}"        
+        Rails.logger.info ">>> new_status_name: #{new_status_name}"
         processar_tarefa(issue, new_status_name)
         SkyRedminePlugin::Indicadores.processar_indicadores(issue)
       end
@@ -55,7 +54,11 @@ module SkyRedminePlugin
 
       def processar_tarefa(issue, new_status_name)
         Rails.logger.info ">>> processar tarefa #{issue.id} com status #{new_status_name}"
-        
+        # Verifica se o projeto da tarefa está na lista de projetos relevantes, se nao estiver, nao continua o processamento
+        if !SkyRedminePlugin::Constants::Projects::TODOS_PROJETOS.include?(issue.project.name)
+          return
+        end
+
         # Chama a atualização da data de início se necessário
         atualizar_data_inicio(issue, new_status_name)
 
@@ -66,7 +69,7 @@ module SkyRedminePlugin
         fechar_tarefa_qs(issue, new_status_name)
 
         # Atualizar status tarefa QS na tarefa de desenvolvimento
-        atualizar_status_tarefa_qs_tarefa_devel(issue, new_status_name)       
+        atualizar_status_tarefa_qs_tarefa_devel(issue, new_status_name)
       end
 
       def atualizar_status_tarefa_qs_tarefa_devel(issue, new_status_name)
