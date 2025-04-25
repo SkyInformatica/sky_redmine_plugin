@@ -291,8 +291,10 @@ module FluxoTarefasHelper
     # Gerar HTML dos cards de indicadores
     html = ""
     html << obter_css_completo
-    # Adicionar cards se houver indicadores
-    html << render_cards_indicadores(indicadores, tarefas_relacionadas)
+    if SkyRedminePlugin::Constants::Projects::TODOS_PROJETOS.include?(issue.project.name)
+      # Adicionar cards se houver indicadores
+      html << render_cards_indicadores(indicadores, tarefas_relacionadas)
+    end
 
     # Gerar HTML do fluxo de tarefas
     html << gerar_texto_fluxo_html(tarefas_relacionadas, issue.id)
