@@ -49,7 +49,7 @@ namespace :sky_redmine_plugin do
         projeto: tarefa.project.name,
         tipo: tarefa.tracker.name,
         status: tarefa.status.name,
-        sprint: tarefa.fixed_version.name,
+        sprint: tarefa.fixed_version.present? ? tarefa.fixed_version.name : nil,
         tempo_estimado: tarefa.estimated_hours,
         tempo_gasto: tarefa.spent_hours,
         prioridade: tarefa.priority.name,
