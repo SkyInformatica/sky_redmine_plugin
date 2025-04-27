@@ -191,7 +191,7 @@ module SkyRedminePlugin
           if (tarefas_qs.empty? &&
               [SkyRedminePlugin::Constants::CustomFieldsValues::NAO_NECESSITA_TESTE].include?(ultima_tarefa_devel.teste_qs) &&
               [SkyRedminePlugin::Constants::IssueStatus::FECHADA].include?(ultima_tarefa_devel.status.name)) ||
-             (!tarefa_qs.empty? &&
+             (!tarefas_qs.empty? &&
               [SkyRedminePlugin::Constants::IssueStatus::TESTE_OK, SkyRedminePlugin::Constants::IssueStatus::TESTE_NOK,
                SkyRedminePlugin::Constants::IssueStatus::TESTE_OK_FECHADA, SkyRedminePlugin::Constants::IssueStatus::TESTE_NOK_FECHADA, SkyRedminePlugin::Constants::IssueStatus::CANCELADA].include?(ultima_tarefa_qs.status.name) &&
               [SkyRedminePlugin::Constants::IssueStatus::FECHADA].include?(ultima_tarefa_devel.status.name))
