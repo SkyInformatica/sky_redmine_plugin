@@ -187,15 +187,22 @@ module SkyRedminePlugin
           # Determinar o local atual da tarefa
           # Se a última tarefa DEVEL está fechada, está FECHADA
           ultima_tarefa_devel = tarefas_devel.last
-          if [SkyRedminePlugin::Constants::IssueStatus::FECHADA].include?(ultima_tarefa_devel.status.name)
+
+          if (tarefas_qs.empty? &&
+              [SkyRedminePlugin::Constants::CustomFieldsValues::NAO_NECESSITA_TESTE].include?(ultima_tarefa_devel.teste_qs) &&
+              [SkyRedminePlugin::Constants::IssueStatus::FECHADA].include?(ultima_tarefa_devel.status.name)) ||
+             (!tarefa_qs.empty? &&
+              [SkyRedminePlugin::Constants::IssueStatus::TESTE_OK, SkyRedminePlugin::Constants::IssueStatus::TESTE_NOK,
+               SkyRedminePlugin::Constants::IssueStatus::TESTE_OK_FECHADA, SkyRedminePlugin::Constants::IssueStatus::TESTE_NOK_FECHADA, SkyRedminePlugin::Constants::IssueStatus::CANCELADA].include?(ultima_tarefa_qs.status.name) &&
+              [SkyRedminePlugin::Constants::IssueStatus::FECHADA].include?(ultima_tarefa_devel.status.name))
             indicador.equipe_responsavel_atual = SkyRedminePlugin::Constants::EquipeResponsavel::FECHADA
           else
-            if tarefas_qs.empty?
+            if tarefas_qs.empty? || ultima_tarefa_devel.teste_qs == SkyRedminePlugin::Constants::CustomFieldsValues::NAO_NECESSITA_TESTE
               # Se não existe tarefa QS, está no DEVEL
               indicador.equipe_responsavel_atual = SkyRedminePlugin::Constants::EquipeResponsavel::DEVEL
             else
-              if [SkyRedminePlugin::Constants::IssueStatus::TESTE_OK, SkyRedminePlugin::Constants::IssueStatus::TESTE_NOK,
-                  SkyRedminePlugin::Constants::IssueStatus::TESTE_OK_FECHADA, SkyRedminePlugin::Constants::IssueStatus::TESTE_NOK_FECHADA].include?(ultima_tarefa_qs.status.name)
+              if tarefas_qs.size > 0 && [SkyRedminePlugin::Constants::IssueStatus::TESTE_OK, SkyRedminePlugin::Constants::IssueStatus::TESTE_NOK,
+                                         SkyRedminePlugin::Constants::IssueStatus::TESTE_OK_FECHADA, SkyRedminePlugin::Constants::IssueStatus::TESTE_NOK_FECHADA].include?(ultima_tarefa_qs.status.name)
                 indicador.equipe_responsavel_atual = SkyRedminePlugin::Constants::EquipeResponsavel::DEVEL
               else
                 # Se existe tarefa QS e não está fechada, está no QS
@@ -535,6 +542,11 @@ module SkyRedminePlugin
                    SkyRedminePlugin::Constants::SituacaoAtual::AGUARDANDO_VERSAO
         when SkyRedminePlugin::Constants::IssueStatus::TESTE_NOK
           return SkyRedminePlugin::Constants::SituacaoAtual::AGUARDANDO_ENCAMINHAR_RETORNO_TESTES
+        end
+      when SkyRedminePlugin::Constants::EquipeResponsavel::FECHADA
+        case ultima_tarefa.status.name
+        when SkyRedminePlugin::Constants::IssueStatus::FECHADA
+          return SkyRedminePlugin::Constants::SituacaoAtual::VERSAO_LIBERADA
         end
       end
 

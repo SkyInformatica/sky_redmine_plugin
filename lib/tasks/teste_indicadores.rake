@@ -1,6 +1,8 @@
 # para executar os testes de indicadores use o comando
 # RAILS_ENV=production rake sky_redmine_plugin:teste_indicadores
 
+# tarefa #79135 - versao liberada antes dos testes
+
 namespace :sky_redmine_plugin do
   desc "Executa os testes de indicadores no ambiente especificado"
   task :teste_indicadores => :environment do
