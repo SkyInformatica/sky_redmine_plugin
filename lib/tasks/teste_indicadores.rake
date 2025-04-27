@@ -303,6 +303,7 @@ namespace :sky_redmine_plugin do
     if issue
       if trocar_status(issue, @status_em_andamento, "Status alterado para Em andamento")
         if trocar_status(issue, @status_resolvida, "Status alterado para Resolvida")
+          issue = Issue.find(issue.id)
           # Precisamos primeiro encaminhar para QS
           controller = EncaminharQsController.new
           controller.instance_variable_set(:@issue, issue)
