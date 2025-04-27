@@ -238,6 +238,7 @@ namespace :sky_redmine_plugin do
         if trocar_status(issue, @status_resolvida, "Status alterado para Resolvida")
           if trocar_status(issue, @status_fechada, "Status alterado para Fechada")
             verificar_indicador(issue.id, SkyRedminePlugin::Constants::SituacaoAtual::VERSAO_LIBERADA)
+          end
         end
       end
     end
