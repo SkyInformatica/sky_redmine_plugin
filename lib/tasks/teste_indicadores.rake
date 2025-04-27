@@ -12,6 +12,7 @@ namespace :sky_redmine_plugin do
     @status_nova = IssueStatus.find_by(name: "Nova")
     @status_em_andamento = IssueStatus.find_by(name: "Em andamento")
     @status_resolvida = IssueStatus.find_by(name: "Resolvida")
+    @status_fechada = IssueStatus.find_by(name: "Fechada")
     @author = User.find_by(login: "maglan")
     @cf_teste_no_desenvolvimento = CustomField.find_by(name: SkyRedminePlugin::Constants::CustomFields::TESTE_NO_DESENVOLVIMENTO)
     @cf_teste_qs = CustomField.find_by(name: SkyRedminePlugin::Constants::CustomFields::TESTE_QS)
@@ -32,6 +33,7 @@ namespace :sky_redmine_plugin do
     #criar_tarefa_nova(SkyRedminePlugin::Constants::Trackers::CONVERSAO)
     #criar_tarefa_nova_em_andamento(SkyRedminePlugin::Constants::Trackers::CONVERSAO)
     #criar_tarefa_nova_em_andamento_resolvida(SkyRedminePlugin::Constants::Trackers::CONVERSAO)
+    criar_tarefa_nova_em_andamento_resolvida_fechada(SkyRedminePlugin::Constants::Trackers::CONVERSAO)
 
     # Testes no desenvolvimento
     #criar_tarefa_teste_no_desenvolvimento_nao_necessita_teste
@@ -45,7 +47,7 @@ namespace :sky_redmine_plugin do
     # No método principal do rake task, adicione:
     #criar_tarefa_desconhecida_fechada_continua_sem_retorno
     #criar_tarefa_desconhecida_teste_nok_fechada_sem_retorno
-    criar_tarefa_desconhecida_continuidade_nao_retorno
+    #criar_tarefa_desconhecida_continuidade_nao_retorno
 
     puts "\nTestes concluídos!"
   end
@@ -219,6 +221,23 @@ namespace :sky_redmine_plugin do
       if trocar_status(issue, @status_em_andamento, "Status alterado para Em andamento")
         if trocar_status(issue, @status_resolvida, "Status alterado para Resolvida")
           verificar_indicador(issue.id, SkyRedminePlugin::Constants::SituacaoAtual::AGUARDANDO_TESTES_DEVEL)
+        end
+      end
+    end
+  end
+
+  # Criar uma tarefa nova, colocá-la em andamento e depois resolvida
+  def criar_tarefa_nova_em_andamento_resolvida_fechada(tracker_name = nil)
+    tracker = tracker_name ? Tracker.find_by(name: tracker_name) : @tracker
+    suffix = tracker_name ? " (#{tracker_name})" : ""
+    puts "\n\n=== Criar uma tarefa nova, colocá-la em andamento e depois resolvida#{suffix} ==="
+    issue = criar_tarefa("Tarefa Nova para Em Andamento para Resolvida#{suffix}", tracker)
+
+    if issue
+      if trocar_status(issue, @status_em_andamento, "Status alterado para Em andamento")
+        if trocar_status(issue, @status_resolvida, "Status alterado para Resolvida")
+          if trocar_status(issue, @status_fechada, "Status alterado para Fechada")
+            verificar_indicador(issue.id, SkyRedminePlugin::Constants::SituacaoAtual::VERSAO_LIBERADA)
         end
       end
     end
