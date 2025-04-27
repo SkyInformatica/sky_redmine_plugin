@@ -739,7 +739,7 @@ module FluxoTarefasHelper
 
     # Adicionar o motivo se existir
     if motivo.present?
-      html << "<br>#{motivo}"
+      html << "<br><br>#{motivo}"
     end
 
     html << "</div></div>"
