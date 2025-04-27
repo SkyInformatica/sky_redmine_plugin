@@ -541,10 +541,7 @@ module SkyRedminePlugin
                    SkyRedminePlugin::Constants::SituacaoAtual::AGUARDANDO_VERSAO
         when SkyRedminePlugin::Constants::IssueStatus::TESTE_NOK
           return SkyRedminePlugin::Constants::SituacaoAtual::AGUARDANDO_ENCAMINHAR_RETORNO_TESTES
-        end
-      when SkyRedminePlugin::Constants::EquipeResponsavel::FECHADA
-        case ultima_tarefa.status.name
-        when SkyRedminePlugin::Constants::IssueStatus::FECHADA
+        when SkyRedminePlugin::Constants::IssueStatus::TESTE_OK_FECHADA
           return SkyRedminePlugin::Constants::SituacaoAtual::VERSAO_LIBERADA
         end
       end
