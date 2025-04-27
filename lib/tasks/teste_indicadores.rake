@@ -423,6 +423,7 @@ namespace :sky_redmine_plugin do
             controller = RetornoTestesController.new
             controller.instance_variable_set(:@issue, tarefa_qs)
             controller.instance_variable_set(:@processed_issues, [])
+            controller.params = { usar_sprint_atual: false }
             controller.retorno_testes_qs(false, true)
 
             # Localizar a tarefa de retorno de testes criada
