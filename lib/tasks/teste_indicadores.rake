@@ -419,6 +419,7 @@ namespace :sky_redmine_plugin do
             # Trocar status da tarefa QS para TESTE_NOK
             status_teste_nok = IssueStatus.find_by(name: SkyRedminePlugin::Constants::IssueStatus::TESTE_NOK)
             trocar_status(tarefa_qs, status_teste_nok, "Status alterado para TESTE_NOK")
+            tarefa_qs = Issue.find(tarefa_qs.id)
 
             controller = RetornoTestesController.new
             controller.instance_variable_set(:@issue, tarefa_qs)
@@ -430,6 +431,7 @@ namespace :sky_redmine_plugin do
             tarefa_retorno_testes = SkyRedminePlugin::TarefasRelacionadas.localizar_tarefa_continuidade(tarefa_qs)
             if tarefa_retorno_testes
               trocar_tipo_tarefa(tarefa_retorno_testes, SkyRedminePlugin::Constants::Trackers::DEFEITO)
+              tarefa_retorno_testes = Issue.find(tarefa_retorno_testes.id)
 
               verificar_indicador(issue.id, SkyRedminePlugin::Constants::SituacaoAtual::DESCONHECIDA)
             end

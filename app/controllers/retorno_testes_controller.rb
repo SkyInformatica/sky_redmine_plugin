@@ -87,7 +87,7 @@ class RetornoTestesController < ApplicationController
   end
 
   def retorno_testes_qs(is_batch_call = false, is_task_rake = false)
-    Rails.logger.info ">>> retorno_testes_qs #{@issue.id}"
+    Rails.logger.info ">>> retorno_testes_qs #{@issue.id} - is_batch_call #{is_batch_call} - is_task_rake #{is_task_rake}"
     @origem_retorno_teste = ORIGEM_RETORNO_TESTE_QS
     usar_sprint_atual = params[:usar_sprint_atual].present?
 
