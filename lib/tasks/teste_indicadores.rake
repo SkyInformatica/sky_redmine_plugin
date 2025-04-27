@@ -157,7 +157,6 @@ namespace :sky_redmine_plugin do
   def verificar_indicador(issue_id, situacao_esperada)
     puts "\n>> Verificação do Indicador para a Tarefa ##{issue_id}"
 
-    SkyRedminePlugin::Indicadores.processar_indicadores(issue_id)
     # Buscar o indicador pelo número da tarefa
     indicador = SkyRedmineIndicadores.find_by(primeira_tarefa_devel_id: issue_id)
 
