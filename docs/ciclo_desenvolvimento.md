@@ -122,20 +122,24 @@ DEVEL Tarefa ID 100 NOVA -> DEVEL Tarefa ID 100 EM_ANDAMENTO -> DEVEL Tarefa ID 
 - AGUARDANDO_VERSAO: Está com testes concluídos com situação TESTE_OK e aguardando liberação da versão
 - VERSAO_LIBERADA: A versão foi liberada, a tarefa de DEVEL está com situação FECHADA
 
-## FLUXO_IDEAL: define o fluxo ideal das tarefas que não possuem retorno de testes do QS
+## FLUXO_SEM_RETORNO_TESTES: define o fluxo ideal das tarefas que não possuem retorno de testes do QS
 
 - ESTOQUE_DEVEL: Tarefa que está no estoque, uma tarefa DEVEL com a situação NOVA
 - EM_ANDAMENTO_DEVEL: Tarefa que está em desenvolvimento, uma tarefa DEVEL com a situação EM_ANDAMENTO
+- AGUARDANDO_TESTES_DEVEL: Aguardando os testes do desenvolvimento antes de encaminhar para os testes do QS
+- AGUARDANDO_ENCAMINHAR_RETORNO_TESTES_DEVEL: Se há um teste NOK no desenvolvimento e aguardando criar uma tarefa de Retorno de testes
 - AGUARDANDO_ENCAMINHAR_QS: Tarefa DEVEL que está com a situação RESOLVIDA e aguardando na fila para encaminhar para o QS
 - ESTOQUE_QS: Foi encaminhada para QS e está no estoque do QS, uma tarefa QS com a situação NOVA
 - EM_ANDAMENTO_QS: Está em testes, uma tarefa do QS com a situação EM_ANDAMENTO
 - AGUARDANDO_VERSAO: Está com testes concluídos com situação TESTE_OK e aguardando liberação da versão
 - VERSAO_LIBERADA: A versão foi liberada, a tarefa de DEVEL está com situação FECHADA
 
-## FLUXO_RETORNO_TESTES: define o fluxo quando há retorno de testes do QS
+## FLUXO_COM_RETORNO_TESTES: define o fluxo quando há retorno de testes do QS
 
 - ESTOQUE_DEVEL: Tarefa que está no estoque, uma tarefa DEVEL com a situação NOVA
 - EM_ANDAMENTO_DEVEL: Tarefa que está em desenvolvimento, uma tarefa DEVEL com a situação EM_ANDAMENTO
+- AGUARDANDO_TESTES_DEVEL: Aguardando os testes do desenvolvimento antes de encaminhar para os testes do QS
+- AGUARDANDO_ENCAMINHAR_RETORNO_TESTES_DEVEL: Se há um teste NOK no desenvolvimento e aguardando criar uma tarefa de Retorno de testes
 - AGUARDANDO_ENCAMINHAR_QS: Tarefa DEVEL que está com a situação RESOLVIDA e aguardando na fila para encaminhar para o QS
 - ESTOQUE_QS: Foi encaminhada para QS e está no estoque do QS, uma tarefa QS com a situação NOVA
 - EM_ANDAMENTO_QS: Está em testes, uma tarefa do QS com a situação EM_ANDAMENTO
@@ -148,16 +152,14 @@ DEVEL Tarefa ID 100 NOVA -> DEVEL Tarefa ID 100 EM_ANDAMENTO -> DEVEL Tarefa ID 
 - AGUARDANDO_VERSAO_RETORNO_TESTES: Tarefa que retornou do QS com tipo RETORNO_TESTES que está com testes concluídos com situação TESTE_OK e aguardando liberação da versão
 - VERSAO_LIBERADA: A versão foi liberada, a tarefa de DEVEL está com situação FECHADA
 
-# Fluxo com teste no desenvolvimento
+# Testes no desenvolvimento
 
 Essa sao situacoes opcionais que irão ocorrer no primeiro ciclo do desenvolvimento antes de encaminhar para o QS. O campo "teste_no_desenvolvimento" estiver NAO_NECESSITA_TESTE entao estas situações nao irão ocorrer.
 
 - AGUARDANDO_TESTES_DEVEL: depois da tarefa DEVEL estar com situação RESOLVIDA ela deve ser testada entre os pares de desenvolvedores antes de encaminhar para o QS. Então essa situação irá ocorrer entre EM_ANDAMENTO e AGUARDANDO_ENCAMINHAR_QS. Neste caso o campo "teste_no_desenvolvimento" vai estar definido com NAO_TESTADA
 - AGUARDANDO_ENCAMINHAR_RETORNO_TESTES_DEVEL: depois da tarefa DEVEL estar testada entre os pares do desenvolvedores pode-se encontrar um TESTE_NOK no campo "teste_no_desenvolvimento" e uma tarefa de RETORNO_TESTES será criada para resolver o problema. A tarefa vai estar nesta situação sempre que o teste do desenvolvimento
   foi concluido e o resultado foi TESTE_NOK no campo "teste_no_desenvolvimento". Se o teste tiver o resultado TESTE_OK então vai estar AGUARDANDO_ENCAMINHAR_QS
-- Observacao importante: mesmo se a tarefa estiver com o campo "teste_no_desenvolvimento" coo NAO_TESTADA e a tarefa do QS já foi encaminhada entao considerar que os testes no desenvolvimento nao serao feitos, ou seja, a mesma coisa que é usado no NAO_NECESSITA_TESTE
-- Neste caso existem dois novos fluxos para representar quando há teste no desenvolvimento no primeiro ciclo que sao FLUXO_IDEAL_COM_TESTE_NO_DESENVOLVIMENTO e FLUXO_RETORNO_TESTES_COM_TESTE_NO_DESENVOLVIMENTO
--
+- Observacao importante: mesmo se a tarefa estiver com o campo "teste_no_desenvolvimento" como NAO_TESTADA e a tarefa do QS já foi encaminhada entao considerar que os testes no desenvolvimento nao serao feitos, ou seja, a mesma coisa que é usado no NAO_NECESSITA_TESTE
 
 # Situações que devem ser tratadas como exceção e definir situação DESCONHECIDO
 

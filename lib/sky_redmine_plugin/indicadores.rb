@@ -422,8 +422,13 @@ module SkyRedminePlugin
     def self.determinar_situacao_atual(indicador, tarefas_relacionadas, tarefas_devel, tarefas_qs, ciclos_devel, ciclos_qs)
       Rails.logger.info ">>> Determinando situação atual da tarefa"
       # Primeiro verificar se é uma situação DESCONHECIDA
-      situacao = verificar_situacao_desconhecida(tarefas_relacionadas, tarefas_devel, ciclos_devel)
-      return situacao if situacao
+
+      resultado_desconhecida = verificar_situacao_desconhecida(tarefas_relacionadas, tarefas_devel, ciclos_devel)
+      if resultado_desconhecida[:situacao]
+        # Atualizar o motivo no indicador
+        indicador.motivo_situacao_desconhecida = resultado_desconhecida[:motivo]
+        return resultado_desconhecida[:situacao]
+      end
 
       # Verificar se a última tarefa está nas situações INTERROMPIDA
       situacao_especial = verificar_situacao_interrompida(tarefas_relacionadas)
@@ -586,33 +591,44 @@ module SkyRedminePlugin
     # Método para verificar se a situação é DESCONHECIDA
     def self.verificar_situacao_desconhecida(tarefas_relacionadas, tarefas_devel, ciclos_devel)
       Rails.logger.info ">>> Verificando situação desconhecida para a tarefa #{tarefas_relacionadas.last.id}"
+
+      # Estrutura para retornar situação e motivo
+      resultado = { situacao: nil, motivo: nil }
+
       # Regra 1: Verificar se a última tarefa do último ciclo DEVEL é FECHADA_CONTINUA_RETORNO_TESTES
       ultima_tarefa_devel = tarefas_devel.last
       if ultima_tarefa_devel.status.name == SkyRedminePlugin::Constants::IssueStatus::FECHADA_CONTINUA_RETORNO_TESTES
-        return SkyRedminePlugin::Constants::SituacaoAtual::DESCONHECIDA
+        resultado[:situacao] = SkyRedminePlugin::Constants::SituacaoAtual::DESCONHECIDA
+        resultado[:motivo] = "Última tarefa DEVEL está com situação FECHADA_CONTINUA_RETORNO_TESTES mas não existe tarefa de continuidade RETORNO_TESTES"
+        return resultado
       end
 
       # Regra 2: Verificar se a última tarefa de todo o ciclo é TESTE_NOK_FECHADA
       ultima_tarefa_ciclo = tarefas_relacionadas.last
       if ultima_tarefa_ciclo.equipe_responsavel == SkyRedminePlugin::Constants::EquipeResponsavel::QS &&
          ultima_tarefa_ciclo.status.name == SkyRedminePlugin::Constants::IssueStatus::TESTE_NOK_FECHADA
-        return SkyRedminePlugin::Constants::SituacaoAtual::DESCONHECIDA
+        resultado[:situacao] = SkyRedminePlugin::Constants::SituacaoAtual::DESCONHECIDA
+        resultado[:motivo] = "Última tarefa QS está com situação TESTE_NOK_FECHADA mas não existe tarefa de continuidade RETORNO_TESTES"
+        return resultado
       end
 
       # Regra 3: Verificar se há algum ciclo de continuidade onde as tarefas DEVEL não são do tipo RETORNO_TESTES
       if ciclos_devel.size > 1
         # Verificar todos os ciclos de continuidade (após o primeiro ciclo)
-        ciclos_devel[1..-1].each do |ciclo|
+        ciclos_devel[1..-1].each_with_index do |ciclo, index|
           ciclo.each do |tarefa|
             if tarefa.tracker.name != SkyRedminePlugin::Constants::Trackers::RETORNO_TESTES
-              return SkyRedminePlugin::Constants::SituacaoAtual::DESCONHECIDA
+              resultado[:situacao] = SkyRedminePlugin::Constants::SituacaoAtual::DESCONHECIDA
+              resultado[:motivo] = "Tarefa #{tarefa.id} no ciclo de continuidade #{index + 2} não é do tipo RETORNO_TESTES"
+              return resultado
             end
           end
         end
       end
+
       Rails.logger.info ">>> Não atende nenhuma condição de DESCONHECIDA"
       # Se não atende nenhuma condição de DESCONHECIDA, retorna nil para continuar a verificação
-      nil
+      resultado
     end
   end
 end
