@@ -446,9 +446,9 @@ module SkyRedminePlugin
       ultima_tarefa_devel = tarefas_devel.last
 
       # Se a última tarefa DEVEL está com situação FECHADA, a versão foi liberada
-      if ultima_tarefa_devel.status.name == SkyRedminePlugin::Constants::IssueStatus::FECHADA
-        return SkyRedminePlugin::Constants::SituacaoAtual::VERSAO_LIBERADA
-      end
+      #if ultima_tarefa_devel.status.name == SkyRedminePlugin::Constants::IssueStatus::FECHADA
+      #  return SkyRedminePlugin::Constants::SituacaoAtual::VERSAO_LIBERADA
+      #end
 
       # Verificar se é uma tarefa que não necessita de QS
       if ultima_tarefa_devel.tracker.name == SkyRedminePlugin::Constants::Trackers::CONVERSAO ||
@@ -464,6 +464,8 @@ module SkyRedminePlugin
             return SkyRedminePlugin::Constants::SituacaoAtual::EM_ANDAMENTO_DEVEL_RETORNO_TESTES
           when SkyRedminePlugin::Constants::IssueStatus::RESOLVIDA
             return SkyRedminePlugin::Constants::SituacaoAtual::AGUARDANDO_VERSAO_RETORNO_TESTES
+          when SkyRedminePlugin::Constants::IssueStatus::FECHADA
+            return SkyRedminePlugin::Constants::SituacaoAtual::VERSAO_LIBERADA
           end
         else
           # Caso ainda não tenha sido encaminhado para QS
@@ -474,6 +476,8 @@ module SkyRedminePlugin
             return SkyRedminePlugin::Constants::SituacaoAtual::EM_ANDAMENTO_DEVEL
           when SkyRedminePlugin::Constants::IssueStatus::RESOLVIDA
             return SkyRedminePlugin::Constants::SituacaoAtual::AGUARDANDO_VERSAO
+          when SkyRedminePlugin::Constants::IssueStatus::FECHADA
+            return SkyRedminePlugin::Constants::SituacaoAtual::VERSAO_LIBERADA
           end
         end
       end
@@ -512,6 +516,8 @@ module SkyRedminePlugin
           return is_retorno_do_qs ?
                    SkyRedminePlugin::Constants::SituacaoAtual::AGUARDANDO_ENCAMINHAR_QS_RETORNO_TESTES :
                    SkyRedminePlugin::Constants::SituacaoAtual::AGUARDANDO_ENCAMINHAR_QS
+        when SkyRedminePlugin::Constants::IssueStatus::FECHADA
+          return SkyRedminePlugin::Constants::SituacaoAtual::VERSAO_LIBERADA
         end
       when SkyRedminePlugin::Constants::EquipeResponsavel::QS
         case ultima_tarefa.status.name
