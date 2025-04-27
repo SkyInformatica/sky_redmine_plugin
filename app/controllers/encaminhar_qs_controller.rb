@@ -6,7 +6,7 @@ class EncaminharQsController < ApplicationController
 
   def encaminhar_qs(is_batch_call = false, is_task_rake = false)
     usar_sprint_atual = params[:usar_sprint_atual].present?
-    Rails.logger.info ">>> encaminhar_qs #{@issue.id} - is_batch_call #{is_batch_call} usar_sprint_atual #{usar_sprint_atual}"
+    Rails.logger.info ">>> encaminhar_qs #{@issue.id} - is_batch_call #{is_batch_call} usar_sprint_atual #{usar_sprint_atual} - is_task_rake #{is_task_rake}"
 
     # Check if the issue is not in QS projects and its status is "Resolvida"
     if (!SkyRedminePlugin::Constants::Projects::QS_PROJECTS.include?(@issue.project.name)) && (@issue.status.name == SkyRedminePlugin::Constants::IssueStatus::RESOLVIDA)
