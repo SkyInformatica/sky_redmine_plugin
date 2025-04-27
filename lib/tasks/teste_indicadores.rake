@@ -429,7 +429,7 @@ namespace :sky_redmine_plugin do
 
             tarefa_qs = Issue.find(tarefa_qs.id)
             # Localizar a tarefa de retorno de testes criada
-            tarefa_retorno_testes = SkyRedminePlugin::TarefasRelacionadas.localizar_tarefa_continuidade(tarefa_qs)
+            tarefa_retorno_testes = SkyRedminePlugin::TarefasRelacionadas.localizar_tarefa_retorno_testes(tarefa_qs)
             if tarefa_retorno_testes
               trocar_tipo_tarefa(tarefa_retorno_testes, SkyRedminePlugin::Constants::Trackers::DEFEITO)
               tarefa_retorno_testes = Issue.find(tarefa_retorno_testes.id)
