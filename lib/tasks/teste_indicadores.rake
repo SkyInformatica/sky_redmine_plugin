@@ -23,20 +23,22 @@ namespace :sky_redmine_plugin do
 
     puts "✓ Usuário 'maglan' encontrado (ID: #{@author.id})"
 
-    # Executar os cenários com tipo padrão (Defeito)
+    # Tipo padrão (Defeito)
     criar_tarefa_nova
     criar_tarefa_nova_em_andamento
     criar_tarefa_nova_em_andamento_resolvida
 
-    # Executar os mesmos cenários com tipo Conversão
+    # Tipo Conversão
     criar_tarefa_nova(SkyRedminePlugin::Constants::Trackers::CONVERSAO)
     criar_tarefa_nova_em_andamento(SkyRedminePlugin::Constants::Trackers::CONVERSAO)
     criar_tarefa_nova_em_andamento_resolvida(SkyRedminePlugin::Constants::Trackers::CONVERSAO)
 
-    # Resto dos cenários
+    # Testes no desenvolvimento
     criar_tarefa_teste_no_desenvolvimento_nao_necessita_teste
     criar_tarefa_teste_no_desenvolvimento_ok
     criar_tarefa_teste_no_desenvolvimento_nok
+
+    # Testes no QS
     criar_tarefa_qs_nao_necessita_teste
     criar_tarefa_encaminhar_para_qs
 
@@ -138,24 +140,24 @@ namespace :sky_redmine_plugin do
     end
   end
 
-  # Cenário 1: Criar uma tarefa nova
+  # Criar uma tarefa nova
   def criar_tarefa_nova(tracker_name = nil)
     tracker = tracker_name ? Tracker.find_by(name: tracker_name) : @tracker
     suffix = tracker_name ? " (#{tracker_name})" : ""
-    puts "\n=== Cenário 1: Criar uma tarefa nova#{suffix} ==="
-    issue = criar_tarefa("Teste Cenário 1 - Tarefa Nova#{suffix}", tracker)
+    puts "\n=== Criar uma tarefa nova#{suffix} ==="
+    issue = criar_tarefa("Tarefa Nova#{suffix}", tracker)
 
     if issue
       verificar_indicador(issue.id, SkyRedminePlugin::Constants::SituacaoAtual::ESTOQUE_DEVEL)
     end
   end
 
-  # Cenário 2: Criar uma tarefa nova e depois colocá-la em andamento
+  # Criar uma tarefa nova e depois colocá-la em andamento
   def criar_tarefa_nova_em_andamento(tracker_name = nil)
     tracker = tracker_name ? Tracker.find_by(name: tracker_name) : @tracker
     suffix = tracker_name ? " (#{tracker_name})" : ""
-    puts "\n=== Cenário 2: Criar uma tarefa nova e depois colocá-la em andamento#{suffix} ==="
-    issue = criar_tarefa("Teste Cenário 2 - Tarefa Nova para Em Andamento#{suffix}", tracker)
+    puts "\n=== Criar uma tarefa nova e depois colocá-la em andamento#{suffix} ==="
+    issue = criar_tarefa("Tarefa Nova para Em Andamento#{suffix}", tracker)
 
     if issue
       if trocar_status(issue, @status_em_andamento, "Status alterado para Em andamento")
@@ -164,12 +166,12 @@ namespace :sky_redmine_plugin do
     end
   end
 
-  # Cenário 3: Criar uma tarefa nova, colocá-la em andamento e depois resolvida
+  # Criar uma tarefa nova, colocá-la em andamento e depois resolvida
   def criar_tarefa_nova_em_andamento_resolvida(tracker_name = nil)
     tracker = tracker_name ? Tracker.find_by(name: tracker_name) : @tracker
     suffix = tracker_name ? " (#{tracker_name})" : ""
-    puts "\n\n=== Cenário 3: Criar uma tarefa nova, colocá-la em andamento e depois resolvida#{suffix} ==="
-    issue = criar_tarefa("Teste Cenário 3 - Tarefa Nova para Em Andamento para Resolvida#{suffix}", tracker)
+    puts "\n\n=== Criar uma tarefa nova, colocá-la em andamento e depois resolvida#{suffix} ==="
+    issue = criar_tarefa("Tarefa Nova para Em Andamento para Resolvida#{suffix}", tracker)
 
     if issue
       if trocar_status(issue, @status_em_andamento, "Status alterado para Em andamento")
@@ -180,10 +182,10 @@ namespace :sky_redmine_plugin do
     end
   end
 
-  # Cenário 4: Criar uma tarefa, colocá-la em andamento, resolvida e marcar como 'Não necessita teste'
+  # Criar uma tarefa, colocá-la em andamento, resolvida e marcar como 'Não necessita teste'
   def criar_tarefa_teste_no_desenvolvimento_nao_necessita_teste
-    puts "\n=== Cenário 4: Criar uma tarefa, colocá-la em andamento, resolvida e marcar como 'Não necessita teste' ==="
-    issue = criar_tarefa("Teste Cenário 4 - Tarefa Teste DEVEL Não Necessita Teste")
+    puts "\n=== Criar uma tarefa, colocá-la em andamento, resolvida e marcar como 'Não necessita teste' ==="
+    issue = criar_tarefa("Tarefa Teste DEVEL Não Necessita Teste")
 
     if issue
       if trocar_status(issue, @status_em_andamento, "Status alterado para Em andamento")
@@ -196,10 +198,10 @@ namespace :sky_redmine_plugin do
     end
   end
 
-  # Cenário 5: Criar uma tarefa, colocá-la em andamento, resolvida e marcar como 'Teste OK'
+  # Criar uma tarefa, colocá-la em andamento, resolvida e marcar como 'Teste OK'
   def criar_tarefa_teste_no_desenvolvimento_ok
-    puts "\n=== Cenário 5: Criar uma tarefa, colocá-la em andamento, resolvida e marcar como 'Teste OK' ==="
-    issue = criar_tarefa("Teste Cenário 5 - Tarefa Teste DEVEL Teste OK")
+    puts "\n=== Criar uma tarefa, colocá-la em andamento, resolvida e marcar como 'Teste OK' ==="
+    issue = criar_tarefa("Tarefa Teste DEVEL Teste OK")
 
     if issue
       if trocar_status(issue, @status_em_andamento, "Status alterado para Em andamento")
@@ -212,10 +214,10 @@ namespace :sky_redmine_plugin do
     end
   end
 
-  # Cenário 6: Criar uma tarefa, colocá-la em andamento, resolvida e marcar como 'Teste NOK'
+  # Criar uma tarefa, colocá-la em andamento, resolvida e marcar como 'Teste NOK'
   def criar_tarefa_teste_no_desenvolvimento_nok
-    puts "\n=== Cenário 6: Criar uma tarefa, colocá-la em andamento, resolvida e marcar como 'Teste NOK' ==="
-    issue = criar_tarefa("Teste Cenário 6 - Tarefa Teste DEVEL Teste NOK")
+    puts "\n=== Criar uma tarefa, colocá-la em andamento, resolvida e marcar como 'Teste NOK' ==="
+    issue = criar_tarefa("Tarefa Teste DEVEL Teste NOK")
 
     if issue
       if trocar_status(issue, @status_em_andamento, "Status alterado para Em andamento")
@@ -228,10 +230,10 @@ namespace :sky_redmine_plugin do
     end
   end
 
-  # Cenário 7: Criar uma tarefa, colocá-la em andamento, resolvida e marcar Teste QS como 'Não necessita teste'
+  # Criar uma tarefa, colocá-la em andamento, resolvida e marcar Teste QS como 'Não necessita teste'
   def criar_tarefa_qs_nao_necessita_teste
-    puts "\n=== Cenário 7: Criar uma tarefa, colocá-la em andamento, resolvida e marcar Teste QS como 'Não necessita teste' ==="
-    issue = criar_tarefa("Teste Cenário 7 - Tarefa Teste QS não necessita teste")
+    puts "\n=== Criar uma tarefa, colocá-la em andamento, resolvida e marcar Teste QS como 'Não necessita teste' ==="
+    issue = criar_tarefa("Tarefa Teste QS não necessita teste")
 
     if issue
       if trocar_status(issue, @status_em_andamento, "Status alterado para Em andamento")
@@ -244,10 +246,10 @@ namespace :sky_redmine_plugin do
     end
   end
 
-  # Cenário 8: Criar uma tarefa, colocá-la em andamento, resolvida e encaminhar para QS
+  # Criar uma tarefa, colocá-la em andamento, resolvida e encaminhar para QS
   def criar_tarefa_encaminhar_para_qs
-    puts "\n=== Cenário 8: Criar uma tarefa, colocá-la em andamento, resolvida e encaminhar para QS ==="
-    issue = criar_tarefa("Teste Cenário 8 - Tarefa para Encaminhar para QS")
+    puts "\n=== Criar uma tarefa, colocá-la em andamento, resolvida e encaminhar para QS ==="
+    issue = criar_tarefa("Tarefa para Encaminhar para QS")
 
     if issue
       if trocar_status(issue, @status_em_andamento, "Status alterado para Em andamento")
