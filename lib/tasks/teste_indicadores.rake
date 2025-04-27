@@ -40,7 +40,12 @@ namespace :sky_redmine_plugin do
 
     # Testes no QS
     #criar_tarefa_qs_nao_necessita_teste
-    criar_tarefa_encaminhar_para_qs
+    #criar_tarefa_encaminhar_para_qs
+
+    # No método principal do rake task, adicione:
+    criar_tarefa_desconhecida_fechada_continua_sem_retorno
+    #criar_tarefa_desconhecida_teste_nok_fechada_sem_retorno
+    #criar_tarefa_desconhecida_continuidade_nao_retorno
 
     puts "\nTestes concluídos!"
   end
@@ -284,6 +289,111 @@ namespace :sky_redmine_plugin do
             verificar_indicador(issue.id, SkyRedminePlugin::Constants::SituacaoAtual::ESTOQUE_QS)
           else
             puts "✗ Falha ao encaminhar a tarefa ##{issue.id} para QS"
+          end
+        end
+      end
+    end
+  end
+
+  # Criar uma tarefa que ficará com situação DESCONHECIDA por ter FECHADA_CONTINUA_RETORNO_TESTES sem continuidade
+  def criar_tarefa_desconhecida_fechada_continua_sem_retorno
+    puts "\n=== Criar tarefa que ficará DESCONHECIDA (FECHADA_CONTINUA_RETORNO_TESTES sem continuidade) ==="
+    issue = criar_tarefa("Tarefa DESCONHECIDA - Fechada Continua sem Retorno")
+
+    if issue
+      if trocar_status(issue, @status_em_andamento, "Status alterado para Em andamento")
+        if trocar_status(issue, @status_resolvida, "Status alterado para Resolvida")
+          # Precisamos primeiro encaminhar para QS
+          controller = EncaminharQsController.new
+          controller.instance_variable_set(:@issue, issue)
+          controller.instance_variable_set(:@processed_issues, [])
+          controller.params = { usar_sprint_atual: false }
+          controller.encaminhar_qs(false, true)
+
+          # Localizar a tarefa QS criada
+          tarefa_qs = SkyRedminePlugin::TarefasRelacionadas.localizar_tarefa_copiada_qs(issue)
+          if tarefa_qs
+            # Trocar status da tarefa QS para TESTE_NOK
+            status_teste_nok = IssueStatus.find_by(name: SkyRedminePlugin::Constants::IssueStatus::TESTE_NOK)
+            trocar_status(tarefa_qs, status_teste_nok, "Status alterado para TESTE NOK")
+
+            # Trocar status da tarefa DEVEL para FECHADA_CONTINUA_RETORNO_TESTES
+            status_fechada_continua = IssueStatus.find_by(name: SkyRedminePlugin::Constants::IssueStatus::FECHADA_CONTINUA_RETORNO_TESTES)
+            trocar_status(issue, status_fechada_continua, "Status alterado para FECHADA_CONTINUA_RETORNO_TESTES")
+
+            verificar_indicador(issue.id, SkyRedminePlugin::Constants::SituacaoAtual::DESCONHECIDA)
+          end
+        end
+      end
+    end
+  end
+
+  # Criar uma tarefa que ficará com situação DESCONHECIDA por ter TESTE_NOK_FECHADA sem continuidade
+  def criar_tarefa_desconhecida_teste_nok_fechada_sem_retorno
+    puts "\n=== Criar tarefa que ficará DESCONHECIDA (TESTE_NOK_FECHADA sem continuidade) ==="
+    issue = criar_tarefa("Tarefa DESCONHECIDA - Teste NOK Fechada sem Retorno")
+
+    if issue
+      if trocar_status(issue, @status_em_andamento, "Status alterado para Em andamento")
+        if trocar_status(issue, @status_resolvida, "Status alterado para Resolvida")
+          # Encaminhar para QS
+          controller = EncaminharQsController.new
+          controller.instance_variable_set(:@issue, issue)
+          controller.instance_variable_set(:@processed_issues, [])
+          controller.params = { usar_sprint_atual: false }
+          controller.encaminhar_qs(false, true)
+
+          # Localizar a tarefa QS criada
+          tarefa_qs = SkyRedminePlugin::TarefasRelacionadas.localizar_tarefa_copiada_qs(issue)
+          if tarefa_qs
+            # Trocar status da tarefa QS para TESTE_NOK_FECHADA
+            status_teste_nok_fechada = IssueStatus.find_by(name: SkyRedminePlugin::Constants::IssueStatus::TESTE_NOK_FECHADA)
+            trocar_status(tarefa_qs, status_teste_nok_fechada, "Status alterado para TESTE_NOK_FECHADA")
+
+            verificar_indicador(issue.id, SkyRedminePlugin::Constants::SituacaoAtual::DESCONHECIDA)
+          end
+        end
+      end
+    end
+  end
+
+  # Criar uma tarefa que ficará com situação DESCONHECIDA por ter tarefa de continuidade que não é RETORNO_TESTES
+  def criar_tarefa_desconhecida_continuidade_nao_retorno
+    puts "\n=== Criar tarefa que ficará DESCONHECIDA (Continuidade não é RETORNO_TESTES) ==="
+    issue = criar_tarefa("Tarefa DESCONHECIDA - Continuidade não é Retorno")
+
+    if issue
+      if trocar_status(issue, @status_em_andamento, "Status alterado para Em andamento")
+        if trocar_status(issue, @status_resolvida, "Status alterado para Resolvida")
+          # Encaminhar para QS
+          controller = EncaminharQsController.new
+          controller.instance_variable_set(:@issue, issue)
+          controller.instance_variable_set(:@processed_issues, [])
+          controller.params = { usar_sprint_atual: false }
+          controller.encaminhar_qs(false, true)
+
+          # Localizar a tarefa QS criada
+          tarefa_qs = SkyRedminePlugin::TarefasRelacionadas.localizar_tarefa_copiada_qs(issue)
+          if tarefa_qs
+            # Trocar status da tarefa QS para TESTE_NOK
+            status_teste_nok = IssueStatus.find_by(name: SkyRedminePlugin::Constants::IssueStatus::TESTE_NOK)
+            trocar_status(tarefa_qs, status_teste_nok, "Status alterado para TESTE_NOK")
+
+            # Criar uma tarefa de continuidade do tipo errado (não RETORNO_TESTES)
+            issue_continuidade = Issue.new(
+              project: @project,
+              tracker: @tracker, # Usar tracker padrão em vez de RETORNO_TESTES
+              status: @status_nova,
+              subject: "Continuidade incorreta para #{issue.subject}",
+              author: @author,
+              assigned_to: @author,
+              parent_issue_id: issue.id,
+            )
+
+            if issue_continuidade.save
+              puts "✓ Tarefa de continuidade criada com tipo incorreto"
+              verificar_indicador(issue.id, SkyRedminePlugin::Constants::SituacaoAtual::DESCONHECIDA)
+            end
           end
         end
       end
