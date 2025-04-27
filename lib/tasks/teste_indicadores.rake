@@ -260,6 +260,8 @@ namespace :sky_redmine_plugin do
 
           # Configurar o controller para simular a chamada
           controller = EncaminharQsController.new
+          controller.instance_variable_set(:@issue, issue)
+          controller.instance_variable_set(:@processed_issues, [])
 
           # Simular o parâmetro de usar sprint atual (opcional)
           params = { usar_sprint_atual: false }
