@@ -43,8 +43,8 @@ namespace :sky_redmine_plugin do
     #criar_tarefa_encaminhar_para_qs
 
     # No método principal do rake task, adicione:
-    criar_tarefa_desconhecida_fechada_continua_sem_retorno
-    #criar_tarefa_desconhecida_teste_nok_fechada_sem_retorno
+    #criar_tarefa_desconhecida_fechada_continua_sem_retorno
+    criar_tarefa_desconhecida_teste_nok_fechada_sem_retorno
     #criar_tarefa_desconhecida_continuidade_nao_retorno
 
     puts "\nTestes concluídos!"
@@ -337,6 +337,7 @@ namespace :sky_redmine_plugin do
     if issue
       if trocar_status(issue, @status_em_andamento, "Status alterado para Em andamento")
         if trocar_status(issue, @status_resolvida, "Status alterado para Resolvida")
+          issue = Issue.find(issue.id)
           # Encaminhar para QS
           controller = EncaminharQsController.new
           controller.instance_variable_set(:@issue, issue)
@@ -366,6 +367,7 @@ namespace :sky_redmine_plugin do
     if issue
       if trocar_status(issue, @status_em_andamento, "Status alterado para Em andamento")
         if trocar_status(issue, @status_resolvida, "Status alterado para Resolvida")
+          issue = Issue.find(issue.id)
           # Encaminhar para QS
           controller = EncaminharQsController.new
           controller.instance_variable_set(:@issue, issue)
