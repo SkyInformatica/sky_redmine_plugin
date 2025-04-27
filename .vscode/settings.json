@@ -1,3 +1,5 @@
 {    
-    "cSpell.enabled": false
+    "cSpell.enabled": false,
+    "monica-code.enableTabAutocomplete": false,
+    "monica-code.enableQuickActions": true
 }
