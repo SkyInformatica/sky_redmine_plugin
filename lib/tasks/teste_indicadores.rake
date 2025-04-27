@@ -262,6 +262,12 @@ namespace :sky_redmine_plugin do
           controller = EncaminharQsController.new
           controller.instance_variable_set(:@issue, issue)
           controller.instance_variable_set(:@processed_issues, [])
+          include ActionController::UrlFor
+          controller.instance_variable_set(:@_routes, Rails.application.routes)
+          controller.instance_variable_set(:@_url_options, {
+            host: "localhost:3000",
+            protocol: "http",
+          })
 
           # Simular o parâmetro de usar sprint atual (opcional)
           params = { usar_sprint_atual: false }
