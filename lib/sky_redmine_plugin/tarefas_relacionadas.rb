@@ -283,7 +283,7 @@ module SkyRedminePlugin
       copied_to_issue = related_issues.map { |relation| Issue.find_by(id: relation.issue_to_id) }
         .find { |issue| @issue.project.name == issue.project.name }
 
-      if copied_to_issue.nil?
+      if !copied_to_issue.nil?
         Rails.logger.info ">>> tarefa continuidade encontrada foi #{copied_to_issue.id}"
       end
       copied_to_issue
@@ -296,7 +296,7 @@ module SkyRedminePlugin
       copied_to_issue = related_issues.map { |relation| Issue.find_by(id: relation.issue_to_id) }
         .find { |issue| issue.tracker.name == SkyRedminePlugin::Constants::Trackers::RETORNO_TESTES }
 
-      if copied_to_issue.nil?
+      if !copied_to_issue.nil?
         Rails.logger.info ">>> tarefa retorno de testes encontrada foi #{copied_to_issue.id}"
       end
       copied_to_issue
