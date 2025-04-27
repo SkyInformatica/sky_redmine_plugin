@@ -44,8 +44,8 @@ namespace :sky_redmine_plugin do
 
     # No método principal do rake task, adicione:
     #criar_tarefa_desconhecida_fechada_continua_sem_retorno
-    criar_tarefa_desconhecida_teste_nok_fechada_sem_retorno
-    #criar_tarefa_desconhecida_continuidade_nao_retorno
+    #criar_tarefa_desconhecida_teste_nok_fechada_sem_retorno
+    criar_tarefa_desconhecida_continuidade_nao_retorno
 
     puts "\nTestes concluídos!"
   end
