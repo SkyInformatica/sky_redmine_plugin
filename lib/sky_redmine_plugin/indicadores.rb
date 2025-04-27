@@ -451,7 +451,7 @@ module SkyRedminePlugin
       end
 
       # Verificar se é uma tarefa que não necessita de QS
-      if ultima_tarefa_devel.tipo == SkyRedminePlugin::Constants::Trackers::CONVERSAO ||
+      if ultima_tarefa_devel.tracker.name == SkyRedminePlugin::Constants::Trackers::CONVERSAO ||
          ultima_tarefa_devel.teste_qs == SkyRedminePlugin::Constants::CustomFieldsValues::NAO_NECESSITA_TESTE ||
          (tarefas_qs.any? && tarefas_qs.last.status.name == SkyRedminePlugin::Constants::IssueStatus::CANCELADA)
         # Verificar se é um retorno de testes que já passou pelo QS anteriormente
