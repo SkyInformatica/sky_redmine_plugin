@@ -31,16 +31,14 @@ namespace :sky_redmine_plugin do
     ciclos_qs = SkyRedminePlugin::TarefasRelacionadas.separar_ciclos_qs(tarefas_relacionadas)
 
     # Processar indicadores
-    puts "\n=== Processando indicadores ==="
     SkyRedminePlugin::Indicadores.processar_indicadores(issue)
 
-    # Exibir situação atual do indicador
     primeira_tarefa = tarefas_relacionadas.first
-    indicador = nil
-
-    if primeira_tarefa
-      indicador = SkyRedmineIndicadores.find_by(primeira_tarefa_devel_id: primeira_tarefa.id)
+    if !primeira_tarefa
+      return
     end
+
+    indicador = SkyRedmineIndicadores.find_by(primeira_tarefa_devel_id: primeira_tarefa.id)
 
     # Gerar JSON das tarefas relacionadas
     json_tarefas = tarefas_relacionadas.map do |tarefa|
@@ -177,7 +175,7 @@ namespace :sky_redmine_plugin do
     end
 
     # Exibir JSON formatado
-    puts "\n=== JSON das tarefas relacionadas ==="
+    puts "\n=== JSON das tarefas relacionadas e indicadores ==="
     puts JSON.pretty_generate(json_resultado)
   end
 end
