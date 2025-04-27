@@ -268,7 +268,7 @@ namespace :sky_redmine_plugin do
           controller.params = params
 
           # Executar o método encaminhar_qs
-          controller.encaminhar_qs(false)
+          controller.encaminhar_qs(false, true)
 
           Rails.logger.info ">>> depois de controller.encaminhar_qs #{issue.id}"
           # Verificar se a tarefa foi encaminhada com sucesso
