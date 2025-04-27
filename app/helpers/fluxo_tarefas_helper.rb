@@ -665,6 +665,12 @@ module FluxoTarefasHelper
       return render_timeline_normal(fluxo, indice_atual, indicadores)
     end
 
+    if !indicadores.tipo_primeira_tarefa_devel.nil? && indicadores.tipo_primeira_tarefa_devel == SkyRedminePlugin::Constants::Trackers::CONVERSAO
+      fluxo = SkyRedminePlugin::Constants::SituacaoAtual::FLUXO_SEM_QS
+      indice_atual = fluxo.index(situacao_atual)
+      return render_timeline_normal(fluxo, indice_atual, indicadores)
+    end
+
     tem_retorno_testes_qs = indicadores.qtd_retorno_testes_qs.to_i > 0 ||
                             situacao_atual == SkyRedminePlugin::Constants::SituacaoAtual::AGUARDANDO_ENCAMINHAR_RETORNO_TESTES
 
