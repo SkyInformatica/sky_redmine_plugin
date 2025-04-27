@@ -427,6 +427,7 @@ namespace :sky_redmine_plugin do
             controller.params = { usar_sprint_atual: false }
             controller.retorno_testes_qs(false, true)
 
+            tarefa_qs = Issue.find(tarefa_qs.id)
             # Localizar a tarefa de retorno de testes criada
             tarefa_retorno_testes = SkyRedminePlugin::TarefasRelacionadas.localizar_tarefa_continuidade(tarefa_qs)
             if tarefa_retorno_testes
