@@ -7,8 +7,8 @@ class RetornoTestesController < ApplicationController
   ORIGEM_RETORNO_TESTE_DEVEL = "DEVEL"
   ORIGEM_RETORNO_TESTE_QS = "QS"
 
-  def retorno_testes_devel(is_batch_call = false)
-    Rails.logger.info ">>> retorno_testes_devel #{@issue.id}"
+  def retorno_testes_devel(is_batch_call = false, is_task_rake = false)
+    Rails.logger.info ">>> retorno_testes_devel #{@issue.id} - is_batch_call #{is_batch_call} - is_task_rake #{is_task_rake}"
     @origem_retorno_teste = ORIGEM_RETORNO_TESTE_DEVEL
 
     # Check if the issue is not in QS projects and its status is "Resolvida"
@@ -20,9 +20,11 @@ class RetornoTestesController < ApplicationController
       # Se existir um retorno de testes
       if retorno_testes_issue
         # A tarefa de retorno de testes já foi encaminhada
-        flash[:warning] = "O retorno de testes já foi encaminhado em  #{view_context.link_to "#{retorno_testes_issue.tracker.name} ##{retorno_testes_issue.id}", issue_path(retorno_testes_issue)} e está com status #{retorno_testes_issue.status.name}." unless is_batch_call
-        @processed_issues << "[NOK] #{view_context.link_to "#{@issue.tracker.name} ##{@issue.id}", issue_path(@issue)} - #{@issue.subject} - o retorno de testes já foi encaminhado em  #{view_context.link_to "#{retorno_testes_issue.tracker.name} ##{retorno_testes_issue.id}", issue_path(retorno_testes_issue)} e está com status #{retorno_testes_issue.status.name}"
-        redirect_to issue_path(@issue) unless is_batch_call
+        if !is_task_rake
+          flash[:warning] = "O retorno de testes já foi encaminhado em  #{view_context.link_to "#{retorno_testes_issue.tracker.name} ##{retorno_testes_issue.id}", issue_path(retorno_testes_issue)} e está com status #{retorno_testes_issue.status.name}." unless is_batch_call
+          @processed_issues << "[NOK] #{view_context.link_to "#{@issue.tracker.name} ##{@issue.id}", issue_path(@issue)} - #{@issue.subject} - o retorno de testes já foi encaminhado em  #{view_context.link_to "#{retorno_testes_issue.tracker.name} ##{retorno_testes_issue.id}", issue_path(retorno_testes_issue)} e está com status #{retorno_testes_issue.status.name}" if is_batch_call
+          redirect_to issue_path(@issue) unless is_batch_call
+        end
         return
       end
 
@@ -40,9 +42,11 @@ class RetornoTestesController < ApplicationController
           IssueRelation.where(issue_from_id: @issue.id, issue_to_id: copied_to_qs_issue.id, relation_type: "copied_to").destroy_all
         else
           # A tarefa já foi encaminhada para QS e não está como "Nova"
-          flash[:warning] = "Os testes já foram iniciados pelo QS em  #{view_context.link_to "#{copied_to_qs_issue.tracker.name} ##{copied_to_qs_issue.id}", issue_path(copied_to_qs_issue)} e está com status #{copied_to_qs_issue.status.name}.<br>Neste caso não possivel criar um retorno de testes para a tarefa de desenvolvimento.<br>Ou crie uma nova tarefa de Defeito ou crie um retorno de testes apartir da tarefa do QS.".html_safe unless is_batch_call
-          @processed_issues << "[NOK] #{view_context.link_to "#{@issue.tracker.name} ##{@issue.id}", issue_path(@issue)} - #{@issue.subject} - tarefa já foi encaminhada para o QS em  #{view_context.link_to "#{copied_to_qs_issue.tracker.name} ##{copied_to_qs_issue.id}", issue_path(copied_to_qs_issue)} e está com status #{copied_to_qs_issue.status.name}"
-          redirect_to issue_path(@issue) unless is_batch_call
+          if !is_task_rake
+            flash[:warning] = "Os testes já foram iniciados pelo QS em  #{view_context.link_to "#{copied_to_qs_issue.tracker.name} ##{copied_to_qs_issue.id}", issue_path(copied_to_qs_issue)} e está com status #{copied_to_qs_issue.status.name}.<br>Neste caso não possivel criar um retorno de testes para a tarefa de desenvolvimento.<br>Ou crie uma nova tarefa de Defeito ou crie um retorno de testes apartir da tarefa do QS.".html_safe unless is_batch_call
+            @processed_issues << "[NOK] #{view_context.link_to "#{@issue.tracker.name} ##{@issue.id}", issue_path(@issue)} - #{@issue.subject} - tarefa já foi encaminhada para o QS em  #{view_context.link_to "#{copied_to_qs_issue.tracker.name} ##{copied_to_qs_issue.id}", issue_path(copied_to_qs_issue)} e está com status #{copied_to_qs_issue.status.name}" if is_batch_call
+            redirect_to issue_path(@issue) unless is_batch_call
+          end
           return
         end
       end
@@ -62,21 +66,27 @@ class RetornoTestesController < ApplicationController
 
       SkyRedminePlugin::Indicadores.processar_indicadores(@issue)
 
-      flash[:notice] = "Tarefa #{view_context.link_to "#{new_issue.tracker.name} ##{new_issue.id}", issue_path(new_issue)} foi criada no projeto #{view_context.link_to new_issue.project.name, project_path(new_issue.project)} na sprint #{view_context.link_to new_issue.fixed_version.name, version_path(new_issue.fixed_version)} com tempo estimado de 1.0h<br>" \
-      "Ajuste a descrição da tarefa com o resultado dos testes e orientacoes o que deve ser corrigido #{view_context.link_to "clicando aqui", edit_issue_path(new_issue)}".html_safe unless is_batch_call
-      flash[:info] = "Essa tarefa teve seu status ajustado para <strong><em>#{@issue.status.name}</em></strong>" unless is_batch_call
-      if tarefa_qs_removida
-        flash[:info] = flash[:info] + "<br>A tarefa já havia sido encaminhada para o QS e ainda estava com status Nova, portanto foi removida do backlog do QS".html_safe unless is_batch_call
+      if !is_task_rake
+        flash[:notice] = "Tarefa #{view_context.link_to "#{new_issue.tracker.name} ##{new_issue.id}", issue_path(new_issue)} foi criada no projeto #{view_context.link_to new_issue.project.name, project_path(new_issue.project)} na sprint #{view_context.link_to new_issue.fixed_version.name, version_path(new_issue.fixed_version)} com tempo estimado de 1.0h<br>" \
+        "Ajuste a descrição da tarefa com o resultado dos testes e orientacoes o que deve ser corrigido #{view_context.link_to "clicando aqui", edit_issue_path(new_issue)}".html_safe unless is_batch_call
+        flash[:info] = "Essa tarefa teve seu status ajustado para <strong><em>#{@issue.status.name}</em></strong>" unless is_batch_call
+        if tarefa_qs_removida
+          flash[:info] = flash[:info] + "<br>A tarefa já havia sido encaminhada para o QS e ainda estava com status Nova, portanto foi removida do backlog do QS".html_safe unless is_batch_call
+        end
+        @processed_issues << "[OK] #{view_context.link_to "#{@issue.tracker.name} ##{@issue.id}", issue_path(@issue)} - #{@issue.subject} - retorno de testes criado em #{view_context.link_to "#{new_issue.tracker.name} ##{new_issue.id}", issue_path(new_issue)} " if is_batch_call
       end
-      @processed_issues << "[OK] #{view_context.link_to "#{@issue.tracker.name} ##{@issue.id}", issue_path(@issue)} - #{@issue.subject} - retorno de testes criado em #{view_context.link_to "#{new_issue.tracker.name} ##{new_issue.id}", issue_path(new_issue)} "
     else
-      flash[:warning] = "O retorno de testes só pode ser criado para tarefas de desenvolvimento com status 'Resolvida'." unless is_batch_call
+      if !is_task_rake
+        flash[:warning] = "O retorno de testes só pode ser criado para tarefas de desenvolvimento com status 'Resolvida'." unless is_batch_call
+      end
     end
 
-    redirect_to issue_path(@issue) unless is_batch_call
+    if !is_batch_call && !is_task_rake
+      redirect_to issue_path(@issue)
+    end
   end
 
-  def retorno_testes_qs(is_batch_call = false)
+  def retorno_testes_qs(is_batch_call = false, is_task_rake = false)
     Rails.logger.info ">>> retorno_testes_qs #{@issue.id}"
     @origem_retorno_teste = ORIGEM_RETORNO_TESTE_QS
     usar_sprint_atual = params[:usar_sprint_atual].present?
@@ -90,9 +100,11 @@ class RetornoTestesController < ApplicationController
       # Se existir um retorno de testes
       if retorno_testes_issue
         # A tarefa de retorno de testes já foi encaminhada
-        flash[:warning] = "O retorno de testes já foi encaminhado em  #{view_context.link_to "#{retorno_testes_issue.tracker.name} ##{retorno_testes_issue.id}", issue_path(retorno_testes_issue)} e está com status #{retorno_testes_issue.status.name}." unless is_batch_call
-        @processed_issues << "[NOK] #{view_context.link_to "#{@issue.tracker.name} ##{@issue.id}", issue_path(@issue)} - #{@issue.subject} - o retorno de testes já foi encaminhado em  #{view_context.link_to "#{retorno_testes_issue.tracker.name} ##{retorno_testes_issue.id}", issue_path(retorno_testes_issue)} e está com status #{retorno_testes_issue.status.name}"
-        redirect_to issue_path(@issue) unless is_batch_call
+        if !is_task_rake
+          flash[:warning] = "O retorno de testes já foi encaminhado em  #{view_context.link_to "#{retorno_testes_issue.tracker.name} ##{retorno_testes_issue.id}", issue_path(retorno_testes_issue)} e está com status #{retorno_testes_issue.status.name}." unless is_batch_call
+          @processed_issues << "[NOK] #{view_context.link_to "#{@issue.tracker.name} ##{@issue.id}", issue_path(@issue)} - #{@issue.subject} - o retorno de testes já foi encaminhado em  #{view_context.link_to "#{retorno_testes_issue.tracker.name} ##{retorno_testes_issue.id}", issue_path(retorno_testes_issue)} e está com status #{retorno_testes_issue.status.name}" if is_batch_call
+          redirect_to issue_path(@issue) unless is_batch_call
+        end
         return
       end
 
@@ -125,19 +137,27 @@ class RetornoTestesController < ApplicationController
 
         SkyRedminePlugin::Indicadores.processar_indicadores(@issue)
 
-        flash[:notice] = "Tarefa #{view_context.link_to "#{new_issue.tracker.name} ##{new_issue.id}", issue_path(new_issue)} foi criada no projeto #{view_context.link_to devel_issue.project.name, project_path(devel_issue.project)} na sprint #{view_context.link_to new_issue.fixed_version.name, version_path(new_issue.fixed_version)} com tempo estimado de 1.0h" unless is_batch_call
-        flash[:info] = "Tarefa do desenvolvimento #{view_context.link_to "#{devel_issue.tracker.name} ##{devel_issue.id}", issue_path(devel_issue)} foi ajustada o status para <strong><em>#{devel_issue.status.name}</em></strong><br>" \
-        "Essa tarefa de testes foi fechada e ajustado seu status para <strong><em>#{@issue.status.name}</em></strong>".html_safe unless is_batch_call
+        if !is_task_rake
+          flash[:notice] = "Tarefa #{view_context.link_to "#{new_issue.tracker.name} ##{new_issue.id}", issue_path(new_issue)} foi criada no projeto #{view_context.link_to devel_issue.project.name, project_path(devel_issue.project)} na sprint #{view_context.link_to new_issue.fixed_version.name, version_path(new_issue.fixed_version)} com tempo estimado de 1.0h" unless is_batch_call
+          flash[:info] = "Tarefa do desenvolvimento #{view_context.link_to "#{devel_issue.tracker.name} ##{devel_issue.id}", issue_path(devel_issue)} foi ajustada o status para <strong><em>#{devel_issue.status.name}</em></strong><br>" \
+          "Essa tarefa de testes foi fechada e ajustado seu status para <strong><em>#{@issue.status.name}</em></strong>".html_safe unless is_batch_call
 
-        @processed_issues << "#{view_context.link_to "#{@issue.tracker.name} ##{@issue.id}", issue_path(@issue)} - #{@issue.subject} - retorno de testes criado em #{view_context.link_to "#{new_issue.tracker.name} ##{new_issue.id}", issue_path(new_issue)} "
+          @processed_issues << "#{view_context.link_to "#{@issue.tracker.name} ##{@issue.id}", issue_path(@issue)} - #{@issue.subject} - retorno de testes criado em #{view_context.link_to "#{new_issue.tracker.name} ##{new_issue.id}", issue_path(new_issue)} " if is_batch_call
+        end
       else
-        flash[:warning] = "Não foi possível encontrar o projeto de origem (desenvolvimento) para criar o retorno de testes." unless is_batch_call
+        if !is_task_rake
+          flash[:warning] = "Não foi possível encontrar o projeto de origem (desenvolvimento) para criar o retorno de testes." unless is_batch_call
+        end
       end
     else
-      flash[:warning] = "O retorno de testes só pode ser criado para tarefas do QS com status 'Teste NOK'." unless is_batch_call
+      if !is_task_rake
+        flash[:warning] = "O retorno de testes só pode ser criado para tarefas do QS com status 'Teste NOK'." unless is_batch_call
+      end
     end
 
-    redirect_to issue_path(@issue) unless is_batch_call
+    if !is_batch_call && !is_task_rake
+      redirect_to issue_path(@issue)
+    end
   end
 
   def retorno_testes_lote

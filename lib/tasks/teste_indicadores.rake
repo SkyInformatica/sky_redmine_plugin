@@ -99,6 +99,43 @@ namespace :sky_redmine_plugin do
     end
   end
 
+  # Função auxiliar para trocar o tipo (tracker) de uma tarefa
+  def trocar_tipo_tarefa(issue, novo_tipo)
+    puts "\n>> Trocando tipo da tarefa ##{issue.id} para #{novo_tipo}"
+
+    # Recarregar a tarefa para evitar StaleObjectError
+    issue = Issue.find(issue.id)
+
+    # Encontrar o tracker pelo nome
+    tracker = Tracker.find_by(name: novo_tipo)
+    if tracker.nil?
+      puts "✗ Tipo de tarefa '#{novo_tipo}' não encontrado"
+      return false
+    end
+
+    # Inicializar o journal antes de alterar o tipo
+    issue.init_journal(@author, "[SkyRedminePlugin] Tipo alterado para #{novo_tipo}")
+
+    # Guardar o tipo antigo para log
+    tipo_antigo = issue.tracker.name
+
+    # Atualizar o tipo
+    issue.tracker = tracker
+
+    if issue.save
+      puts "✓ Tipo da tarefa alterado com sucesso (#{tipo_antigo} -> #{novo_tipo})"
+
+      # Processar indicadores após a mudança
+      SkyRedminePlugin::Indicadores.processar_indicadores(issue)
+      puts "✓ Indicadores processados após alteração do tipo"
+
+      return true
+    else
+      puts "✗ Falha ao alterar tipo da tarefa: #{issue.errors.full_messages.join(", ")}"
+      return false
+    end
+  end
+
   # Função auxiliar para atualizar um campo personalizado
   def atualizar_campo_personalizado(issue, custom_field, valor, mensagem)
     issue = Issue.find(issue.id)
@@ -120,6 +157,7 @@ namespace :sky_redmine_plugin do
   def verificar_indicador(issue_id, situacao_esperada)
     puts "\n>> Verificação do Indicador para a Tarefa ##{issue_id}"
 
+    SkyRedminePlugin::Indicadores.processar_indicadores(issue_id)
     # Buscar o indicador pelo número da tarefa
     indicador = SkyRedmineIndicadores.find_by(primeira_tarefa_devel_id: issue_id)
 
@@ -382,19 +420,16 @@ namespace :sky_redmine_plugin do
             status_teste_nok = IssueStatus.find_by(name: SkyRedminePlugin::Constants::IssueStatus::TESTE_NOK)
             trocar_status(tarefa_qs, status_teste_nok, "Status alterado para TESTE_NOK")
 
-            # Criar uma tarefa de continuidade do tipo errado (não RETORNO_TESTES)
-            issue_continuidade = Issue.new(
-              project: @project,
-              tracker: @tracker, # Usar tracker padrão em vez de RETORNO_TESTES
-              status: @status_nova,
-              subject: "Continuidade incorreta para #{issue.subject}",
-              author: @author,
-              assigned_to: @author,
-              parent_issue_id: issue.id,
-            )
+            controller = RetornoTestesController.new
+            controller.instance_variable_set(:@issue, tarefa_qs)
+            controller.instance_variable_set(:@processed_issues, [])
+            controller.retorno_testes_qs(false, true)
 
-            if issue_continuidade.save
-              puts "✓ Tarefa de continuidade criada com tipo incorreto"
+            # Localizar a tarefa de retorno de testes criada
+            tarefa_retorno_testes = SkyRedminePlugin::TarefasRelacionadas.localizar_tarefa_retorno_testes(tarefa_qs)
+            if tarefa_retorno_testes
+              trocar_tipo_tarefa(tarefa_retorno_testes, SkyRedminePlugin::Constants::Trackers::DEFEITO)
+
               verificar_indicador(issue.id, SkyRedminePlugin::Constants::SituacaoAtual::DESCONHECIDA)
             end
           end
