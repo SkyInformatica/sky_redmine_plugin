@@ -811,8 +811,8 @@ module FluxoTarefasHelper
             if (estado == "current") &&
                exibir_versao = true
             else
-              if fluxo.include?(SkyRedminePlugin::Constants::SituacaoAtual::AGUARDANDO_ENCAMINHAR_RETORNO_TESTES)
-                if indice_atual < fluxo.index(SkyRedminePlugin::Constants::SituacaoAtual::AGUARDANDO_ENCAMINHAR_RETORNO_TESTES)
+              if fluxo.include?(SkyRedminePlugin::Constants::SituacaoAtual::ESTOQUE_QS_RETORNO_TESTES)
+                if indice_atual < fluxo.index(SkyRedminePlugin::Constants::SituacaoAtual::ESTOQUE_QS_RETORNO_TESTES)
                   exibir_versao = true
                 else
                   exibir_versao = false
