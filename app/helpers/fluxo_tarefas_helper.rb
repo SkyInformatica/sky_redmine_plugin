@@ -798,6 +798,8 @@ module FluxoTarefasHelper
       elsif situacao == SkyRedminePlugin::Constants::SituacaoAtual::AGUARDANDO_ENCAMINHAR_RETORNO_TESTES_DEVEL &&
             indicadores&.qtd_retorno_testes_devel.to_i > 0
         texto_situacao += "<br>#{indicadores.qtd_retorno_testes_devel}x"
+      elsif [SkyRedminePlugin::Constants::SituacaoAtual::VERSAO_LIBERADA, SkyRedminePlugin::Constants::SituacaoAtual::VERSAO_LIBERADA_FALTA_FECHAR].include?(situacao)
+        texto_situacao += "<br>#{indicadores.versao_estavel}"
       end
 
       html << "<div class='timeline-step timeline-step-#{estado}'>"
