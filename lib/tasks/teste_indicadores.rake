@@ -28,29 +28,29 @@ namespace :sky_redmine_plugin do
     puts "✓ Usuário 'maglan' encontrado (ID: #{@author.id})"
 
     # Tipo padrão (Defeito)
-    #criar_tarefa_nova
-    #criar_tarefa_nova_em_andamento
-    #criar_tarefa_nova_em_andamento_resolvida
+    criar_tarefa_nova
+    criar_tarefa_nova_em_andamento
+    criar_tarefa_nova_em_andamento_resolvida
 
     # Tipo Conversão
-    #criar_tarefa_nova(SkyRedminePlugin::Constants::Trackers::CONVERSAO)
-    #criar_tarefa_nova_em_andamento(SkyRedminePlugin::Constants::Trackers::CONVERSAO)
-    #criar_tarefa_nova_em_andamento_resolvida(SkyRedminePlugin::Constants::Trackers::CONVERSAO)
+    criar_tarefa_nova(SkyRedminePlugin::Constants::Trackers::CONVERSAO)
+    criar_tarefa_nova_em_andamento(SkyRedminePlugin::Constants::Trackers::CONVERSAO)
+    criar_tarefa_nova_em_andamento_resolvida(SkyRedminePlugin::Constants::Trackers::CONVERSAO)
     criar_tarefa_nova_em_andamento_resolvida_fechada(SkyRedminePlugin::Constants::Trackers::CONVERSAO)
 
     # Testes no desenvolvimento
-    #criar_tarefa_teste_no_desenvolvimento_nao_necessita_teste
-    #criar_tarefa_teste_no_desenvolvimento_ok
-    #criar_tarefa_teste_no_desenvolvimento_nok
+    criar_tarefa_teste_no_desenvolvimento_nao_necessita_teste
+    criar_tarefa_teste_no_desenvolvimento_ok
+    criar_tarefa_teste_no_desenvolvimento_nok
 
     # Testes no QS
-    #criar_tarefa_qs_nao_necessita_teste
-    #criar_tarefa_encaminhar_para_qs
+    criar_tarefa_qs_nao_necessita_teste
+    criar_tarefa_encaminhar_para_qs
 
     # No método principal do rake task, adicione:
-    #criar_tarefa_desconhecida_fechada_continua_sem_retorno
-    #criar_tarefa_desconhecida_teste_nok_fechada_sem_retorno
-    #criar_tarefa_desconhecida_continuidade_nao_retorno
+    criar_tarefa_desconhecida_fechada_continua_sem_retorno
+    criar_tarefa_desconhecida_teste_nok_fechada_sem_retorno
+    criar_tarefa_desconhecida_continuidade_nao_retorno
 
     puts "\nTestes concluídos!"
   end

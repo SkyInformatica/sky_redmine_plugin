@@ -20,7 +20,42 @@ bundle exec rake redmine:plugins:migrate RAILS_ENV=production
 - [Ações automatizadas na gestão do fluxo das tarefas](docs/acoes_automatizadas_fluxo_tarefas.md)
 - [Ciclo do desenvolvimento das tarefas](docs/ciclo_desenvolvimento.md)
 
+# Tags das etapas
+
+| Tag                                                     | Descrição                                                                                                                                      |
+| ------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
+| E01_ESTOQUE_DEVEL, E01_ESTOQUE_DEVEL_RT                 | Tarefa que está no estoque, uma tarefa DEVEL com a situação NOVA                                                                               |
+| E02_EM_ANDAMENTO_DEVEL, E02_EM_ANDAMENTO_DEVEL_RT       | Tarefa que está em desenvolvimento, uma tarefa DEVEL com a situação EM_ANDAMENTO                                                               |
+| E03_AGUARDA_TESTES_DEVEL                                | Uma tarefa DEVEL que está com a situação RESOLVIDA e aguardando os testes no desenvolvimento                                                   |
+| E03_AGUARDA_ENCAMINHAR_RT_DEVEL                         | Uma tarefa DEVEL que está com a situação RESOLVIDA e testes no desenvolvimento TESTE_NOK e aguardando encaminhar a tarefa de retorno de testes |
+| E04_AGUARDA_ENCAMINHAR_QS, E04_AGUARDA_ENCAMINHAR_QS_RT | Tarefa DEVEL que está com a situação RESOLVIDA e os testes no desenvolvimento com TESTE_OK ou NAO_NECESSITA_TESTES                             |
+| E05_ESTOQUE_QS, E05_ESTOQUE_QS_RT                       | Foi encaminhada para QS e está no estoque do QS, uma tarefa QS com a situação NOVA                                                             |
+| E06_EM_ANDAMENTO_QS, E06_EM_ANDAMENTO_QS_RT             | Está em testes, uma tarefa do QS com a situação EM_ANDAMENTO                                                                                   |
+| E07_AGUARDA_VERSAO, E07_AGUARDA_VERSAO_RT               | Está com os testes concluídos com situação TESTE_OK e aguardando liberar a versão                                                              |
+| E07_AGUARDA_ENCAMINHAR_RT                               | Está com os testes concluídos com situação TESTE_NOK e aguardando encaminhar a tarefa do tipo RETORNO_TESTES                                   |
+| E08_VERSAO_LIBERADA_FALTA_FECHAR                        | Tarefa                                                                                                                                         |
+| E08_FECHADA_SEM_DESENVOLVIMENTO                         | Tarefa fechada sem desenvolvimento                                                                                                             |
+| E08_CANCELADA                                           | Tarefa cancelada                                                                                                                               |
+| E99_INTERROMPIDA, E99_INTERROMPIDA_ANALISE              | Tarefa interrompida                                                                                                                            |
+| E99_DESCONHECIDA                                        | Etapa desconhecida. Deve ser verificado o fluxo das tarefas                                                                                    |
+
 # O que há de novo?
+
+## 2025.04.27.1
+
+- Tratamento dos indicadores das tarefas complementares (video, documentacao, suporte, tarefa nao planejada, testes)
+- Tratamento dos indicadores das tarefas de conversão.
+- Tratamento dos indicadores para tarefas interrompidas, interrompidas para analise, cancelada e fechada sem desenvolvimento
+- Incluido a etapa com a tag E99_DESCONHECIDO para tarefas que não estão seguindo o fluxo de desenvolvimento previsto.
+- Incluido os cenarios de tarefas que não são encaminhadas para o QS no tratamento dos indicadores e timeline
+- Melhorado a visualização da timeline exibindo a versão de testes e versão estável
+- Criado nova etapa E08_VERSAO_LIBERADA_FALTA_FECHAR para tarefas que ainda nao foram fechadas mas já possuem a versão liberada.
+
+## 2025.04.09.1
+
+- Nova opção "Encaminhar para QS na sprint atual" para tarefas de Retorno de testes. Ira encaminhar os testes na sprint atual do QS
+- Nova opção "Criar retorno de testes na sprint atual" para tarefas do QS. Irá encaminhar o retorno de testes na sprint atual do desenvolvimento
+- Incluido novas etapas E03_AGUARDA_TESTES_DEVEL e E03_AGUARDA_ENCAMINHAR_RT_DEVEL. Demais etapas após E03 foram renumeradas.
 
 ## 2025.04.06.1
 
@@ -47,14 +82,13 @@ Fluxo com retorno de testes: define o fluxo quando há retorno de testes das tar
 | E03_AGUARDANDO_ENCAMINHAR_QS | Tarefa DEVEL que está com a situação RESOLVIDA e aguardando na fila para encaminhar para o QS |
 | E04_ESTOQUE_QS | Foi encaminhada para QS e está no estoque do QS, uma tarefa QS com a situação NOVA |
 | E05_EM_ANDAMENTO_QS | Está em testes, uma tarefa do QS com a situação EM_ANDAMENTO |
-beração da versão |
 | E07_AGUARDANDO_ENCAMINHAR_RT | Está com os testes concluídos com situação TESTE_NOK e aguardando encaminhar a tarefa do tipo RETORNO_TESTES |
 | E01_ESTOQUE_DEVEL_RT | Tarefa que retornou do QS com tipo RETORNO_TESTES que está no estoque, uma tarefa DEVEL com a situação NOVA |
 | E02_EM_ANDAMENTO_DEVEL_RT | Tarefa que retornou do QS com tipo RETORNO_TESTES que está em desenvolvimento, uma tarefa DEVEL com situação EM_ANDAMENTO |
 | E03_AGUARDANDO_ENCAMINHAR_QS_RT | Tarefa que retornou do QS com tipo RETORNO_TESTES que está com a situação RESOLVIDA e aguardando na fila para encaminhar para o QS |
 | E04_ESTOQUE_QS_RT | Tarefa que retornou do QS com tipo RETORNO_TESTES que foi encaminhada para QS e está no estoque do QS, uma tarefa QS com a situação NOVA |
 | E05_EM_ANDAMENTO_QS_RT | Tarefa que retornou do QS com tipo RETORNO_TESTES que está em testes, uma tarefa do QS com a situação EM_ANDAMENTO |
-| E06_AGUARDANDO_VERSAO_RT | Tarefa que retornou do QS com tipo RETORNO_TESTES que está com testes concluídos com situação TESTE_OK e aguardando li
+| E06_AGUARDANDO_VERSAO_RT | Tarefa que retornou do QS com tipo RETORNO_TESTES que está com testes concluídos com situação TESTE_OK e aguardando liberação da versão |
 
 ## 2025.01.06.1
 
