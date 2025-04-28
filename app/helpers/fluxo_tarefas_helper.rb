@@ -808,19 +808,7 @@ module FluxoTarefasHelper
           # somente exibe a versao de testes na situacao ESTOQUE_QS caso ela seja a current
           # se ela for completed somente exibir se a ESTOQUE_QS_RETORNO_TESTES nao exista ou ainda nao foi executada
           if (situacao == SkyRedminePlugin::Constants::SituacaoAtual::ESTOQUE_QS)
-            if (estado == "current") &&
-               exibir_versao = true
-            else
-              if !esta_na_parte_atual
-                if indice_atual < fluxo.index(SkyRedminePlugin::Constants::SituacaoAtual::ESTOQUE_QS_RETORNO_TESTES)
-                  exibir_versao = true
-                else
-                  exibir_versao = false
-                end
-              else
-                exibir_versao = true
-              end
-            end
+            exibir_versao = esta_na_parte_atual
           end
           Rails.logger.info(">>>> render_timeline_steps: #{situacao} - #{indicadores&.versao_teste} - fluxo: #{fluxo} - situacao_atual: #{indicadores&.situacao_atual} - situcao_atual.index #{fluxo.index(indicadores&.situacao_atual)} - ESTOQUE_QS_RETORNO_TESTES.index: #{fluxo.index(SkyRedminePlugin::Constants::SituacaoAtual::ESTOQUE_QS_RETORNO_TESTES)} - exibir_versao: #{exibir_versao}")
 
