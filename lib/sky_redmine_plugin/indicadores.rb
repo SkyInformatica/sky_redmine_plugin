@@ -544,9 +544,13 @@ module SkyRedminePlugin
         when SkyRedminePlugin::Constants::IssueStatus::TESTE_OK_FECHADA
           case ultima_tarefa_devel.status.name
           when SkyRedminePlugin::Constants::IssueStatus::RESOLVIDA
-            return is_retorno_do_qs ?
-                     SkyRedminePlugin::Constants::SituacaoAtual::AGUARDANDO_VERSAO_RETORNO_TESTES :
-                     SkyRedminePlugin::Constants::SituacaoAtual::AGUARDANDO_VERSAO
+            if ultima_tarefa_devel.versao_estavel.present?
+              return SkyRedminePlugin::Constants::SituacaoAtual::VERSAO_LIBERADA
+            else
+              return is_retorno_do_qs ?
+                       SkyRedminePlugin::Constants::SituacaoAtual::AGUARDANDO_VERSAO_RETORNO_TESTES :
+                       SkyRedminePlugin::Constants::SituacaoAtual::AGUARDANDO_VERSAO
+            end
           when SkyRedminePlugin::Constants::IssueStatus::FECHADA
             return SkyRedminePlugin::Constants::SituacaoAtual::VERSAO_LIBERADA
           end
@@ -617,20 +621,21 @@ module SkyRedminePlugin
       # Estrutura para retornar situação e motivo
       resultado = { situacao: nil, motivo: nil }
 
-      # Regra 1: Verificar se a última tarefa do último ciclo DEVEL é FECHADA_CONTINUA_RETORNO_TESTES
+      ultima_tarefa_ciclo = tarefas_relacionadas.last
       ultima_tarefa_devel = tarefas_devel.last
+
+      # Regra 1: Verificar se a última tarefa do último ciclo DEVEL é FECHADA_CONTINUA_RETORNO_TESTES
       if ultima_tarefa_devel.status.name == SkyRedminePlugin::Constants::IssueStatus::FECHADA_CONTINUA_RETORNO_TESTES
         resultado[:situacao] = SkyRedminePlugin::Constants::SituacaoAtual::DESCONHECIDA
-        resultado[:motivo] = "Última tarefa DEVEL está com situação FECHADA_CONTINUA_RETORNO_TESTES mas não existe tarefa de continuidade RETORNO_TESTES"
+        resultado[:motivo] = "Tarefa #{ultima_tarefa_devel.id} está com situação FECHADA_CONTINUA_RETORNO_TESTES mas não existe tarefa de continuidade RETORNO_TESTES"
         return resultado
       end
 
       # Regra 2: Verificar se a última tarefa de todo o ciclo é TESTE_NOK_FECHADA
-      ultima_tarefa_ciclo = tarefas_relacionadas.last
       if ultima_tarefa_ciclo.equipe_responsavel == SkyRedminePlugin::Constants::EquipeResponsavel::QS &&
          ultima_tarefa_ciclo.status.name == SkyRedminePlugin::Constants::IssueStatus::TESTE_NOK_FECHADA
         resultado[:situacao] = SkyRedminePlugin::Constants::SituacaoAtual::DESCONHECIDA
-        resultado[:motivo] = "Última tarefa QS está com situação TESTE_NOK_FECHADA mas não existe tarefa de continuidade RETORNO_TESTES"
+        resultado[:motivo] = "Tarefa #{ultima_tarefa_ciclo.id} está com situação TESTE_NOK_FECHADA mas não existe tarefa de continuidade RETORNO_TESTES"
         return resultado
       end
 
@@ -646,6 +651,22 @@ module SkyRedminePlugin
             end
           end
         end
+      end
+
+      # Regra 4: Verificar que nao pode ter FECHADA_SEM_DESENVOLVIMENTO apartir do segundo ciclo de desenvolvimento
+      if ciclos_devel.size > 1
+        if ultima_tarefa_ciclo.status.name == SkyRedminePlugin::Constants::IssueStatus::FECHADA_SEM_DESENVOLVIMENTO
+          resultado[:situacao] = SkyRedminePlugin::Constants::SituacaoAtual::DESCONHECIDA
+          resultado[:motivo] = "Tarefa #{ultima_tarefa_ciclo.id} está com situação FECHADA_SEM_DESENVOLVIMENTO porém houverem tarefas anteriores de devel com desenvolvimento."
+          return resultado
+        end
+      end
+
+      # Regra 5: Verificar se há tarefa de continuidade depois de uma tarefa CONTINUA_PROXIMA_SPRINT
+      if ultima_tarefa_ciclo.status.name == SkyRedminePlugin::Constants::IssueStatus::CONTINUA_PROXIMA_SPRINT
+        resultado[:situacao] = SkyRedminePlugin::Constants::SituacaoAtual::DESCONHECIDA
+        resultado[:motivo] = "Tarefa #{ultima_tarefa_ciclo.id} está com situação CONTINUA_PROXIMA_SPRINT porém não existe tarefa de continuidade."
+        return resultado
       end
 
       Rails.logger.info ">>> Não atende nenhuma condição de DESCONHECIDA"

@@ -121,6 +121,14 @@ module SkyRedminePlugin
         tarefa.instance_variable_set(:@teste_no_desenvolvimento, teste_no_desenvolvimento)
         tarefa.define_singleton_method(:teste_no_desenvolvimento) { @teste_no_desenvolvimento }
 
+        versao_teste = obter_valor_campo_personalizado(tarefa, SkyRedminePlugin::Constants::CustomFields::VERSAO_TESTE)
+        tarefa.instance_variable_set(:@versao_teste, versao_teste)
+        tarefa.define_singleton_method(:versao_teste) { @versao_teste }
+
+        versao_estavel = obter_valor_campo_personalizado(tarefa, SkyRedminePlugin::Constants::CustomFields::VERSAO_ESTAVEL)
+        tarefa.instance_variable_set(:@versao_estavel, versao_estavel)
+        tarefa.define_singleton_method(:versao_estavel) { @versao_estavel }
+
         tipos_complementares = [
           SkyRedminePlugin::Constants::Trackers::TESTE,
           SkyRedminePlugin::Constants::Trackers::VIDEOS,

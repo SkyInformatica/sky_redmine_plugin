@@ -66,6 +66,8 @@ module SkyRedminePlugin
       SISTEMA = "Sistema"
       TESTE_NO_DESENVOLVIMENTO = "Teste no desenvolvimento"
       RESULTADO_TESTE_NOK = "Resultado Teste NOK"
+      VERSAO_TESTE = "Versão teste"
+      VERSAO_ESTAVEL = "Versão estável"
     end
 
     module CustomFieldsValues
