@@ -450,7 +450,7 @@ module FluxoTarefasHelper
                     processar_indicadores_tarefa_path(tarefas_relacionadas.first),
                     method: :post)
     html << ")"
-    html << situacao_atual_detalhes ? " #{situacao_atual_detalhes}" : ""
+    #html << situacao_atual_detalhes ? " #{situacao_atual_detalhes}" : ""
     html << "<p>"
 
     if indicadores.nil?
