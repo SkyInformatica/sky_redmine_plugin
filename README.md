@@ -33,7 +33,7 @@ bundle exec rake redmine:plugins:migrate RAILS_ENV=production
 | E06_EM_ANDAMENTO_QS, E06_EM_ANDAMENTO_QS_RT             | Está em testes, uma tarefa do QS com a situação EM_ANDAMENTO                                                                                   |
 | E07_AGUARDA_VERSAO, E07_AGUARDA_VERSAO_RT               | Está com os testes concluídos com situação TESTE_OK e aguardando liberar a versão                                                              |
 | E07_AGUARDA_ENCAMINHAR_RT                               | Está com os testes concluídos com situação TESTE_NOK e aguardando encaminhar a tarefa do tipo RETORNO_TESTES                                   |
-| E08_VERSAO_LIBERADA_FALTA_FECHAR                        | Tarefa                                                                                                                                         |
+| E08_VERSAO_LIBERADA_FALTA_FECHAR                        | Tarefa devel Resolvida com versão estável definida e com tarefa do QS com TESTE_OK                                                             |
 | E08_FECHADA_SEM_DESENVOLVIMENTO                         | Tarefa fechada sem desenvolvimento                                                                                                             |
 | E08_CANCELADA                                           | Tarefa cancelada                                                                                                                               |
 | E99_INTERROMPIDA, E99_INTERROMPIDA_ANALISE              | Tarefa interrompida                                                                                                                            |
