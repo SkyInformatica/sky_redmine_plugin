@@ -117,14 +117,17 @@ module SkyRedminePlugin
           # Calcular tempos DEVEL
           if indicador.data_criacao_ou_atendimento_primeira_tarefa_devel.present? && indicador.data_andamento_primeira_tarefa_devel.present?
             indicador.tempo_andamento_devel = (indicador.data_andamento_primeira_tarefa_devel - indicador.data_criacao_ou_atendimento_primeira_tarefa_devel).to_i
+            indicador.tempo_andamento_devel_detalhes = "De #{indicador.data_criacao_ou_atendimento_primeira_tarefa_devel&.strftime("%d/%m/%Y")} até #{indicador.data_andamento_primeira_tarefa_devel&.strftime("%d/%m/%Y")}"
           end
 
           if indicador.data_andamento_primeira_tarefa_devel.present? && indicador.data_resolvida_ultima_tarefa_devel.present?
             indicador.tempo_resolucao_devel = (indicador.data_resolvida_ultima_tarefa_devel - indicador.data_andamento_primeira_tarefa_devel).to_i
+            indicador.tempo_resolucao_devel_detalhes = "De #{indicador.data_andamento_primeira_tarefa_devel&.strftime("%d/%m/%Y")} até #{indicador.data_resolvida_ultima_tarefa_devel&.strftime("%d/%m/%Y")}"
           end
 
           if indicador.data_resolvida_ultima_tarefa_devel.present? && indicador.data_fechamento_ultima_tarefa_devel.present?
             indicador.tempo_fechamento_devel = (indicador.data_fechamento_ultima_tarefa_devel - indicador.data_resolvida_ultima_tarefa_devel).to_i
+            indicador.tempo_fechamento_devel_detalhes = "De #{indicador.data_resolvida_ultima_tarefa_devel&.strftime("%d/%m/%Y")} até #{indicador.data_fechamento_ultima_tarefa_devel&.strftime("%d/%m/%Y")}"
           end
 
           # Processar dados QS
@@ -165,24 +168,29 @@ module SkyRedminePlugin
             # Calcular tempos QS
             if indicador.data_criacao_primeira_tarefa_qs.present? && indicador.data_andamento_primeira_tarefa_qs.present?
               indicador.tempo_andamento_qs = (indicador.data_andamento_primeira_tarefa_qs - indicador.data_criacao_primeira_tarefa_qs).to_i
+              indicador.tempo_andamento_qs_detalhes = "De #{indicador.data_criacao_primeira_tarefa_qs&.strftime("%d/%m/%Y")} até #{indicador.data_andamento_primeira_tarefa_qs&.strftime("%d/%m/%Y")}"
             end
 
             if indicador.data_andamento_primeira_tarefa_qs.present? && indicador.data_resolvida_ultima_tarefa_qs.present?
               indicador.tempo_resolucao_qs = (indicador.data_resolvida_ultima_tarefa_qs - indicador.data_andamento_primeira_tarefa_qs).to_i
+              indicador.tempo_resolucao_qs_detalhes = "De #{indicador.data_andamento_primeira_tarefa_qs&.strftime("%d/%m/%Y")} até #{indicador.data_resolvida_ultima_tarefa_qs&.strftime("%d/%m/%Y")}"
             end
 
             if indicador.data_resolvida_ultima_tarefa_qs.present? && indicador.data_fechamento_ultima_tarefa_qs.present?
               indicador.tempo_fechamento_qs = (indicador.data_fechamento_ultima_tarefa_qs - indicador.data_resolvida_ultima_tarefa_qs).to_i
+              indicador.tempo_fechamento_qs_detalhes = "De #{indicador.data_resolvida_ultima_tarefa_qs&.strftime("%d/%m/%Y")} até #{indicador.data_fechamento_ultima_tarefa_qs&.strftime("%d/%m/%Y")}"
             end
 
             # Calcular tempo para encaminhar para QS (apenas no primeiro ciclo)
             if primeiro_ciclo_devel.last.data_resolvida.present? && indicador.data_criacao_primeira_tarefa_qs.present?
               indicador.tempo_para_encaminhar_qs = indicador.data_criacao_primeira_tarefa_qs - primeiro_ciclo_devel.last.data_resolvida
+              indicador.tempo_para_encaminhar_qs_detalhes = "De #{primeiro_ciclo_devel.last.data_resolvida&.strftime("%d/%m/%Y")} até #{indicador.data_criacao_primeira_tarefa_qs&.strftime("%d/%m/%Y")}"
             end
 
             # Calcular tempo entre conclusão dos testes e liberação da versão
             if indicador.data_resolvida_ultima_tarefa_qs.present? && indicador.data_fechamento_ultima_tarefa_devel.present?
               indicador.tempo_concluido_testes_versao_liberada = (indicador.data_fechamento_ultima_tarefa_devel - indicador.data_resolvida_ultima_tarefa_qs).to_i
+              indicador.tempo_concluido_testes_versao_liberada_detalhes = "De #{indicador.data_resolvida_ultima_tarefa_qs&.strftime("%d/%m/%Y")} até #{indicador.data_fechamento_ultima_tarefa_devel&.strftime("%d/%m/%Y")}"
             end
           end
 
