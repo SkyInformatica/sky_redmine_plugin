@@ -775,7 +775,7 @@ module FluxoTarefasHelper
     fluxo.each_with_index do |situacao, i|
       eh_ultima_etapa = i == fluxo.length - 1
       eh_versao_liberada_antes_testes = indicadores&.tarefa_fechada_sem_testes == "SIM"
-      eh_versao_liberada = [SkyRedminePlugin::Constants::SituacaoAtual::VERSAO_LIBERADA].include?(situacao)
+      eh_versao_liberada = [SkyRedminePlugin::Constants::SituacaoAtual::VERSAO_LIBERADA, SkyRedminePlugin::Constants::SituacaoAtual::FECHADA_SEM_DESENVOLVIMENTO].include?(situacao)
 
       estado = if (i < indice_atual)
           "completed"
