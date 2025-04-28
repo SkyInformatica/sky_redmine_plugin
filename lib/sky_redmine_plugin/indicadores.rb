@@ -356,6 +356,7 @@ module SkyRedminePlugin
           SkyRedminePlugin::Constants::SituacaoAtual::ESTOQUE_QS_RETORNO_TESTES => "05",
           SkyRedminePlugin::Constants::SituacaoAtual::EM_ANDAMENTO_QS_RETORNO_TESTES => "06",
           SkyRedminePlugin::Constants::SituacaoAtual::AGUARDANDO_VERSAO_RETORNO_TESTES => "07",
+          SkyRedminePlugin::Constants::SituacaoAtual::VERSAO_LIBERADA_FALTA_FECHAR => "08",
         }
 
         # Criar a nova tag baseada na situação atual, exceto para VERSAO_LIBERADA
@@ -469,7 +470,11 @@ module SkyRedminePlugin
           when SkyRedminePlugin::Constants::IssueStatus::EM_ANDAMENTO
             return SkyRedminePlugin::Constants::SituacaoAtual::EM_ANDAMENTO_DEVEL_RETORNO_TESTES
           when SkyRedminePlugin::Constants::IssueStatus::RESOLVIDA
-            return SkyRedminePlugin::Constants::SituacaoAtual::AGUARDANDO_VERSAO_RETORNO_TESTES
+            if ultima_tarefa_devel.versao_estavel.present?
+              return SkyRedminePlugin::Constants::SituacaoAtual::VERSAO_LIBERADA_FALTA_FECHAR
+            else
+              return SkyRedminePlugin::Constants::SituacaoAtual::AGUARDANDO_VERSAO_RETORNO_TESTES
+            end
           when SkyRedminePlugin::Constants::IssueStatus::FECHADA
             return SkyRedminePlugin::Constants::SituacaoAtual::VERSAO_LIBERADA
           end
@@ -481,7 +486,11 @@ module SkyRedminePlugin
           when SkyRedminePlugin::Constants::IssueStatus::EM_ANDAMENTO
             return SkyRedminePlugin::Constants::SituacaoAtual::EM_ANDAMENTO_DEVEL
           when SkyRedminePlugin::Constants::IssueStatus::RESOLVIDA
-            return SkyRedminePlugin::Constants::SituacaoAtual::AGUARDANDO_VERSAO
+            if ultima_tarefa_devel.versao_estavel.present?
+              return SkyRedminePlugin::Constants::SituacaoAtual::VERSAO_LIBERADA_FALTA_FECHAR
+            else
+              return SkyRedminePlugin::Constants::SituacaoAtual::AGUARDANDO_VERSAO
+            end
           when SkyRedminePlugin::Constants::IssueStatus::FECHADA
             return SkyRedminePlugin::Constants::SituacaoAtual::VERSAO_LIBERADA
           end
@@ -545,7 +554,7 @@ module SkyRedminePlugin
           case ultima_tarefa_devel.status.name
           when SkyRedminePlugin::Constants::IssueStatus::RESOLVIDA
             if ultima_tarefa_devel.versao_estavel.present?
-              return SkyRedminePlugin::Constants::SituacaoAtual::VERSAO_LIBERADA
+              return SkyRedminePlugin::Constants::SituacaoAtual::VERSAO_LIBERADA_FALTA_FECHAR
             else
               return is_retorno_do_qs ?
                        SkyRedminePlugin::Constants::SituacaoAtual::AGUARDANDO_VERSAO_RETORNO_TESTES :

@@ -679,6 +679,12 @@ module FluxoTarefasHelper
       SkyRedminePlugin::Constants::SituacaoAtual::FLUXO_COM_RETORNO_TESTES :
       SkyRedminePlugin::Constants::SituacaoAtual::FLUXO_SEM_RETORNO_TESTES
 
+    if situacao_atual == SkyRedminePlugin::Constants::SituacaoAtual::VERSAO_LIBERADA_FALTA_FECHAR
+      # Adicionar a situacao VERSAO_LIBERADA_FALTA_FECHAR ao fluxo antes do VERSAO_LIBERADA
+      fluxo = fluxo.dup
+      fluxo.insert(fluxo.index(SkyRedminePlugin::Constants::SituacaoAtual::VERSAO_LIBERADA), SkyRedminePlugin::Constants::SituacaoAtual::VERSAO_LIBERADA_FALTA_FECHAR)
+    end
+
     # Encontrar o índice da situação atual no fluxo
     indice_atual = fluxo.index(situacao_atual)
 
@@ -769,7 +775,7 @@ module FluxoTarefasHelper
     fluxo.each_with_index do |situacao, i|
       eh_ultima_etapa = i == fluxo.length - 1
       eh_versao_liberada_antes_testes = indicadores&.tarefa_fechada_sem_testes == "SIM"
-      eh_versao_liberada = situacao == SkyRedminePlugin::Constants::SituacaoAtual::VERSAO_LIBERADA
+      eh_versao_liberada = [SkyRedminePlugin::Constants::SituacaoAtual::VERSAO_LIBERADA].include?(situacao)
 
       estado = if (!esta_na_parte_atual && i < indice_atual) || (esta_na_parte_atual && i < indice_atual)
           "completed"
