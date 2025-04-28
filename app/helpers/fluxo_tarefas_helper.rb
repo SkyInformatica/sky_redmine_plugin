@@ -818,7 +818,7 @@ module FluxoTarefasHelper
                   exibir_versao = false
                 end
               else
-                exibir_versao = false
+                exibir_versao = true
               end
             end
           end
