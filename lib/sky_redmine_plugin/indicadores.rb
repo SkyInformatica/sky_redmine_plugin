@@ -530,27 +530,33 @@ module SkyRedminePlugin
       when SkyRedminePlugin::Constants::EquipeResponsavel::DEVEL
         case ultima_tarefa.status.name
         when SkyRedminePlugin::Constants::IssueStatus::NOVA
+          indicador.data_situacao_atual = ultima_tarefa.data_criacao_ou_atendimento_primeira_tarefa_devel
           return is_retorno_do_qs ?
                    SkyRedminePlugin::Constants::SituacaoAtual::ESTOQUE_DEVEL_RETORNO_TESTES :
                    SkyRedminePlugin::Constants::SituacaoAtual::ESTOQUE_DEVEL
         when SkyRedminePlugin::Constants::IssueStatus::EM_ANDAMENTO
+          indicador.data_situacao_atual = ultima_tarefa.data_em_andamento
           return is_retorno_do_qs ?
                    SkyRedminePlugin::Constants::SituacaoAtual::EM_ANDAMENTO_DEVEL_RETORNO_TESTES :
                    SkyRedminePlugin::Constants::SituacaoAtual::EM_ANDAMENTO_DEVEL
         when SkyRedminePlugin::Constants::IssueStatus::RESOLVIDA
+          indicador.data_situacao_atual = ultima_tarefa.data_resolvida
           return is_retorno_do_qs ?
                    SkyRedminePlugin::Constants::SituacaoAtual::AGUARDANDO_ENCAMINHAR_QS_RETORNO_TESTES :
                    SkyRedminePlugin::Constants::SituacaoAtual::AGUARDANDO_ENCAMINHAR_QS
         when SkyRedminePlugin::Constants::IssueStatus::FECHADA
+          indicador.data_situacao_atual = ultima_tarefa.data_fechada
           return SkyRedminePlugin::Constants::SituacaoAtual::VERSAO_LIBERADA
         end
       when SkyRedminePlugin::Constants::EquipeResponsavel::QS
         case ultima_tarefa.status.name
         when SkyRedminePlugin::Constants::IssueStatus::NOVA
+          indicador.data_situacao_atual = ultima_tarefa.data_criacao_ou_atendimento_primeira_tarefa_devel
           return is_retorno_do_qs ?
                    SkyRedminePlugin::Constants::SituacaoAtual::ESTOQUE_QS_RETORNO_TESTES :
                    SkyRedminePlugin::Constants::SituacaoAtual::ESTOQUE_QS
         when SkyRedminePlugin::Constants::IssueStatus::EM_ANDAMENTO
+          indicador.data_situacao_atual = ultima_tarefa.data_em_andamento
           return is_retorno_do_qs ?
                    SkyRedminePlugin::Constants::SituacaoAtual::EM_ANDAMENTO_QS_RETORNO_TESTES :
                    SkyRedminePlugin::Constants::SituacaoAtual::EM_ANDAMENTO_QS
@@ -558,11 +564,13 @@ module SkyRedminePlugin
           if ultima_tarefa_devel.versao_estavel.present?
             return SkyRedminePlugin::Constants::SituacaoAtual::VERSAO_LIBERADA_FALTA_FECHAR
           else
+            indicador.data_situacao_atual = ultima_tarefa.data_resolvida
             return is_retorno_do_qs ?
                      SkyRedminePlugin::Constants::SituacaoAtual::AGUARDANDO_VERSAO_RETORNO_TESTES :
                      SkyRedminePlugin::Constants::SituacaoAtual::AGUARDANDO_VERSAO
           end
         when SkyRedminePlugin::Constants::IssueStatus::TESTE_NOK
+          indicador.data_situacao_atual = ultima_tarefa.data_resolvida
           return SkyRedminePlugin::Constants::SituacaoAtual::AGUARDANDO_ENCAMINHAR_RETORNO_TESTES
         when SkyRedminePlugin::Constants::IssueStatus::TESTE_OK_FECHADA
           case ultima_tarefa_devel.status.name
@@ -570,11 +578,13 @@ module SkyRedminePlugin
             if ultima_tarefa_devel.versao_estavel.present?
               return SkyRedminePlugin::Constants::SituacaoAtual::VERSAO_LIBERADA_FALTA_FECHAR
             else
+              indicador.data_situacao_atual = ultima_tarefa.data_fechada
               return is_retorno_do_qs ?
                        SkyRedminePlugin::Constants::SituacaoAtual::AGUARDANDO_VERSAO_RETORNO_TESTES :
                        SkyRedminePlugin::Constants::SituacaoAtual::AGUARDANDO_VERSAO
             end
           when SkyRedminePlugin::Constants::IssueStatus::FECHADA
+            indicador.data_situacao_atual = ultima_tarefa_devel.data_fechada
             return SkyRedminePlugin::Constants::SituacaoAtual::VERSAO_LIBERADA
           end
         end

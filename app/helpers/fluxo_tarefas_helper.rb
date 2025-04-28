@@ -439,6 +439,9 @@ module FluxoTarefasHelper
       return html.join("\n")
     end
 
+    numero_dias_data_situacao_atual = indicadores.data_situacao_atual ? (Date.today - indicadores.data_situacao_atual).to_i : 0
+    situacao_atual_detalhes = indicadores.data_situacao_atual ? "#{indicadores.situacao_atual} em #{indicadores.data_situacao_atual} - #{numero_dias_data_situacao_atual} dias" : "#{indicadores.situacao_atual}"
+
     html << "<div class='description'>"
     html << "<p>"
     html << "<p><strong>Indicadores</strong>"
@@ -447,6 +450,7 @@ module FluxoTarefasHelper
                     processar_indicadores_tarefa_path(tarefas_relacionadas.first),
                     method: :post)
     html << ")"
+    html << situacao_atual_detalhes ? " #{situacao_atual_detalhes}" : ""
     html << "<p>"
 
     if indicadores.nil?
@@ -469,10 +473,12 @@ module FluxoTarefasHelper
       html << "<div class='indicadores-grupo'>"
       html << "<div class='indicadores-cards'>"
 
+      # calcula o numero de dias que está nesta a situacao até hoje
+
       # Informações gerais
       html << render_card("Responsável atual",
                           indicadores.equipe_responsavel_atual,
-                          indicadores.situacao_atual,
+                          "",
                           "Equipe responsável pela tarefa")
 
       if (indicadores.tipo_primeira_tarefa_devel != SkyRedminePlugin::Constants::Trackers::CONVERSAO) &&

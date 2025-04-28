@@ -310,8 +310,6 @@ module SkyRedminePlugin
       copied_to_issue
     end
 
-    private
-
     def self.obter_data_mudanca_status(tarefa, status_nomes)
       status_ids = IssueStatus.where(name: status_nomes).pluck(:id)
 
