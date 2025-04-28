@@ -791,15 +791,17 @@ module FluxoTarefasHelper
 
       texto_situacao = situacao.gsub("_", " ")
 
-      # Adicionar o contador de retornos se for ESTOQUE_DEVEL_RETORNO_TESTES ou AGUARDANDO_ENCAMINHAR_RETORNO_TESTES_DEVEL
-      if situacao == SkyRedminePlugin::Constants::SituacaoAtual::ESTOQUE_DEVEL_RETORNO_TESTES &&
-         indicadores&.qtd_retorno_testes_qs.to_i > 0
-        texto_situacao += "<br>#{indicadores.qtd_retorno_testes_qs}x"
-      elsif situacao == SkyRedminePlugin::Constants::SituacaoAtual::AGUARDANDO_ENCAMINHAR_RETORNO_TESTES_DEVEL &&
-            indicadores&.qtd_retorno_testes_devel.to_i > 0
-        texto_situacao += "<br>#{indicadores.qtd_retorno_testes_devel}x"
-      elsif [SkyRedminePlugin::Constants::SituacaoAtual::VERSAO_LIBERADA, SkyRedminePlugin::Constants::SituacaoAtual::VERSAO_LIBERADA_FALTA_FECHAR].include?(situacao)
-        texto_situacao += "<br>#{indicadores.versao_estavel}"
+      if (estado == "completed") || (estado == "currrent")
+        # Adicionar o contador de retornos se for ESTOQUE_DEVEL_RETORNO_TESTES ou AGUARDANDO_ENCAMINHAR_RETORNO_TESTES_DEVEL
+        if situacao == SkyRedminePlugin::Constants::SituacaoAtual::ESTOQUE_DEVEL_RETORNO_TESTES &&
+           indicadores&.qtd_retorno_testes_qs.to_i > 0
+          texto_situacao += "<br>#{indicadores.qtd_retorno_testes_qs}x"
+        elsif situacao == SkyRedminePlugin::Constants::SituacaoAtual::AGUARDANDO_ENCAMINHAR_RETORNO_TESTES_DEVEL &&
+              indicadores&.qtd_retorno_testes_devel.to_i > 0
+          texto_situacao += "<br>#{indicadores.qtd_retorno_testes_devel}x"
+        elsif [SkyRedminePlugin::Constants::SituacaoAtual::VERSAO_LIBERADA, SkyRedminePlugin::Constants::SituacaoAtual::VERSAO_LIBERADA_FALTA_FECHAR].include?(situacao)
+          texto_situacao += "<br><br>#{indicadores.versao_estavel}"
+        end
       end
 
       html << "<div class='timeline-step timeline-step-#{estado}'>"
