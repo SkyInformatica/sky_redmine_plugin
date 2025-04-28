@@ -822,6 +822,8 @@ module FluxoTarefasHelper
               end
             end
           end
+          Rails.logger.info(">>>> render_timeline_steps: #{situacao} - #{indicadores&.versao_teste} - fluxo: #{fluxo} - situacao_atual: #{indicadores&.situacao_atual} - situcao_atual.index #{fluxo.index(indicadores&.situacao_atual)} - ESTOQUE_QS_RETORNO_TESTES.index: #{fluxo.index(SkyRedminePlugin::Constants::SituacaoAtual::ESTOQUE_QS_RETORNO_TESTES)} - exibir_versao: #{exibir_versao}")
+
           if (indicadores&.versao_teste.present? && exibir_versao)
             texto_situacao += "<br><br>#{indicadores.versao_teste}"
           end
