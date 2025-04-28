@@ -777,7 +777,7 @@ module FluxoTarefasHelper
       eh_versao_liberada_antes_testes = indicadores&.tarefa_fechada_sem_testes == "SIM"
       eh_versao_liberada = [SkyRedminePlugin::Constants::SituacaoAtual::VERSAO_LIBERADA].include?(situacao)
 
-      estado = if (!esta_na_parte_atual && i < indice_atual) || (esta_na_parte_atual && i < indice_atual)
+      estado = if (i < indice_atual)
           "completed"
         elsif eh_versao_liberada && i == indice_atual
           "completed"  # Se é VERSAO_LIBERADA e é a etapa atual, mostra como concluída
@@ -791,7 +791,7 @@ module FluxoTarefasHelper
 
       texto_situacao = situacao.gsub("_", " ")
 
-      if (estado == "completed") || (estado == "currrent")
+      if (estado == "completed") || (estado == "current")
         # Adicionar o contador de retornos se for ESTOQUE_DEVEL_RETORNO_TESTES ou AGUARDANDO_ENCAMINHAR_RETORNO_TESTES_DEVEL
         if situacao == SkyRedminePlugin::Constants::SituacaoAtual::ESTOQUE_DEVEL_RETORNO_TESTES &&
            indicadores&.qtd_retorno_testes_qs.to_i > 0
