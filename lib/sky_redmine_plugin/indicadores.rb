@@ -542,7 +542,14 @@ module SkyRedminePlugin
         when SkyRedminePlugin::Constants::IssueStatus::TESTE_NOK
           return SkyRedminePlugin::Constants::SituacaoAtual::AGUARDANDO_ENCAMINHAR_RETORNO_TESTES
         when SkyRedminePlugin::Constants::IssueStatus::TESTE_OK_FECHADA
-          return SkyRedminePlugin::Constants::SituacaoAtual::VERSAO_LIBERADA
+          case ultima_tarefa_devel.status.name
+          when SkyRedminePlugin::Constants::IssueStatus::RESOLVIDA
+            return is_retorno_do_qs ?
+                     SkyRedminePlugin::Constants::SituacaoAtual::AGUARDANDO_VERSAO_RETORNO_TESTES :
+                     SkyRedminePlugin::Constants::SituacaoAtual::AGUARDANDO_VERSAO
+          when SkyRedminePlugin::Constants::IssueStatus::FECHADA
+            return SkyRedminePlugin::Constants::SituacaoAtual::VERSAO_LIBERADA
+          end
         end
       end
 
