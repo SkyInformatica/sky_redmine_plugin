@@ -800,7 +800,31 @@ module FluxoTarefasHelper
               indicadores&.qtd_retorno_testes_devel.to_i > 0
           texto_situacao += "<br>#{indicadores.qtd_retorno_testes_devel}x"
         elsif [SkyRedminePlugin::Constants::SituacaoAtual::VERSAO_LIBERADA, SkyRedminePlugin::Constants::SituacaoAtual::VERSAO_LIBERADA_FALTA_FECHAR].include?(situacao)
-          texto_situacao += "<br><br>#{indicadores.versao_estavel}"
+          if indicadores&.versao_estavel.present?
+            texto_situacao += "<br><br>#{indicadores.versao_estavel}"
+          end
+        elsif [SkyRedminePlugin::Constants::SituacaoAtual::ESTOQUE_QS, SkyRedminePlugin::Constants::SituacaoAtual::ESTOQUE_QS_RETORNO_TESTES].include?(situacao)
+          exibir_versao = true
+          # somente exibe a versao de testes na situacao ESTOQUE_QS caso ela seja a current
+          # se ela for completed somente exibir se a ESTOQUE_QS_RETORNO_TESTES nao exista ou ainda nao foi executada
+          if (situacao == SkyRedminePlugin::Constants::SituacaoAtual::ESTOQUE_QS)
+            if (estado == "current") &&
+               exibir_versao = true
+            else
+              if fluxo.include?(SkyRedminePlugin::Constants::SituacaoAtual::AGUARDANDO_ENCAMINHAR_RETORNO_TESTES)
+                if indice_atual < fluxo.index(SkyRedminePlugin::Constants::SituacaoAtual::AGUARDANDO_ENCAMINHAR_RETORNO_TESTES)
+                  exibir_versao = true
+                else
+                  exibir_versao = false
+                end
+              else
+                exibir_versao = false
+              end
+            end
+          end
+          if (indicadores&.versao_teste.present? && exibir_versao)
+            texto_situacao += "<br><br>#{indicadores.versao_teste}"
+          end
         end
       end
 

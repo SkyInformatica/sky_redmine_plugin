@@ -53,6 +53,7 @@ class CreateSkyRedmineIndicadores < ActiveRecord::Migration[5.2]
       t.string :fluxo_das_tarefas
       t.string :motivo_situacao_desconhecida
       t.string :versao_estavel
+      t.string :versao_teste
 
       t.timestamps
     end

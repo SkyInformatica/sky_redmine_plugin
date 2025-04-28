@@ -74,6 +74,8 @@ module SkyRedminePlugin
         indicador.data_criacao_ou_atendimento_primeira_tarefa_devel = primeira_tarefa_devel.data_criacao
         indicador.data_resolvida_ultima_tarefa_devel = ultima_tarefa_devel.data_resolvida
         indicador.data_fechamento_ultima_tarefa_devel = ultima_tarefa_devel.data_fechada
+        indicador.versao_teste = ultima_tarefa_devel.versao_teste
+        indicador.versao_estavel = ultima_tarefa_devel.versao_estavel
 
         if indicador.tarefa_complementar == "NAO"
           # Contar retornos de testes baseado no fluxo entre projetos
@@ -195,7 +197,6 @@ module SkyRedminePlugin
               [SkyRedminePlugin::Constants::IssueStatus::TESTE_OK_FECHADA, SkyRedminePlugin::Constants::IssueStatus::TESTE_NOK_FECHADA, SkyRedminePlugin::Constants::IssueStatus::CANCELADA].include?(ultima_tarefa_qs.status.name) &&
               [SkyRedminePlugin::Constants::IssueStatus::FECHADA].include?(ultima_tarefa_devel.status.name))
             indicador.equipe_responsavel_atual = SkyRedminePlugin::Constants::EquipeResponsavel::FECHADA
-            indicador.versao_estavel = ultima_tarefa_devel.versao_estavel
           else
             if tarefas_qs.empty? || ultima_tarefa_devel.teste_qs == SkyRedminePlugin::Constants::CustomFieldsValues::NAO_NECESSITA_TESTE
               # Se não existe tarefa QS, está no DEVEL
@@ -488,7 +489,6 @@ module SkyRedminePlugin
             return SkyRedminePlugin::Constants::SituacaoAtual::EM_ANDAMENTO_DEVEL
           when SkyRedminePlugin::Constants::IssueStatus::RESOLVIDA
             if ultima_tarefa_devel.versao_estavel.present?
-              indicador.versao_estavel = ultima_tarefa_devel.versao_estavel
               return SkyRedminePlugin::Constants::SituacaoAtual::VERSAO_LIBERADA_FALTA_FECHAR
             else
               return SkyRedminePlugin::Constants::SituacaoAtual::AGUARDANDO_VERSAO
@@ -556,7 +556,6 @@ module SkyRedminePlugin
           case ultima_tarefa_devel.status.name
           when SkyRedminePlugin::Constants::IssueStatus::RESOLVIDA
             if ultima_tarefa_devel.versao_estavel.present?
-              indicador.versao_estavel = ultima_tarefa_devel.versao_estavel
               return SkyRedminePlugin::Constants::SituacaoAtual::VERSAO_LIBERADA_FALTA_FECHAR
             else
               return is_retorno_do_qs ?
