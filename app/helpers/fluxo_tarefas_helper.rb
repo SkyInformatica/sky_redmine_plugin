@@ -742,6 +742,7 @@ module FluxoTarefasHelper
 
   # Método auxiliar para renderizar os passos da timeline
   def render_timeline_steps(fluxo, indice_atual, indicadores, esta_na_parte_atual = true)
+    Rails.logger.info(">>>> render_timeline_steps: #{fluxo}, #{indice_atual}, #{indicadores}, #{esta_na_parte_atual}")
     html = "<div class='timeline'>"
 
     fluxo.each_with_index do |situacao, i|
@@ -784,8 +785,6 @@ module FluxoTarefasHelper
           if (situacao == SkyRedminePlugin::Constants::SituacaoAtual::ESTOQUE_QS)
             exibir_versao = esta_na_parte_atual
           end
-          Rails.logger.info(">>>> render_timeline_steps: #{situacao} - #{indicadores&.versao_teste} - fluxo: #{fluxo} - situacao_atual: #{indicadores&.situacao_atual} - situcao_atual.index #{fluxo.index(indicadores&.situacao_atual)} - ESTOQUE_QS_RETORNO_TESTES.index: #{fluxo.index(SkyRedminePlugin::Constants::SituacaoAtual::ESTOQUE_QS_RETORNO_TESTES)} - exibir_versao: #{exibir_versao}")
-
           if (indicadores&.versao_teste.present? && exibir_versao)
             texto_situacao += "<br><br>#{indicadores.versao_teste}"
           end
@@ -796,6 +795,7 @@ module FluxoTarefasHelper
           if indicadores.data_situacao_atual.present?
             dias_na_etapa_atual = (Date.today - indicadores.data_situacao_atual).to_i
             texto_situacao += "<br><br><a title='#{indicadores.data_situacao_atual&.strftime("%d/%m/%Y")}' #{dias_na_etapa_atual} #{dias_na_etapa_atual == 1 ? "dia" : "dias"} </a>"
+            Rails.logger.info(">>>> dias_na_etapa_atual: #{dias_na_etapa_atual}")
           end
         end
       end
