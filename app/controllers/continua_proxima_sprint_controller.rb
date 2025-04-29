@@ -4,16 +4,18 @@ class ContinuaProximaSprintController < ApplicationController
   before_action :find_issue, only: [:continua_proxima_sprint]
   before_action :find_issues, only: [:continua_proxima_sprint_lote]
 
-  def continua_proxima_sprint(is_batch_call = false)
+  def continua_proxima_sprint(is_batch_call = false, is_task_rake = false)
     Rails.logger.info ">>> continua_proxima_sprint #{@issue.id}"
     nova_emandamento_interrompida_status = [SkyRedminePlugin::Constants::IssueStatus::NOVA, SkyRedminePlugin::Constants::IssueStatus::EM_ANDAMENTO, SkyRedminePlugin::Constants::IssueStatus::INTERROMPIDA]
 
     current_sprint_name = @issue.fixed_version&.name # Usa o safe navigation operator para evitar erro se fixed_version for nil
     unless current_sprint_name && current_sprint_name.match?(/^\d{4}-\d{1,2} \(\d{2}\/\d{2} a \d{2}\/\d{2}\)$/)
-      # Se o formato da sprint não corresponder, não permite a criação da continua na proxima sprint
-      flash[:warning] = "A tarefa não pertence a uma sprint de desenvolvimento/testes e não pode ter uma continuidade na próxima sprint." unless is_batch_call
-      @processed_issues << "[NOK] #{view_context.link_to "#{@issue.tracker.name} ##{@issue.id}", issue_path(@issue)} - #{@issue.subject} - tarefa não pertence a uma sprint de desenvolvimento"
-      redirect_to issue_path(@issue) unless is_batch_call
+      if !is_task_rake
+        # Se o formato da sprint não corresponder, não permite a criação da continua na proxima sprint
+        flash[:warning] = "A tarefa não pertence a uma sprint de desenvolvimento/testes e não pode ter uma continuidade na próxima sprint." unless is_batch_call
+        @processed_issues << "[NOK] #{view_context.link_to "#{@issue.tracker.name} ##{@issue.id}", issue_path(@issue)} - #{@issue.subject} - tarefa não pertence a uma sprint de desenvolvimento"
+        redirect_to issue_path(@issue) unless is_batch_call
+      end
       return
     end
 
@@ -24,9 +26,11 @@ class ContinuaProximaSprintController < ApplicationController
       copied_to_issue = SkyRedminePlugin::TarefasRelacionadas.localizar_tarefa_continuidade(@issue)
       if copied_to_issue
         # A tarefa já possui uma copia de continuidade
-        flash[:warning] = "A tarefa já possui continuidade em  #{view_context.link_to "#{copied_to_issue.tracker.name} ##{copied_to_issue.id}", issue_path(copied_to_issue)} e está com status #{copied_to_issue.status.name}." unless is_batch_call
-        @processed_issues << "[NOK] #{view_context.link_to "#{@issue.tracker.name} ##{@issue.id}", issue_path(@issue)} - #{@issue.subject} - tarefa já possui continuidade em  #{view_context.link_to "#{copied_to_issue.tracker.name} ##{copied_to_issue.id}", issue_path(copied_to_issue)} e está com status #{copied_to_issue.status.name}"
-        redirect_to issue_path(@issue) unless is_batch_call
+        if !is_task_rake
+          flash[:warning] = "A tarefa já possui continuidade em  #{view_context.link_to "#{copied_to_issue.tracker.name} ##{copied_to_issue.id}", issue_path(copied_to_issue)} e está com status #{copied_to_issue.status.name}." unless is_batch_call
+          @processed_issues << "[NOK] #{view_context.link_to "#{@issue.tracker.name} ##{@issue.id}", issue_path(@issue)} - #{@issue.subject} - tarefa já possui continuidade em  #{view_context.link_to "#{copied_to_issue.tracker.name} ##{copied_to_issue.id}", issue_path(copied_to_issue)} e está com status #{copied_to_issue.status.name}"
+          redirect_to issue_path(@issue) unless is_batch_call
+        end
         return
       end
 
@@ -53,13 +57,19 @@ class ContinuaProximaSprintController < ApplicationController
         end
       end
 
-      flash[:notice] = "Tarefa de continuidade #{view_context.link_to "#{new_issue.tracker.name} ##{new_issue.id}", issue_path(new_issue)} foi criada na sprint #{view_context.link_to new_issue.fixed_version.name, version_path(new_issue.fixed_version)}" unless is_batch_call
-      @processed_issues << "[OK] #{view_context.link_to "#{@issue.tracker.name} ##{@issue.id}", issue_path(@issue)} - #{@issue.subject} - continua em #{view_context.link_to "#{new_issue.tracker.name} ##{new_issue.id}", issue_path(new_issue)} na sprint #{view_context.link_to new_issue.fixed_version.name, version_path(new_issue.fixed_version)}"
+      if !is_task_rake
+        flash[:notice] = "Tarefa de continuidade #{view_context.link_to "#{new_issue.tracker.name} ##{new_issue.id}", issue_path(new_issue)} foi criada na sprint #{view_context.link_to new_issue.fixed_version.name, version_path(new_issue.fixed_version)}" unless is_batch_call
+        @processed_issues << "[OK] #{view_context.link_to "#{@issue.tracker.name} ##{@issue.id}", issue_path(@issue)} - #{@issue.subject} - continua em #{view_context.link_to "#{new_issue.tracker.name} ##{new_issue.id}", issue_path(new_issue)} na sprint #{view_context.link_to new_issue.fixed_version.name, version_path(new_issue.fixed_version)}"
+      end
     else
-      flash[:warning] = "Somente pode continuar na proxima sprint tarefas que estão com status 'Nova', 'Em andamento' ou 'Interrompida'." unless is_batch_call
+      if !is_task_rake
+        flash[:warning] = "Somente pode continuar na proxima sprint tarefas que estão com status 'Nova', 'Em andamento' ou 'Interrompida'." unless is_batch_call
+      end
     end
 
-    redirect_to issue_path(@issue) unless is_batch_call
+    if !is_task_rake && !is_batch_call
+      redirect_to issue_path(@issue)
+    end
   end
 
   def continua_proxima_sprint_lote

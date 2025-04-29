@@ -13,6 +13,8 @@ namespace :sky_redmine_plugin do
     @project = Project.find_by(name: "Equipe Notar")
     @tracker = Tracker.first
     @status_nova = IssueStatus.find_by(name: "Nova")
+    @version = @project.versions.find_by(name: "2025-01 (30/12 a 10/01)")
+
     @status_em_andamento = IssueStatus.find_by(name: "Em andamento")
     @status_resolvida = IssueStatus.find_by(name: "Resolvida")
     @status_fechada = IssueStatus.find_by(name: "Fechada")
@@ -28,29 +30,33 @@ namespace :sky_redmine_plugin do
     puts "✓ Usuário 'maglan' encontrado (ID: #{@author.id})"
 
     # Tipo padrão (Defeito)
-    criar_tarefa_nova
-    criar_tarefa_nova_em_andamento
-    criar_tarefa_nova_em_andamento_resolvida
+    #criar_tarefa_nova
+    #criar_tarefa_nova_em_andamento
+    #criar_tarefa_nova_em_andamento_resolvida
 
     # Tipo Conversão
-    criar_tarefa_nova(SkyRedminePlugin::Constants::Trackers::CONVERSAO)
-    criar_tarefa_nova_em_andamento(SkyRedminePlugin::Constants::Trackers::CONVERSAO)
-    criar_tarefa_nova_em_andamento_resolvida(SkyRedminePlugin::Constants::Trackers::CONVERSAO)
-    criar_tarefa_nova_em_andamento_resolvida_fechada(SkyRedminePlugin::Constants::Trackers::CONVERSAO)
+    #criar_tarefa_nova(SkyRedminePlugin::Constants::Trackers::CONVERSAO)
+    #criar_tarefa_nova_em_andamento(SkyRedminePlugin::Constants::Trackers::CONVERSAO)
+    #criar_tarefa_nova_em_andamento_resolvida(SkyRedminePlugin::Constants::Trackers::CONVERSAO, SkyRedminePlugin::Constants::SituacaoAtual::AGUARDANDO_VERSAO)
+    #criar_tarefa_nova_em_andamento_resolvida_fechada(SkyRedminePlugin::Constants::Trackers::CONVERSAO)
 
     # Testes no desenvolvimento
-    criar_tarefa_teste_no_desenvolvimento_nao_necessita_teste
-    criar_tarefa_teste_no_desenvolvimento_ok
-    criar_tarefa_teste_no_desenvolvimento_nok
+    #criar_tarefa_teste_no_desenvolvimento_nao_necessita_teste
+    #criar_tarefa_teste_no_desenvolvimento_ok
+    #criar_tarefa_teste_no_desenvolvimento_nok
 
     # Testes no QS
-    criar_tarefa_qs_nao_necessita_teste
-    criar_tarefa_encaminhar_para_qs
+    #criar_tarefa_qs_nao_necessita_teste
+    #criar_tarefa_encaminhar_para_qs
 
-    # No método principal do rake task, adicione:
-    criar_tarefa_desconhecida_fechada_continua_sem_retorno
-    criar_tarefa_desconhecida_teste_nok_fechada_sem_retorno
-    criar_tarefa_desconhecida_continuidade_nao_retorno
+    # Teste de situacoes DESCONHECIDAS
+    #criar_tarefa_desconhecida_fechada_continua_sem_retorno
+    #criar_tarefa_desconhecida_teste_nok_fechada_sem_retorno
+    #criar_tarefa_desconhecida_continuidade_nao_retorno
+
+    # Teste das funcionalidaes de continuidade
+    criar_tarefa_continua_proxima_sprint
+    #criar_tarefa_retorno_testes
 
     puts "\nTestes concluídos!"
   end
@@ -60,6 +66,7 @@ namespace :sky_redmine_plugin do
     issue = Issue.new(
       project: @project,
       tracker: tracker || @tracker,
+      version: @version,
       status: @status_nova,
       subject: subject,
       author: @author,
@@ -214,7 +221,7 @@ namespace :sky_redmine_plugin do
   end
 
   # Criar uma tarefa nova, colocá-la em andamento e depois resolvida
-  def criar_tarefa_nova_em_andamento_resolvida(tracker_name = nil)
+  def criar_tarefa_nova_em_andamento_resolvida(tracker_name = nil, situacao_esperada = SkyRedminePlugin::Constants::SituacaoAtual::AGUARDANDO_TESTES_DEVEL)
     tracker = tracker_name ? Tracker.find_by(name: tracker_name) : @tracker
     suffix = tracker_name ? " (#{tracker_name})" : ""
     puts "\n\n=== Criar uma tarefa nova, colocá-la em andamento e depois resolvida#{suffix} ==="
@@ -223,7 +230,7 @@ namespace :sky_redmine_plugin do
     if issue
       if trocar_status(issue, @status_em_andamento, "Status alterado para Em andamento")
         if trocar_status(issue, @status_resolvida, "Status alterado para Resolvida")
-          verificar_indicador(issue.id, SkyRedminePlugin::Constants::SituacaoAtual::AGUARDANDO_TESTES_DEVEL)
+          verificar_indicador(issue.id, situacao_esperada)
         end
       end
     end
@@ -459,6 +466,31 @@ namespace :sky_redmine_plugin do
               verificar_indicador(issue.id, SkyRedminePlugin::Constants::SituacaoAtual::DESCONHECIDA)
             end
           end
+        end
+      end
+    end
+  end
+
+  def criar_tarefa_continua_proxima_sprint
+    tracker = tracker_name ? Tracker.find_by(name: tracker_name) : @tracker
+    suffix = tracker_name ? " (#{tracker_name})" : ""
+    puts "\n=== Criar uma tarefa nova e depois colocá-la em andamento e depois continua na proxima sprint#{suffix} ==="
+    issue = criar_tarefa("Tarefa Nova para Em Andamento - continua proxima sprint#{suffix}", tracker)
+
+    if issue
+      if trocar_status(issue, @status_em_andamento, "Status alterado para Em andamento")
+        issue = Issue.find(issue.id)
+
+        # Executar o controller para fazer copia de continuidade para a proxima sprint
+        controller = ContinuaProximaSprintController.new
+        controller.instance_variable_set(:@issue, issue)
+        controller.instance_variable_set(:@processed_issues, [])
+        controller.params = { usar_sprint_atual: false }
+        controller.continua_proxima_sprint(false, true)
+
+        tarefa_continuidade = SkyRedminePlugin::TarefasRelacionadas.localizar_tarefa_continuidade(issue)
+        if tarefa_continuidade
+          verificar_indicador(issue.id, SkyRedminePlugin::Constants::SituacaoAtual::EM_ANDAMENTO_DEVEL)
         end
       end
     end
