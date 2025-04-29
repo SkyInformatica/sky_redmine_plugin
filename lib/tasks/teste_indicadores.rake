@@ -194,7 +194,7 @@ namespace :sky_redmine_plugin do
 
   def retorno_testes_devel(tarefa_devel)
     tarefa_devel = Issue.find(tarefa_devel.id)
-    puts "Criando retorno de testes DEVEL para tarefa ##{tarefa_qs.id}..."
+    puts "Criando retorno de testes DEVEL para tarefa ##{tarefa_devel.id}..."
     controller = RetornoTestesController.new
     controller.instance_variable_set(:@issue, tarefa_devel)
     controller.instance_variable_set(:@processed_issues, [])
