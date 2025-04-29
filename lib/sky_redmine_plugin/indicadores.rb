@@ -337,7 +337,6 @@ module SkyRedminePlugin
       indicador.tarefa_fechada_sem_testes = nil
       indicador.situacao_atual = nil
       indicador.data_situacao_atual = nil
-      indicador.fluxo_das_tarefas = nil
     end
 
     # Método para atualizar as tags das tarefas com a situação atual
