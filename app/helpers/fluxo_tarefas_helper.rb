@@ -602,12 +602,6 @@ module FluxoTarefasHelper
         html << "</div>" # indicadores-grupo
       end
 
-      if !indicadores.data_situacao_atual.nil?
-        numero_dias_data_situacao_atual = indicadores.data_situacao_atual ? (Date.today - indicadores.data_situacao_atual&.to_date).to_i : 0
-        situacao_atual_detalhes = indicadores.data_situacao_atual ? "#{indicadores.situacao_atual} em #{indicadores.data_situacao_atual&.strftime("%d/%m/%Y")} (#{numero_dias_data_situacao_atual} dias)" : "#{indicadores.situacao_atual}"
-        html << "<div style='font-style: italic; color: #666;'><small>#{situacao_atual_detalhes}</small></div>"
-      end
-
       # Timeline de situação atual
       if indicadores.situacao_atual.present?
         html << render_timeline_situacao_atual(indicadores)
@@ -667,6 +661,11 @@ module FluxoTarefasHelper
     # Preparar HTML
     html = "<div class='indicadores-grupo'>"
     html << "<div class='indicadores-titulo'>Progresso</div>"
+    if !indicadores.data_situacao_atual.nil?
+      numero_dias_data_situacao_atual = indicadores.data_situacao_atual ? (Date.today - indicadores.data_situacao_atual&.to_date).to_i : 0
+      situacao_atual_detalhes = indicadores.data_situacao_atual ? "#{indicadores.situacao_atual} em #{indicadores.data_situacao_atual&.strftime("%d/%m/%Y")} (#{numero_dias_data_situacao_atual} dias)" : "#{indicadores.situacao_atual}"
+      html << "<div style='font-style: italic; color: #666;'><small>#{situacao_atual_detalhes}</small></div>"
+    end
     html << "<div class='timeline-container'>"
 
     if tem_retorno_testes_qs
