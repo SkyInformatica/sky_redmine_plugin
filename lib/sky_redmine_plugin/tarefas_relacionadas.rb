@@ -325,6 +325,8 @@ module SkyRedminePlugin
       Rails.logger.info ">>> obter_data_definicao_campo_personalizado #{tarefa.id} #{custom_field_desc} #{conteudo}"
       # obter do historico de edição da tarefa a data que foi definido o conteudo no campo personalizado
       if custom_field = IssueCustomField.find_by(name: custom_field_desc)
+        Rails.logger.info ">>> custom_field #{custom_field.id}"
+        Rails.logger.info ">>> tarefa.journals #{tarefa.journals.to_json}"
         journal = tarefa.journals.joins(:details)
                         .where(journal_details: { property: "attr", prop_key: "custom_field_#{custom_field.id}", value: conteudo })
                         .order("created_on ASC")
