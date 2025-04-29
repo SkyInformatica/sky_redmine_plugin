@@ -15,9 +15,10 @@ namespace :sky_redmine_plugin do
     @status_nova = IssueStatus.find_by(name: "Nova")
     @version = @project.versions.find_by(name: "2025-01 (30/12 a 10/01)")
 
-    @status_em_andamento = IssueStatus.find_by(name: "Em andamento")
-    @status_resolvida = IssueStatus.find_by(name: "Resolvida")
-    @status_fechada = IssueStatus.find_by(name: "Fechada")
+    @status_em_andamento = IssueStatus.find_by(name: SkyRedminePlugin::Constants::IssueStatus::EM_ANDAMENTO)
+    @status_resolvida = IssueStatus.find_by(name: SkyRedminePlugin::Constants::IssueStatus::RESOLVIDA)
+    @status_fechada = IssueStatus.find_by(name: SkyRedminePlugin::Constants::IssueStatus::FECHADA)
+    @status_teste_nok = IssueStatus.find_by(name: SkyRedminePlugin::Constants::IssueStatus::TESTE_NOK)
     @author = User.find_by(login: "maglan")
     @cf_teste_no_desenvolvimento = CustomField.find_by(name: SkyRedminePlugin::Constants::CustomFields::TESTE_NO_DESENVOLVIMENTO)
     @cf_teste_qs = CustomField.find_by(name: SkyRedminePlugin::Constants::CustomFields::TESTE_QS)
@@ -55,8 +56,8 @@ namespace :sky_redmine_plugin do
     #criar_tarefa_desconhecida_continuidade_nao_retorno
 
     # Teste das funcionalidaes de continuidade
-    criar_tarefa_continua_proxima_sprint
-    #criar_tarefa_retorno_testes
+    #criar_tarefa_continua_proxima_sprint
+    criar_tarefa_retorno_testes
 
     puts "\nTestes concluídos!"
   end
@@ -446,8 +447,7 @@ namespace :sky_redmine_plugin do
           tarefa_qs = SkyRedminePlugin::TarefasRelacionadas.localizar_tarefa_copiada_qs(issue)
           if tarefa_qs
             # Trocar status da tarefa QS para TESTE_NOK
-            status_teste_nok = IssueStatus.find_by(name: SkyRedminePlugin::Constants::IssueStatus::TESTE_NOK)
-            trocar_status(tarefa_qs, status_teste_nok, "Status alterado para TESTE_NOK")
+            trocar_status(tarefa_qs, @status_teste_nok, "Status alterado para TESTE_NOK")
             tarefa_qs = Issue.find(tarefa_qs.id)
 
             controller = RetornoTestesController.new
@@ -478,7 +478,7 @@ namespace :sky_redmine_plugin do
     if issue
       if trocar_status(issue, @status_em_andamento, "Status alterado para Em andamento")
         issue = Issue.find(issue.id)
-
+        puts "Criando copia da tarefa ##{issue.id} para continua na proxima sprint..."
         # Executar o controller para fazer copia de continuidade para a proxima sprint
         controller = ContinuaProximaSprintController.new
         controller.instance_variable_set(:@issue, issue)
@@ -489,6 +489,63 @@ namespace :sky_redmine_plugin do
         tarefa_continuidade = SkyRedminePlugin::TarefasRelacionadas.localizar_tarefa_continuidade(issue)
         if tarefa_continuidade
           verificar_indicador(issue.id, SkyRedminePlugin::Constants::SituacaoAtual::ESTOQUE_DEVEL)
+        end
+      end
+    end
+  end
+
+  def criar_tarefa_retorno_testes
+    puts "\n=== Criar uma tarefa, colocá-la em andamento, resolvida e encaminhar para QS com Teste NOK e criar o retorno de testes ==="
+    issue = criar_tarefa("Tarefa para Encaminhar para QS com retorno de testes")
+
+    if issue
+      if trocar_status(issue, @status_em_andamento, "Status alterado para Em andamento")
+        if trocar_status(issue, @status_resolvida, "Status alterado para Resolvida")
+          issue = Issue.find(issue.id)
+          # Encaminhar para QS usando o controller
+          puts "Encaminhando tarefa ##{issue.id} para QS..."
+
+          # Configurar o controller para simular a chamada
+          controller = EncaminharQsController.new
+          controller.instance_variable_set(:@issue, issue)
+          controller.instance_variable_set(:@processed_issues, [])
+
+          # Simular o parâmetro de usar sprint atual (opcional)
+          params = { usar_sprint_atual: false }
+          controller.params = params
+
+          # Executar o método encaminhar_qs
+          controller.encaminhar_qs(false, true)
+
+          Rails.logger.info ">>> depois de controller.encaminhar_qs #{issue.id}"
+          # Verificar se a tarefa foi encaminhada com sucesso
+          copied_to_qs_issue = SkyRedminePlugin::TarefasRelacionadas.localizar_tarefa_copiada_qs(issue)
+
+          if copied_to_qs_issue
+            puts "✓ Tarefa ##{issue.id} encaminhada com sucesso para QS (ID: #{copied_to_qs_issue.id})"
+            puts "  Projeto QS: #{copied_to_qs_issue.project.name}"
+            puts "  Sprint: #{copied_to_qs_issue.fixed_version.name}"
+            puts "  Tempo estimado: #{copied_to_qs_issue.estimated_hours} horas"
+
+            # Trocar status da tarefa QS para TESTE_NOK
+            trocar_status(copied_to_qs_issue, @status_teste_nok, "Status alterado para TESTE NOK")
+            copied_to_qs_issue = Issue.find(copied_to_qs_issue.id)
+            # Criar o retorno de testes
+            controller = RetornoTestesController.new
+            controller.instance_variable_set(:@issue, copied_to_qs_issue)
+            controller.instance_variable_set(:@processed_issues, [])
+            controller.params = { usar_sprint_atual: false }
+            controller.retorno_testes_qs(false, true)
+
+            # Localizar a tarefa de retorno de testes criada
+            tarefa_retorno_testes = SkyRedminePlugin::TarefasRelacionadas.localizar_tarefa_retorno_testes(copied_to_qs_issue)
+            if tarefa_retorno_testes
+              # Verificar o indicador após criacao do retorno de testes
+              verificar_indicador(issue.id, SkyRedminePlugin::Constants::SituacaoAtual::ESTOQUE_DEVEL_RETORNO_TESTES)
+            end
+          else
+            puts "✗ Falha ao encaminhar a tarefa ##{issue.id} para QS"
+          end
         end
       end
     end
