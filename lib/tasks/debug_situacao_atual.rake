@@ -166,7 +166,6 @@ namespace :sky_redmine_plugin do
 
         # Flags e status
         tarefa_fechada_sem_testes: indicador.tarefa_fechada_sem_testes,
-        fluxo_das_tarefas: indicador.fluxo_das_tarefas,
 
         # Timestamps padrão
         created_at: indicador.created_at,

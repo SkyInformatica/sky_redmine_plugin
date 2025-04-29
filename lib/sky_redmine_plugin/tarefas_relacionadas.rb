@@ -320,5 +320,17 @@ module SkyRedminePlugin
 
       journal&.created_on
     end
+
+    def self.obter_data_definicao_campo_personalizado(tarefa, custom_field_desc, conteudo)
+      # obter do historico de edição da tarefa a data que foi definido o conteudo no campo personalizado
+      if custom_field = IssueCustomField.find_by(name: custom_field_desc)
+        journal = tarefa.journals.joins(:details)
+                        .where(journal_details: { property: "attr", prop_key: "custom_field_#{custom_field.id}", value: conteudo })
+                        .order("created_on ASC")
+                        .first
+
+        journal&.created_on
+      end
+    end
   end
 end

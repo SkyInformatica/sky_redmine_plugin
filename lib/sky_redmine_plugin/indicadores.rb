@@ -336,6 +336,7 @@ module SkyRedminePlugin
       indicador.equipe_responsavel_atual = nil
       indicador.tarefa_fechada_sem_testes = nil
       indicador.situacao_atual = nil
+      indicador.data_situacao_atual = nil
       indicador.fluxo_das_tarefas = nil
     end
 
@@ -476,32 +477,42 @@ module SkyRedminePlugin
            tarefas_qs.any?
           case ultima_tarefa_devel.status.name
           when SkyRedminePlugin::Constants::IssueStatus::NOVA
+            indicador.data_situacao_atual = ultima_tarefa_devel.created_on
             return SkyRedminePlugin::Constants::SituacaoAtual::ESTOQUE_DEVEL_RETORNO_TESTES
           when SkyRedminePlugin::Constants::IssueStatus::EM_ANDAMENTO
+            indicador.data_situacao_atual = ultima_tarefa_devel.data_em_andamento
             return SkyRedminePlugin::Constants::SituacaoAtual::EM_ANDAMENTO_DEVEL_RETORNO_TESTES
           when SkyRedminePlugin::Constants::IssueStatus::RESOLVIDA
             if ultima_tarefa_devel.versao_estavel.present?
+              indicador.data_situacao_atual = SkyRedminePlugin::TarefasRelacionadas::obter_data_definicao_campo_personalizado(ultima_tarefa_devel, SkyRedminePlugin::Constants::CustomFields::VERSAO_ESTAVEL, ultima_tarefa_devel.versao_estavel)
               return SkyRedminePlugin::Constants::SituacaoAtual::VERSAO_LIBERADA_FALTA_FECHAR
             else
+              indicador.data_situacao_atual = ultima_tarefa_devel.data_resolvida
               return SkyRedminePlugin::Constants::SituacaoAtual::AGUARDANDO_VERSAO_RETORNO_TESTES
             end
           when SkyRedminePlugin::Constants::IssueStatus::FECHADA
+            indicador.data_situacao_atual = ultima_tarefa_devel.data_fechada
             return SkyRedminePlugin::Constants::SituacaoAtual::VERSAO_LIBERADA
           end
         else
           # Caso ainda não tenha sido encaminhado para QS
           case ultima_tarefa_devel.status.name
           when SkyRedminePlugin::Constants::IssueStatus::NOVA
+            indicador.data_situacao_atual = ultima_tarefa_devel.created_on
             return SkyRedminePlugin::Constants::SituacaoAtual::ESTOQUE_DEVEL
           when SkyRedminePlugin::Constants::IssueStatus::EM_ANDAMENTO
+            indicador.data_situacao_atual = ultima_tarefa_devel.data_em_andamento
             return SkyRedminePlugin::Constants::SituacaoAtual::EM_ANDAMENTO_DEVEL
           when SkyRedminePlugin::Constants::IssueStatus::RESOLVIDA
             if ultima_tarefa_devel.versao_estavel.present?
+              indicador.data_situacao_atual = SkyRedminePlugin::TarefasRelacionadas::obter_data_definicao_campo_personalizado(ultima_tarefa_devel, SkyRedminePlugin::Constants::CustomFields::VERSAO_ESTAVEL, ultima_tarefa_devel.versao_estavel)
               return SkyRedminePlugin::Constants::SituacaoAtual::VERSAO_LIBERADA_FALTA_FECHAR
             else
+              indicador.data_situacao_atual = ultima_tarefa_devel.data_resolvida
               return SkyRedminePlugin::Constants::SituacaoAtual::AGUARDANDO_VERSAO
             end
           when SkyRedminePlugin::Constants::IssueStatus::FECHADA
+            indicador.data_situacao_atual = ultima_tarefa_devel.data_fechada
             return SkyRedminePlugin::Constants::SituacaoAtual::VERSAO_LIBERADA
           end
         end
@@ -515,8 +526,10 @@ module SkyRedminePlugin
         # Se já tem tarefa QS, ignorar o teste no desenvolvimento
         if !ja_tem_tarefa_qs && ultima_tarefa_devel.status.name == SkyRedminePlugin::Constants::IssueStatus::RESOLVIDA
           if ultima_tarefa_devel.teste_no_desenvolvimento == SkyRedminePlugin::Constants::CustomFieldsValues::NAO_TESTADA
+            indicador.data_situacao_atual = ultima_tarefa_devel.data_resolvida
             return SkyRedminePlugin::Constants::SituacaoAtual::AGUARDANDO_TESTES_DEVEL
           elsif ultima_tarefa_devel.teste_no_desenvolvimento == SkyRedminePlugin::Constants::CustomFieldsValues::TESTE_NOK
+            indicador.data_situacao_atual = SkyRedminePlugin::TarefasRelacionadas::obter_data_definicao_campo_personalizado(ultima_tarefa_devel, SkyRedminePlugin::Constants::CustomFields::TESTE_NO_DESENVOLVIMENTO, SkyRedminePlugin::Constants::CustomFieldsValues::TESTE_NOK)
             return SkyRedminePlugin::Constants::SituacaoAtual::AGUARDANDO_ENCAMINHAR_RETORNO_TESTES_DEVEL
           end
         end
@@ -530,7 +543,7 @@ module SkyRedminePlugin
       when SkyRedminePlugin::Constants::EquipeResponsavel::DEVEL
         case ultima_tarefa.status.name
         when SkyRedminePlugin::Constants::IssueStatus::NOVA
-          indicador.data_situacao_atual = ultima_tarefa.data_criacao_ou_atendimento_primeira_tarefa_devel
+          indicador.data_situacao_atual = ultima_tarefa.created_on
           return is_retorno_do_qs ?
                    SkyRedminePlugin::Constants::SituacaoAtual::ESTOQUE_DEVEL_RETORNO_TESTES :
                    SkyRedminePlugin::Constants::SituacaoAtual::ESTOQUE_DEVEL
