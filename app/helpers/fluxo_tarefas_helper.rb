@@ -440,7 +440,7 @@ module FluxoTarefasHelper
     end
 
     numero_dias_data_situacao_atual = indicadores.data_situacao_atual ? (Date.today - indicadores.data_situacao_atual).to_i : 0
-    situacao_atual_detalhes = indicadores.data_situacao_atual ? "#{indicadores.situacao_atual} em #{indicadores.data_situacao_atual} - #{numero_dias_data_situacao_atual} dias" : "#{indicadores.situacao_atual}"
+    situacao_atual_detalhes = indicadores.data_situacao_atual ? "#{indicadores.situacao_atual} em #{indicadores.data_situacao_atual&.strftime("%d/%m/%Y")} (#{numero_dias_data_situacao_atual} dias)" : "#{indicadores.situacao_atual}"
 
     html << "<div class='description'>"
     html << "<p>"
@@ -771,10 +771,12 @@ module FluxoTarefasHelper
         elsif situacao == SkyRedminePlugin::Constants::SituacaoAtual::AGUARDANDO_ENCAMINHAR_RETORNO_TESTES_DEVEL &&
               indicadores&.qtd_retorno_testes_devel.to_i > 0
           texto_situacao += "<br>#{indicadores.qtd_retorno_testes_devel}x"
+          # Adicionar o numero da versão estavel no VERSAO_LIBERADA ou VERSAO_LIBERADA_FALTA_FECHAR
         elsif [SkyRedminePlugin::Constants::SituacaoAtual::VERSAO_LIBERADA, SkyRedminePlugin::Constants::SituacaoAtual::VERSAO_LIBERADA_FALTA_FECHAR].include?(situacao)
           if indicadores&.versao_estavel.present?
             texto_situacao += "<br><br>#{indicadores.versao_estavel}"
           end
+          # Adicionar o numero da versão de testes no ESTOQUE_QS ou ESTOQUE_QS_RETORNO_TESTES
         elsif [SkyRedminePlugin::Constants::SituacaoAtual::ESTOQUE_QS, SkyRedminePlugin::Constants::SituacaoAtual::ESTOQUE_QS_RETORNO_TESTES].include?(situacao)
           exibir_versao = true
           # somente exibe a versao de testes na situacao ESTOQUE_QS caso ela seja a current
@@ -786,6 +788,14 @@ module FluxoTarefasHelper
 
           if (indicadores&.versao_teste.present? && exibir_versao)
             texto_situacao += "<br><br>#{indicadores.versao_teste}"
+          end
+        end
+
+        # Adicionar a quantidade de dias que está na etapa atual
+        if estado == "current"
+          if indicadores.data_situacao_atual.present?
+            dias_na_etapa_atual = (Date.today - indicadores.data_situacao_atual).to_i
+            texto_situacao += "<br><br><a title='#{indicadores.data_situacao_atual&.strftime("%d/%m/%Y")}' #{dias_na_etapa_atual} #{dias_na_etapa_atual == 1 ? "dia" : "dias"} </a>"
           end
         end
       end
