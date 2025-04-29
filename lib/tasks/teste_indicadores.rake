@@ -192,9 +192,32 @@ namespace :sky_redmine_plugin do
     end
   end
 
-  def retorno_testes(tarefa_qs)
+  def retorno_testes_devel(tarefa_devel)
+    tarefa_devel = Issue.find(tarefa_devel.id)
+    puts "Criando retorno de testes DEVEL para tarefa ##{tarefa_qs.id}..."
+    controller = RetornoTestesController.new
+    controller.instance_variable_set(:@issue, tarefa_devel)
+    controller.instance_variable_set(:@processed_issues, [])
+    controller.params = { usar_sprint_atual: false }
+    controller.retorno_testes_devel(false, true)
+
+    # Localizar a tarefa de retorno de testes criada
+    tarefa_retorno_testes = SkyRedminePlugin::TarefasRelacionadas.localizar_tarefa_retorno_testes(tarefa_devel)
+    if tarefa_retorno_testes
+      puts "✓ Retorno de testes #{tarefa_retorno_testes.id} criadao com sucesso para tarefa ##{tarefa_devel.id}"
+      puts "  Projeto: #{tarefa_retorno_testes.project.name}"
+      puts "  Sprint: #{tarefa_retorno_testes.fixed_version.name}"
+      puts "  Tempo estimado: #{tarefa_retorno_testes.estimated_hours} horas"
+      return tarefa_retorno_testes
+    else
+      puts "✗ Falha ao criar retorno de testes para a tarefa ##{tarefa_devel.id}"
+      return nil
+    end
+  end
+
+  def retorno_testes_qs(tarefa_qs)
     tarefa_qs = Issue.find(tarefa_qs.id)
-    puts "Criando retorno de testes para tarefa ##{tarefa_qs.id}..."
+    puts "Criando retorno de testes do QS para tarefa ##{tarefa_qs.id}..."
     controller = RetornoTestesController.new
     controller.instance_variable_set(:@issue, tarefa_qs)
     controller.instance_variable_set(:@processed_issues, [])
@@ -478,7 +501,7 @@ namespace :sky_redmine_plugin do
             trocar_status(tarefa_qs, @status_teste_nok, "Status alterado para TESTE_NOK")
             tarefa_qs = Issue.find(tarefa_qs.id)
 
-            tarefa_retorno_testes = retorno_testes(tarefa_qs)
+            tarefa_retorno_testes = retorno_testes_qs(tarefa_qs)
             if tarefa_retorno_testes
               trocar_tipo_tarefa(tarefa_retorno_testes, SkyRedminePlugin::Constants::Trackers::DEFEITO)
               tarefa_retorno_testes = Issue.find(tarefa_retorno_testes.id)
@@ -517,7 +540,7 @@ namespace :sky_redmine_plugin do
 
           if tarefa_qs
             trocar_status(tarefa_qs, @status_teste_nok, "Status alterado para TESTE NOK")
-            tarefa_retorno_testes = retorno_testes(tarefa_qs)
+            tarefa_retorno_testes = retorno_testes_qs(tarefa_qs)
             if tarefa_retorno_testes
               verificar_indicador(issue.id, SkyRedminePlugin::Constants::SituacaoAtual::ESTOQUE_DEVEL_RETORNO_TESTES)
             end
@@ -530,7 +553,7 @@ namespace :sky_redmine_plugin do
   def criar_tarefa_teste_no_desenvolvimento_nok_retorno_testes_encaminhar_qs
     issue = criar_tarefa_teste_no_desenvolvimento_nok(false)
     issue = Issue.find(issue.id)
-    tarefa_retorno_testes = retorno_testes(issue)
+    tarefa_retorno_testes = retorno_testes_devel(issue)
     if tarefa_retorno_testes
       tarefa_qs = encaminhar_para_qs(tarefa_retorno_testes)
       if tarefa_qs
