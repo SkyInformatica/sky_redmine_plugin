@@ -19,6 +19,7 @@ namespace :sky_redmine_plugin do
     @status_resolvida = IssueStatus.find_by(name: SkyRedminePlugin::Constants::IssueStatus::RESOLVIDA)
     @status_fechada = IssueStatus.find_by(name: SkyRedminePlugin::Constants::IssueStatus::FECHADA)
     @status_teste_nok = IssueStatus.find_by(name: SkyRedminePlugin::Constants::IssueStatus::TESTE_NOK)
+    @status_teste_ok = IssueStatus.find_by(name: SkyRedminePlugin::Constants::IssueStatus::TESTE_OK)
     @author = User.find_by(login: "maglan")
     @cf_teste_no_desenvolvimento = CustomField.find_by(name: SkyRedminePlugin::Constants::CustomFields::TESTE_NO_DESENVOLVIMENTO)
     @cf_teste_qs = CustomField.find_by(name: SkyRedminePlugin::Constants::CustomFields::TESTE_QS)
@@ -60,7 +61,8 @@ namespace :sky_redmine_plugin do
     #criar_tarefa_encaminhar_para_qs_teste_nok_retorno_testes
 
     #criar_tarefa_teste_no_desenvolvimento_nok_retorno_testes_encaminhar_qs
-    criar_tarefa_teste_no_desenvolvimento_nok_retorno_testes_encaminhar_qs_teste_nok_retorno_testes
+    #criar_tarefa_teste_no_desenvolvimento_nok_retorno_testes_encaminhar_qs_teste_nok_retorno_testes
+    criar_tarefa_teste_no_desenvolvimento_nok_retorno_testes_encaminhar_qs_teste_nok_retorno_testes_validar_resolver_encaminhar_qs_teste_ok
 
     puts "\nTestes concluídos!"
   end
@@ -568,12 +570,33 @@ namespace :sky_redmine_plugin do
   end
 
   def criar_tarefa_teste_no_desenvolvimento_nok_retorno_testes_encaminhar_qs_teste_nok_retorno_testes(validar = true)
-    issues = criar_tarefa_teste_no_desenvolvimento_nok_retorno_testes_encaminhar_qs(validar)
+    issues = criar_tarefa_teste_no_desenvolvimento_nok_retorno_testes_encaminhar_qs(false)
     tarefa_qs = issues[:tarefa_qs]
     trocar_status(tarefa_qs, @status_teste_nok, "Status alterado para TESTE NOK")
     tarefa_retorno_testes = retorno_testes_qs(tarefa_qs)
     if tarefa_retorno_testes
-      verificar_indicador(issues[:issue_original].id, SkyRedminePlugin::Constants::SituacaoAtual::ESTOQUE_DEVEL_RETORNO_TESTES)
+      if validar
+        verificar_indicador(issues[:issue_original].id, SkyRedminePlugin::Constants::SituacaoAtual::ESTOQUE_DEVEL_RETORNO_TESTES)
+      end
+      return { issue_original: issues[:issue_original], tarefa_qs: tarefa_qs, tarefa_retorno_testes: tarefa_retorno_testes }
+    end
+  end
+
+  def criar_tarefa_teste_no_desenvolvimento_nok_retorno_testes_encaminhar_qs_teste_nok_retorno_testes_validar_resolver_encaminhar_qs_teste_ok(validar = true)
+    issues = criar_tarefa_teste_no_desenvolvimento_nok_retorno_testes_encaminhar_qs_teste_nok_retorno_testes(false)
+    tarefa_retorno_testes = issues[:tarefa_retorno_testes]
+    if tarefa_retorno_testes
+      if trocar_status(tarefa_retorno_testes, @status_resolvida, "Status alterado para Resolvida")
+        tarefa_qs = encaminhar_para_qs(tarefa_retorno_testes)
+        if tarefa_qs
+          if trocar_status(tarefa_qs, @status_teste_ok, "Status alterado para Teste OK")
+            if validar
+              verificar_indicador(issues[:issue_original].id, SkyRedminePlugin::Constants::SituacaoAtual::AGUARDANDO_VERSAO_RETORNO_TESTES)
+            end
+            return { issue_original: issues[:issue_original], tarefa_qs: tarefa_qs, tarefa_retorno_testes: tarefa_retorno_testes }
+          end
+        end
+      end
     end
   end
 end
