@@ -66,11 +66,11 @@ namespace :sky_redmine_plugin do
     issue = Issue.new(
       project: @project,
       tracker: tracker || @tracker,
-      version: @version,
       status: @status_nova,
       subject: subject,
       author: @author,
       assigned_to: @author,
+      fixed_version: @version,
     )
 
     if issue.save
