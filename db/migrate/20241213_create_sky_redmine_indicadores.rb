@@ -17,14 +17,14 @@ class CreateSkyRedmineIndicadores < ActiveRecord::Migration[5.2]
       t.string :skynet_primeira_tarefa_devel
       t.string :equipe_responsavel_atual
       t.string :situacao_atual
-      t.date :data_situacao_atual
+      t.datetime :data_situacao_atual
       t.integer :qtd_retorno_testes_qs
       t.integer :qtd_retorno_testes_devel
-      t.date :data_atendimento_primeira_tarefa_devel
-      t.date :data_criacao_ou_atendimento_primeira_tarefa_devel
-      t.date :data_andamento_primeira_tarefa_devel
-      t.date :data_resolvida_ultima_tarefa_devel
-      t.date :data_fechamento_ultima_tarefa_devel
+      t.datetime :data_atendimento_primeira_tarefa_devel
+      t.datetime :data_criacao_ou_atendimento_primeira_tarefa_devel
+      t.datetime :data_andamento_primeira_tarefa_devel
+      t.datetime :data_resolvida_ultima_tarefa_devel
+      t.datetime :data_fechamento_ultima_tarefa_devel
       t.integer :tempo_andamento_devel
       t.string :tempo_andamento_devel_detalhes
       t.integer :tempo_resolucao_devel
@@ -42,10 +42,10 @@ class CreateSkyRedmineIndicadores < ActiveRecord::Migration[5.2]
       t.float :tempo_gasto_qs
       t.string :status_ultima_tarefa_qs
       t.boolean :houve_teste_nok
-      t.date :data_criacao_primeira_tarefa_qs
-      t.date :data_andamento_primeira_tarefa_qs
-      t.date :data_resolvida_ultima_tarefa_qs
-      t.date :data_fechamento_ultima_tarefa_qs
+      t.datetime :data_criacao_primeira_tarefa_qs
+      t.datetime :data_andamento_primeira_tarefa_qs
+      t.datetime :data_resolvida_ultima_tarefa_qs
+      t.datetime :data_fechamento_ultima_tarefa_qs
       t.integer :tempo_andamento_qs
       t.string :tempo_andamento_qs_detalhes
       t.integer :tempo_resolucao_qs
