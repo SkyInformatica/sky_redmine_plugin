@@ -448,7 +448,7 @@ module FluxoTarefasHelper
                     method: :post)
     html << ")"
     if !indicadores.nil? && !indicadores.data_situacao_atual.nil?
-      numero_dias_data_situacao_atual = indicadores.data_situacao_atual ? (Date.today - indicadores.data_situacao_atual).to_i : 0
+      numero_dias_data_situacao_atual = indicadores.data_situacao_atual ? (Date.today - indicadores.data_situacao_atual&.to_date).to_i : 0
       situacao_atual_detalhes = indicadores.data_situacao_atual ? "#{indicadores.situacao_atual} em #{indicadores.data_situacao_atual&.strftime("%d/%m/%Y")} (#{numero_dias_data_situacao_atual} dias)" : "#{indicadores.situacao_atual}"
       html << " #{situacao_atual_detalhes}"
     end
