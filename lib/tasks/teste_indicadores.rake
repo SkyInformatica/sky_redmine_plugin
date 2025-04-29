@@ -555,6 +555,7 @@ namespace :sky_redmine_plugin do
     issue = Issue.find(issue.id)
     tarefa_retorno_testes = retorno_testes_devel(issue)
     if tarefa_retorno_testes
+      trocar_status(tarefa_retorno_testes, @status_resolvida, "Status alterado para Resolvida")
       tarefa_qs = encaminhar_para_qs(tarefa_retorno_testes)
       if tarefa_qs
         verificar_indicador(issue.id, SkyRedminePlugin::Constants::SituacaoAtual::ESTOQUE_QS)
