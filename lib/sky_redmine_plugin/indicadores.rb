@@ -116,17 +116,17 @@ module SkyRedminePlugin
 
           # Calcular tempos DEVEL
           if indicador.data_criacao_ou_atendimento_primeira_tarefa_devel.present? && indicador.data_andamento_primeira_tarefa_devel.present?
-            indicador.tempo_andamento_devel = (indicador.data_andamento_primeira_tarefa_devel - indicador.data_criacao_ou_atendimento_primeira_tarefa_devel).to_i
+            indicador.tempo_andamento_devel = (indicador.data_andamento_primeira_tarefa_devel.to_date - indicador.data_criacao_ou_atendimento_primeira_tarefa_devel.to_date).to_i
             indicador.tempo_andamento_devel_detalhes = "De #{indicador.data_criacao_ou_atendimento_primeira_tarefa_devel&.strftime("%d/%m/%Y")} até #{indicador.data_andamento_primeira_tarefa_devel&.strftime("%d/%m/%Y")}"
           end
 
           if indicador.data_andamento_primeira_tarefa_devel.present? && indicador.data_resolvida_ultima_tarefa_devel.present?
-            indicador.tempo_resolucao_devel = (indicador.data_resolvida_ultima_tarefa_devel - indicador.data_andamento_primeira_tarefa_devel).to_i
+            indicador.tempo_resolucao_devel = (indicador.data_resolvida_ultima_tarefa_devel.to_date - indicador.data_andamento_primeira_tarefa_devel.to_date).to_i
             indicador.tempo_resolucao_devel_detalhes = "De #{indicador.data_andamento_primeira_tarefa_devel&.strftime("%d/%m/%Y")} até #{indicador.data_resolvida_ultima_tarefa_devel&.strftime("%d/%m/%Y")}"
           end
 
           if indicador.data_resolvida_ultima_tarefa_devel.present? && indicador.data_fechamento_ultima_tarefa_devel.present?
-            indicador.tempo_fechamento_devel = (indicador.data_fechamento_ultima_tarefa_devel - indicador.data_resolvida_ultima_tarefa_devel).to_i
+            indicador.tempo_fechamento_devel = (indicador.data_fechamento_ultima_tarefa_devel.to_date - indicador.data_resolvida_ultima_tarefa_devel.to_date).to_i
             indicador.tempo_fechamento_devel_detalhes = "De #{indicador.data_resolvida_ultima_tarefa_devel&.strftime("%d/%m/%Y")} até #{indicador.data_fechamento_ultima_tarefa_devel&.strftime("%d/%m/%Y")}"
           end
 
@@ -167,35 +167,35 @@ module SkyRedminePlugin
 
             # Calcular tempos QS
             if indicador.data_criacao_primeira_tarefa_qs.present? && indicador.data_andamento_primeira_tarefa_qs.present?
-              indicador.tempo_andamento_qs = (indicador.data_andamento_primeira_tarefa_qs - indicador.data_criacao_primeira_tarefa_qs).to_i
+              indicador.tempo_andamento_qs = (indicador.data_andamento_primeira_tarefa_qs.to_date - indicador.data_criacao_primeira_tarefa_qs.to_date).to_i
               indicador.tempo_andamento_qs_detalhes = "De #{indicador.data_criacao_primeira_tarefa_qs&.strftime("%d/%m/%Y")} até #{indicador.data_andamento_primeira_tarefa_qs&.strftime("%d/%m/%Y")}"
             end
 
             if indicador.data_andamento_primeira_tarefa_qs.present? && indicador.data_resolvida_ultima_tarefa_qs.present?
-              indicador.tempo_resolucao_qs = (indicador.data_resolvida_ultima_tarefa_qs - indicador.data_andamento_primeira_tarefa_qs).to_i
+              indicador.tempo_resolucao_qs = (indicador.data_resolvida_ultima_tarefa_qs.to_date - indicador.data_andamento_primeira_tarefa_qs.to_date).to_i
               indicador.tempo_resolucao_qs_detalhes = "De #{indicador.data_andamento_primeira_tarefa_qs&.strftime("%d/%m/%Y")} até #{indicador.data_resolvida_ultima_tarefa_qs&.strftime("%d/%m/%Y")}"
             end
 
             if indicador.data_resolvida_ultima_tarefa_qs.present? && indicador.data_fechamento_ultima_tarefa_qs.present?
-              indicador.tempo_fechamento_qs = (indicador.data_fechamento_ultima_tarefa_qs - indicador.data_resolvida_ultima_tarefa_qs).to_i
+              indicador.tempo_fechamento_qs = (indicador.data_fechamento_ultima_tarefa_qs.to_date - indicador.data_resolvida_ultima_tarefa_qs.to_date).to_i
               indicador.tempo_fechamento_qs_detalhes = "De #{indicador.data_resolvida_ultima_tarefa_qs&.strftime("%d/%m/%Y")} até #{indicador.data_fechamento_ultima_tarefa_qs&.strftime("%d/%m/%Y")}"
             end
 
             # Calcular tempo para encaminhar para QS (apenas no primeiro ciclo)
             if primeiro_ciclo_devel.last.data_resolvida.present? && indicador.data_criacao_primeira_tarefa_qs.present?
-              indicador.tempo_para_encaminhar_qs = indicador.data_criacao_primeira_tarefa_qs - primeiro_ciclo_devel.last.data_resolvida
+              indicador.tempo_para_encaminhar_qs = (indicador.data_criacao_primeira_tarefa_qs.to_date - primeiro_ciclo_devel.last.data_resolvida.to_date).to_i
               indicador.tempo_para_encaminhar_qs_detalhes = "De #{primeiro_ciclo_devel.last.data_resolvida&.strftime("%d/%m/%Y")} até #{indicador.data_criacao_primeira_tarefa_qs&.strftime("%d/%m/%Y")}"
             end
 
             # Calcular tempo entre conclusão dos testes e liberação da versão
             if indicador.data_resolvida_ultima_tarefa_qs.present? && indicador.data_fechamento_ultima_tarefa_devel.present?
-              indicador.tempo_concluido_testes_versao_liberada = (indicador.data_fechamento_ultima_tarefa_devel - indicador.data_resolvida_ultima_tarefa_qs).to_i
+              indicador.tempo_concluido_testes_versao_liberada = (indicador.data_fechamento_ultima_tarefa_devel.to_date - indicador.data_resolvida_ultima_tarefa_qs.to_date).to_i
               indicador.tempo_concluido_testes_versao_liberada_detalhes = "De #{indicador.data_resolvida_ultima_tarefa_qs&.strftime("%d/%m/%Y")} até #{indicador.data_fechamento_ultima_tarefa_devel&.strftime("%d/%m/%Y")}"
             end
           end
 
           # Determinar o local atual da tarefa
-          # Se a última tarefa DEVEL está fechada, está FECHADA
+          # Se a última tarefa DEVEL está fechada, está FECHADAf
           ultima_tarefa_devel = tarefas_devel.last
 
           if (tarefas_qs.empty? &&
@@ -234,7 +234,7 @@ module SkyRedminePlugin
               else
                 # Se existe tarefa QS, verificar se a tarefa DEVEL foi fechada antes da tarefa QS
                 if indicador.data_fechamento_ultima_tarefa_qs.present?
-                  if indicador.data_fechamento_ultima_tarefa_devel < indicador.data_fechamento_ultima_tarefa_qs
+                  if indicador.data_fechamento_ultima_tarefa_devel.to_date < indicador.data_fechamento_ultima_tarefa_qs.to_date
                     Rails.logger.info ">>> A tarefa DEVEL foi fechada antes da tarefa QS"
                     # Se a tarefa DEVEL foi fechada antes da tarefa QS
                     indicador.tarefa_fechada_sem_testes = "SIM"
@@ -254,19 +254,20 @@ module SkyRedminePlugin
 
           # Calcular tempo total para liberar versão
           if indicador.data_criacao_ou_atendimento_primeira_tarefa_devel && indicador.data_fechamento_ultima_tarefa_devel
-            indicador.tempo_total_liberar_versao = (indicador.data_fechamento_ultima_tarefa_devel - indicador.data_criacao_ou_atendimento_primeira_tarefa_devel).to_i
+            indicador.tempo_total_liberar_versao = (indicador.data_fechamento_ultima_tarefa_devel.to_date - indicador.data_criacao_ou_atendimento_primeira_tarefa_devel.to_date).to_i
           end
 
           # Calcular tempo total de desenvolvimento
           if indicador.data_criacao_ou_atendimento_primeira_tarefa_devel && indicador.data_resolvida_ultima_tarefa_devel
-            indicador.tempo_total_devel = (indicador.data_resolvida_ultima_tarefa_devel - indicador.data_criacao_ou_atendimento_primeira_tarefa_devel).to_i
+            indicador.tempo_total_devel = (indicador.data_resolvida_ultima_tarefa_devel.to_date - indicador.data_criacao_ou_atendimento_primeira_tarefa_devel.to_date).to_i
           end
 
+          # Calcular tempo total de testes
           # Calcular tempo total de testes
           if indicador.data_criacao_primeira_tarefa_qs && indicador.data_resolvida_ultima_tarefa_qs &&
              [SkyRedminePlugin::Constants::IssueStatus::TESTE_OK,
               SkyRedminePlugin::Constants::IssueStatus::TESTE_OK_FECHADA].include?(ultima_tarefa_qs.status.name)
-            indicador.tempo_total_testes = (indicador.data_resolvida_ultima_tarefa_qs - indicador.data_criacao_primeira_tarefa_qs).to_i
+            indicador.tempo_total_testes = (indicador.data_resolvida_ultima_tarefa_qs.to_date - indicador.data_criacao_primeira_tarefa_qs.to_date).to_i
           end
 
           # Calcular tempo total desde a criação da tarefa até a conclusão dos testes
