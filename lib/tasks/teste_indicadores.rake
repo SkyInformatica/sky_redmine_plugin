@@ -472,10 +472,8 @@ namespace :sky_redmine_plugin do
   end
 
   def criar_tarefa_continua_proxima_sprint
-    tracker = tracker_name ? Tracker.find_by(name: tracker_name) : @tracker
-    suffix = tracker_name ? " (#{tracker_name})" : ""
-    puts "\n=== Criar uma tarefa nova e depois colocá-la em andamento e depois continua na proxima sprint#{suffix} ==="
-    issue = criar_tarefa("Tarefa Nova para Em Andamento - continua proxima sprint#{suffix}", tracker)
+    puts "\n=== Criar uma tarefa nova e depois colocá-la em andamento e depois continua na proxima sprint ==="
+    issue = criar_tarefa("Tarefa Nova para Em Andamento - continua proxima sprint")
 
     if issue
       if trocar_status(issue, @status_em_andamento, "Status alterado para Em andamento")
