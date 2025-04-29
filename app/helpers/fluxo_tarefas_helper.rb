@@ -439,11 +439,6 @@ module FluxoTarefasHelper
       return html.join("\n")
     end
 
-    if !indicadores.data_situacao_atual.nil?
-      numero_dias_data_situacao_atual = indicadores.data_situacao_atual ? (Date.today - indicadores.data_situacao_atual).to_i : 0
-      situacao_atual_detalhes = indicadores.data_situacao_atual ? "#{indicadores.situacao_atual} em #{indicadores.data_situacao_atual&.strftime("%d/%m/%Y")} (#{numero_dias_data_situacao_atual} dias)" : "#{indicadores.situacao_atual}"
-    end
-
     html << "<div class='description'>"
     html << "<p>"
     html << "<p><strong>Indicadores</strong>"
@@ -452,7 +447,11 @@ module FluxoTarefasHelper
                     processar_indicadores_tarefa_path(tarefas_relacionadas.first),
                     method: :post)
     html << ")"
-    html << !situacao_atual_detalhes.nil ? " #{situacao_atual_detalhes}" : ""
+    if !indicadores.nil? && !indicadores.data_situacao_atual.nil?
+      numero_dias_data_situacao_atual = indicadores.data_situacao_atual ? (Date.today - indicadores.data_situacao_atual).to_i : 0
+      situacao_atual_detalhes = indicadores.data_situacao_atual ? "#{indicadores.situacao_atual} em #{indicadores.data_situacao_atual&.strftime("%d/%m/%Y")} (#{numero_dias_data_situacao_atual} dias)" : "#{indicadores.situacao_atual}"
+      html << " #{situacao_atual_detalhes}"
+    end
     html << "<p>"
 
     if indicadores.nil?
