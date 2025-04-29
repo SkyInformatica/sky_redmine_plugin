@@ -564,7 +564,7 @@ module SkyRedminePlugin
       when SkyRedminePlugin::Constants::EquipeResponsavel::QS
         case ultima_tarefa.status.name
         when SkyRedminePlugin::Constants::IssueStatus::NOVA
-          indicador.data_situacao_atual = ultima_tarefa.data_criacao_ou_atendimento_primeira_tarefa_devel
+          indicador.data_situacao_atual = ultima_tarefa.created_on
           return is_retorno_do_qs ?
                    SkyRedminePlugin::Constants::SituacaoAtual::ESTOQUE_QS_RETORNO_TESTES :
                    SkyRedminePlugin::Constants::SituacaoAtual::ESTOQUE_QS
