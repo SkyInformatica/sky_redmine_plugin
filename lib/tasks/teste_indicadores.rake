@@ -488,7 +488,7 @@ namespace :sky_redmine_plugin do
 
         tarefa_continuidade = SkyRedminePlugin::TarefasRelacionadas.localizar_tarefa_continuidade(issue)
         if tarefa_continuidade
-          verificar_indicador(issue.id, SkyRedminePlugin::Constants::SituacaoAtual::EM_ANDAMENTO_DEVEL)
+          verificar_indicador(issue.id, SkyRedminePlugin::Constants::SituacaoAtual::ESTOQUE_DEVEL)
         end
       end
     end
