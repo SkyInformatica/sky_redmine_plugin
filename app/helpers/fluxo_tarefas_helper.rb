@@ -794,7 +794,7 @@ module FluxoTarefasHelper
 
         # Adicionar a quantidade de dias que está na etapa atual
         if estado == "current"
-          if indicadores.data_situacao_atual.present?
+          if !indicadores.data_situacao_atual.nil?
             #dias_na_etapa_atual = (Date.today - indicadores.data_situacao_atual).to_i
             #texto_situacao += "<br><br><a title='#{indicadores.data_situacao_atual&.strftime("%d/%m/%Y")}'> #{dias_na_etapa_atual} #{dias_na_etapa_atual == 1 ? "dia" : "dias"}</a>"
             texto_situacao += "<br><br><a title='#{indicadores.data_situacao_atual&.strftime("%d/%m/%Y")}'> #{time_ago_in_words(indicadores.data_situacao_atual)}</a>"
