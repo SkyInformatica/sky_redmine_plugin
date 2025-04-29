@@ -323,16 +323,28 @@ module SkyRedminePlugin
 
     def self.obter_data_definicao_campo_personalizado(tarefa, custom_field_desc, conteudo)
       Rails.logger.info ">>> obter_data_definicao_campo_personalizado #{tarefa.id} #{custom_field_desc} #{conteudo}"
-      # obter do historico de edição da tarefa a data que foi definido o conteudo no campo personalizado
+
       if custom_field = IssueCustomField.find_by(name: custom_field_desc)
         Rails.logger.info ">>> custom_field #{custom_field.id}"
-        Rails.logger.info ">>> tarefa.journals #{tarefa.journals.to_json}"
-        journal = tarefa.journals.joins(:details)
-                        .where(journal_details: { property: "attr", prop_key: "custom_field_#{custom_field.id}", value: conteudo })
-                        .order("created_on ASC")
+
+        # Adicionar log para debug dos journal_details
+        tarefa.journals.each do |journal|
+          Rails.logger.info ">>> Journal #{journal.id} details: #{journal.details.to_json}"
+        end
+
+        # Modificar a query para usar includes e debugar os resultados
+        journal = tarefa.journals.includes(:details)
+                        .where(journal_details: {
+                                 property: "cf",  # Mudar de "attr" para "cf" para campos personalizados
+                                 prop_key: custom_field.id.to_s, # Usar apenas o ID, sem prefixo
+                                 value: conteudo,
+                               })
+                        .order("journals.created_on ASC")
                         .first
 
-        Rails.logger.info ">>> journal created_on #{journal&.created_on}"
+        Rails.logger.info ">>> Query SQL: #{journal.to_sql}" if journal.respond_to?(:to_sql)
+        Rails.logger.info ">>> journal encontrado: #{journal.inspect}" if journal
+
         journal&.created_on
       end
     end
