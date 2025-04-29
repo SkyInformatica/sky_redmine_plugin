@@ -57,9 +57,9 @@ namespace :sky_redmine_plugin do
 
     # Teste das funcionalidaes de continuidade
     #criar_tarefa_continua_proxima_sprint
-    criar_tarefa_encaminhar_para_qs_teste_nok_retorno_testes
+    #criar_tarefa_encaminhar_para_qs_teste_nok_retorno_testes
 
-    #criar_tarefa_teste_no_desenvolvimento_nok_retorno_testes_encaminhar_qs
+    criar_tarefa_teste_no_desenvolvimento_nok_retorno_testes_encaminhar_qs
 
     puts "\nTestes concluídos!"
   end
@@ -529,6 +529,7 @@ namespace :sky_redmine_plugin do
 
   def criar_tarefa_teste_no_desenvolvimento_nok_retorno_testes_encaminhar_qs
     issue = criar_tarefa_teste_no_desenvolvimento_nok(false)
+    issue = Issue.find(issue.id)
     tarefa_retorno_testes = retorno_testes(issue)
     if tarefa_retorno_testes
       tarefa_qs = encaminhar_para_qs(tarefa_retorno_testes)
