@@ -439,14 +439,14 @@ module SkyRedminePlugin
     # Método para determinar a situação atual com base no status das tarefas
     def self.determinar_situacao_atual(indicador, tarefas_relacionadas, tarefas_devel, tarefas_qs, ciclos_devel, ciclos_qs)
       Rails.logger.info ">>> Determinando situação atual da tarefa"
-      Rails.logger.info ">>> Ciclos DEVEL.size: #{ciclos_devel ? ciclos_devel.size : 0}"
-      Rails.logger.info ">>> Ciclos QS.size: #{ciclos_qs ? ciclos_qs.size : 0}"
-      Rails.logger.info ">>> Tarefas DEVEL.last: #{tarefas_devel ? tarefas_devel.last.to_json : ""}"
-      Rails.logger.info ">>> Tarefas QS.last: #{tarefas_qs ? tarefas_qs.last.to_json : ""}"
-      Rails.logger.info ">>> Tarefas relacionadas.last: #{tarefas_relacionadas ? tarefas_relacionadas.last.to_json : ""}"
-      Rails.logger.info ">>> Indicador: #{indicador.to_json}"
-      # Primeiro verificar se é uma situação DESCONHECIDA
+      #Rails.logger.info ">>> Ciclos DEVEL.size: #{ciclos_devel ? ciclos_devel.size : 0}"
+      #Rails.logger.info ">>> Ciclos QS.size: #{ciclos_qs ? ciclos_qs.size : 0}"
+      #Rails.logger.info ">>> Tarefas DEVEL.last: #{tarefas_devel ? tarefas_devel.last.to_json : ""}"
+      #Rails.logger.info ">>> Tarefas QS.last: #{tarefas_qs ? tarefas_qs.last.to_json : ""}"
+      #Rails.logger.info ">>> Tarefas relacionadas.last: #{tarefas_relacionadas ? tarefas_relacionadas.last.to_json : ""}"
+      #Rails.logger.info ">>> Indicador: #{indicador.to_json}"
 
+      # Primeiro verificar se é uma situação DESCONHECIDA
       resultado_desconhecida = verificar_situacao_desconhecida(tarefas_relacionadas, tarefas_devel, ciclos_devel)
       if resultado_desconhecida[:situacao]
         # Atualizar o motivo no indicador
@@ -531,11 +531,10 @@ module SkyRedminePlugin
         # Adicionar verificação se já existe tarefa de QS
         ja_tem_tarefa_qs = !tarefas_qs.empty?
 
-        Rails.logger.info ">>> ja_tem_tarefa_qs: #{ja_tem_tarefa_qs} - ultima_tarefa_devel.status.name: #{ultima_tarefa_devel.status.name} - ultima_tarefa_devel.teste_no_desenvolvimento: #{ultima_tarefa_devel.teste_no_desenvolvimento}"
-
         # Se já tem tarefa QS, ignorar o teste no desenvolvimento
         if !ja_tem_tarefa_qs && ultima_tarefa_devel.status.name == SkyRedminePlugin::Constants::IssueStatus::RESOLVIDA
-          if ultima_tarefa_devel.teste_no_desenvolvimento == SkyRedminePlugin::Constants::CustomFieldsValues::NAO_TESTADA
+          if (ultima_tarefa_devel.teste_no_desenvolvimento == SkyRedminePlugin::Constants::CustomFieldsValues::NAO_TESTADA) ||
+             (ultima_tarefa_devel.teste_no_desenvolvimento == "")
             indicador.data_situacao_atual = ultima_tarefa_devel.data_resolvida
             return SkyRedminePlugin::Constants::SituacaoAtual::AGUARDANDO_TESTES_DEVEL
           elsif ultima_tarefa_devel.teste_no_desenvolvimento == SkyRedminePlugin::Constants::CustomFieldsValues::TESTE_NOK
@@ -729,7 +728,6 @@ module SkyRedminePlugin
         return resultado
       end
 
-      Rails.logger.info ">>> Não atende nenhuma condição de DESCONHECIDA"
       # Se não atende nenhuma condição de DESCONHECIDA, retorna nil para continuar a verificação
       resultado
     end
