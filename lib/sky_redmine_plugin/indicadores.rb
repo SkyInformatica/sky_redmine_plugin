@@ -374,16 +374,13 @@ module SkyRedminePlugin
         nova_tag = if etapa_atual == SkyRedminePlugin::Constants::EtapaAtual::VERSAO_LIBERADA
             nil
           else
-            prefixo_num = prefixos_situacoes[etapa_atual]
-            situacao_formatada = etapa_atual.gsub("RETORNO_TESTES", "RT").gsub("AGUARDANDO", "AGUARDA")
-
             # Adicionar sufixo _APTAS se for ESTOQUE_DEVEL e estiver na sprint "Aptas para desenvolvimento"
             if etapa_atual == SkyRedminePlugin::Constants::EtapaAtual::ESTOQUE_DEVEL &&
                !tarefas_devel.empty? &&
                tarefas_devel.last.fixed_version&.name == SkyRedminePlugin::Constants::Sprints::APTAS_PARA_DESENVOLVIMENTO
-              "E#{prefixo_num}_#{situacao_formatada}_APTAS"
+              "#{etapa_atual}_APTAS"
             else
-              "E#{prefixo_num}_#{situacao_formatada}"
+              etapa_atual
             end
           end
 
