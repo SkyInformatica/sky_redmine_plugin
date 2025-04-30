@@ -439,8 +439,8 @@ module SkyRedminePlugin
     # Método para determinar a situação atual com base no status das tarefas
     def self.determinar_situacao_atual(indicador, tarefas_relacionadas, tarefas_devel, tarefas_qs, ciclos_devel, ciclos_qs)
       Rails.logger.info ">>> Determinando situação atual da tarefa"
-      Rails.logger.info ">>> Ciclos DEVEL.size: #{ciclos_devel.size}"
-      Rails.logger.info ">>> Ciclos QS.size: #{ciclos_qs.size}"
+      Rails.logger.info ">>> Ciclos DEVEL.size: #{ciclos_devel ? ciclos_devel.size : 0}"
+      Rails.logger.info ">>> Ciclos QS.size: #{ciclos_qs ? ciclos_qs.size : 0}"
       Rails.logger.info ">>> Tarefas DEVEL: #{tarefas_devel.to_json}"
       Rails.logger.info ">>> Tarefas QS: #{tarefas_qs.to_json}"
       Rails.logger.info ">>> Tarefas relacionadas: #{tarefas_relacionadas.to_json}"
