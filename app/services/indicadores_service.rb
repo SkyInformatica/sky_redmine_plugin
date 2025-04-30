@@ -44,6 +44,22 @@ class IndicadoresService
     # Tarefas de desenvolvimento agrupadas por tipo
     tarefas_devel_por_tipo = tarefas_desenvolvimento.group(:tipo_primeira_tarefa_devel).count
 
+    # Tarefas por etapa (apenas não fechadas)
+    tarefas_devel_por_etapa_todas = tarefas_desenvolvimento
+      .where.not(equipe_responsavel_atual: SkyRedminePlugin::Constants::EquipeResponsavel::FECHADA)
+      .group(:etapa_atual)
+      .count
+
+    # Agrupar etapas similares (removendo _RT)
+    tarefas_devel_por_etapa = {}
+    tarefas_devel_por_etapa_todas.each do |etapa, quantidade|
+      # remover o sufixo _RT
+      # Exemplo: "E01_ESTOQUE_DEVEL_RT" se torna "E01_ESTOQUE_DEVEL"
+      etapa_base = etapa.to_s.gsub(/_RT$/, "")
+      tarefas_devel_por_etapa[etapa_base] ||= 0
+      tarefas_devel_por_etapa[etapa_base] += quantidade
+    end
+
     # Criar tarefas apenas para tarefas fechadas
     tarefas_devel_fechadas = tarefas_desenvolvimento.where(equipe_responsavel_atual: SkyRedminePlugin::Constants::EquipeResponsavel::FECHADA)
 
@@ -74,6 +90,7 @@ class IndicadoresService
       tempo_gasto_por_tipo_todas_tarefas: tempo_gasto_por_tipo_todas_tarefas,
 
       tarefas_devel_por_tipo: tarefas_devel_por_tipo,
+      tarefas_devel_por_etapa: tarefas_devel_por_etapa,
       tarefas_devel_por_retorno_testes: tarefas_devel_por_retorno_testes,
       tarefas_devel_fechadas_sem_testes: tarefas_devel_fechadas_sem_testes,
 

@@ -33,18 +33,25 @@ module IndicadoresHelper
         # Segunda linha - Cards de gráficos
         render_cards_row([
           render_card_grafico(
-            "Tempo gasto em horas por tipo",
+            "Tempo gasto em horas de todas as tarefas",
             "doughnut",
             dados_graficos[:tempo_gasto_por_tipo_todas_tarefas],
             "Total do tempo gasto em horas por tipo de tarefa",
             "Total do tempo gasto do desenvolvimento + QS"
           ),
           render_card_grafico(
-            "Tarefas por Tipo",
+            "Tarefas de desenvolvimento",
             "bar",
             dados_graficos[:tarefas_devel_por_tipo],
             "Distribuição das tarefas por tipo no período selecionado",
             "Total de tarefas agrupadas por tipo"
+          ),
+          render_card_grafico(
+            "Tarefas desenvolvimento por etapa (sem )",
+            "bar",
+            dados_graficos[:tarefas_por_etapa],
+            "Distribuição das tarefas em desenvolvimento por etapa atual",
+            "Total de tarefas em desenvolvimento em cada etapa do fluxo"
           ),
         ]),
 
