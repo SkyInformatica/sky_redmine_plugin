@@ -531,6 +531,8 @@ module SkyRedminePlugin
         # Adicionar verificação se já existe tarefa de QS
         ja_tem_tarefa_qs = !tarefas_qs.empty?
 
+        Rails.logger.info ">>> ja_tem_tarefa_qs: #{ja_tem_tarefa_qs} - ultima_tarefa_devel.status.name: #{ultima_tarefa_devel.status.name} - ultima_tarefa_devel.teste_no_desenvolvimento: #{ultima_tarefa_devel.teste_no_desenvolvimento}"
+
         # Se já tem tarefa QS, ignorar o teste no desenvolvimento
         if !ja_tem_tarefa_qs && ultima_tarefa_devel.status.name == SkyRedminePlugin::Constants::IssueStatus::RESOLVIDA
           if ultima_tarefa_devel.teste_no_desenvolvimento == SkyRedminePlugin::Constants::CustomFieldsValues::NAO_TESTADA
