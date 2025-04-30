@@ -588,6 +588,7 @@ module SkyRedminePlugin
                    SkyRedminePlugin::Constants::EtapaAtual::EM_ANDAMENTO_QS
         when SkyRedminePlugin::Constants::IssueStatus::TESTE_OK
           if ultima_tarefa_devel.versao_estavel.present?
+            indicador.data_etapa_atual = SkyRedminePlugin::TarefasRelacionadas::obter_data_definicao_campo_personalizado(ultima_tarefa_devel, SkyRedminePlugin::Constants::CustomFields::VERSAO_ESTAVEL, ultima_tarefa_devel.versao_estavel)
             return SkyRedminePlugin::Constants::EtapaAtual::VERSAO_LIBERADA_FALTA_FECHAR
           else
             indicador.data_etapa_atual = ultima_tarefa.data_resolvida
@@ -602,6 +603,7 @@ module SkyRedminePlugin
           case ultima_tarefa_devel.status.name
           when SkyRedminePlugin::Constants::IssueStatus::RESOLVIDA
             if ultima_tarefa_devel.versao_estavel.present?
+              indicador.data_etapa_atual = SkyRedminePlugin::TarefasRelacionadas::obter_data_definicao_campo_personalizado(ultima_tarefa_devel, SkyRedminePlugin::Constants::CustomFields::VERSAO_ESTAVEL, ultima_tarefa_devel.versao_estavel)
               return SkyRedminePlugin::Constants::EtapaAtual::VERSAO_LIBERADA_FALTA_FECHAR
             else
               indicador.data_etapa_atual = ultima_tarefa.data_fechada
