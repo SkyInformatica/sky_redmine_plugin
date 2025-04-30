@@ -46,30 +46,30 @@ class IndicadoresService
     tarefas_devel_fechadas = tarefas_desenvolvimento.where(equipe_responsavel_atual: SkyRedminePlugin::Constants::EquipeResponsavel::FECHADA)
 
     # Buscar quantidade de tarefas por retorno de testes (apenas fechadas)
-    tarefas_por_retorno_testes = tarefas_fechadas.group(:qtd_retorno_testes_qs).count
+    tarefas_por_retorno_testes = tarefas_devel_fechadas.group(:qtd_retorno_testes_qs).count
 
     # Buscar quantidade de tarefas fechadas sem testes (apenas fechadas)
-    tarefas_fechadas_sem_testes = tarefas_fechadas.group(:tarefa_fechada_sem_testes).count
+    tarefas_devel_fechadas_sem_testes = tarefas_devel_fechadas.group(:tarefa_fechada_sem_testes).count
 
     # Calcular tempos médios para tarefas fechadas
-    tempo_medio_andamento_devel = tarefas_fechadas.average(:tempo_andamento_devel)
-    tempo_medio_resolucao_devel = tarefas_fechadas.average(:tempo_resolucao_devel)
-    tempo_medio_para_encaminhar_qs = tarefas_fechadas.average(:tempo_para_encaminhar_qs)
+    tempo_medio_andamento_devel = tarefas_devel_fechadas.average(:tempo_andamento_devel)
+    tempo_medio_resolucao_devel = tarefas_devel_fechadas.average(:tempo_resolucao_devel)
+    tempo_medio_para_encaminhar_qs = tarefas_devel_fechadas.average(:tempo_para_encaminhar_qs)
 
     # Calcular tempos médios do QS
-    tempo_medio_andamento_qs = tarefas_fechadas.average(:tempo_andamento_qs)
-    tempo_medio_resolucao_qs = tarefas_fechadas.average(:tempo_resolucao_qs)
+    tempo_medio_andamento_qs = tarefas_devel_fechadas.average(:tempo_andamento_qs)
+    tempo_medio_resolucao_qs = tarefas_devel_fechadas.average(:tempo_resolucao_qs)
 
     # Calcular tempos médios adicionais
-    tempo_medio_concluido_testes_versao_liberada = tarefas_fechadas.average(:tempo_concluido_testes_versao_liberada)
-    tempo_medio_fechamento_devel = tarefas_fechadas.average(:tempo_fechamento_devel)
+    tempo_medio_concluido_testes_versao_liberada = tarefas_devel_fechadas.average(:tempo_concluido_testes_versao_liberada)
+    tempo_medio_fechamento_devel = tarefas_devel_fechadas.average(:tempo_fechamento_devel)
 
     {
       tarefas: tarefas,
       tarefas_por_tipo: tarefas_por_tipo,
       tarefas_por_tipo_tempo_gasto: tarefas_por_tipo_tempo_gasto,
       tarefas_por_retorno_testes: tarefas_por_retorno_testes,
-      tarefas_fechadas_sem_testes: tarefas_fechadas_sem_testes,
+      tarefas_devel_fechadas_sem_testes: tarefas_devel_fechadas_sem_testes,
       tempo_medio_andamento_devel: tempo_medio_andamento_devel,
       tempo_medio_resolucao_devel: tempo_medio_resolucao_devel,
       tempo_medio_para_encaminhar_qs: tempo_medio_para_encaminhar_qs,
