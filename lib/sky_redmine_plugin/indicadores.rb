@@ -414,10 +414,10 @@ module SkyRedminePlugin
         # Verificar se a tarefa tem o método tag_list (alguns plugins de tagging podem não estar instalados)
         return unless tarefa.respond_to?(:tag_list)
 
-        Rails.logger.info ">>> Atualizando tag da tarefa #{tarefa.id}"
-
         # Obter lista atual de tags da tarefa
         tags_atuais = tarefa.tag_list.dup
+
+        Rails.logger.info ">>> Validando a necessidade de atualizar tag da tarefa #{tarefa.id} para #{nova_tag ? nova_tag : " remover tag de EXX_ "} - tags atuais: #{tags_atuais.join(", ")}"
 
         # Remover tags antigas que começam com o prefixo E seguido de dois dígitos e underscore
         tags_filtradas = tags_atuais.reject { |tag| tag =~ /^E\d{2}_/ }
