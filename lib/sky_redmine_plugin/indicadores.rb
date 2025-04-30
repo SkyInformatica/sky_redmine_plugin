@@ -439,6 +439,12 @@ module SkyRedminePlugin
     # Método para determinar a situação atual com base no status das tarefas
     def self.determinar_situacao_atual(indicador, tarefas_relacionadas, tarefas_devel, tarefas_qs, ciclos_devel, ciclos_qs)
       Rails.logger.info ">>> Determinando situação atual da tarefa"
+      Rails.logger.info ">>> Ciclos DEVEL: #{ciclos_devel.to_json}"
+      Rails.logger.info ">>> Ciclos QS: #{ciclos_qs.to_json}"
+      Rails.logger.info ">>> Tarefas DEVEL: #{tarefas_devel.to_json}"
+      Rails.logger.info ">>> Tarefas QS: #{tarefas_qs.to_json}"
+      Rails.logger.info ">>> Tarefas relacionadas: #{tarefas_relacionadas.to_json}"
+      Rails.logger.info ">>> Indicador: #{indicador.to_json}"
       # Primeiro verificar se é uma situação DESCONHECIDA
 
       resultado_desconhecida = verificar_situacao_desconhecida(tarefas_relacionadas, tarefas_devel, ciclos_devel)
@@ -531,6 +537,9 @@ module SkyRedminePlugin
           elsif ultima_tarefa_devel.teste_no_desenvolvimento == SkyRedminePlugin::Constants::CustomFieldsValues::TESTE_NOK
             indicador.data_situacao_atual = SkyRedminePlugin::TarefasRelacionadas::obter_data_definicao_campo_personalizado(ultima_tarefa_devel, SkyRedminePlugin::Constants::CustomFields::TESTE_NO_DESENVOLVIMENTO, SkyRedminePlugin::Constants::CustomFieldsValues::TESTE_NOK)
             return SkyRedminePlugin::Constants::SituacaoAtual::AGUARDANDO_ENCAMINHAR_RETORNO_TESTES_DEVEL
+          elsif ultima_tarefa_devel.teste_no_desenvolvimento == SkyRedminePlugin::Constants::CustomFieldsValues::TESTE_OK
+            indicador.data_situacao_atual = SkyRedminePlugin::TarefasRelacionadas::obter_data_definicao_campo_personalizado(ultima_tarefa_devel, SkyRedminePlugin::Constants::CustomFields::TESTE_NO_DESENVOLVIMENTO, SkyRedminePlugin::Constants::CustomFieldsValues::TESTE_OK)
+            return SkyRedminePlugin::Constants::SituacaoAtual::AGUARDANDO_ENCAMINHAR_QS
           end
         end
       end
