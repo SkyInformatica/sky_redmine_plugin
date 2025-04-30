@@ -46,20 +46,6 @@ module IndicadoresHelper
             "Distribuição das tarefas por tipo no período selecionado",
             "Total de tarefas agrupadas por tipo"
           ),
-          render_card_grafico(
-            "Tarefas por Tipo",
-            "bar",
-            dados_graficos[:tarefas_devel_por_tipo],
-            "Distribuição das tarefas por tipo no período selecionado",
-            "Total de tarefas agrupadas por tipo"
-          ),
-          render_card_grafico(
-            "Tarefas por Tipo",
-            "bar",
-            dados_graficos[:tarefas_devel_por_tipo],
-            "Distribuição das tarefas por tipo no período selecionado",
-            "Total de tarefas agrupadas por tipo"
-          ),
         ]),
 
         # Terceira linha - Cards de gráficos
