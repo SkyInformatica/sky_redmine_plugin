@@ -7,7 +7,7 @@ module IndicadoresHelper
           render_card_valor(
             "Total de tarefas",
             dados_graficos[:tarefas_desenvolvimento].count,
-            "Total de tarefas de desenvolvimento no período selecionado",
+            "Total de tarefas de desenvolvimento (Defeito, Funcionalidade, Retorno de testes, Conversão) no período selecionado",
             "Complementares: #{dados_graficos[:tarefas_complementar].count}"
           ),
           render_card_valor(
@@ -33,18 +33,32 @@ module IndicadoresHelper
         # Segunda linha - Cards de gráficos
         render_cards_row([
           render_card_grafico(
-            "Tarefas por Tipo",
-            "bar",
-            dados_graficos[:tarefas_por_tipo],
-            "Distribuição das tarefas por tipo no período selecionado",
-            "Total de tarefas agrupadas por tipo"
-          ),
-          render_card_grafico(
             "Tempo gasto em horas por tipo",
             "doughnut",
             dados_graficos[:tarefas_por_tipo_tempo_gasto],
             "Total do tempo gasto em horas por tipo de tarefa",
             "Total do tempo gasto do desenvolvimento + QS"
+          ),
+          render_card_grafico(
+            "Tarefas por Tipo",
+            "bar",
+            dados_graficos[:tarefas_por_tipo].where(),
+            "Distribuição das tarefas por tipo no período selecionado",
+            "Total de tarefas agrupadas por tipo"
+          ),
+          render_card_grafico(
+            "Tarefas por Tipo",
+            "bar",
+            dados_graficos[:tarefas_por_tipo].where(),
+            "Distribuição das tarefas por tipo no período selecionado",
+            "Total de tarefas agrupadas por tipo"
+          ),
+          render_card_grafico(
+            "Tarefas por Tipo",
+            "bar",
+            dados_graficos[:tarefas_por_tipo].where(),
+            "Distribuição das tarefas por tipo no período selecionado",
+            "Total de tarefas agrupadas por tipo"
           ),
         ]),
 
@@ -53,14 +67,14 @@ module IndicadoresHelper
           render_card_grafico(
             "Retornos de Testes",
             "bar",
-            dados_graficos[:tarefas_por_retorno_testes],
+            dados_graficos[:tarefas_devel_por_retorno_testes],
             "Quantidade de vezes que as tarefas retornaram dos testes",
             "Total de tarefas agrupadas por quantidade de retornos de testes"
           ),
           render_card_grafico(
             "Tarefas fechadas sem testes",
             "bar",
-            dados_graficos[:tarefas_fechadas_sem_testes],
+            dados_graficos[:tarefas_devel_fechadas_sem_testes],
             "Tarefas que foram fechadas antes de passar por testes",
             "Total de tarefas fechadas sem passar por testes"
           ),

@@ -38,15 +38,17 @@ class IndicadoresService
     tarefas_complementar = tarefas.where(tarefa_complementar: "SIM")
 
     # Buscar as tarefas agrupadas por tipo e calcular tempo gasto
-    tarefas_por_tipo = tarefas.group(:tipo_primeira_tarefa_devel).count
     tarefas_por_tipo_tempo_gasto = tarefas.group(:tipo_primeira_tarefa_devel)
       .sum("ROUND(CAST(COALESCE(tempo_gasto_devel, 0) + COALESCE(tempo_gasto_qs, 0) AS DECIMAL(10,1)), 1)")
+
+    # Tarefas de desenvolvimento agrupadas por tipo
+    tarefas_devel_por_tipo = tarefas_desenvolvimento.group(:tipo_primeira_tarefa_devel).count
 
     # Criar tarefas apenas para tarefas fechadas
     tarefas_devel_fechadas = tarefas_desenvolvimento.where(equipe_responsavel_atual: SkyRedminePlugin::Constants::EquipeResponsavel::FECHADA)
 
     # Buscar quantidade de tarefas por retorno de testes (apenas fechadas)
-    tarefas_por_retorno_testes = tarefas_devel_fechadas.group(:qtd_retorno_testes_qs).count
+    tarefas_devel_por_retorno_testes = tarefas_devel_fechadas.group(:qtd_retorno_testes_qs).count
 
     # Buscar quantidade de tarefas fechadas sem testes (apenas fechadas)
     tarefas_devel_fechadas_sem_testes = tarefas_devel_fechadas.group(:tarefa_fechada_sem_testes).count
@@ -68,9 +70,9 @@ class IndicadoresService
       tarefas: tarefas,
       tarefas_desenvolvimento: tarefas_desenvolvimento,
       tarefas_complementar: tarefas_complementar,
-      tarefas_por_tipo: tarefas_por_tipo,
       tarefas_por_tipo_tempo_gasto: tarefas_por_tipo_tempo_gasto,
-      tarefas_por_retorno_testes: tarefas_por_retorno_testes,
+      tarefas_devel_por_tipo: tarefas_por_tipo,
+      tarefas_devel_por_retorno_testes: tarefas_por_retorno_testes,
       tarefas_devel_fechadas_sem_testes: tarefas_devel_fechadas_sem_testes,
       tempo_medio_andamento_devel: tempo_medio_andamento_devel,
       tempo_medio_resolucao_devel: tempo_medio_resolucao_devel,
