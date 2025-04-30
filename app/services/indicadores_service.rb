@@ -53,9 +53,16 @@ class IndicadoresService
     # Agrupar etapas similares (removendo _RT)
     tarefas_devel_por_etapa = {}
     tarefas_devel_por_etapa_todas.each do |etapa, quantidade|
-      # remover o sufixo _RT
-      # Exemplo: "E01_ESTOQUE_DEVEL_RT" se torna "E01_ESTOQUE_DEVEL"
-      etapa_base = etapa.to_s.gsub(/_RT$/, "")
+
+      # Caso especial para E99_INTERROMPIDA
+      if etapa_str.start_with?("E99_INTERROMPIDA")
+        # Agrupar E99_INTERROMPIDA e E99_INTERROMPIDA_ANALISE em E99_INTERROMPIDA
+        etapa_base = "E99_INTERROMPIDA"
+      else
+        # remover o sufixo _RT
+        # Exemplo: "E01_ESTOQUE_DEVEL_RT" se torna "E01_ESTOQUE_DEVEL"
+        etapa_base = etapa.to_s.gsub(/_RT$/, "")
+      end
       tarefas_devel_por_etapa[etapa_base] ||= 0
       tarefas_devel_por_etapa[etapa_base] += quantidade
     end
