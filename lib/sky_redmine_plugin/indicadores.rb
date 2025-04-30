@@ -478,6 +478,7 @@ module SkyRedminePlugin
       if ultima_tarefa_devel.tracker.name == SkyRedminePlugin::Constants::Trackers::CONVERSAO ||
          ultima_tarefa_devel.teste_qs == SkyRedminePlugin::Constants::CustomFieldsValues::NAO_NECESSITA_TESTE ||
          (tarefas_qs.any? && tarefas_qs.last.status.name == SkyRedminePlugin::Constants::IssueStatus::CANCELADA)
+        Rails.logger.info ">>> Tarefa não necessita de QS"
         # Verificar se é um retorno de testes que já passou pelo QS anteriormente
         if ultima_tarefa_devel.tracker.name == SkyRedminePlugin::Constants::Trackers::RETORNO_TESTES &&
            tarefas_qs.any?
@@ -526,6 +527,7 @@ module SkyRedminePlugin
 
       # Verificar se está no primeiro ciclo com teste no desenvolvimento
       if ciclos_devel.size == 1 && ultima_tarefa_devel.teste_no_desenvolvimento != SkyRedminePlugin::Constants::CustomFieldsValues::NAO_NECESSITA_TESTE
+        Rails.logger.info ">>> Tarefa está no primeiro ciclo com teste no desenvolvimento"
         # Adicionar verificação se já existe tarefa de QS
         ja_tem_tarefa_qs = !tarefas_qs.empty?
 
@@ -545,6 +547,7 @@ module SkyRedminePlugin
       end
 
       # Verificar situações baseadas na última tarefa
+      Rails.logger.info ">>> Verificando situações baseadas na última tarefa"
       # Usar o indicador já calculado para determinar se é um retorno do QS
       is_retorno_do_qs = indicador.qtd_retorno_testes_qs > 0
 
