@@ -66,6 +66,8 @@ class IndicadoresService
 
     {
       tarefas: tarefas,
+      tarefas_desenvolvimento: tarefas_desenvolvimento,
+      tarefas_complementar: tarefas_complementar,
       tarefas_por_tipo: tarefas_por_tipo,
       tarefas_por_tipo_tempo_gasto: tarefas_por_tipo_tempo_gasto,
       tarefas_por_retorno_testes: tarefas_por_retorno_testes,
