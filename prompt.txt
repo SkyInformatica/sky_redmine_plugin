@@ -3,8 +3,8 @@
 
 - Utilize o contexto acima e faça o que está descrito abaixo
 - escrever o codigo funcao "determinar_sitaucao_atual" que já foi iniciado em indicadores.rb
-- a funcao irá processar e avaliar e determinar o conteudo do campo "situacao_atual"
-- para o campo "situacao_atual" a logica deve prever todas as situacoes possiveis definidas pela constante SkyRedminePlugin::Constants::SituacaoAtual em constants.rb
+- a funcao irá processar e avaliar e determinar o conteudo do campo "etapa_atual"
+- para o campo "etapa_atual" a logica deve prever todas as situacoes possiveis definidas pela constante SkyRedminePlugin::Constants::EtapaAtual em constants.rb
 - essa funcao somente é para tarefas de desenvolvimento, ou seja nao vai ser executado para tarefas complementares, 
   e já está sendo chamada pela funcao processar_indicadores ou seja quando indicador.tarefa_complementar == "NAO"
 - primeira avaliacao da funcao é determinar a situacao DESCONHECIDA, que já está implementado

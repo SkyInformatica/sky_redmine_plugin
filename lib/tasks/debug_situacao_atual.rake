@@ -1,11 +1,11 @@
 # para executar o rake, use o seguinte comando:
-# RAILS_ENV=production rake sky_redmine_plugin:debug_situacao_atual[65408]
+# RAILS_ENV=production rake sky_redmine_plugin:debug_etapa_atual[65408]
 
 namespace :sky_redmine_plugin do
-  desc "Depura a situação atual e tarefas relacionadas para uma tarefa específica. Uso: rake sky_redmine_plugin:debug_situacao_atual[TAREFA_ID]"
-  task :debug_situacao_atual, [:tarefa_id] => :environment do |t, args|
+  desc "Depura a situação atual e tarefas relacionadas para uma tarefa específica. Uso: rake sky_redmine_plugin:debug_etapa_atual[TAREFA_ID]"
+  task :debug_etapa_atual, [:tarefa_id] => :environment do |t, args|
     if args[:tarefa_id].blank?
-      puts "Erro: É necessário fornecer o ID da tarefa. Exemplo: RAILS_ENV=production rake sky_redmine_plugin:debug_situacao_atual[12345]"
+      puts "Erro: É necessário fornecer o ID da tarefa. Exemplo: RAILS_ENV=production rake sky_redmine_plugin:debug_etapa_atual[12345]"
       exit 1
     end
 
@@ -106,7 +106,7 @@ namespace :sky_redmine_plugin do
         tarefa_complementar: indicador.tarefa_complementar,
         teste_no_desenvolvimento: indicador.teste_no_desenvolvimento,
         equipe_responsavel_atual: indicador.equipe_responsavel_atual,
-        situacao_atual: indicador.situacao_atual,
+        etapa_atual: indicador.etapa_atual,
 
         # Tempos DEVEL
         tempo_estimado_devel: indicador.tempo_estimado_devel,

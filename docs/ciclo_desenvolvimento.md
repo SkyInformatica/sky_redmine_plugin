@@ -193,8 +193,8 @@ Essa sao situacoes opcionais que irão ocorrer no primeiro ciclo do desenvolvime
 - A constante SkyRedminePlugin::Constants::EquipeResponsavel define as constantes DEVEL, QS e FECHADA para definir a equipe responsável pelo momento atual que a tarefa se encontra.
 - A constante SkyRedminePlugin::Constants::IssueStatus define as situações possíveis das tarefas.
 - A constante SkyRedminePlugin::Constants::Trackers define os tipos de tarefas
-- As constantes SkyRedminePlugin::Constants::SituacaoAtual define as possiveis situacoes e os fluxos das situacoes que são esperados
-- A função SkyRedminePlugin::Indicadores.determinar_situacao_atual define a situação atual avaliando o fluxo e em qual situação a tarefa se encontra no momento.
+- As constantes SkyRedminePlugin::Constants::EtapaAtual define as possiveis situacoes e os fluxos das situacoes que são esperados
+- A função SkyRedminePlugin::Indicadores.determinar_etapa_atual define a situação atual avaliando o fluxo e em qual situação a tarefa se encontra no momento.
 - A classe SkyRedmineIndicadorer cria a entidade para definir os Indicadores da tarefa. O conteúdo dos indicadores é definido pela função SkyRedminePlugin::Indicadores::processar_indicadores. Alguns indicadores importantes
   - “equipe_responsavel_atual”: DEVEL: se o ciclo está com a responsabilidade da equipe de DEVEL, QS se o ciclo atual está com a responsabilidade da equipe de QS e FECHADA quando todos os ciclos estão concluídos
   - “qtd_retorno_testes_qs”: quantidade de vezes que houve retorno de testes que foram originados pelos testes do QS

@@ -39,7 +39,7 @@ namespace :sky_redmine_plugin do
     # Tipo Conversão
     #criar_tarefa_nova(SkyRedminePlugin::Constants::Trackers::CONVERSAO)
     #criar_tarefa_nova_em_andamento(SkyRedminePlugin::Constants::Trackers::CONVERSAO)
-    #criar_tarefa_nova_em_andamento_resolvida(SkyRedminePlugin::Constants::Trackers::CONVERSAO, SkyRedminePlugin::Constants::SituacaoAtual::AGUARDANDO_VERSAO)
+    #criar_tarefa_nova_em_andamento_resolvida(SkyRedminePlugin::Constants::Trackers::CONVERSAO, SkyRedminePlugin::Constants::EtapaAtual::AGUARDANDO_VERSAO)
     #criar_tarefa_nova_em_andamento_resolvida_fechada(SkyRedminePlugin::Constants::Trackers::CONVERSAO)
 
     # Testes no desenvolvimento
@@ -275,7 +275,7 @@ namespace :sky_redmine_plugin do
       puts "✓ Indicador encontrado"
 
       # Imprimir os dados do indicador
-      puts "  Situação Atual: #{indicador.situacao_atual}"
+      puts "  Situação Atual: #{indicador.etapa_atual}"
       puts "  Responsável Atual: #{indicador.equipe_responsavel_atual}"
       puts "  Qtde Retorno Testes QS: #{indicador.qtd_retorno_testes_qs}"
       puts "  Qtde Retorno Testes Devel: #{indicador.qtd_retorno_testes_devel}"
@@ -283,10 +283,10 @@ namespace :sky_redmine_plugin do
       puts "  Tarefa Complementar: #{indicador.tarefa_complementar}"
 
       # Verificar se a situação atual está correta
-      if indicador.situacao_atual == situacao_esperada
+      if indicador.etapa_atual == situacao_esperada
         puts "✓ Situação atual está correta: #{situacao_esperada}"
       else
-        puts "✗ Situação atual está incorreta: #{indicador.situacao_atual} (esperada: #{situacao_esperada})"
+        puts "✗ Situação atual está incorreta: #{indicador.etapa_atual} (esperada: #{situacao_esperada})"
       end
     else
       puts "✗ Indicador não encontrado para a tarefa ##{issue_id}"
@@ -301,7 +301,7 @@ namespace :sky_redmine_plugin do
     issue = criar_tarefa("Tarefa Nova#{suffix}", tracker)
 
     if issue
-      verificar_indicador(issue.id, SkyRedminePlugin::Constants::SituacaoAtual::ESTOQUE_DEVEL)
+      verificar_indicador(issue.id, SkyRedminePlugin::Constants::EtapaAtual::ESTOQUE_DEVEL)
     end
   end
 
@@ -314,13 +314,13 @@ namespace :sky_redmine_plugin do
 
     if issue
       if trocar_status(issue, @status_em_andamento, "Status alterado para Em andamento")
-        verificar_indicador(issue.id, SkyRedminePlugin::Constants::SituacaoAtual::EM_ANDAMENTO_DEVEL)
+        verificar_indicador(issue.id, SkyRedminePlugin::Constants::EtapaAtual::EM_ANDAMENTO_DEVEL)
       end
     end
   end
 
   # Criar uma tarefa nova, colocá-la em andamento e depois resolvida
-  def criar_tarefa_nova_em_andamento_resolvida(tracker_name = nil, situacao_esperada = SkyRedminePlugin::Constants::SituacaoAtual::AGUARDANDO_TESTES_DEVEL)
+  def criar_tarefa_nova_em_andamento_resolvida(tracker_name = nil, situacao_esperada = SkyRedminePlugin::Constants::EtapaAtual::AGUARDANDO_TESTES_DEVEL)
     tracker = tracker_name ? Tracker.find_by(name: tracker_name) : @tracker
     suffix = tracker_name ? " (#{tracker_name})" : ""
     puts "\n\n=== Criar uma tarefa nova, colocá-la em andamento e depois resolvida#{suffix} ==="
@@ -346,7 +346,7 @@ namespace :sky_redmine_plugin do
       if trocar_status(issue, @status_em_andamento, "Status alterado para Em andamento")
         if trocar_status(issue, @status_resolvida, "Status alterado para Resolvida")
           if trocar_status(issue, @status_fechada, "Status alterado para Fechada")
-            verificar_indicador(issue.id, SkyRedminePlugin::Constants::SituacaoAtual::VERSAO_LIBERADA)
+            verificar_indicador(issue.id, SkyRedminePlugin::Constants::EtapaAtual::VERSAO_LIBERADA)
           end
         end
       end
@@ -362,7 +362,7 @@ namespace :sky_redmine_plugin do
       if trocar_status(issue, @status_em_andamento, "Status alterado para Em andamento")
         if trocar_status(issue, @status_resolvida, "Status alterado para Resolvida")
           if atualizar_campo_personalizado(issue, @cf_teste_no_desenvolvimento, SkyRedminePlugin::Constants::CustomFieldsValues::NAO_NECESSITA_TESTE, "Campo '#{SkyRedminePlugin::Constants::CustomFields::TESTE_NO_DESENVOLVIMENTO}' alterado para '#{SkyRedminePlugin::Constants::CustomFieldsValues::NAO_NECESSITA_TESTE}'")
-            verificar_indicador(issue.id, SkyRedminePlugin::Constants::SituacaoAtual::AGUARDANDO_ENCAMINHAR_QS)
+            verificar_indicador(issue.id, SkyRedminePlugin::Constants::EtapaAtual::AGUARDANDO_ENCAMINHAR_QS)
           end
         end
       end
@@ -378,7 +378,7 @@ namespace :sky_redmine_plugin do
       if trocar_status(issue, @status_em_andamento, "Status alterado para Em andamento")
         if trocar_status(issue, @status_resolvida, "Status alterado para Resolvida")
           if atualizar_campo_personalizado(issue, @cf_teste_no_desenvolvimento, SkyRedminePlugin::Constants::CustomFieldsValues::TESTE_OK, "Campo '#{SkyRedminePlugin::Constants::CustomFields::TESTE_NO_DESENVOLVIMENTO}' alterado para '#{SkyRedminePlugin::Constants::CustomFieldsValues::TESTE_OK}'")
-            verificar_indicador(issue.id, SkyRedminePlugin::Constants::SituacaoAtual::AGUARDANDO_ENCAMINHAR_QS)
+            verificar_indicador(issue.id, SkyRedminePlugin::Constants::EtapaAtual::AGUARDANDO_ENCAMINHAR_QS)
           end
         end
       end
@@ -395,7 +395,7 @@ namespace :sky_redmine_plugin do
         if trocar_status(issue, @status_resolvida, "Status alterado para Resolvida")
           if atualizar_campo_personalizado(issue, @cf_teste_no_desenvolvimento, SkyRedminePlugin::Constants::CustomFieldsValues::TESTE_NOK, "Campo '#{SkyRedminePlugin::Constants::CustomFields::TESTE_NO_DESENVOLVIMENTO}' alterado para '#{SkyRedminePlugin::Constants::CustomFieldsValues::TESTE_NOK}'")
             if (validar)
-              verificar_indicador(issue.id, SkyRedminePlugin::Constants::SituacaoAtual::AGUARDANDO_ENCAMINHAR_RETORNO_TESTES_DEVEL)
+              verificar_indicador(issue.id, SkyRedminePlugin::Constants::EtapaAtual::AGUARDANDO_ENCAMINHAR_RETORNO_TESTES_DEVEL)
             end
 
             return issue
@@ -414,7 +414,7 @@ namespace :sky_redmine_plugin do
       if trocar_status(issue, @status_em_andamento, "Status alterado para Em andamento")
         if trocar_status(issue, @status_resolvida, "Status alterado para Resolvida")
           if atualizar_campo_personalizado(issue, @cf_teste_qs, SkyRedminePlugin::Constants::CustomFieldsValues::NAO_NECESSITA_TESTE, "Campo '#{SkyRedminePlugin::Constants::CustomFields::TESTE_QS}' alterado para '#{SkyRedminePlugin::Constants::CustomFieldsValues::NAO_NECESSITA_TESTE}'")
-            verificar_indicador(issue.id, SkyRedminePlugin::Constants::SituacaoAtual::AGUARDANDO_VERSAO)
+            verificar_indicador(issue.id, SkyRedminePlugin::Constants::EtapaAtual::AGUARDANDO_VERSAO)
           end
         end
       end
@@ -432,7 +432,7 @@ namespace :sky_redmine_plugin do
           issue = Issue.find(issue.id)
           tarefa_qs = encaminhar_para_qs(issue)
           if tarefa_qs
-            verificar_indicador(issue.id, SkyRedminePlugin::Constants::SituacaoAtual::ESTOQUE_QS)
+            verificar_indicador(issue.id, SkyRedminePlugin::Constants::EtapaAtual::ESTOQUE_QS)
           end
         end
       end
@@ -458,7 +458,7 @@ namespace :sky_redmine_plugin do
             status_fechada_continua = IssueStatus.find_by(name: SkyRedminePlugin::Constants::IssueStatus::FECHADA_CONTINUA_RETORNO_TESTES)
             trocar_status(issue, status_fechada_continua, "Status alterado para FECHADA_CONTINUA_RETORNO_TESTES")
 
-            verificar_indicador(issue.id, SkyRedminePlugin::Constants::SituacaoAtual::DESCONHECIDA)
+            verificar_indicador(issue.id, SkyRedminePlugin::Constants::EtapaAtual::DESCONHECIDA)
           end
         end
       end
@@ -481,7 +481,7 @@ namespace :sky_redmine_plugin do
             status_teste_nok_fechada = IssueStatus.find_by(name: SkyRedminePlugin::Constants::IssueStatus::TESTE_NOK_FECHADA)
             trocar_status(tarefa_qs, status_teste_nok_fechada, "Status alterado para TESTE_NOK_FECHADA")
 
-            verificar_indicador(issue.id, SkyRedminePlugin::Constants::SituacaoAtual::DESCONHECIDA)
+            verificar_indicador(issue.id, SkyRedminePlugin::Constants::EtapaAtual::DESCONHECIDA)
           end
         end
       end
@@ -509,7 +509,7 @@ namespace :sky_redmine_plugin do
               trocar_tipo_tarefa(tarefa_retorno_testes, SkyRedminePlugin::Constants::Trackers::DEFEITO)
               tarefa_retorno_testes = Issue.find(tarefa_retorno_testes.id)
 
-              verificar_indicador(issue.id, SkyRedminePlugin::Constants::SituacaoAtual::DESCONHECIDA)
+              verificar_indicador(issue.id, SkyRedminePlugin::Constants::EtapaAtual::DESCONHECIDA)
             end
           end
         end
@@ -525,7 +525,7 @@ namespace :sky_redmine_plugin do
       if trocar_status(issue, @status_em_andamento, "Status alterado para Em andamento")
         tarefa_continuidade = continua_proxima_sprint(issue)
         if tarefa_continuidade
-          verificar_indicador(issue.id, SkyRedminePlugin::Constants::SituacaoAtual::ESTOQUE_DEVEL)
+          verificar_indicador(issue.id, SkyRedminePlugin::Constants::EtapaAtual::ESTOQUE_DEVEL)
         end
       end
     end
@@ -545,7 +545,7 @@ namespace :sky_redmine_plugin do
             trocar_status(tarefa_qs, @status_teste_nok, "Status alterado para TESTE NOK")
             tarefa_retorno_testes = retorno_testes_qs(tarefa_qs)
             if tarefa_retorno_testes
-              verificar_indicador(issue.id, SkyRedminePlugin::Constants::SituacaoAtual::ESTOQUE_DEVEL_RETORNO_TESTES)
+              verificar_indicador(issue.id, SkyRedminePlugin::Constants::EtapaAtual::ESTOQUE_DEVEL_RETORNO_TESTES)
             end
           end
         end
@@ -562,7 +562,7 @@ namespace :sky_redmine_plugin do
       tarefa_qs = encaminhar_para_qs(tarefa_retorno_testes)
       if tarefa_qs
         if validar
-          verificar_indicador(issue.id, SkyRedminePlugin::Constants::SituacaoAtual::ESTOQUE_QS)
+          verificar_indicador(issue.id, SkyRedminePlugin::Constants::EtapaAtual::ESTOQUE_QS)
         end
         return { issue_original: issue, tarefa_qs: tarefa_qs }
       end
@@ -576,7 +576,7 @@ namespace :sky_redmine_plugin do
     tarefa_retorno_testes = retorno_testes_qs(tarefa_qs)
     if tarefa_retorno_testes
       if validar
-        verificar_indicador(issues[:issue_original].id, SkyRedminePlugin::Constants::SituacaoAtual::ESTOQUE_DEVEL_RETORNO_TESTES)
+        verificar_indicador(issues[:issue_original].id, SkyRedminePlugin::Constants::EtapaAtual::ESTOQUE_DEVEL_RETORNO_TESTES)
       end
       return { issue_original: issues[:issue_original], tarefa_qs: tarefa_qs, tarefa_retorno_testes: tarefa_retorno_testes }
     end
@@ -591,7 +591,7 @@ namespace :sky_redmine_plugin do
         if tarefa_qs
           if trocar_status(tarefa_qs, @status_teste_ok, "Status alterado para Teste OK")
             if validar
-              verificar_indicador(issues[:issue_original].id, SkyRedminePlugin::Constants::SituacaoAtual::AGUARDANDO_VERSAO_RETORNO_TESTES)
+              verificar_indicador(issues[:issue_original].id, SkyRedminePlugin::Constants::EtapaAtual::AGUARDANDO_VERSAO_RETORNO_TESTES)
             end
             return { issue_original: issues[:issue_original], tarefa_qs: tarefa_qs, tarefa_retorno_testes: tarefa_retorno_testes }
           end

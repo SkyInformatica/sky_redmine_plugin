@@ -478,7 +478,7 @@ module FluxoTarefasHelper
                           "Equipe responsável pela tarefa")
 
       if (indicadores.tipo_primeira_tarefa_devel != SkyRedminePlugin::Constants::Trackers::CONVERSAO) &&
-         (indicadores.situacao_atual != SkyRedminePlugin::Constants::SituacaoAtual::FECHADA_SEM_DESENVOLVIMENTO)
+         (indicadores.etapa_atual != SkyRedminePlugin::Constants::EtapaAtual::FECHADA_SEM_DESENVOLVIMENTO)
         # Card de retorno de testes
         retornos = []
         if indicadores.qtd_retorno_testes_qs.to_i > 0
@@ -529,7 +529,7 @@ module FluxoTarefasHelper
                           "Tempo entre a tarefa de desenvolvimento ser colocada em andamento e sua situação ser resolvida (considerando o todos os ciclos incluindo os retornos de testes)")
 
       if (indicadores.tipo_primeira_tarefa_devel != SkyRedminePlugin::Constants::Trackers::CONVERSAO) &&
-         (indicadores.situacao_atual != SkyRedminePlugin::Constants::SituacaoAtual::FECHADA_SEM_DESENVOLVIMENTO)
+         (indicadores.etapa_atual != SkyRedminePlugin::Constants::EtapaAtual::FECHADA_SEM_DESENVOLVIMENTO)
         # Para encaminhar QS
         html << render_card("Encaminhar QS", formatar_dias(indicadores.tempo_para_encaminhar_qs), indicadores.tempo_para_encaminhar_qs_detalhes,
                             "Tempo entre tarefa de desenvolvimento estar resolvida e a tarefa de QS ser encaminhada (considerando somente o primeiro ciclo de desenvolvimento)")
@@ -538,7 +538,7 @@ module FluxoTarefasHelper
       html << "</div>" # indicadores-grupo
 
       if (indicadores.tipo_primeira_tarefa_devel != SkyRedminePlugin::Constants::Trackers::CONVERSAO) &&
-         (indicadores.situacao_atual != SkyRedminePlugin::Constants::SituacaoAtual::FECHADA_SEM_DESENVOLVIMENTO)
+         (indicadores.etapa_atual != SkyRedminePlugin::Constants::EtapaAtual::FECHADA_SEM_DESENVOLVIMENTO)
         # Cards QS
         html << "<div class='indicadores-grupo'>"
         tempo_gasto_qs = format("%.2f", indicadores.tempo_gasto_qs.to_f)
@@ -603,8 +603,8 @@ module FluxoTarefasHelper
       end
 
       # Timeline de situação atual
-      if indicadores.situacao_atual.present?
-        html << render_timeline_situacao_atual(indicadores)
+      if indicadores.etapa_atual.present?
+        html << render_timeline_etapa_atual(indicadores)
       end
     end
     html << "</div>" # indicadores-container
@@ -613,64 +613,64 @@ module FluxoTarefasHelper
   end
 
   # Método para renderizar a timeline da situação atual
-  def render_timeline_situacao_atual(indicadores)
-    Rails.logger.info(">>>> render_timeline_situacao_atual: #{indicadores.situacao_atual}")
-    situacao_atual = indicadores.situacao_atual
-    return "" unless situacao_atual
+  def render_timeline_etapa_atual(indicadores)
+    Rails.logger.info(">>>> render_timeline_etapa_atual: #{indicadores.etapa_atual}")
+    etapa_atual = indicadores.etapa_atual
+    return "" unless etapa_atual
 
     # Se a situação for DESCONHECIDA, renderizar a timeline específica
-    if situacao_atual == SkyRedminePlugin::Constants::SituacaoAtual::DESCONHECIDA ||
-       situacao_atual == SkyRedminePlugin::Constants::SituacaoAtual::INTERROMPIDA ||
-       situacao_atual == SkyRedminePlugin::Constants::SituacaoAtual::INTERROMPIDA_ANALISE ||
-       situacao_atual == SkyRedminePlugin::Constants::SituacaoAtual::CANCELADA
-      return render_timeline_desconhecida(situacao_atual, indicadores.motivo_situacao_desconhecida)
+    if etapa_atual == SkyRedminePlugin::Constants::EtapaAtual::DESCONHECIDA ||
+       etapa_atual == SkyRedminePlugin::Constants::EtapaAtual::INTERROMPIDA ||
+       etapa_atual == SkyRedminePlugin::Constants::EtapaAtual::INTERROMPIDA_ANALISE ||
+       etapa_atual == SkyRedminePlugin::Constants::EtapaAtual::CANCELADA
+      return render_timeline_desconhecida(etapa_atual, indicadores.motivo_situacao_desconhecida)
     end
 
     # Verificar se é uma tarefa que não necessita desenvolvimento
-    if situacao_atual == SkyRedminePlugin::Constants::SituacaoAtual::FECHADA_SEM_DESENVOLVIMENTO
-      fluxo = SkyRedminePlugin::Constants::SituacaoAtual::FLUXO_SEM_QS_FECHADA_SEM_DESENVOLVIMENTO
-      indice_atual = fluxo.index(situacao_atual)
+    if etapa_atual == SkyRedminePlugin::Constants::EtapaAtual::FECHADA_SEM_DESENVOLVIMENTO
+      fluxo = SkyRedminePlugin::Constants::EtapaAtual::FLUXO_SEM_QS_FECHADA_SEM_DESENVOLVIMENTO
+      indice_atual = fluxo.index(etapa_atual)
       return render_timeline_normal(fluxo, indice_atual, indicadores)
     end
 
     if !indicadores.tipo_primeira_tarefa_devel.nil? && indicadores.tipo_primeira_tarefa_devel == SkyRedminePlugin::Constants::Trackers::CONVERSAO
-      fluxo = SkyRedminePlugin::Constants::SituacaoAtual::FLUXO_SEM_QS
-      indice_atual = fluxo.index(situacao_atual)
+      fluxo = SkyRedminePlugin::Constants::EtapaAtual::FLUXO_SEM_QS
+      indice_atual = fluxo.index(etapa_atual)
       return render_timeline_normal(fluxo, indice_atual, indicadores)
     end
 
     tem_retorno_testes_qs = indicadores.qtd_retorno_testes_qs.to_i > 0 ||
-                            situacao_atual == SkyRedminePlugin::Constants::SituacaoAtual::AGUARDANDO_ENCAMINHAR_RETORNO_TESTES
+                            etapa_atual == SkyRedminePlugin::Constants::EtapaAtual::AGUARDANDO_ENCAMINHAR_RETORNO_TESTES
 
     # Determinar qual fluxo usar baseado em se teve retornos de testes
     fluxo = tem_retorno_testes_qs ?
-      SkyRedminePlugin::Constants::SituacaoAtual::FLUXO_COM_RETORNO_TESTES :
-      SkyRedminePlugin::Constants::SituacaoAtual::FLUXO_SEM_RETORNO_TESTES
+      SkyRedminePlugin::Constants::EtapaAtual::FLUXO_COM_RETORNO_TESTES :
+      SkyRedminePlugin::Constants::EtapaAtual::FLUXO_SEM_RETORNO_TESTES
 
-    if situacao_atual == SkyRedminePlugin::Constants::SituacaoAtual::VERSAO_LIBERADA_FALTA_FECHAR
+    if etapa_atual == SkyRedminePlugin::Constants::EtapaAtual::VERSAO_LIBERADA_FALTA_FECHAR
       # Adicionar a situacao VERSAO_LIBERADA_FALTA_FECHAR ao fluxo antes do VERSAO_LIBERADA
       fluxo = fluxo.dup
-      fluxo.insert(fluxo.index(SkyRedminePlugin::Constants::SituacaoAtual::VERSAO_LIBERADA), SkyRedminePlugin::Constants::SituacaoAtual::VERSAO_LIBERADA_FALTA_FECHAR)
+      fluxo.insert(fluxo.index(SkyRedminePlugin::Constants::EtapaAtual::VERSAO_LIBERADA), SkyRedminePlugin::Constants::EtapaAtual::VERSAO_LIBERADA_FALTA_FECHAR)
     end
 
     # Encontrar o índice da situação atual no fluxo
-    indice_atual = fluxo.index(situacao_atual)
+    indice_atual = fluxo.index(etapa_atual)
 
     return "" unless indice_atual
 
     # Preparar HTML
     html = "<div class='indicadores-grupo'>"
     html << "<div class='indicadores-titulo'>Progresso</div>"
-    if !indicadores.data_situacao_atual.nil?
-      numero_dias_data_situacao_atual = indicadores.data_situacao_atual ? (Date.today - indicadores.data_situacao_atual&.to_date).to_i : 0
-      situacao_atual_detalhes = indicadores.data_situacao_atual ? "#{indicadores.situacao_atual} em #{indicadores.data_situacao_atual&.strftime("%d/%m/%Y")} (#{numero_dias_data_situacao_atual} dias)" : "#{indicadores.situacao_atual}"
-      html << "<div style='font-style: italic; color: gray;'><small>#{situacao_atual_detalhes}</small></div>"
+    if !indicadores.data_etapa_atual.nil?
+      numero_dias_data_etapa_atual = indicadores.data_etapa_atual ? (Date.today - indicadores.data_etapa_atual&.to_date).to_i : 0
+      etapa_atual_detalhes = indicadores.data_etapa_atual ? "#{indicadores.etapa_atual} em #{indicadores.data_etapa_atual&.strftime("%d/%m/%Y")} (#{numero_dias_data_etapa_atual} dias)" : "#{indicadores.etapa_atual}"
+      html << "<div style='font-style: italic; color: gray;'><small>#{etapa_atual_detalhes}</small></div>"
     end
     html << "<div class='timeline-container'>"
 
     if tem_retorno_testes_qs
       # Ponto de divisão - índice do AGUARDANDO_ENCAMINHAR_RETORNO_TESTES
-      ponto_divisao = fluxo.index(SkyRedminePlugin::Constants::SituacaoAtual::AGUARDANDO_ENCAMINHAR_RETORNO_TESTES)
+      ponto_divisao = fluxo.index(SkyRedminePlugin::Constants::EtapaAtual::AGUARDANDO_ENCAMINHAR_RETORNO_TESTES)
 
       # Se o ponto de divisão não for encontrado, usar o fluxo normal
       if ponto_divisao.nil?
@@ -711,7 +711,7 @@ module FluxoTarefasHelper
 
   # Método para renderizar a timeline da situação DESCONHECIDA
   # Método para renderizar a timeline da situação DESCONHECIDA
-  def render_timeline_desconhecida(situacao_atual, motivo)
+  def render_timeline_desconhecida(etapa_atual, motivo)
     html = "<div class='indicadores-grupo'>"
     html << "<div class='indicadores-titulo'>Progresso</div>"
     html << "<div class='timeline-container'>"
@@ -720,7 +720,7 @@ module FluxoTarefasHelper
     html << "<div class='timeline-step timeline-step-error'>"
     html << "<div class='timeline-circle'></div>"
     html << "<div class='timeline-label'>"
-    html << "<div class='timeline-text'>#{situacao_atual}"
+    html << "<div class='timeline-text'>#{etapa_atual}"
 
     # Adicionar o motivo se existir
     if motivo.present?
@@ -749,7 +749,7 @@ module FluxoTarefasHelper
     fluxo.each_with_index do |situacao, i|
       eh_ultima_etapa = i == fluxo.length - 1
       eh_versao_liberada_antes_testes = indicadores&.tarefa_fechada_sem_testes == "SIM"
-      eh_situacao_final = [SkyRedminePlugin::Constants::SituacaoAtual::VERSAO_LIBERADA, SkyRedminePlugin::Constants::SituacaoAtual::FECHADA_SEM_DESENVOLVIMENTO].include?(situacao)
+      eh_situacao_final = [SkyRedminePlugin::Constants::EtapaAtual::VERSAO_LIBERADA, SkyRedminePlugin::Constants::EtapaAtual::FECHADA_SEM_DESENVOLVIMENTO].include?(situacao)
 
       estado = if (i < indice_atual)
           "completed"
@@ -757,7 +757,7 @@ module FluxoTarefasHelper
           "completed"  # Se é VERSAO_LIBERADA e é a etapa atual, mostra como concluída
         elsif i == indice_atual && esta_na_parte_atual
           "current"
-        elsif eh_ultima_etapa && eh_versao_liberada_antes_testes && indicadores.situacao_atual != SkyRedminePlugin::Constants::SituacaoAtual::VERSAO_LIBERADA
+        elsif eh_ultima_etapa && eh_versao_liberada_antes_testes && indicadores.etapa_atual != SkyRedminePlugin::Constants::EtapaAtual::VERSAO_LIBERADA
           "warning"
         else
           "future"
@@ -767,23 +767,23 @@ module FluxoTarefasHelper
 
       if (estado == "completed") || (estado == "current")
         # Adicionar o contador de retornos se for ESTOQUE_DEVEL_RETORNO_TESTES ou AGUARDANDO_ENCAMINHAR_RETORNO_TESTES_DEVEL
-        if situacao == SkyRedminePlugin::Constants::SituacaoAtual::ESTOQUE_DEVEL_RETORNO_TESTES &&
+        if situacao == SkyRedminePlugin::Constants::EtapaAtual::ESTOQUE_DEVEL_RETORNO_TESTES &&
            indicadores&.qtd_retorno_testes_qs.to_i > 0
           texto_situacao += "<br>#{indicadores.qtd_retorno_testes_qs}x"
-        elsif situacao == SkyRedminePlugin::Constants::SituacaoAtual::AGUARDANDO_ENCAMINHAR_RETORNO_TESTES_DEVEL &&
+        elsif situacao == SkyRedminePlugin::Constants::EtapaAtual::AGUARDANDO_ENCAMINHAR_RETORNO_TESTES_DEVEL &&
               indicadores&.qtd_retorno_testes_devel.to_i > 0
           texto_situacao += "<br>#{indicadores.qtd_retorno_testes_devel}x"
           # Adicionar o numero da versão estavel no VERSAO_LIBERADA ou VERSAO_LIBERADA_FALTA_FECHAR
-        elsif [SkyRedminePlugin::Constants::SituacaoAtual::VERSAO_LIBERADA, SkyRedminePlugin::Constants::SituacaoAtual::VERSAO_LIBERADA_FALTA_FECHAR].include?(situacao)
+        elsif [SkyRedminePlugin::Constants::EtapaAtual::VERSAO_LIBERADA, SkyRedminePlugin::Constants::EtapaAtual::VERSAO_LIBERADA_FALTA_FECHAR].include?(situacao)
           if indicadores&.versao_estavel.present?
             texto_situacao += "<br><br>#{indicadores.versao_estavel}"
           end
           # Adicionar o numero da versão de testes no ESTOQUE_QS ou ESTOQUE_QS_RETORNO_TESTES
-        elsif [SkyRedminePlugin::Constants::SituacaoAtual::ESTOQUE_QS, SkyRedminePlugin::Constants::SituacaoAtual::ESTOQUE_QS_RETORNO_TESTES].include?(situacao)
+        elsif [SkyRedminePlugin::Constants::EtapaAtual::ESTOQUE_QS, SkyRedminePlugin::Constants::EtapaAtual::ESTOQUE_QS_RETORNO_TESTES].include?(situacao)
           exibir_versao = true
           # somente exibe a versao de testes na situacao ESTOQUE_QS caso ela seja a current
           # se ela for completed somente exibir se a ESTOQUE_QS_RETORNO_TESTES nao exista ou ainda nao foi executada
-          if (situacao == SkyRedminePlugin::Constants::SituacaoAtual::ESTOQUE_QS)
+          if (situacao == SkyRedminePlugin::Constants::EtapaAtual::ESTOQUE_QS)
             exibir_versao = esta_na_parte_atual
           end
           if (indicadores&.versao_teste.present? && exibir_versao)
@@ -793,10 +793,10 @@ module FluxoTarefasHelper
 
         # Adicionar a quantidade de dias que está na etapa atual
         if estado == "current"
-          if !indicadores.data_situacao_atual.nil?
-            #dias_na_etapa_atual = (Date.today - indicadores.data_situacao_atual).to_i
-            #texto_situacao += "<br><br><a title='#{indicadores.data_situacao_atual&.strftime("%d/%m/%Y")}'> #{dias_na_etapa_atual} #{dias_na_etapa_atual == 1 ? "dia" : "dias"}</a>"
-            texto_situacao += "<br><br><a title='#{indicadores.data_situacao_atual&.strftime("%d/%m/%Y")}'> #{time_ago_in_words(indicadores.data_situacao_atual)}</a>"
+          if !indicadores.data_etapa_atual.nil?
+            #dias_na_etapa_atual = (Date.today - indicadores.data_etapa_atual).to_i
+            #texto_situacao += "<br><br><a title='#{indicadores.data_etapa_atual&.strftime("%d/%m/%Y")}'> #{dias_na_etapa_atual} #{dias_na_etapa_atual == 1 ? "dia" : "dias"}</a>"
+            texto_situacao += "<br><br><a title='#{indicadores.data_etapa_atual&.strftime("%d/%m/%Y")}'> #{time_ago_in_words(indicadores.data_etapa_atual)}</a>"
             Rails.logger.info(">>>> texto_situacao: #{texto_situacao}")
           end
         end

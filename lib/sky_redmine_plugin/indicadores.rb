@@ -276,9 +276,9 @@ module SkyRedminePlugin
           end
 
           # Determinar a situação atual do desenvolvimento
-          indicador.situacao_atual = determinar_situacao_atual(indicador, tarefas_relacionadas, tarefas_devel, tarefas_qs, ciclos_devel, ciclos_qs)
+          indicador.etapa_atual = determinar_etapa_atual(indicador, tarefas_relacionadas, tarefas_devel, tarefas_qs, ciclos_devel, ciclos_qs)
           # Atualizar as tags das tarefas com a situação atual
-          atualizar_tags_situacao_atual(tarefas_devel, tarefas_qs, indicador.situacao_atual)
+          atualizar_tags_etapa_atual(tarefas_devel, tarefas_qs, indicador.etapa_atual)
         end
 
         indicador.save(validate: false)
@@ -336,49 +336,49 @@ module SkyRedminePlugin
       # Campo de localização
       indicador.equipe_responsavel_atual = nil
       indicador.tarefa_fechada_sem_testes = nil
-      indicador.situacao_atual = nil
-      indicador.data_situacao_atual = nil
+      indicador.etapa_atual = nil
+      indicador.data_etapa_atual = nil
     end
 
     # Método para atualizar as tags das tarefas com a situação atual
-    def self.atualizar_tags_situacao_atual(tarefas_devel, tarefas_qs, situacao_atual)
+    def self.atualizar_tags_etapa_atual(tarefas_devel, tarefas_qs, etapa_atual)
       begin
-        Rails.logger.info ">>> Atualizando tags das tarefas com situação atual: #{situacao_atual}"
+        Rails.logger.info ">>> Atualizando tags das tarefas com situação atual: #{etapa_atual}"
 
         # Mapeamento de situações para prefixos numéricos
         prefixos_situacoes = {
-          SkyRedminePlugin::Constants::SituacaoAtual::DESCONHECIDA => "99",
-          SkyRedminePlugin::Constants::SituacaoAtual::INTERROMPIDA => "99",
-          SkyRedminePlugin::Constants::SituacaoAtual::INTERROMPIDA_ANALISE => "99",
-          SkyRedminePlugin::Constants::SituacaoAtual::CANCELADA => "08",
-          SkyRedminePlugin::Constants::SituacaoAtual::FECHADA_SEM_DESENVOLVIMENTO => "08",
-          SkyRedminePlugin::Constants::SituacaoAtual::ESTOQUE_DEVEL => "01",
-          SkyRedminePlugin::Constants::SituacaoAtual::EM_ANDAMENTO_DEVEL => "02",
-          SkyRedminePlugin::Constants::SituacaoAtual::AGUARDANDO_TESTES_DEVEL => "03",
-          SkyRedminePlugin::Constants::SituacaoAtual::AGUARDANDO_ENCAMINHAR_RETORNO_TESTES_DEVEL => "03",
-          SkyRedminePlugin::Constants::SituacaoAtual::AGUARDANDO_ENCAMINHAR_QS => "04",
-          SkyRedminePlugin::Constants::SituacaoAtual::ESTOQUE_QS => "05",
-          SkyRedminePlugin::Constants::SituacaoAtual::EM_ANDAMENTO_QS => "06",
-          SkyRedminePlugin::Constants::SituacaoAtual::AGUARDANDO_VERSAO => "07",
-          SkyRedminePlugin::Constants::SituacaoAtual::AGUARDANDO_ENCAMINHAR_RETORNO_TESTES => "07",
-          SkyRedminePlugin::Constants::SituacaoAtual::ESTOQUE_DEVEL_RETORNO_TESTES => "01",
-          SkyRedminePlugin::Constants::SituacaoAtual::EM_ANDAMENTO_DEVEL_RETORNO_TESTES => "02",
-          SkyRedminePlugin::Constants::SituacaoAtual::AGUARDANDO_ENCAMINHAR_QS_RETORNO_TESTES => "04",
-          SkyRedminePlugin::Constants::SituacaoAtual::ESTOQUE_QS_RETORNO_TESTES => "05",
-          SkyRedminePlugin::Constants::SituacaoAtual::EM_ANDAMENTO_QS_RETORNO_TESTES => "06",
-          SkyRedminePlugin::Constants::SituacaoAtual::AGUARDANDO_VERSAO_RETORNO_TESTES => "07",
-          SkyRedminePlugin::Constants::SituacaoAtual::VERSAO_LIBERADA_FALTA_FECHAR => "08",
+          SkyRedminePlugin::Constants::EtapaAtual::DESCONHECIDA => "99",
+          SkyRedminePlugin::Constants::EtapaAtual::INTERROMPIDA => "99",
+          SkyRedminePlugin::Constants::EtapaAtual::INTERROMPIDA_ANALISE => "99",
+          SkyRedminePlugin::Constants::EtapaAtual::CANCELADA => "08",
+          SkyRedminePlugin::Constants::EtapaAtual::FECHADA_SEM_DESENVOLVIMENTO => "08",
+          SkyRedminePlugin::Constants::EtapaAtual::ESTOQUE_DEVEL => "01",
+          SkyRedminePlugin::Constants::EtapaAtual::EM_ANDAMENTO_DEVEL => "02",
+          SkyRedminePlugin::Constants::EtapaAtual::AGUARDANDO_TESTES_DEVEL => "03",
+          SkyRedminePlugin::Constants::EtapaAtual::AGUARDANDO_ENCAMINHAR_RETORNO_TESTES_DEVEL => "03",
+          SkyRedminePlugin::Constants::EtapaAtual::AGUARDANDO_ENCAMINHAR_QS => "04",
+          SkyRedminePlugin::Constants::EtapaAtual::ESTOQUE_QS => "05",
+          SkyRedminePlugin::Constants::EtapaAtual::EM_ANDAMENTO_QS => "06",
+          SkyRedminePlugin::Constants::EtapaAtual::AGUARDANDO_VERSAO => "07",
+          SkyRedminePlugin::Constants::EtapaAtual::AGUARDANDO_ENCAMINHAR_RETORNO_TESTES => "07",
+          SkyRedminePlugin::Constants::EtapaAtual::ESTOQUE_DEVEL_RETORNO_TESTES => "01",
+          SkyRedminePlugin::Constants::EtapaAtual::EM_ANDAMENTO_DEVEL_RETORNO_TESTES => "02",
+          SkyRedminePlugin::Constants::EtapaAtual::AGUARDANDO_ENCAMINHAR_QS_RETORNO_TESTES => "04",
+          SkyRedminePlugin::Constants::EtapaAtual::ESTOQUE_QS_RETORNO_TESTES => "05",
+          SkyRedminePlugin::Constants::EtapaAtual::EM_ANDAMENTO_QS_RETORNO_TESTES => "06",
+          SkyRedminePlugin::Constants::EtapaAtual::AGUARDANDO_VERSAO_RETORNO_TESTES => "07",
+          SkyRedminePlugin::Constants::EtapaAtual::VERSAO_LIBERADA_FALTA_FECHAR => "08",
         }
 
         # Criar a nova tag baseada na situação atual, exceto para VERSAO_LIBERADA
-        nova_tag = if situacao_atual == SkyRedminePlugin::Constants::SituacaoAtual::VERSAO_LIBERADA
+        nova_tag = if etapa_atual == SkyRedminePlugin::Constants::EtapaAtual::VERSAO_LIBERADA
             nil
           else
-            prefixo_num = prefixos_situacoes[situacao_atual]
-            situacao_formatada = situacao_atual.gsub("RETORNO_TESTES", "RT").gsub("AGUARDANDO", "AGUARDA")
+            prefixo_num = prefixos_situacoes[etapa_atual]
+            situacao_formatada = etapa_atual.gsub("RETORNO_TESTES", "RT").gsub("AGUARDANDO", "AGUARDA")
 
             # Adicionar sufixo _APTAS se for ESTOQUE_DEVEL e estiver na sprint "Aptas para desenvolvimento"
-            if situacao_atual == SkyRedminePlugin::Constants::SituacaoAtual::ESTOQUE_DEVEL &&
+            if etapa_atual == SkyRedminePlugin::Constants::EtapaAtual::ESTOQUE_DEVEL &&
                !tarefas_devel.empty? &&
                tarefas_devel.last.fixed_version&.name == SkyRedminePlugin::Constants::Sprints::APTAS_PARA_DESENVOLVIMENTO
               "E#{prefixo_num}_#{situacao_formatada}_APTAS"
@@ -437,7 +437,7 @@ module SkyRedminePlugin
     end
 
     # Método para determinar a situação atual com base no status das tarefas
-    def self.determinar_situacao_atual(indicador, tarefas_relacionadas, tarefas_devel, tarefas_qs, ciclos_devel, ciclos_qs)
+    def self.determinar_etapa_atual(indicador, tarefas_relacionadas, tarefas_devel, tarefas_qs, ciclos_devel, ciclos_qs)
       Rails.logger.info ">>> Determinando situação atual da tarefa"
       #Rails.logger.info ">>> Ciclos DEVEL.size: #{ciclos_devel ? ciclos_devel.size : 0}"
       #Rails.logger.info ">>> Ciclos QS.size: #{ciclos_qs ? ciclos_qs.size : 0}"
@@ -471,7 +471,7 @@ module SkyRedminePlugin
 
       # Se a última tarefa DEVEL está com situação FECHADA, a versão foi liberada
       #if ultima_tarefa_devel.status.name == SkyRedminePlugin::Constants::IssueStatus::FECHADA
-      #  return SkyRedminePlugin::Constants::SituacaoAtual::VERSAO_LIBERADA
+      #  return SkyRedminePlugin::Constants::EtapaAtual::VERSAO_LIBERADA
       #end
 
       # Verificar se é uma tarefa que não necessita de QS
@@ -484,43 +484,43 @@ module SkyRedminePlugin
            tarefas_qs.any?
           case ultima_tarefa_devel.status.name
           when SkyRedminePlugin::Constants::IssueStatus::NOVA
-            indicador.data_situacao_atual = ultima_tarefa_devel.created_on
-            return SkyRedminePlugin::Constants::SituacaoAtual::ESTOQUE_DEVEL_RETORNO_TESTES
+            indicador.data_etapa_atual = ultima_tarefa_devel.created_on
+            return SkyRedminePlugin::Constants::EtapaAtual::ESTOQUE_DEVEL_RETORNO_TESTES
           when SkyRedminePlugin::Constants::IssueStatus::EM_ANDAMENTO
-            indicador.data_situacao_atual = ultima_tarefa_devel.data_em_andamento
-            return SkyRedminePlugin::Constants::SituacaoAtual::EM_ANDAMENTO_DEVEL_RETORNO_TESTES
+            indicador.data_etapa_atual = ultima_tarefa_devel.data_em_andamento
+            return SkyRedminePlugin::Constants::EtapaAtual::EM_ANDAMENTO_DEVEL_RETORNO_TESTES
           when SkyRedminePlugin::Constants::IssueStatus::RESOLVIDA
             if ultima_tarefa_devel.versao_estavel.present?
-              indicador.data_situacao_atual = SkyRedminePlugin::TarefasRelacionadas::obter_data_definicao_campo_personalizado(ultima_tarefa_devel, SkyRedminePlugin::Constants::CustomFields::VERSAO_ESTAVEL, ultima_tarefa_devel.versao_estavel)
-              return SkyRedminePlugin::Constants::SituacaoAtual::VERSAO_LIBERADA_FALTA_FECHAR
+              indicador.data_etapa_atual = SkyRedminePlugin::TarefasRelacionadas::obter_data_definicao_campo_personalizado(ultima_tarefa_devel, SkyRedminePlugin::Constants::CustomFields::VERSAO_ESTAVEL, ultima_tarefa_devel.versao_estavel)
+              return SkyRedminePlugin::Constants::EtapaAtual::VERSAO_LIBERADA_FALTA_FECHAR
             else
-              indicador.data_situacao_atual = ultima_tarefa_devel.data_resolvida
-              return SkyRedminePlugin::Constants::SituacaoAtual::AGUARDANDO_VERSAO_RETORNO_TESTES
+              indicador.data_etapa_atual = ultima_tarefa_devel.data_resolvida
+              return SkyRedminePlugin::Constants::EtapaAtual::AGUARDANDO_VERSAO_RETORNO_TESTES
             end
           when SkyRedminePlugin::Constants::IssueStatus::FECHADA
-            indicador.data_situacao_atual = ultima_tarefa_devel.data_fechada
-            return SkyRedminePlugin::Constants::SituacaoAtual::VERSAO_LIBERADA
+            indicador.data_etapa_atual = ultima_tarefa_devel.data_fechada
+            return SkyRedminePlugin::Constants::EtapaAtual::VERSAO_LIBERADA
           end
         else
           # Caso ainda não tenha sido encaminhado para QS
           case ultima_tarefa_devel.status.name
           when SkyRedminePlugin::Constants::IssueStatus::NOVA
-            indicador.data_situacao_atual = ultima_tarefa_devel.created_on
-            return SkyRedminePlugin::Constants::SituacaoAtual::ESTOQUE_DEVEL
+            indicador.data_etapa_atual = ultima_tarefa_devel.created_on
+            return SkyRedminePlugin::Constants::EtapaAtual::ESTOQUE_DEVEL
           when SkyRedminePlugin::Constants::IssueStatus::EM_ANDAMENTO
-            indicador.data_situacao_atual = ultima_tarefa_devel.data_em_andamento
-            return SkyRedminePlugin::Constants::SituacaoAtual::EM_ANDAMENTO_DEVEL
+            indicador.data_etapa_atual = ultima_tarefa_devel.data_em_andamento
+            return SkyRedminePlugin::Constants::EtapaAtual::EM_ANDAMENTO_DEVEL
           when SkyRedminePlugin::Constants::IssueStatus::RESOLVIDA
             if ultima_tarefa_devel.versao_estavel.present?
-              indicador.data_situacao_atual = SkyRedminePlugin::TarefasRelacionadas::obter_data_definicao_campo_personalizado(ultima_tarefa_devel, SkyRedminePlugin::Constants::CustomFields::VERSAO_ESTAVEL, ultima_tarefa_devel.versao_estavel)
-              return SkyRedminePlugin::Constants::SituacaoAtual::VERSAO_LIBERADA_FALTA_FECHAR
+              indicador.data_etapa_atual = SkyRedminePlugin::TarefasRelacionadas::obter_data_definicao_campo_personalizado(ultima_tarefa_devel, SkyRedminePlugin::Constants::CustomFields::VERSAO_ESTAVEL, ultima_tarefa_devel.versao_estavel)
+              return SkyRedminePlugin::Constants::EtapaAtual::VERSAO_LIBERADA_FALTA_FECHAR
             else
-              indicador.data_situacao_atual = ultima_tarefa_devel.data_resolvida
-              return SkyRedminePlugin::Constants::SituacaoAtual::AGUARDANDO_VERSAO
+              indicador.data_etapa_atual = ultima_tarefa_devel.data_resolvida
+              return SkyRedminePlugin::Constants::EtapaAtual::AGUARDANDO_VERSAO
             end
           when SkyRedminePlugin::Constants::IssueStatus::FECHADA
-            indicador.data_situacao_atual = ultima_tarefa_devel.data_fechada
-            return SkyRedminePlugin::Constants::SituacaoAtual::VERSAO_LIBERADA
+            indicador.data_etapa_atual = ultima_tarefa_devel.data_fechada
+            return SkyRedminePlugin::Constants::EtapaAtual::VERSAO_LIBERADA
           end
         end
       end
@@ -535,14 +535,14 @@ module SkyRedminePlugin
         if !ja_tem_tarefa_qs && ultima_tarefa_devel.status.name == SkyRedminePlugin::Constants::IssueStatus::RESOLVIDA
           if (ultima_tarefa_devel.teste_no_desenvolvimento == SkyRedminePlugin::Constants::CustomFieldsValues::NAO_TESTADA) ||
              (ultima_tarefa_devel.teste_no_desenvolvimento == "")
-            indicador.data_situacao_atual = ultima_tarefa_devel.data_resolvida
-            return SkyRedminePlugin::Constants::SituacaoAtual::AGUARDANDO_TESTES_DEVEL
+            indicador.data_etapa_atual = ultima_tarefa_devel.data_resolvida
+            return SkyRedminePlugin::Constants::EtapaAtual::AGUARDANDO_TESTES_DEVEL
           elsif ultima_tarefa_devel.teste_no_desenvolvimento == SkyRedminePlugin::Constants::CustomFieldsValues::TESTE_NOK
-            indicador.data_situacao_atual = SkyRedminePlugin::TarefasRelacionadas::obter_data_definicao_campo_personalizado(ultima_tarefa_devel, SkyRedminePlugin::Constants::CustomFields::TESTE_NO_DESENVOLVIMENTO, SkyRedminePlugin::Constants::CustomFieldsValues::TESTE_NOK)
-            return SkyRedminePlugin::Constants::SituacaoAtual::AGUARDANDO_ENCAMINHAR_RETORNO_TESTES_DEVEL
+            indicador.data_etapa_atual = SkyRedminePlugin::TarefasRelacionadas::obter_data_definicao_campo_personalizado(ultima_tarefa_devel, SkyRedminePlugin::Constants::CustomFields::TESTE_NO_DESENVOLVIMENTO, SkyRedminePlugin::Constants::CustomFieldsValues::TESTE_NOK)
+            return SkyRedminePlugin::Constants::EtapaAtual::AGUARDANDO_ENCAMINHAR_RETORNO_TESTES_DEVEL
           elsif ultima_tarefa_devel.teste_no_desenvolvimento == SkyRedminePlugin::Constants::CustomFieldsValues::TESTE_OK
-            indicador.data_situacao_atual = SkyRedminePlugin::TarefasRelacionadas::obter_data_definicao_campo_personalizado(ultima_tarefa_devel, SkyRedminePlugin::Constants::CustomFields::TESTE_NO_DESENVOLVIMENTO, SkyRedminePlugin::Constants::CustomFieldsValues::TESTE_OK)
-            return SkyRedminePlugin::Constants::SituacaoAtual::AGUARDANDO_ENCAMINHAR_QS
+            indicador.data_etapa_atual = SkyRedminePlugin::TarefasRelacionadas::obter_data_definicao_campo_personalizado(ultima_tarefa_devel, SkyRedminePlugin::Constants::CustomFields::TESTE_NO_DESENVOLVIMENTO, SkyRedminePlugin::Constants::CustomFieldsValues::TESTE_OK)
+            return SkyRedminePlugin::Constants::EtapaAtual::AGUARDANDO_ENCAMINHAR_QS
           end
         end
       end
@@ -556,69 +556,69 @@ module SkyRedminePlugin
       when SkyRedminePlugin::Constants::EquipeResponsavel::DEVEL
         case ultima_tarefa.status.name
         when SkyRedminePlugin::Constants::IssueStatus::NOVA
-          indicador.data_situacao_atual = ultima_tarefa.created_on
+          indicador.data_etapa_atual = ultima_tarefa.created_on
           return is_retorno_do_qs ?
-                   SkyRedminePlugin::Constants::SituacaoAtual::ESTOQUE_DEVEL_RETORNO_TESTES :
-                   SkyRedminePlugin::Constants::SituacaoAtual::ESTOQUE_DEVEL
+                   SkyRedminePlugin::Constants::EtapaAtual::ESTOQUE_DEVEL_RETORNO_TESTES :
+                   SkyRedminePlugin::Constants::EtapaAtual::ESTOQUE_DEVEL
         when SkyRedminePlugin::Constants::IssueStatus::EM_ANDAMENTO
-          indicador.data_situacao_atual = ultima_tarefa.data_em_andamento
+          indicador.data_etapa_atual = ultima_tarefa.data_em_andamento
           return is_retorno_do_qs ?
-                   SkyRedminePlugin::Constants::SituacaoAtual::EM_ANDAMENTO_DEVEL_RETORNO_TESTES :
-                   SkyRedminePlugin::Constants::SituacaoAtual::EM_ANDAMENTO_DEVEL
+                   SkyRedminePlugin::Constants::EtapaAtual::EM_ANDAMENTO_DEVEL_RETORNO_TESTES :
+                   SkyRedminePlugin::Constants::EtapaAtual::EM_ANDAMENTO_DEVEL
         when SkyRedminePlugin::Constants::IssueStatus::RESOLVIDA
-          indicador.data_situacao_atual = ultima_tarefa.data_resolvida
+          indicador.data_etapa_atual = ultima_tarefa.data_resolvida
           return is_retorno_do_qs ?
-                   SkyRedminePlugin::Constants::SituacaoAtual::AGUARDANDO_ENCAMINHAR_QS_RETORNO_TESTES :
-                   SkyRedminePlugin::Constants::SituacaoAtual::AGUARDANDO_ENCAMINHAR_QS
+                   SkyRedminePlugin::Constants::EtapaAtual::AGUARDANDO_ENCAMINHAR_QS_RETORNO_TESTES :
+                   SkyRedminePlugin::Constants::EtapaAtual::AGUARDANDO_ENCAMINHAR_QS
         when SkyRedminePlugin::Constants::IssueStatus::FECHADA
-          indicador.data_situacao_atual = ultima_tarefa.data_fechada
-          return SkyRedminePlugin::Constants::SituacaoAtual::VERSAO_LIBERADA
+          indicador.data_etapa_atual = ultima_tarefa.data_fechada
+          return SkyRedminePlugin::Constants::EtapaAtual::VERSAO_LIBERADA
         end
       when SkyRedminePlugin::Constants::EquipeResponsavel::QS
         case ultima_tarefa.status.name
         when SkyRedminePlugin::Constants::IssueStatus::NOVA
-          indicador.data_situacao_atual = ultima_tarefa.created_on
+          indicador.data_etapa_atual = ultima_tarefa.created_on
           return is_retorno_do_qs ?
-                   SkyRedminePlugin::Constants::SituacaoAtual::ESTOQUE_QS_RETORNO_TESTES :
-                   SkyRedminePlugin::Constants::SituacaoAtual::ESTOQUE_QS
+                   SkyRedminePlugin::Constants::EtapaAtual::ESTOQUE_QS_RETORNO_TESTES :
+                   SkyRedminePlugin::Constants::EtapaAtual::ESTOQUE_QS
         when SkyRedminePlugin::Constants::IssueStatus::EM_ANDAMENTO
-          indicador.data_situacao_atual = ultima_tarefa.data_em_andamento
+          indicador.data_etapa_atual = ultima_tarefa.data_em_andamento
           return is_retorno_do_qs ?
-                   SkyRedminePlugin::Constants::SituacaoAtual::EM_ANDAMENTO_QS_RETORNO_TESTES :
-                   SkyRedminePlugin::Constants::SituacaoAtual::EM_ANDAMENTO_QS
+                   SkyRedminePlugin::Constants::EtapaAtual::EM_ANDAMENTO_QS_RETORNO_TESTES :
+                   SkyRedminePlugin::Constants::EtapaAtual::EM_ANDAMENTO_QS
         when SkyRedminePlugin::Constants::IssueStatus::TESTE_OK
           if ultima_tarefa_devel.versao_estavel.present?
-            return SkyRedminePlugin::Constants::SituacaoAtual::VERSAO_LIBERADA_FALTA_FECHAR
+            return SkyRedminePlugin::Constants::EtapaAtual::VERSAO_LIBERADA_FALTA_FECHAR
           else
-            indicador.data_situacao_atual = ultima_tarefa.data_resolvida
+            indicador.data_etapa_atual = ultima_tarefa.data_resolvida
             return is_retorno_do_qs ?
-                     SkyRedminePlugin::Constants::SituacaoAtual::AGUARDANDO_VERSAO_RETORNO_TESTES :
-                     SkyRedminePlugin::Constants::SituacaoAtual::AGUARDANDO_VERSAO
+                     SkyRedminePlugin::Constants::EtapaAtual::AGUARDANDO_VERSAO_RETORNO_TESTES :
+                     SkyRedminePlugin::Constants::EtapaAtual::AGUARDANDO_VERSAO
           end
         when SkyRedminePlugin::Constants::IssueStatus::TESTE_NOK
-          indicador.data_situacao_atual = ultima_tarefa.data_resolvida
-          return SkyRedminePlugin::Constants::SituacaoAtual::AGUARDANDO_ENCAMINHAR_RETORNO_TESTES
+          indicador.data_etapa_atual = ultima_tarefa.data_resolvida
+          return SkyRedminePlugin::Constants::EtapaAtual::AGUARDANDO_ENCAMINHAR_RETORNO_TESTES
         when SkyRedminePlugin::Constants::IssueStatus::TESTE_OK_FECHADA
           case ultima_tarefa_devel.status.name
           when SkyRedminePlugin::Constants::IssueStatus::RESOLVIDA
             if ultima_tarefa_devel.versao_estavel.present?
-              return SkyRedminePlugin::Constants::SituacaoAtual::VERSAO_LIBERADA_FALTA_FECHAR
+              return SkyRedminePlugin::Constants::EtapaAtual::VERSAO_LIBERADA_FALTA_FECHAR
             else
-              indicador.data_situacao_atual = ultima_tarefa.data_fechada
+              indicador.data_etapa_atual = ultima_tarefa.data_fechada
               return is_retorno_do_qs ?
-                       SkyRedminePlugin::Constants::SituacaoAtual::AGUARDANDO_VERSAO_RETORNO_TESTES :
-                       SkyRedminePlugin::Constants::SituacaoAtual::AGUARDANDO_VERSAO
+                       SkyRedminePlugin::Constants::EtapaAtual::AGUARDANDO_VERSAO_RETORNO_TESTES :
+                       SkyRedminePlugin::Constants::EtapaAtual::AGUARDANDO_VERSAO
             end
           when SkyRedminePlugin::Constants::IssueStatus::FECHADA
-            indicador.data_situacao_atual = ultima_tarefa_devel.data_fechada
-            return SkyRedminePlugin::Constants::SituacaoAtual::VERSAO_LIBERADA
+            indicador.data_etapa_atual = ultima_tarefa_devel.data_fechada
+            return SkyRedminePlugin::Constants::EtapaAtual::VERSAO_LIBERADA
           end
         end
       end
 
       Rails.logger.info ">>> Nenhuma situação identificada para a tarefa #{ultima_tarefa.id} - #{ultima_tarefa.status.name}, retornando DESCONHECIDA"
       # Se nenhuma situação foi identificada, retornar DESCONHECIDA
-      SkyRedminePlugin::Constants::SituacaoAtual::DESCONHECIDA
+      SkyRedminePlugin::Constants::EtapaAtual::DESCONHECIDA
     end
 
     # Verifica se a última tarefa está nas situações INTERROMPIDA
@@ -632,7 +632,7 @@ module SkyRedminePlugin
       case ultima_tarefa.status.name
       when SkyRedminePlugin::Constants::IssueStatus::INTERROMPIDA,
            SkyRedminePlugin::Constants::IssueStatus::INTERROMPIDA_ANALISE
-        return SkyRedminePlugin::Constants::SituacaoAtual::INTERROMPIDA
+        return SkyRedminePlugin::Constants::EtapaAtual::INTERROMPIDA
       end
 
       nil
@@ -648,7 +648,7 @@ module SkyRedminePlugin
 
       case ultima_tarefa.status.name
       when SkyRedminePlugin::Constants::IssueStatus::CANCELADA
-        return SkyRedminePlugin::Constants::SituacaoAtual::CANCELADA
+        return SkyRedminePlugin::Constants::EtapaAtual::CANCELADA
       end
 
       nil
@@ -667,7 +667,7 @@ module SkyRedminePlugin
 
       # Verificar se a última tarefa DEVEL está com situação FECHADA_SEM_DESENVOLVIMENTO
       if ultima_tarefa_devel.status.name == SkyRedminePlugin::Constants::IssueStatus::FECHADA_SEM_DESENVOLVIMENTO
-        return SkyRedminePlugin::Constants::SituacaoAtual::FECHADA_SEM_DESENVOLVIMENTO
+        return SkyRedminePlugin::Constants::EtapaAtual::FECHADA_SEM_DESENVOLVIMENTO
       end
 
       nil
@@ -685,7 +685,7 @@ module SkyRedminePlugin
 
       # Regra 1: Verificar se a última tarefa do último ciclo DEVEL é FECHADA_CONTINUA_RETORNO_TESTES
       if ultima_tarefa_devel.status.name == SkyRedminePlugin::Constants::IssueStatus::FECHADA_CONTINUA_RETORNO_TESTES
-        resultado[:situacao] = SkyRedminePlugin::Constants::SituacaoAtual::DESCONHECIDA
+        resultado[:situacao] = SkyRedminePlugin::Constants::EtapaAtual::DESCONHECIDA
         resultado[:motivo] = "Tarefa #{ultima_tarefa_devel.id} está com situação FECHADA_CONTINUA_RETORNO_TESTES mas não existe tarefa de continuidade RETORNO_TESTES"
         return resultado
       end
@@ -693,7 +693,7 @@ module SkyRedminePlugin
       # Regra 2: Verificar se a última tarefa de todo o ciclo é TESTE_NOK_FECHADA
       if ultima_tarefa_ciclo.equipe_responsavel == SkyRedminePlugin::Constants::EquipeResponsavel::QS &&
          ultima_tarefa_ciclo.status.name == SkyRedminePlugin::Constants::IssueStatus::TESTE_NOK_FECHADA
-        resultado[:situacao] = SkyRedminePlugin::Constants::SituacaoAtual::DESCONHECIDA
+        resultado[:situacao] = SkyRedminePlugin::Constants::EtapaAtual::DESCONHECIDA
         resultado[:motivo] = "Tarefa #{ultima_tarefa_ciclo.id} está com situação TESTE_NOK_FECHADA mas não existe tarefa de continuidade RETORNO_TESTES"
         return resultado
       end
@@ -704,7 +704,7 @@ module SkyRedminePlugin
         ciclos_devel[1..-1].each_with_index do |ciclo, index|
           ciclo.each do |tarefa|
             if tarefa.tracker.name != SkyRedminePlugin::Constants::Trackers::RETORNO_TESTES
-              resultado[:situacao] = SkyRedminePlugin::Constants::SituacaoAtual::DESCONHECIDA
+              resultado[:situacao] = SkyRedminePlugin::Constants::EtapaAtual::DESCONHECIDA
               resultado[:motivo] = "Tarefa #{tarefa.id} no ciclo de continuidade #{index + 2} não é do tipo RETORNO_TESTES"
               return resultado
             end
@@ -715,7 +715,7 @@ module SkyRedminePlugin
       # Regra 4: Verificar que nao pode ter FECHADA_SEM_DESENVOLVIMENTO apartir do segundo ciclo de desenvolvimento
       if ciclos_devel.size > 1
         if ultima_tarefa_ciclo.status.name == SkyRedminePlugin::Constants::IssueStatus::FECHADA_SEM_DESENVOLVIMENTO
-          resultado[:situacao] = SkyRedminePlugin::Constants::SituacaoAtual::DESCONHECIDA
+          resultado[:situacao] = SkyRedminePlugin::Constants::EtapaAtual::DESCONHECIDA
           resultado[:motivo] = "Tarefa #{ultima_tarefa_ciclo.id} está com situação FECHADA_SEM_DESENVOLVIMENTO porém houverem tarefas anteriores de devel com desenvolvimento."
           return resultado
         end
@@ -723,7 +723,7 @@ module SkyRedminePlugin
 
       # Regra 5: Verificar se há tarefa de continuidade depois de uma tarefa CONTINUA_PROXIMA_SPRINT
       if ultima_tarefa_ciclo.status.name == SkyRedminePlugin::Constants::IssueStatus::CONTINUA_PROXIMA_SPRINT
-        resultado[:situacao] = SkyRedminePlugin::Constants::SituacaoAtual::DESCONHECIDA
+        resultado[:situacao] = SkyRedminePlugin::Constants::EtapaAtual::DESCONHECIDA
         resultado[:motivo] = "Tarefa #{ultima_tarefa_ciclo.id} está com situação CONTINUA_PROXIMA_SPRINT porém não existe tarefa de continuidade."
         return resultado
       end

@@ -104,7 +104,7 @@ module SkyRedminePlugin
       FLUXO_SEM_QS = "FLUXO_SEM_QS"
     end
 
-    module SituacaoAtual
+    module EtapaAtual
       # Situação desconhecida
       DESCONHECIDA = "DESCONHECIDA"
       INTERROMPIDA = "INTERROMPIDA"
