@@ -139,7 +139,7 @@ module SkyRedminePlugin
       # Situações de QS em retorno de testes
       ESTOQUE_QS_RETORNO_TESTES = "E05_ESTOQUE_QS_RT"
       EM_ANDAMENTO_QS_RETORNO_TESTES = "E06_EM_ANDAMENTO_QS_RT"
-      AGUARDANDO_VERSAO_RETORNO_TESTES = "E07_AGUARDANDO_VERSAO_RT"
+      AGUARDANDO_VERSAO_RETORNO_TESTES = "E07_AGUARDA_VERSAO_RT"
 
       # Fluxo de situações das tarefas que não passam por QS
       FLUXO_SEM_QS = [
