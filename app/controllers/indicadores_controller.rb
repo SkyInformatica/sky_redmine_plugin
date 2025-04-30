@@ -24,18 +24,18 @@ class IndicadoresController < ApplicationController
     Rails.logger.info "Cláusula de ordenação: #{sort_clause}"
 
     # Buscar os registros da tabela SkyRedmineIndicadores com paginação e ordenação
-    scope = @dados_graficos[:scope]
-    scope = scope.order(sort_clause)
+    tarefas = @dados_graficos[:tarefas]
+    tarefas = tarefas.order(sort_clause)
 
     # Log da query SQL final
-    Rails.logger.info "Query SQL: #{scope.to_sql}"
+    Rails.logger.info "Query SQL: #{tarefas.to_sql}"
 
     # Paginação usando o Paginator do Redmine
     @limit = per_page_option
-    @indicadores_count = scope.count
+    @indicadores_count = tarefas.count
     @indicadores_pages = Paginator.new(@indicadores_count, @limit, params[:page])
     @offset = @indicadores_pages.offset
-    @indicadores = scope.limit(@limit).offset(@offset)
+    @indicadores = tarefas.limit(@limit).offset(@offset)
     @colunas = SkyRedmineIndicadores.column_names
   end
 

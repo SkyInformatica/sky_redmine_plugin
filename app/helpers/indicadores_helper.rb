@@ -6,27 +6,27 @@ module IndicadoresHelper
         render_cards_row([
           render_card_valor(
             "Total de tarefas",
-            dados_graficos[:scope].count,
-            "Total de tarefas no período selecionado",
-            "Geral"
+            dados_graficos[:tarefas_desenvolvimento].count,
+            "Total de tarefas de desenvolvimento no período selecionado",
+            "Complementares: #{dados_graficos[:tarefas_complementar].count}"
           ),
           render_card_valor(
             "Desenvolvimento",
-            dados_graficos[:scope].where(equipe_responsavel_atual: SkyRedminePlugin::Constants::EquipeResponsavel::DEVEL).count,
+            dados_graficos[:tarefas_desenvolvimento].where(equipe_responsavel_atual: SkyRedminePlugin::Constants::EquipeResponsavel::DEVEL).count,
             "Total de tarefas abertas sob responsabilidade do desenvolvimento no período selecionado",
             "Tarefas abertas sob responsabilidade do desenvolvimento"
           ),
           render_card_valor(
             "QS",
-            dados_graficos[:scope].where(equipe_responsavel_atual: SkyRedminePlugin::Constants::EquipeResponsavel::QS).count,
+            dados_graficos[:tarefas_desenvolvimento].where(equipe_responsavel_atual: SkyRedminePlugin::Constants::EquipeResponsavel::QS).count,
             "Total de tarefas aberta sob responsabilidade da QS no período selecionado",
             "Tarefas abertas sob responsabilidade do QS",
           ),
           render_card_valor(
-            "Fechadas",
-            dados_graficos[:scope].where(equipe_responsavel_atual: SkyRedminePlugin::Constants::EquipeResponsavel::FECHADA).count,
-            "Total de tarefas fechadas no período selecionado",
-            "Tarefas fechadas no período selecionado",
+            "Versão liberada",
+            dados_graficos[:tarefas_desenvolvimento].where(equipe_responsavel_atual: SkyRedminePlugin::Constants::EquipeResponsavel::FECHADA).count,
+            "Total de tarefas com versão liberada no período selecionado",
+            "Tarefas com versão liberada no período selecionado",
           ),
         ]),
 

@@ -26,22 +26,22 @@ bundle exec rake redmine:plugins:migrate RAILS_ENV=production
 
 # Tags das etapas
 
-| Tag                                                     | Descrição                                                                                                                                      |
-| ------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
-| E01_ESTOQUE_DEVEL, E01_ESTOQUE_DEVEL_RT                 | Tarefa que está no estoque, uma tarefa DEVEL com a situação NOVA                                                                               |
-| E02_EM_ANDAMENTO_DEVEL, E02_EM_ANDAMENTO_DEVEL_RT       | Tarefa que está em desenvolvimento, uma tarefa DEVEL com a situação EM_ANDAMENTO                                                               |
-| E03_AGUARDA_TESTES_DEVEL                                | Uma tarefa DEVEL que está com a situação RESOLVIDA e aguardando os testes no desenvolvimento                                                   |
-| E03_AGUARDA_ENCAMINHAR_RT_DEVEL                         | Uma tarefa DEVEL que está com a situação RESOLVIDA e testes no desenvolvimento TESTE_NOK e aguardando encaminhar a tarefa de retorno de testes |
-| E04_AGUARDA_ENCAMINHAR_QS, E04_AGUARDA_ENCAMINHAR_QS_RT | Tarefa DEVEL que está com a situação RESOLVIDA e os testes no desenvolvimento com TESTE_OK ou NAO_NECESSITA_TESTES                             |
-| E05_ESTOQUE_QS, E05_ESTOQUE_QS_RT                       | Foi encaminhada para QS e está no estoque do QS, uma tarefa QS com a situação NOVA                                                             |
-| E06_EM_ANDAMENTO_QS, E06_EM_ANDAMENTO_QS_RT             | Está em testes, uma tarefa do QS com a situação EM_ANDAMENTO                                                                                   |
-| E07_AGUARDA_VERSAO, E07_AGUARDA_VERSAO_RT               | Está com os testes concluídos com situação TESTE_OK e aguardando liberar a versão                                                              |
-| E07_AGUARDA_ENCAMINHAR_RT                               | Está com os testes concluídos com situação TESTE_NOK e aguardando encaminhar a tarefa do tipo RETORNO_TESTES                                   |
-| E08_VERSAO_LIBERADA_FALTA_FECHAR                        | Tarefa devel Resolvida com versão estável definida e com tarefa do QS com TESTE_OK                                                             |
-| E08_FECHADA_SEM_DESENVOLVIMENTO                         | Tarefa fechada sem desenvolvimento                                                                                                             |
-| E08_CANCELADA                                           | Tarefa cancelada                                                                                                                               |
-| E99_INTERROMPIDA, E99_INTERROMPIDA_ANALISE              | Tarefa interrompida                                                                                                                            |
-| E99_DESCONHECIDA                                        | Etapa desconhecida. Deve ser verificado o fluxo das tarefas                                                                                    |
+| Tag                                                     | Descrição                                                                                                                                             |
+| ------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
+| E01_ESTOQUE_DEVEL, E01_ESTOQUE_DEVEL_RT                 | Tarefa que está no estoque, uma tarefa DEVEL com a situação NOVA                                                                                      |
+| E02_EM_ANDAMENTO_DEVEL, E02_EM_ANDAMENTO_DEVEL_RT       | Tarefa que está em desenvolvimento, uma tarefa DEVEL com a situação EM_ANDAMENTO                                                                      |
+| E03_AGUARDA_TESTES_DEVEL                                | Uma tarefa DEVEL que está com a situação RESOLVIDA e aguardando os testes no desenvolvimento                                                          |
+| E03_AGUARDA_ENCAMINHAR_RT_DEVEL                         | Uma tarefa DEVEL que está com a situação RESOLVIDA e testes no desenvolvimento TESTE_NOK e aguardando encaminhar a tarefa de retorno de testes        |
+| E04_AGUARDA_ENCAMINHAR_QS, E04_AGUARDA_ENCAMINHAR_QS_RT | Tarefa DEVEL que está com a situação RESOLVIDA e os testes no desenvolvimento com TESTE_OK ou NAO_NECESSITA_TESTES                                    |
+| E05_ESTOQUE_QS, E05_ESTOQUE_QS_RT                       | Foi encaminhada para QS e está no estoque do QS, uma tarefa QS com a situação NOVA                                                                    |
+| E06_EM_ANDAMENTO_QS, E06_EM_ANDAMENTO_QS_RT             | Está em testes, uma tarefa do QS com a situação EM_ANDAMENTO                                                                                          |
+| E07_AGUARDA_VERSAO, E07_AGUARDA_VERSAO_RT               | Está com os testes concluídos com situação TESTE_OK e aguardando liberar a versão                                                                     |
+| E07_AGUARDA_ENCAMINHAR_RT                               | Está com os testes concluídos com situação TESTE_NOK e aguardando encaminhar a tarefa do tipo RETORNO_TESTES                                          |
+| E08_VERSAO_LIBERADA_FALTA_FECHAR                        | Tarefa devel com versão estável definida e com tarefa Devel e/ou QS não fechadas. Tarefa Devel pode ser Resolvida ou Fechada e Tarefa QS com Teste OK |
+| E08_FECHADA_SEM_DESENVOLVIMENTO                         | Tarefa fechada sem desenvolvimento                                                                                                                    |
+| E08_CANCELADA                                           | Tarefa cancelada                                                                                                                                      |
+| E99_INTERROMPIDA, E99_INTERROMPIDA_ANALISE              | Tarefa interrompida                                                                                                                                   |
+| E99_DESCONHECIDA                                        | Etapa desconhecida. Deve ser verificado o fluxo das tarefas                                                                                           |
 
 # O que há de novo?
 
