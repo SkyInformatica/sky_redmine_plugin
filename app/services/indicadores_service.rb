@@ -55,7 +55,7 @@ class IndicadoresService
     tarefas_devel_por_etapa_todas.each do |etapa, quantidade|
 
       # Caso especial para E99_INTERROMPIDA
-      if etapa_str.start_with?("E99_INTERROMPIDA")
+      if etapa.start_with?("E99_INTERROMPIDA")
         # Agrupar E99_INTERROMPIDA e E99_INTERROMPIDA_ANALISE em E99_INTERROMPIDA
         etapa_base = "E99_INTERROMPIDA"
       else
