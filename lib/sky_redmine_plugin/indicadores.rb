@@ -441,9 +441,9 @@ module SkyRedminePlugin
       Rails.logger.info ">>> Determinando situação atual da tarefa"
       Rails.logger.info ">>> Ciclos DEVEL.size: #{ciclos_devel ? ciclos_devel.size : 0}"
       Rails.logger.info ">>> Ciclos QS.size: #{ciclos_qs ? ciclos_qs.size : 0}"
-      Rails.logger.info ">>> Tarefas DEVEL: #{tarefas_devel.to_json}"
-      Rails.logger.info ">>> Tarefas QS: #{tarefas_qs.to_json}"
-      Rails.logger.info ">>> Tarefas relacionadas: #{tarefas_relacionadas.to_json}"
+      Rails.logger.info ">>> Tarefas DEVEL.last: #{tarefas_devel ? tarefas_devel.last.to_json : ""}"
+      Rails.logger.info ">>> Tarefas QS.last: #{tarefas_qs ? tarefas_qs.last.to_json : ""}"
+      Rails.logger.info ">>> Tarefas relacionadas.last: #{tarefas_relacionadas ? tarefas_relacionadas.last.to_json : ""}"
       Rails.logger.info ">>> Indicador: #{indicador.to_json}"
       # Primeiro verificar se é uma situação DESCONHECIDA
 
