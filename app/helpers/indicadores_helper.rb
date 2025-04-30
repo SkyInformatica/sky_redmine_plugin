@@ -35,28 +35,28 @@ module IndicadoresHelper
           render_card_grafico(
             "Tempo gasto em horas por tipo",
             "doughnut",
-            dados_graficos[:tarefas_por_tipo_tempo_gasto],
+            dados_graficos[:tempo_gasto_por_tipo_todas_tarefas],
             "Total do tempo gasto em horas por tipo de tarefa",
             "Total do tempo gasto do desenvolvimento + QS"
           ),
           render_card_grafico(
             "Tarefas por Tipo",
             "bar",
-            dados_graficos[:tarefas_por_tipo].where(),
+            dados_graficos[:tarefas_devel_por_tipo].where(),
             "Distribuição das tarefas por tipo no período selecionado",
             "Total de tarefas agrupadas por tipo"
           ),
           render_card_grafico(
             "Tarefas por Tipo",
             "bar",
-            dados_graficos[:tarefas_por_tipo].where(),
+            dados_graficos[:tarefas_devel_por_tipo].where(),
             "Distribuição das tarefas por tipo no período selecionado",
             "Total de tarefas agrupadas por tipo"
           ),
           render_card_grafico(
             "Tarefas por Tipo",
             "bar",
-            dados_graficos[:tarefas_por_tipo].where(),
+            dados_graficos[:tarefas_devel_por_tipo].where(),
             "Distribuição das tarefas por tipo no período selecionado",
             "Total de tarefas agrupadas por tipo"
           ),
