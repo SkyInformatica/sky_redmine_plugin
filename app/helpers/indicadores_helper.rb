@@ -111,6 +111,36 @@ module IndicadoresHelper
     end
   end
 
+  def render_graficos_etapas(dados_graficos)
+    content_tag(:div, class: "graficos-container") do
+      safe_join([
+        render_cards_row([
+          render_card_grafico(
+            "Tempo gasto em horas de todas as tarefas",
+            "doughnut",
+            dados_graficos[:tempo_gasto_por_tipo_todas_tarefas],
+            "Total do tempo gasto em horas por tipo de tarefa",
+            "Total do tempo gasto do desenvolvimento + QS"
+          ),
+          render_card_grafico(
+            "Tarefas de desenvolvimento",
+            "bar",
+            dados_graficos[:tarefas_devel_por_tipo],
+            "Distribuição das tarefas por tipo no período selecionado",
+            "Total de tarefas agrupadas por tipo"
+          ),
+          render_card_grafico(
+            "Tarefas desenvolvimento em aberto por etapa",
+            "bar",
+            dados_graficos[:tarefas_devel_por_etapa],
+            "Distribuição das tarefas em desenvolvimento em aberto por etapa atual (nao contabiliza as etapas E99_, E08_ e EM_ANDAMENTO)",
+            "Total de tarefas na fila de cada etapa"
+          ),
+        ]),
+      ])
+    end
+  end
+
   private
 
   def render_cards_row(cards)

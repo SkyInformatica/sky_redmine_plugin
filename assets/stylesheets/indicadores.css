@@ -253,3 +253,63 @@
 .tooltip-arrow {
   display: none !important;
 }
+
+/* Tabs/Abas */
+
+.sky-indicadores .sky-tabs {
+  margin-bottom: 24px;
+}
+
+.sky-indicadores .nav-tabs {
+  border-bottom: 1px solid #dee2e6;
+  margin-bottom: 24px;
+}
+
+.sky-indicadores .nav-tabs .nav-item {
+  margin-bottom: -1px;
+}
+
+.sky-indicadores .nav-tabs .nav-link {
+  border: 1px solid transparent;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+  padding: 12px 24px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #666;
+  transition: all 0.2s ease;
+}
+
+.sky-indicadores .nav-tabs .nav-link:hover {
+  border-color: #e9ecef #e9ecef #dee2e6;
+  isolation: isolate;
+}
+
+.sky-indicadores .nav-tabs .nav-link.active {
+  color: #3498db;
+  background-color: #fff;
+  border-color: #dee2e6 #dee2e6 #fff;
+}
+
+.sky-indicadores .tab-content {
+  background: transparent;
+  padding: 0;
+}
+
+.sky-indicadores .tab-pane {
+  display: none;
+}
+
+.sky-indicadores .tab-pane.active {
+  display: block;
+}
+
+/* Animação suave para transição entre abas */
+.sky-indicadores .tab-pane.fade {
+  opacity: 0;
+  transition: opacity 0.15s linear;
+}
+
+.sky-indicadores .tab-pane.fade.show {
+  opacity: 1;
+}

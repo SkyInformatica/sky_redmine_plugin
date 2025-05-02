@@ -33,7 +33,33 @@
     </div>  
   <% end %>  
 
-  <%= render_graficos_container(@dados_graficos) %>
+  <!-- Adicionar as abas aqui -->
+  <div class="sky-tabs">
+    <ul class="nav nav-tabs" id="indicadoresTab" role="tablist">
+      <li class="nav-item" role="presentation">
+        <button class="nav-link active" id="geral-tab" data-bs-toggle="tab" data-bs-target="#geral" type="button" role="tab" aria-controls="geral" aria-selected="true">
+          Geral
+        </button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link" id="etapas-tab" data-bs-toggle="tab" data-bs-target="#etapas" type="button" role="tab" aria-controls="etapas" aria-selected="false">
+          Etapas
+        </button>
+      </li>
+    </ul>
+
+    <div class="tab-content" id="indicadoresTabContent">
+      <!-- Conteúdo da aba Geral -->
+      <div class="tab-pane fade show active" id="geral" role="tabpanel" aria-labelledby="geral-tab">
+        <%= render_graficos_container(@dados_graficos) %>
+      </div>
+
+      <!-- Conteúdo da aba Etapas -->
+      <div class="tab-pane fade" id="etapas" role="tabpanel" aria-labelledby="etapas-tab">
+        <%= render_graficos_etapas(@dados_graficos) %>
+      </div>
+    </div>
+  </div>
 
   <!-- **Adicionar a tabela com estilos do Redmine** -->  
   <h2>Listagem de Indicadores</h2>  
