@@ -14,7 +14,6 @@ class IndicadoresController < ApplicationController
     @periodo = params[:periodo] || "all"
     @equipe = params[:equipe] || "all"
     @dados_graficos = IndicadoresService.obter_dados_graficos(@project, @periodo, @equipe)
-
     @dados_graficos_etapas = IndicadoresService.obter_dados_graficos_etapas
 
     # Adicionar ordenação
@@ -26,7 +25,7 @@ class IndicadoresController < ApplicationController
     Rails.logger.info "Cláusula de ordenação: #{sort_clause}"
 
     # Buscar os registros da tabela SkyRedmineIndicadores com paginação e ordenação
-    tarefas = @dados_graficos[:tarefas]
+    tarefas = SkyRedmineIndicadores.obter_todas_tarefas()
     tarefas = tarefas.order(sort_clause)
 
     # Log da query SQL final
