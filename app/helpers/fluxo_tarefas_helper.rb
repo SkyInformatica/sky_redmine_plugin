@@ -618,25 +618,46 @@ module FluxoTarefasHelper
     etapa_atual = indicadores.etapa_atual
     return "" unless etapa_atual
 
+    # Preparar HTML
+    html = "<div class='indicadores-grupo'>"
+    html << "<div class='indicadores-titulo'>Progresso</div>"
+    if !indicadores.data_etapa_atual.nil?
+      numero_dias_data_etapa_atual = indicadores.data_etapa_atual ? (Date.today - indicadores.data_etapa_atual&.to_date).to_i : 0
+      etapa_atual_detalhes = indicadores.data_etapa_atual ? "#{indicadores.etapa_atual} em #{indicadores.data_etapa_atual&.strftime("%d/%m/%Y")} (#{numero_dias_data_etapa_atual} dias)" : "#{indicadores.etapa_atual}"
+      html << "<div style='font-style: italic; color: gray;'><small>#{etapa_atual_detalhes}</small></div>"
+    end
+    html << "<div class='timeline-container'>"
+
     # Se a situação for DESCONHECIDA, renderizar a timeline específica
     if etapa_atual == SkyRedminePlugin::Constants::EtapaAtual::DESCONHECIDA ||
        etapa_atual == SkyRedminePlugin::Constants::EtapaAtual::INTERROMPIDA ||
        etapa_atual == SkyRedminePlugin::Constants::EtapaAtual::INTERROMPIDA_ANALISE ||
        etapa_atual == SkyRedminePlugin::Constants::EtapaAtual::CANCELADA
-      return render_timeline_desconhecida(etapa_atual, indicadores.motivo_situacao_desconhecida)
+      html << render_timeline_desconhecida(etapa_atual, indicadores.motivo_situacao_desconhecida)
+      html << "</div>"
+      html << "</div>"
+      returnhtml
     end
 
     # Verificar se é uma tarefa que não necessita desenvolvimento
     if etapa_atual == SkyRedminePlugin::Constants::EtapaAtual::FECHADA_SEM_DESENVOLVIMENTO
       fluxo = SkyRedminePlugin::Constants::EtapaAtual::FLUXO_SEM_QS_FECHADA_SEM_DESENVOLVIMENTO
       indice_atual = fluxo.index(etapa_atual)
-      return render_timeline_normal(fluxo, indice_atual, indicadores)
+      html << render_timeline_normal(fluxo, indice_atual, indicadores)
+      html << "</div>"
+      html << "</div>"
+
+      return html
     end
 
     if !indicadores.tipo_primeira_tarefa_devel.nil? && indicadores.tipo_primeira_tarefa_devel == SkyRedminePlugin::Constants::Trackers::CONVERSAO
       fluxo = SkyRedminePlugin::Constants::EtapaAtual::FLUXO_SEM_QS
       indice_atual = fluxo.index(etapa_atual)
-      return render_timeline_normal(fluxo, indice_atual, indicadores)
+      html << render_timeline_normal(fluxo, indice_atual, indicadores)
+      html << "</div>"
+      html << "</div>"
+
+      return html
     end
 
     tem_retorno_testes_qs = indicadores.qtd_retorno_testes_qs.to_i > 0 ||
@@ -657,16 +678,6 @@ module FluxoTarefasHelper
     indice_atual = fluxo.index(etapa_atual)
 
     return "" unless indice_atual
-
-    # Preparar HTML
-    html = "<div class='indicadores-grupo'>"
-    html << "<div class='indicadores-titulo'>Progresso</div>"
-    if !indicadores.data_etapa_atual.nil?
-      numero_dias_data_etapa_atual = indicadores.data_etapa_atual ? (Date.today - indicadores.data_etapa_atual&.to_date).to_i : 0
-      etapa_atual_detalhes = indicadores.data_etapa_atual ? "#{indicadores.etapa_atual} em #{indicadores.data_etapa_atual&.strftime("%d/%m/%Y")} (#{numero_dias_data_etapa_atual} dias)" : "#{indicadores.etapa_atual}"
-      html << "<div style='font-style: italic; color: gray;'><small>#{etapa_atual_detalhes}</small></div>"
-    end
-    html << "<div class='timeline-container'>"
 
     if tem_retorno_testes_qs
       # Ponto de divisão - índice do AGUARDANDO_ENCAMINHAR_RETORNO_TESTES
