@@ -11,7 +11,7 @@
   display: flex;
   gap: 24px;
   padding: 8px 0;
-  list-style: none; /* Remove os bullets */
+  list-style: none;
 }
 
 .sky-indicadores .nav-tabs .nav-item {
@@ -21,14 +21,15 @@
 
 .sky-indicadores .nav-tabs .nav-link {
   border: none;
-  padding: 8px 0;
+  padding: 8px 16px; /* Adicionado padding horizontal para o fundo */
   font-size: 14px;
   color: #6b7280;
   background: transparent;
-  transition: color 0.2s ease;
+  transition: all 0.2s ease; /* Alterado para all para incluir background */
   font-weight: 400;
   cursor: pointer;
   text-decoration: none;
+  border-radius: 4px; /* Adicionado border-radius como no botão filtrar */
 }
 
 .sky-indicadores .nav-tabs .nav-link:hover,
@@ -36,14 +37,14 @@
 .sky-indicadores .nav-tabs .nav-link:active {
   border: none;
   outline: none;
-  background: transparent;
-  color: #000;
+  background: rgba(52, 152, 219, 0.1); /* Fundo azul suave no hover */
+  color: #3498db;
 }
 
 .sky-indicadores .nav-tabs .nav-link.active {
-  color: #000;
+  color: white; /* Texto branco quando ativo */
   font-weight: 500;
-  background: transparent;
+  background: #3498db; /* Mesmo azul do botão filtrar */
   border: none;
 }
 
