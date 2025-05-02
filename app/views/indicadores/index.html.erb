@@ -6,33 +6,6 @@
 <% end %> 
 
 <div class="sky-indicadores">
-  <%= form_with url: indicadores_path(@project), method: :get, local: true, class: "filtros-form" do %>  
-    <div class="filtros-container">  
-      <div class="filtro-grupo">
-        <%= label_tag :periodo, "Período:" %>  
-        <%= select_tag :periodo, options_for_select([
-                         ["Todo o período", "all"],
-                         ["Este mês", "current_month"],
-                         ["Último mês", "last_month"],
-                         ["Este ano", "current_year"],
-                       ], selected: @periodo) %>  
-      </div>
-
-      <div class="filtro-grupo">
-        <%= label_tag :equipe, "Responsável atual:" %>  
-        <%= select_tag :equipe, options_for_select([
-                         ["Todas", "all"],
-                         ["Desenvolvimento", SkyRedminePlugin::Constants::EquipeResponsavel::DEVEL],
-                         ["QS", SkyRedminePlugin::Constants::EquipeResponsavel::QS],
-                         ["Desenvolvimento+QS", "#{SkyRedminePlugin::Constants::EquipeResponsavel::DEVEL}_#{SkyRedminePlugin::Constants::EquipeResponsavel::QS}"],
-                         ["Versão liberada", SkyRedminePlugin::Constants::EquipeResponsavel::FECHADA],
-                       ], selected: @equipe) %>  
-      </div>
-
-      <%= submit_tag "Filtrar", class: "filtro-submit" %>  
-    </div>  
-  <% end %>  
-
   <!-- Adicionar as abas aqui -->
   <div class="sky-tabs">
     <ul class="nav nav-tabs" id="indicadoresTab" role="tablist">
@@ -46,44 +19,77 @@
           Etapas
         </button>
       </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link" id="tarefas-tab" data-bs-toggle="tab" data-bs-target="#tarefas" type="button" role="tab" aria-controls="tarefas" aria-selected="false">
+          Tarefas
+        </button>
+      </li>
     </ul>
 
     <div class="tab-content" id="indicadoresTabContent">
       <!-- Conteúdo da aba Geral -->
       <div class="tab-pane fade show active" id="geral" role="tabpanel" aria-labelledby="geral-tab">
-        <%= render_graficos_container(@dados_graficos) %>
+        <!-- Movido o filtro para dentro da aba Geral -->
+        <%= form_with url: indicadores_path(@project), method: :get, local: true, class: "filtros-form" do %>  
+          <div class="filtros-container">  
+            <div class="filtro-grupo">
+              <%= label_tag :periodo, "Período:" %>  
+              <%= select_tag :periodo, options_for_select([
+                               ["Todo o período", "all"],
+                               ["Este mês", "current_month"],
+                               ["Último mês", "last_month"],
+                               ["Este ano", "current_year"],
+                             ], selected: @periodo) %>  
+            </div>
+
+            <div class="filtro-grupo">
+              <%= label_tag :equipe, "Responsável atual:" %>  
+              <%= select_tag :equipe, options_for_select([
+                               ["Todas", "all"],
+                               ["Desenvolvimento", SkyRedminePlugin::Constants::EquipeResponsavel::DEVEL],
+                               ["QS", SkyRedminePlugin::Constants::EquipeResponsavel::QS],
+                               ["Desenvolvimento+QS", "#{SkyRedminePlugin::Constants::EquipeResponsavel::DEVEL}_#{SkyRedminePlugin::Constants::EquipeResponsavel::QS}"],
+                               ["Versão liberada", SkyRedminePlugin::Constants::EquipeResponsavel::FECHADA],
+                             ], selected: @equipe) %>  
+            </div>
+
+            <%= submit_tag "Filtrar", class: "filtro-submit" %>  
+          </div>  
+          <% end %>  
+        
+        <%= render_graficos_geral(@dados_graficos) %>
       </div>
 
       <!-- Conteúdo da aba Etapas -->
       <div class="tab-pane fade" id="etapas" role="tabpanel" aria-labelledby="etapas-tab">
-        <%= render_graficos_etapas(@dados_graficos) %>
+        <%= render_graficos_etapas(@dados_graficos_etapas) %>
+      </div>
+
+      <!-- Aba Tarefas -->
+      <div class="tab-pane fade" id="tarefas" role="tabpanel" aria-labelledby="tarefas-tab">
+        <h2>Listagem de Tarefas</h2>  
+        <div style="overflow-x: auto;">  
+          <table class="list issues">  
+            <thead>  
+              <tr>  
+                <% @colunas.each do |coluna| %>  
+                  <th><%= coluna.humanize %></th>  
+                <% end %>  
+              </tr>  
+            </thead>  
+            <tbody>  
+              <% @indicadores.each do |indicador| %>  
+                <tr class="<%= cycle("odd", "even") %>">  
+                  <% @colunas.each do |coluna| %>  
+                    <td><%= indicador.send(coluna) %></td>  
+                  <% end %>  
+                </tr>  
+              <% end %>  
+            </tbody>  
+          </table>  
+        </div>  
+        <%= pagination_links_full(@indicadores_pages, @indicadores_count, per_page_links: per_page_options) %>
       </div>
     </div>
-  </div>
-
-  <!-- **Adicionar a tabela com estilos do Redmine** -->  
-  <h2>Listagem de Indicadores</h2>  
-  <div style="overflow-x: auto;">  
-    <table class="list issues">  
-      <thead>  
-        <tr>  
-          <% @colunas.each do |coluna| %>  
-            <th><%= coluna.humanize %></th>  
-          <% end %>  
-        </tr>  
-      </thead>  
-      <tbody>  
-        <% @indicadores.each do |indicador| %>  
-          <tr class="<%= cycle("odd", "even") %>">  
-            <% @colunas.each do |coluna| %>  
-              <td><%= indicador.send(coluna) %></td>  
-            <% end %>  
-          </tr>  
-        <% end %>  
-      </tbody>  
-    </table>  
   </div>  
-
-  <!-- Controles de paginação -->  
-  <%= pagination_links_full(@indicadores_pages, @indicadores_count, per_page_links: per_page_options) %>
 </div>

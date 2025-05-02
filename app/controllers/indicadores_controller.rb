@@ -15,6 +15,8 @@ class IndicadoresController < ApplicationController
     @equipe = params[:equipe] || "all"
     @dados_graficos = IndicadoresService.obter_dados_graficos(@project, @periodo, @equipe)
 
+    @dados_graficos_etapas = IndicadoresService.obter_dados_graficos_etapas
+
     # Adicionar ordenação
     sort_init "id", "desc"
     sort_update %w(primeira_tarefa_devel_id ultima_tarefa_devel_id status_ultima_tarefa_devel tempo_estimado_devel tempo_gasto_devel)

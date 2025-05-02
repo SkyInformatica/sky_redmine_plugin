@@ -44,31 +44,6 @@ class IndicadoresService
     # Tarefas de desenvolvimento agrupadas por tipo
     tarefas_devel_por_tipo = tarefas_desenvolvimento.group(:tipo_primeira_tarefa_devel).count
 
-    # Tarefas por etapa (apenas não fechadas)
-    tarefas_devel_por_etapa_todas = tarefas_desenvolvimento
-      .where.not(equipe_responsavel_atual: SkyRedminePlugin::Constants::EquipeResponsavel::FECHADA)
-      .group(:etapa_atual)
-      .order(:etapa_atual)
-      .count
-
-    # Agrupar etapas similares (removendo _RT)
-    tarefas_devel_por_etapa = {}
-    tarefas_devel_por_etapa_todas.each do |etapa, quantidade|
-      # Ignorar etapas que começam com E99_ ou E02_EM_ANDAMENTO_
-      next if etapa.to_s.start_with?("E99_", "E02_EM_ANDAMENTO", "E06_EM_ANDAMENTO", "E08_")
-
-      if etapa.to_s.start_with?("E07_AGUARDA_ENCAMINHAR_RT")
-        etapa_base = etapa
-      else
-        # remover o sufixo _RT
-        # Exemplo: "E01_ESTOQUE_DEVEL_RT" se torna "E01_ESTOQUE_DEVEL"
-        etapa_base = etapa.to_s.gsub(/_RT$/, "")
-      end
-
-      tarefas_devel_por_etapa[etapa_base] ||= 0
-      tarefas_devel_por_etapa[etapa_base] += quantidade
-    end
-
     # Criar tarefas apenas para tarefas fechadas
     tarefas_devel_fechadas = tarefas_desenvolvimento.where(equipe_responsavel_atual: SkyRedminePlugin::Constants::EquipeResponsavel::FECHADA)
 
@@ -99,7 +74,6 @@ class IndicadoresService
       tempo_gasto_por_tipo_todas_tarefas: tempo_gasto_por_tipo_todas_tarefas,
 
       tarefas_devel_por_tipo: tarefas_devel_por_tipo,
-      tarefas_devel_por_etapa: tarefas_devel_por_etapa,
       tarefas_devel_por_retorno_testes: tarefas_devel_por_retorno_testes,
       tarefas_devel_fechadas_sem_testes: tarefas_devel_fechadas_sem_testes,
 
@@ -110,6 +84,33 @@ class IndicadoresService
       tempo_medio_resolucao_qs: tempo_medio_resolucao_qs,
       tempo_medio_concluido_testes_versao_liberada: tempo_medio_concluido_testes_versao_liberada,
       tempo_medio_fechamento_devel: tempo_medio_fechamento_devel,
+    }
+  end
+
+  def obter_dados_graficos_etapas
+    # Obter dados de gráficos para etapas
+    tarefas_por_etapa = SkyRedmineIndicadores.group(:etapa_atual).count
+
+    # Agrupar etapas similares (removendo _RT)
+    tarefas_devel_por_etapa = {}
+    tarefas_por_etapa.each do |etapa, quantidade|
+      # Ignorar etapas que começam com E99_ ou E02_EM_ANDAMENTO_
+      next if etapa.to_s.start_with?("E99_", "E02_EM_ANDAMENTO", "E06_EM_ANDAMENTO", "E08_")
+
+      if etapa.to_s.start_with?("E07_AGUARDA_ENCAMINHAR_RT")
+        etapa_base = etapa
+      else
+        # remover o sufixo _RT
+        # Exemplo: "E01_ESTOQUE_DEVEL_RT" se torna "E01_ESTOQUE_DEVEL"
+        etapa_base = etapa.to_s.gsub(/_RT$/, "")
+      end
+
+      tarefas_devel_por_etapa[etapa_base] ||= 0
+      tarefas_devel_por_etapa[etapa_base] += quantidade
+    end
+
+    {
+      tarefas_devel_por_etapa: tarefas_devel_por_etapa,
     }
   end
 end
