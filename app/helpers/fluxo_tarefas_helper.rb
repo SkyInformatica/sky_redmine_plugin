@@ -636,7 +636,7 @@ module FluxoTarefasHelper
       html << render_timeline_desconhecida(etapa_atual, indicadores.motivo_situacao_desconhecida)
       html << "</div>"
       html << "</div>"
-      returnhtml
+      return html
     end
 
     # Verificar se é uma tarefa que não necessita desenvolvimento
