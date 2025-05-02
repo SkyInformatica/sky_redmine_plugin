@@ -11,10 +11,12 @@
   display: flex;
   gap: 24px;
   padding: 8px 0;
+  list-style: none; /* Remove os bullets */
 }
 
 .sky-indicadores .nav-tabs .nav-item {
   margin: 0;
+  padding: 0;
 }
 
 .sky-indicadores .nav-tabs .nav-link {
@@ -25,6 +27,8 @@
   background: transparent;
   transition: color 0.2s ease;
   font-weight: 400;
+  cursor: pointer;
+  text-decoration: none;
 }
 
 .sky-indicadores .nav-tabs .nav-link:hover,
@@ -33,6 +37,7 @@
   border: none;
   outline: none;
   background: transparent;
+  color: #000;
 }
 
 .sky-indicadores .nav-tabs .nav-link.active {
@@ -47,6 +52,22 @@
   margin-bottom: 24px;
 }
 
+/* Ajuste para o conteúdo das abas */
+.sky-indicadores .tab-content {
+  margin-top: 24px;
+}
+
+.sky-indicadores .tab-pane {
+  display: none;
+}
+
+.sky-indicadores .tab-pane.active {
+  display: block;
+}
+
+.sky-indicadores .tab-pane.show {
+  opacity: 1;
+}
 /* Estilos dos filtros */
 .sky-indicadores .filtros-form {
   margin-bottom: 24px;
