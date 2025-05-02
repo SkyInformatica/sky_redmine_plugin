@@ -16,10 +16,4 @@ class SkyRedmineIndicadores < ActiveRecord::Base
     tarefas = tarefas.where("data_criacao_ou_atendimento_primeira_tarefa_devel <= ?", end_date) if end_date
     tarefas
   end
-
-  def self.tempo_gasto_por_tipo(start_date = nil, end_date = nil)
-    tarefas = obter_tarefas(start_date, end_date)
-
-    tarefas.group(:tipo).sum("tempo_gasto_devel + tempo_gasto_qs")
-  end
 end

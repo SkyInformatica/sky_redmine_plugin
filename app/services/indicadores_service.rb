@@ -1,23 +1,6 @@
 class IndicadoresService
-  def self.obter_dados_graficos(project, periodo = "all", equipe = "all")
+  def self.obter_dados_graficos(tarefas)
     # Determinar o período com base no parâmetro recebido
-    case periodo
-    when "current_month"
-      start_date = Date.current.beginning_of_month
-      end_date = Date.current.end_of_month
-    when "last_month"
-      start_date = (Date.current - 1.month).beginning_of_month
-      end_date = (Date.current - 1.month).end_of_month
-    when "current_year"
-      start_date = Date.current.beginning_of_year
-      end_date = Date.current.end_of_year
-    else
-      start_date = nil
-      end_date = nil
-    end
-
-    # Buscar os registros com base no período
-    tarefas = SkyRedmineIndicadores.por_projeto_e_periodo(project, start_date, end_date)
 
     # Aplicar filtro por equipe
     case equipe
@@ -87,9 +70,8 @@ class IndicadoresService
     }
   end
 
-  def self.obter_dados_graficos_etapas(project)
+  def self.obter_dados_graficos_etapas(tarefas)
     # Obter dados de gráficos para etapas
-    tarefas = SkyRedmineIndicadores.por_projeto_e_periodo(project, nil, nil)
     tarefas_por_etapa = tarefas.group(:etapa_atual).count
 
     # Agrupar etapas similares (removendo _RT)

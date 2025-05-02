@@ -13,8 +13,24 @@ class IndicadoresController < ApplicationController
   def index
     @periodo = params[:periodo] || "all"
     @equipe = params[:equipe] || "all"
-    @dados_graficos = IndicadoresService.obter_dados_graficos(@project, @periodo, @equipe)
-    @dados_graficos_etapas = IndicadoresService.obter_dados_graficos_etapas(@project)
+    @start_date = nil
+    @end_date = nil
+
+    case periodo
+    when "current_month"
+      @start_date = Date.current.beginning_of_month
+      @end_date = Date.current.end_of_month
+    when "last_month"
+      @start_date = (Date.current - 1.month).beginning_of_month
+      @end_date = (Date.current - 1.month).end_of_month
+    when "current_year"
+      @start_date = Date.current.beginning_of_year
+      @end_date = Date.current.end_of_year
+    end
+
+    @tarefas_projeto_periodo = IndicadoresService.por_projeto_e_periodo(@project, @start_date, @end_date)
+    @dados_graficos = IndicadoresService.obter_dados_graficos(@tarefas_projeto_periodo)
+    @dados_graficos_etapas = IndicadoresService.obter_dados_graficos_etapas(@tarefas_projeto_periodo)
 
     # Adicionar ordenação
     sort_init "id", "desc"
@@ -25,18 +41,14 @@ class IndicadoresController < ApplicationController
     Rails.logger.info "Cláusula de ordenação: #{sort_clause}"
 
     # Buscar os registros da tabela SkyRedmineIndicadores com paginação e ordenação
-    tarefas = SkyRedmineIndicadores.obter_todas_tarefas()
-    tarefas = tarefas.order(sort_clause)
-
-    # Log da query SQL final
-    Rails.logger.info "Query SQL: #{tarefas.to_sql}"
+    tarefas_listagem = tarefas_projeto_periodo.order(sort_clause)
 
     # Paginação usando o Paginator do Redmine
     @limit = per_page_option
-    @indicadores_count = tarefas.count
+    @indicadores_count = tarefas_listagem.count
     @indicadores_pages = Paginator.new(@indicadores_count, @limit, params[:page])
     @offset = @indicadores_pages.offset
-    @indicadores = tarefas.limit(@limit).offset(@offset)
+    @indicadores = tarefas_listagem.limit(@limit).offset(@offset)
     @colunas = SkyRedmineIndicadores.column_names
   end
 
