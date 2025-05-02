@@ -72,7 +72,11 @@ class IndicadoresService
 
   def self.obter_dados_graficos_etapas(tarefas)
     # Obter dados de gráficos para etapas
-    tarefas_por_etapa = tarefas.group(:etapa_atual).count
+    tarefas_devel = tarefas.where(tarefa_complementar: "NAO")
+    tarefas_por_etapa = tarefas_devel
+      .sort(:etapa_atual)
+      .group(:etapa_atual)
+      .count
 
     # Agrupar etapas similares (removendo _RT)
     tarefas_devel_por_etapa = {}
