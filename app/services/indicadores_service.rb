@@ -57,9 +57,11 @@ class IndicadoresService
       # Ignorar etapas que começam com E99_ ou E02_EM_ANDAMENTO_
       next if etapa.to_s.start_with?("E99_", "E02_EM_ANDAMENTO", "E06_EM_ANDAMENTO", "E08_")
 
-      # remover o sufixo _RT
-      # Exemplo: "E01_ESTOQUE_DEVEL_RT" se torna "E01_ESTOQUE_DEVEL"
-      etapa_base = etapa.to_s.gsub(/_RT$/, "")
+      if !etapa.to_s.start_with?("E07_AGUARDA_ENCAMINHAR_RT")
+        # remover o sufixo _RT
+        # Exemplo: "E01_ESTOQUE_DEVEL_RT" se torna "E01_ESTOQUE_DEVEL"
+        etapa_base = etapa.to_s.gsub(/_RT$/, "")
+      end
 
       tarefas_devel_por_etapa[etapa_base] ||= 0
       tarefas_devel_por_etapa[etapa_base] += quantidade
