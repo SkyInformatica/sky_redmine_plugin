@@ -104,7 +104,7 @@ module IndicadoresHelper
     end
   end
 
-  def render_graficos_etapas(dados_graficos)
+  def render_graficos_etapas(dados_graficos_etapas)
     content_tag(:div, class: "graficos-container") do
       safe_join([
         render_cards_row([
