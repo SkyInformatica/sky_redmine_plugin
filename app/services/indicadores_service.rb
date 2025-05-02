@@ -48,6 +48,7 @@ class IndicadoresService
     tarefas_devel_por_etapa_todas = tarefas_desenvolvimento
       .where.not(equipe_responsavel_atual: SkyRedminePlugin::Constants::EquipeResponsavel::FECHADA)
       .group(:etapa_atual)
+      .order(:etapa_atual)
       .count
 
     # Agrupar etapas similares (removendo _RT)

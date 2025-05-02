@@ -49,7 +49,7 @@ module IndicadoresHelper
           render_card_grafico(
             "Tarefas desenvolvimento por etapa",
             "bar",
-            dados_graficos[:tarefas_devel_por_etapa].order(:etapa_atual),
+            dados_graficos[:tarefas_devel_por_etapa],
             "Distribuição das tarefas em desenvolvimento por etapa atual",
             "Total de tarefas em desenvolvimento em cada etapa do fluxo"
           ),
