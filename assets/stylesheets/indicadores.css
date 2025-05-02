@@ -80,7 +80,7 @@
 /* Estilos dos filtros */
 /* Adicione estas classes */
 .sky-indicadores .filtros-section {
-  margin-bottom: 48px; /* Espaço adequado entre os filtros e os gráficos */
+  margin-bottom: 24px; /* Espaço adequado entre os filtros e os gráficos */
 }
 
 .sky-indicadores .filtros-form {
