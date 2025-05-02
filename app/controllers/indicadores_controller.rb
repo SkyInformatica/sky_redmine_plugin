@@ -16,7 +16,7 @@ class IndicadoresController < ApplicationController
     @start_date = nil
     @end_date = nil
 
-    case periodo
+    case @periodo
     when "current_month"
       @start_date = Date.current.beginning_of_month
       @end_date = Date.current.end_of_month
