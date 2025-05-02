@@ -29,7 +29,7 @@ class IndicadoresController < ApplicationController
     end
 
     tarefas_projeto_periodo = SkyRedmineIndicadores.por_projeto_e_periodo(@project, @start_date, @end_date)
-    @dados_graficos = IndicadoresService.obter_dados_graficos(tarefas_projeto_periodo)
+    @dados_graficos = IndicadoresService.obter_dados_graficos(tarefas_projeto_periodo, @equipe)
     @dados_graficos_etapas = IndicadoresService.obter_dados_graficos_etapas(tarefas_projeto_periodo)
 
     # Adicionar ordenação

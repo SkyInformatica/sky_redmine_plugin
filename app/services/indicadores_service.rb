@@ -1,5 +1,5 @@
 class IndicadoresService
-  def self.obter_dados_graficos(tarefas)
+  def self.obter_dados_graficos(tarefas, equipe)
     # Determinar o período com base no parâmetro recebido
 
     # Aplicar filtro por equipe
