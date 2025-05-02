@@ -610,9 +610,10 @@ module SkyRedminePlugin
       ultima_tarefa = tarefas_relacionadas.last
 
       case ultima_tarefa.status.name
-      when SkyRedminePlugin::Constants::IssueStatus::INTERROMPIDA,
-           SkyRedminePlugin::Constants::IssueStatus::INTERROMPIDA_ANALISE
+      when SkyRedminePlugin::Constants::IssueStatus::INTERROMPIDA
         return SkyRedminePlugin::Constants::EtapaAtual::INTERROMPIDA
+      when SkyRedminePlugin::Constants::IssueStatus::INTERROMPIDA_ANALISE
+        return SkyRedminePlugin::Constants::EtapaAtual::INTERROMPIDA_ANALISE
       end
 
       nil
