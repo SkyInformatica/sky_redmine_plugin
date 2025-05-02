@@ -727,23 +727,23 @@ module FluxoTarefasHelper
   # Método para renderizar a timeline da situação DESCONHECIDA
   def render_timeline_desconhecida(etapa_atual, motivo)
     html = ""
-    html << "<div class='timeline-row'>"
-    html << "<div class='timeline timeline-desconhecida'>"
-    html << "<div class='timeline-step timeline-step-error'>"
-    html << "<div class='timeline-circle'></div>"
-    html << "<div class='timeline-label'>"
-    html << "<div class='timeline-text'>#{etapa_atual}"
+    html += "<div class='timeline-row'>"
+    html += "<div class='timeline timeline-desconhecida'>"
+    html += "<div class='timeline-step timeline-step-error'>"
+    html += "<div class='timeline-circle'></div>"
+    html += "<div class='timeline-label'>"
+    html += "<div class='timeline-text'>#{etapa_atual}"
 
     # Adicionar o motivo se existir
     if motivo.present?
-      html << "<br><br>#{motivo}"
+      html += "<br><br>#{motivo}"
     end
 
-    html << "</div>"
-    html << "</div>"
-    html << "</div>"
-    html << "</div>"
-    html << "</div>"
+    html += "</div>"
+    html += "</div>"
+    html += "</div>"
+    html += "</div>"
+    html += "</div>"
     html
   end
 
