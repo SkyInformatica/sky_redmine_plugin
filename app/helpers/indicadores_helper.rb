@@ -47,11 +47,11 @@ module IndicadoresHelper
             "Total de tarefas agrupadas por tipo"
           ),
           render_card_grafico(
-            "Tarefas desenvolvimento por etapa",
+            "Tarefas desenvolvimento em aberto por etapa",
             "bar",
             dados_graficos[:tarefas_devel_por_etapa],
-            "Distribuição das tarefas em desenvolvimento por etapa atual",
-            "Total de tarefas em desenvolvimento em cada etapa do fluxo"
+            "Distribuição das tarefas em desenvolvimento em aberto por etapa atual (nao contabiliza as etapas E99_ e E02_EM_ANDAMENTO)",
+            "Total de tarefas na fila de cada etapa (não contabiliza as etapas E99_ e E02_EM_ANDAMENTO)"
           ),
         ]),
 

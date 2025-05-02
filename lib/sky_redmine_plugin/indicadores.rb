@@ -345,31 +345,6 @@ module SkyRedminePlugin
       begin
         Rails.logger.info ">>> Atualizando tags das tarefas com situação atual: #{etapa_atual}"
 
-        # Mapeamento de situações para prefixos numéricos
-        prefixos_situacoes = {
-          SkyRedminePlugin::Constants::EtapaAtual::DESCONHECIDA => "99",
-          SkyRedminePlugin::Constants::EtapaAtual::INTERROMPIDA => "99",
-          SkyRedminePlugin::Constants::EtapaAtual::INTERROMPIDA_ANALISE => "99",
-          SkyRedminePlugin::Constants::EtapaAtual::CANCELADA => "08",
-          SkyRedminePlugin::Constants::EtapaAtual::FECHADA_SEM_DESENVOLVIMENTO => "08",
-          SkyRedminePlugin::Constants::EtapaAtual::ESTOQUE_DEVEL => "01",
-          SkyRedminePlugin::Constants::EtapaAtual::EM_ANDAMENTO_DEVEL => "02",
-          SkyRedminePlugin::Constants::EtapaAtual::AGUARDANDO_TESTES_DEVEL => "03",
-          SkyRedminePlugin::Constants::EtapaAtual::AGUARDANDO_ENCAMINHAR_RETORNO_TESTES_DEVEL => "03",
-          SkyRedminePlugin::Constants::EtapaAtual::AGUARDANDO_ENCAMINHAR_QS => "04",
-          SkyRedminePlugin::Constants::EtapaAtual::ESTOQUE_QS => "05",
-          SkyRedminePlugin::Constants::EtapaAtual::EM_ANDAMENTO_QS => "06",
-          SkyRedminePlugin::Constants::EtapaAtual::AGUARDANDO_VERSAO => "07",
-          SkyRedminePlugin::Constants::EtapaAtual::AGUARDANDO_ENCAMINHAR_RETORNO_TESTES => "07",
-          SkyRedminePlugin::Constants::EtapaAtual::ESTOQUE_DEVEL_RETORNO_TESTES => "01",
-          SkyRedminePlugin::Constants::EtapaAtual::EM_ANDAMENTO_DEVEL_RETORNO_TESTES => "02",
-          SkyRedminePlugin::Constants::EtapaAtual::AGUARDANDO_ENCAMINHAR_QS_RETORNO_TESTES => "04",
-          SkyRedminePlugin::Constants::EtapaAtual::ESTOQUE_QS_RETORNO_TESTES => "05",
-          SkyRedminePlugin::Constants::EtapaAtual::EM_ANDAMENTO_QS_RETORNO_TESTES => "06",
-          SkyRedminePlugin::Constants::EtapaAtual::AGUARDANDO_VERSAO_RETORNO_TESTES => "07",
-          SkyRedminePlugin::Constants::EtapaAtual::VERSAO_LIBERADA_FALTA_FECHAR => "08",
-        }
-
         # Criar a nova tag baseada na situação atual, exceto para VERSAO_LIBERADA
         nova_tag = if etapa_atual == SkyRedminePlugin::Constants::EtapaAtual::VERSAO_LIBERADA
             nil
