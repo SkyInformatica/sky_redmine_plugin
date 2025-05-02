@@ -636,6 +636,7 @@ module FluxoTarefasHelper
       html << render_timeline_desconhecida(etapa_atual, indicadores.motivo_situacao_desconhecida)
       html << "</div>"
       html << "</div>"
+      html << "</div>"
       return html
     end
 
@@ -646,6 +647,7 @@ module FluxoTarefasHelper
       html << render_timeline_normal(fluxo, indice_atual, indicadores)
       html << "</div>"
       html << "</div>"
+      html << "</div>"
 
       return html
     end
@@ -654,6 +656,7 @@ module FluxoTarefasHelper
       fluxo = SkyRedminePlugin::Constants::EtapaAtual::FLUXO_SEM_QS
       indice_atual = fluxo.index(etapa_atual)
       html << render_timeline_normal(fluxo, indice_atual, indicadores)
+      html << "</div>"
       html << "</div>"
       html << "</div>"
 
@@ -723,9 +726,6 @@ module FluxoTarefasHelper
   # Método para renderizar a timeline da situação DESCONHECIDA
   # Método para renderizar a timeline da situação DESCONHECIDA
   def render_timeline_desconhecida(etapa_atual, motivo)
-    html = "<div class='indicadores-grupo'>"
-    html << "<div class='indicadores-titulo'>Progresso</div>"
-    html << "<div class='timeline-container'>"
     html << "<div class='timeline-row'>"
     html << "<div class='timeline timeline-desconhecida'>"
     html << "<div class='timeline-step timeline-step-error'>"
@@ -738,7 +738,6 @@ module FluxoTarefasHelper
       html << "<br><br>#{motivo}"
     end
 
-    html << "</div></div>"
     html << "</div>"
     html << "</div>"
     html << "</div>"
