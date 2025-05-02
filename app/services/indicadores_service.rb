@@ -78,15 +78,15 @@ class IndicadoresService
     tarefas_devel_por_etapa = {}
     tarefas_por_etapa.each do |etapa, quantidade|
       # Ignorar etapas que começam com E99_ ou E02_EM_ANDAMENTO_
-      next if etapa.to_s.start_with?("E99_", "E02_EM_ANDAMENTO", "E06_EM_ANDAMENTO", "E08_")
+      #next if etapa.to_s.start_with?("E99_", "E02_EM_ANDAMENTO", "E06_EM_ANDAMENTO", "E08_")
 
-      if etapa.to_s.start_with?("E07_AGUARDA_ENCAMINHAR_RT")
-        etapa_base = etapa
-      else
-        # remover o sufixo _RT
-        # Exemplo: "E01_ESTOQUE_DEVEL_RT" se torna "E01_ESTOQUE_DEVEL"
-        etapa_base = etapa.to_s.gsub(/_RT$/, "")
-      end
+      #if etapa.to_s.start_with?("E07_AGUARDA_ENCAMINHAR_RT")
+      etapa_base = etapa
+      #else
+      # remover o sufixo _RT
+      # Exemplo: "E01_ESTOQUE_DEVEL_RT" se torna "E01_ESTOQUE_DEVEL"
+      #  etapa_base = etapa.to_s.gsub(/_RT$/, "")
+      #end
 
       tarefas_devel_por_etapa[etapa_base] ||= 0
       tarefas_devel_por_etapa[etapa_base] += quantidade
