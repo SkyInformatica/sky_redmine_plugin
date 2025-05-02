@@ -743,7 +743,6 @@ module FluxoTarefasHelper
     html += "</div>"
     html += "</div>"
     html += "</div>"
-    html += "</div>"
     html
   end
 
