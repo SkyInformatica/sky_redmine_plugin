@@ -1,10 +1,53 @@
-/* Reseta apenas os elementos dentro do nosso plugin */
+/* Reset e configurações base */
 .sky-indicadores {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   line-height: 1.5;
 }
 
-/* Filtros */
+/* Estilo das abas */
+.sky-indicadores .nav-tabs {
+  border: none;
+  margin-bottom: 24px;
+  display: flex;
+  gap: 24px;
+  padding: 8px 0;
+}
+
+.sky-indicadores .nav-tabs .nav-item {
+  margin: 0;
+}
+
+.sky-indicadores .nav-tabs .nav-link {
+  border: none;
+  padding: 8px 0;
+  font-size: 14px;
+  color: #6b7280;
+  background: transparent;
+  transition: color 0.2s ease;
+  font-weight: 400;
+}
+
+.sky-indicadores .nav-tabs .nav-link:hover,
+.sky-indicadores .nav-tabs .nav-link:focus,
+.sky-indicadores .nav-tabs .nav-link:active {
+  border: none;
+  outline: none;
+  background: transparent;
+}
+
+.sky-indicadores .nav-tabs .nav-link.active {
+  color: #000;
+  font-weight: 500;
+  background: transparent;
+  border: none;
+}
+
+.sky-indicadores .sky-tabs {
+  border-bottom: 1px solid #e5e7eb;
+  margin-bottom: 24px;
+}
+
+/* Estilos dos filtros */
 .sky-indicadores .filtros-form {
   margin-bottom: 24px;
 }
@@ -57,11 +100,7 @@
   background: #2980b9;
 }
 
-/* Mantém os estilos da tabela do Redmine */
-.sky-indicadores table.list.issues {
-  font-family: inherit;
-}
-
+/* Container de gráficos */
 .sky-indicadores .graficos-container {
   display: flex;
   flex-direction: column;
@@ -76,7 +115,7 @@
   width: 100%;
 }
 
-/* Card base com glass morphism */
+/* Estilos dos cards */
 .sky-indicadores .card-grafico,
 .sky-indicadores .card-valor {
   background: rgba(255, 255, 255, 0.95);
@@ -87,7 +126,12 @@
   transition: transform 0.2s ease;
 }
 
-/* Cards de valor são menores e flexíveis */
+.sky-indicadores .card-grafico:hover,
+.sky-indicadores .card-valor:hover {
+  transform: translateY(-5px);
+}
+
+/* Card de valor */
 .sky-indicadores .card-valor {
   flex: 0 1 auto;
   min-width: 150px;
@@ -95,7 +139,6 @@
   position: relative;
 }
 
-/* Tooltip no card de valor */
 .sky-indicadores .card-valor .tooltip-container {
   position: absolute;
   top: 24px;
@@ -114,19 +157,21 @@
   line-height: 1.4;
 }
 
-/* Cards de gráfico ocupam mais espaço */
+.sky-indicadores .card-valor .valor-principal {
+  font-size: 36px;
+  font-weight: 600;
+  color: #202020;
+  margin: 16px 0;
+  line-height: 1;
+}
+
+/* Card de gráfico */
 .sky-indicadores .card-grafico {
-  flex: 1 1 calc(30% - 24px); /* Ajustado para 33.33% para permitir 3 gráficos por linha */
-  max-width: calc(30% - 24px); /* Ajustado para limitar o tamanho máximo */
+  flex: 1 1 calc(30% - 24px);
+  max-width: calc(30% - 24px);
   padding: 24px;
 }
 
-.sky-indicadores .card-grafico:hover,
-.sky-indicadores .card-valor:hover {
-  transform: translateY(-5px);
-}
-
-/* Header específico para card de gráfico */
 .sky-indicadores .card-grafico .card-header {
   display: flex;
   justify-content: space-between;
@@ -151,85 +196,29 @@
   font-weight: normal;
 }
 
-/* Body do card de gráfico */
 .sky-indicadores .card-grafico .card-body {
   position: relative;
   min-height: 300px;
   margin-top: 12px;
 }
 
-/* Estilos específicos para card de valor */
-.sky-indicadores .card-valor .valor-principal {
-  font-size: 36px;
-  font-weight: 600;
-  color: #202020;
-  margin: 16px 0;
-  line-height: 1;
+/* Estilos da tabela */
+.sky-indicadores table.list.issues {
+  font-family: inherit;
+  width: 100%;
 }
 
-.sky-indicadores .card-valor .valor-tendencia {
-  font-size: 13px;
-  color: #202020;
-  margin: 8px 0 4px 0;
-  line-height: 1.4;
+.sky-indicadores table.list.issues th {
+  white-space: normal;
+  word-wrap: break-word;
+  max-width: 200px;
 }
 
-.sky-indicadores .valor-tendencia.positivo {
-  color: #4CAF50;
-}
-
-.sky-indicadores .valor-tendencia.negativo {
-  color: #F44336;
-}
-
-/* Footer do card */
-.sky-indicadores .card-footer {
-  margin-top: 4px;
-  padding-top: 0;
-  border-top: none;
-}
-
-.sky-indicadores .card-descricao {
-  font-size: 13px;
-  color: #666;
-  font-style: normal;
-  margin: 0;
-  line-height: 1.4;
-}
-
-/* Responsividade */
-@media (max-width: 824px) {
-  .sky-indicadores .card-grafico {
-    flex: 1 1 100%;
-    max-width: 100%;
-  }
-}
-
-@media (max-width: 768px) {
-  .sky-indicadores .card-valor {
-    flex: 1 1 calc(50% - 24px);
-  }
-}
-
-@media (max-width: 480px) {
-  .sky-indicadores .card-valor {
-    flex: 1 1 100%;
-  }
-}
-
-/* Ajustes para a tabela */
-.sky-indicadores table.list.issues th {  
-  white-space: normal;  
-  word-wrap: break-word;  
-  max-width: 200px;  
-}
-
-/* Estilo do tooltip */
+/* Tooltip */
 .sky-indicadores [data-bs-toggle="tooltip"] {
   position: relative;
 }
 
-/* Tooltip personalizado */
 .tooltip {
   position: absolute;
   z-index: 1000;
@@ -254,62 +243,22 @@
   display: none !important;
 }
 
-/* Tabs/Abas */
-
-.sky-indicadores .sky-tabs {
-  margin-bottom: 24px;
+/* Responsividade */
+@media (max-width: 824px) {
+  .sky-indicadores .card-grafico {
+    flex: 1 1 100%;
+    max-width: 100%;
+  }
 }
 
-.sky-indicadores .nav-tabs {
-  border-bottom: 1px solid #dee2e6;
-  margin-bottom: 24px;
+@media (max-width: 768px) {
+  .sky-indicadores .card-valor {
+    flex: 1 1 calc(50% - 24px);
+  }
 }
 
-.sky-indicadores .nav-tabs .nav-item {
-  margin-bottom: -1px;
-}
-
-.sky-indicadores .nav-tabs .nav-link {
-  border: 1px solid transparent;
-  border-top-left-radius: 8px;
-  border-top-right-radius: 8px;
-  padding: 12px 24px;
-  font-size: 14px;
-  font-weight: 500;
-  color: #666;
-  transition: all 0.2s ease;
-}
-
-.sky-indicadores .nav-tabs .nav-link:hover {
-  border-color: #e9ecef #e9ecef #dee2e6;
-  isolation: isolate;
-}
-
-.sky-indicadores .nav-tabs .nav-link.active {
-  color: #3498db;
-  background-color: #fff;
-  border-color: #dee2e6 #dee2e6 #fff;
-}
-
-.sky-indicadores .tab-content {
-  background: transparent;
-  padding: 0;
-}
-
-.sky-indicadores .tab-pane {
-  display: none;
-}
-
-.sky-indicadores .tab-pane.active {
-  display: block;
-}
-
-/* Animação suave para transição entre abas */
-.sky-indicadores .tab-pane.fade {
-  opacity: 0;
-  transition: opacity 0.15s linear;
-}
-
-.sky-indicadores .tab-pane.fade.show {
-  opacity: 1;
+@media (max-width: 480px) {
+  .sky-indicadores .card-valor {
+    flex: 1 1 100%;
+  }
 }
