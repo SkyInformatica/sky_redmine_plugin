@@ -647,7 +647,6 @@ module FluxoTarefasHelper
       html << render_timeline_normal(fluxo, indice_atual, indicadores)
       html << "</div>"
       html << "</div>"
-      html << "</div>"
 
       return html
     end
@@ -656,7 +655,6 @@ module FluxoTarefasHelper
       fluxo = SkyRedminePlugin::Constants::EtapaAtual::FLUXO_SEM_QS
       indice_atual = fluxo.index(etapa_atual)
       html << render_timeline_normal(fluxo, indice_atual, indicadores)
-      html << "</div>"
       html << "</div>"
       html << "</div>"
 
