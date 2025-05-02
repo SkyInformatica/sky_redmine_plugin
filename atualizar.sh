@@ -6,6 +6,8 @@ echo "" > /var/log/apache2/error.log
 git pull origin main
 touch /opt/redmine/tmp/restart.txt
 
+
+cp assets/stylesheets/*.css /opt/redmine-5.1.1/public/plugin_assets/sky_redmine_plugin/stylesheets/
 chown -R www-data:www-data /opt/redmine-5.1.1/public/plugin_assets/sky_redmine_plugin/
 chmod -R 775 /opt/redmine-5.1.1/public/plugin_assets/sky_redmine_plugin/
 

@@ -87,7 +87,7 @@ class IndicadoresService
     }
   end
 
-  def obter_dados_graficos_etapas
+  def self.obter_dados_graficos_etapas
     # Obter dados de gráficos para etapas
     tarefas_por_etapa = SkyRedmineIndicadores.group(:etapa_atual).count
 
