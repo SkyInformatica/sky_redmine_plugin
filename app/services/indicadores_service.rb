@@ -72,9 +72,12 @@ class IndicadoresService
 
   def self.obter_dados_graficos_etapas(tarefas)
     # Obter dados de gráficos para etapas
-    tarefas_devel = tarefas.where(tarefa_complementar: "NAO")
+    tarefas_devel = tarefas
+      .where(tarefa_complementar: "NAO")
+      .where.not(equipe_responsavel_atual: SkyRedminePlugin::Constants::EquipeResponsavel::FECHADA)
+
     tarefas_por_etapa = tarefas_devel
-      .sort(:etapa_atual)
+      .order(:etapa_atual)
       .group(:etapa_atual)
       .count
 
