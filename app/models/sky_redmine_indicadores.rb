@@ -17,10 +17,6 @@ class SkyRedmineIndicadores < ActiveRecord::Base
     tarefas
   end
 
-  def self.obter_todas_tarefas()
-    all
-  end
-
   def self.tempo_gasto_por_tipo(start_date = nil, end_date = nil)
     tarefas = obter_tarefas(start_date, end_date)
 
