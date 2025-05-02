@@ -29,34 +29,7 @@
     <div class="tab-content" id="indicadoresTabContent">
       <!-- Conteúdo da aba Geral -->
       <div class="tab-pane fade show active" id="geral" role="tabpanel" aria-labelledby="geral-tab">
-        <!-- Movido o filtro para dentro da aba Geral -->
-        <%= form_with url: indicadores_path(@project), method: :get, local: true, class: "filtros-form" do %>  
-          <div class="filtros-container">  
-            <div class="filtro-grupo">
-              <%= label_tag :periodo, "Período:" %>  
-              <%= select_tag :periodo, options_for_select([
-                               ["Todo o período", "all"],
-                               ["Este mês", "current_month"],
-                               ["Último mês", "last_month"],
-                               ["Este ano", "current_year"],
-                             ], selected: @periodo) %>  
-            </div>
-
-            <div class="filtro-grupo">
-              <%= label_tag :equipe, "Responsável atual:" %>  
-              <%= select_tag :equipe, options_for_select([
-                               ["Todas", "all"],
-                               ["Desenvolvimento", SkyRedminePlugin::Constants::EquipeResponsavel::DEVEL],
-                               ["QS", SkyRedminePlugin::Constants::EquipeResponsavel::QS],
-                               ["Desenvolvimento+QS", "#{SkyRedminePlugin::Constants::EquipeResponsavel::DEVEL}_#{SkyRedminePlugin::Constants::EquipeResponsavel::QS}"],
-                               ["Versão liberada", SkyRedminePlugin::Constants::EquipeResponsavel::FECHADA],
-                             ], selected: @equipe) %>  
-            </div>
-
-            <%= submit_tag "Filtrar", class: "filtro-submit" %>  
-          </div>  
-          <% end %>  
-        
+        <%= render_filtros(@periodo, @equipe, @project) %>
         <%= render_graficos_geral(@dados_graficos) %>
       </div>
 

@@ -78,9 +78,13 @@
   opacity: 1;
 }
 /* Estilos dos filtros */
+/* Adicione estas classes */
+.sky-indicadores .filtros-section {
+  margin-bottom: 48px; /* Espaço adequado entre os filtros e os gráficos */
+}
+
 .sky-indicadores .filtros-form {
-  margin-bottom: 48px;
-  padding: 0; 
+  width: 100%;
 }
 
 .sky-indicadores .filtros-container {

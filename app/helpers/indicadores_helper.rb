@@ -120,6 +120,52 @@ module IndicadoresHelper
     end
   end
 
+  # Adicione esta nova função
+  def render_filtros(periodo_atual, equipe_atual, project)
+    content_tag(:div, class: "filtros-section") do
+      form_with(url: indicadores_path(project), method: :get, local: true, class: "filtros-form") do
+        content_tag(:div, class: "filtros-container") do
+          safe_join([
+            render_filtro_grupo(
+              "periodo",
+              "Período:",
+              options_for_select([
+                ["Todo o período", "all"],
+                ["Este mês", "current_month"],
+                ["Último mês", "last_month"],
+                ["Este ano", "current_year"],
+              ], selected: periodo_atual)
+            ),
+            render_filtro_grupo(
+              "equipe",
+              "Responsável atual:",
+              options_for_select([
+                ["Todas", "all"],
+                ["Desenvolvimento", SkyRedminePlugin::Constants::EquipeResponsavel::DEVEL],
+                ["QS", SkyRedminePlugin::Constants::EquipeResponsavel::QS],
+                ["Desenvolvimento+QS", "#{SkyRedminePlugin::Constants::EquipeResponsavel::DEVEL}_#{SkyRedminePlugin::Constants::EquipeResponsavel::QS}"],
+                ["Versão liberada", SkyRedminePlugin::Constants::EquipeResponsavel::FECHADA],
+              ], selected: equipe_atual)
+            ),
+            content_tag(:button, "Filtrar", type: "submit", class: "filtro-submit"),
+          ])
+        end
+      end
+    end
+  end
+
+  private
+
+  # Adicione esta nova função auxiliar
+  def render_filtro_grupo(campo, label_texto, options)
+    content_tag(:div, class: "filtro-grupo") do
+      safe_join([
+        label_tag(campo, label_texto),
+        select_tag(campo, options),
+      ])
+    end
+  end
+
   private
 
   def render_cards_row(cards)
