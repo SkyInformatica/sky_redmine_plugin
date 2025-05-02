@@ -774,7 +774,7 @@ module FluxoTarefasHelper
           "future"
         end
 
-      texto_situacao = situacao.gsub("_", " ").gsub(/E\d{2}_/, "")
+      texto_situacao = situacao.gsub(/E\d{2}_/, "").gsub("_", " ")
 
       if (estado == "completed") || (estado == "current")
         # Adicionar o contador de retornos se for ESTOQUE_DEVEL_RETORNO_TESTES ou AGUARDANDO_ENCAMINHAR_RETORNO_TESTES_DEVEL
