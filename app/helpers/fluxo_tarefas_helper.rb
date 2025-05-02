@@ -726,7 +726,7 @@ module FluxoTarefasHelper
   # Método para renderizar a timeline da situação DESCONHECIDA
   # Método para renderizar a timeline da situação DESCONHECIDA
   def render_timeline_desconhecida(etapa_atual, motivo)
-    html = []
+    html = ""
     html << "<div class='timeline-row'>"
     html << "<div class='timeline timeline-desconhecida'>"
     html << "<div class='timeline-step timeline-step-error'>"
