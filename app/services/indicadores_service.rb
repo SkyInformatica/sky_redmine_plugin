@@ -164,8 +164,8 @@ class IndicadoresService
     end
 
     Rails.logger.info ">>> Histograma completo: #{histograma_completo.inspect}"
-    Rails.logger.info ">>> E01_ESTOQUE_DEVEL: #{histograma_completo.select { |h| h[:etapa] == "E01_ESTOQUE_DEVEL" }}"
     Rails.logger.info ">>> tarefas_devel_por_etapa: #{tarefas_devel_por_etapa}"
+    Rails.logger.info ">>> histograma_por_etapa: #{histograma_por_etapa}"
 
     {
       tarefas_devel_por_etapa: tarefas_devel_por_etapa,
