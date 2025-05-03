@@ -142,13 +142,34 @@ class IndicadoresService
       end
     end
 
+    # Transformar o histograma em um formato adequado para o gráfico
+    histograma_por_etapa = {}
+    etapas_unicas.each do |etapa|
+      dados_etapa = {}
+      histograma_completo.select { |h| h[:etapa] == etapa }.each do |registro|
+        # Converter o período em um rótulo mais amigável
+        rotulo = case registro[:periodo]
+          when "maior_2_anos"
+            "Maior que 2 anos"
+          when "maior_1_ano"
+            "Maior que 1 ano"
+          else
+            # Calcular o mês baseado no período (0-11)
+            data = Date.today - registro[:periodo].to_i.months
+            data.strftime("%B/%Y") # Nome do mês/Ano
+          end
+        dados_etapa[rotulo] = registro[:quantidade]
+      end
+      histograma_por_etapa[etapa] = dados_etapa
+    end
+
     Rails.logger.info ">>> Histograma completo: #{histograma_completo.inspect}"
     Rails.logger.info ">>> E01_ESTOQUE_DEVEL: #{histograma_completo.select { |h| h[:etapa] == "E01_ESTOQUE_DEVEL" }}"
     Rails.logger.info ">>> tarefas_devel_por_etapa: #{tarefas_devel_por_etapa}"
 
     {
       tarefas_devel_por_etapa: tarefas_devel_por_etapa,
-      tarefas_devel_por_etapa_por_mes_histograma: histograma_completo,
+      tarefas_devel_por_etapa_por_mes_histograma: histograma_por_etapa,
     }
   end
 
