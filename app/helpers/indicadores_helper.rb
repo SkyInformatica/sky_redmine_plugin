@@ -123,7 +123,8 @@ module IndicadoresHelper
             "bar",
             dados_graficos_etapas[:tarefas_devel_por_etapa_por_mes_histograma].select { |h| h[:etapa] == "E01_ESTOQUE_DEVEL" },
             "Distribuição das tarefas em desenvolvimento em aberto por etapa atual (nao contabiliza as etapas E99_, E08_ e EM_ANDAMENTO)",
-            "Total de tarefas: #{dados_graficos_etapas[:tarefas_devel_por_etapa].select { |h| h[:etapa] == "E01_ESTOQUE_DEVEL" }.first[:quantidade]}",
+            ""
+            #"Total de tarefas: #{dados_graficos_etapas[:tarefas_devel_por_etapa].select { |h| h[:etapa] == "E01_ESTOQUE_DEVEL" }.first[:quantidade]}",
           ),
         ]),
 
@@ -133,7 +134,8 @@ module IndicadoresHelper
             "bar",
             dados_graficos_etapas[:tarefas_devel_por_etapa_por_mes_histograma].select { |h| h[:etapa] == "E04_AGUARDA_ENCAMINHAR_QS" },
             "Distribuição das tarefas em desenvolvimento em aberto por etapa atual (nao contabiliza as etapas E99_, E08_ e EM_ANDAMENTO)",
-            "Total de tarefas: #{dados_graficos_etapas[:tarefas_devel_por_etapa].select { |h| h[:etapa] == "E04_AGUARDA_ENCAMINHAR_QS" }.first[:quantidade]}",
+            ""
+            #"Total de tarefas: #{dados_graficos_etapas[:tarefas_devel_por_etapa].select { |h| h[:etapa] == "E04_AGUARDA_ENCAMINHAR_QS" }.first[:quantidade]}",
           ),
         ]),
 
