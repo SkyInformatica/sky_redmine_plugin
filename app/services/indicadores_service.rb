@@ -85,22 +85,81 @@ class IndicadoresService
     tarefas_devel_por_etapa = {}
     tarefas_por_etapa.each do |etapa, quantidade|
       # Ignorar etapas que começam com E99_ ou E02_EM_ANDAMENTO_
-      #next if etapa.to_s.start_with?("E99_", "E02_EM_ANDAMENTO", "E06_EM_ANDAMENTO", "E08_")
+      next if etapa.to_s.start_with?("E99_", "E02_EM_ANDAMENTO", "E06_EM_ANDAMENTO", "E08_")
 
-      #if etapa.to_s.start_with?("E07_AGUARDA_ENCAMINHAR_RT")
-      etapa_base = etapa
-      #else
-      # remover o sufixo _RT
-      # Exemplo: "E01_ESTOQUE_DEVEL_RT" se torna "E01_ESTOQUE_DEVEL"
-      #  etapa_base = etapa.to_s.gsub(/_RT$/, "")
-      #end
+      if etapa.to_s.start_with?("E07_AGUARDA_ENCAMINHAR_RT")
+        etapa_base = etapa
+      else
+        #remover o sufixo _RT
+        #Exemplo: "E01_ESTOQUE_DEVEL_RT" se torna "E01_ESTOQUE_DEVEL"
+        etapa_base = etapa.to_s.gsub(/_RT$/, "")
+      end
 
       tarefas_devel_por_etapa[etapa_base] ||= 0
       tarefas_devel_por_etapa[etapa_base] += quantidade
     end
 
+    # Criar histograma por período
+    data_atual = Date.today
+    histograma_etapas = []
+
+    # Agrupar tarefas por etapa e período
+    tarefas_devel.each do |tarefa|
+      next unless tarefa.data_etapa_atual && tarefa.etapa_atual
+
+      periodo = determinar_periodo(tarefa.data_etapa_atual.to_date, data_atual)
+      next unless periodo
+
+      # Remover sufixo _RT da etapa para agrupamento
+      etapa_base = if tarefa.etapa_atual.to_s.start_with?("E07_AGUARDA_ENCAMINHAR_RT")
+          tarefa.etapa_atual
+        else
+          tarefa.etapa_atual.to_s.gsub(/_RT$/, "")
+        end
+
+      # Criar chave única para o histograma
+      histograma_etapas << {
+        etapa: etapa_base,
+        periodo: periodo,
+        quantidade: 1,
+      }
+    end
+
+    # Agregar quantidades
+    histograma_agregado = histograma_etapas.group_by { |h| [h[:etapa], h[:periodo]] }
+      .transform_values { |arr| arr.count }
+      .map { |k, v| { etapa: k[0], periodo: k[1], quantidade: v } }
+
+    # Garantir que todas as etapas tenham todos os períodos (incluindo zeros)
+    etapas_unicas = histograma_agregado.map { |h| h[:etapa] }.uniq
+    periodos = (0..11).to_a + ["maior_1_ano", "maior_2_anos"]
+
+    histograma_completo = etapas_unicas.flat_map do |etapa|
+      periodos.map do |periodo|
+        registro = histograma_agregado.find { |h| h[:etapa] == etapa && h[:periodo] == periodo }
+        registro || { etapa: etapa, periodo: periodo, quantidade: 0 }
+      end
+    end
+
     {
       tarefas_devel_por_etapa: tarefas_devel_por_etapa,
+      tarefas_devel_por_etapa_por_mes_histograma: histograma_completo,
     }
+  end
+
+  # Função auxiliar para determinar o período
+  def self.determinar_periodo(data_etapa, data_atual)
+    return nil unless data_etapa
+
+    meses_diferenca = ((data_atual.year * 12 + data_atual.month) -
+                       (data_etapa.year * 12 + data_etapa.month))
+
+    if meses_diferenca >= 24
+      "maior_2_anos"
+    elsif meses_diferenca >= 12
+      "maior_1_ano"
+    elsif meses_diferenca >= 0
+      meses_diferenca # retorna o número do mês (0 a 11)
+    end
   end
 end

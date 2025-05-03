@@ -116,6 +116,27 @@ module IndicadoresHelper
             "Total de tarefas na fila de cada etapa"
           ),
         ]),
+
+        render_cards_row([
+          render_card_grafico(
+            "E01_ESTOQUE_DEVEL",
+            "bar",
+            dados_graficos_etapas[:tarefas_devel_por_etapa_por_mes_histograma].select { |h| h[:etapa] == "E01_ESTOQUE_DEVEL" },
+            "Distribuição das tarefas em desenvolvimento em aberto por etapa atual (nao contabiliza as etapas E99_, E08_ e EM_ANDAMENTO)",
+            "Total de tarefas: #{dados_graficos_etapas[:tarefas_devel_por_etapa].select { |h| h[:etapa] == "E01_ESTOQUE_DEVEL" }.first[:quantidade]}",
+          ),
+        ]),
+
+        render_cards_row([
+          render_card_grafico(
+            "E04_AGUARDA_ENCAMINHAR_QS",
+            "bar",
+            dados_graficos_etapas[:tarefas_devel_por_etapa_por_mes_histograma].select { |h| h[:etapa] == "E04_AGUARDA_ENCAMINHAR_QS" },
+            "Distribuição das tarefas em desenvolvimento em aberto por etapa atual (nao contabiliza as etapas E99_, E08_ e EM_ANDAMENTO)",
+            "Total de tarefas: #{dados_graficos_etapas[:tarefas_devel_por_etapa].select { |h| h[:etapa] == "E04_AGUARDA_ENCAMINHAR_QS" }.first[:quantidade]}",
+          ),
+        ]),
+
       ])
     end
   end
