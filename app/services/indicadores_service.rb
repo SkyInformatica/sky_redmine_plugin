@@ -156,7 +156,7 @@ class IndicadoresService
           else
             # Calcular o mês baseado no período (0-11)
             data = Date.today - registro[:periodo].to_i.months
-            data.strftime("%B/%Y") # Nome do mês/Ano
+            data.strftime("%Y.%m") # Formato YYYY.MM
           end
         dados_etapa[rotulo] = registro[:quantidade]
       end
