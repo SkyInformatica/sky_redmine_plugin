@@ -71,6 +71,7 @@ class IndicadoresService
   end
 
   def self.obter_dados_graficos_etapas(tarefas)
+    Rails.logger.info ">>> obter_dados_graficos_etapas"
     # Obter dados de gráficos para etapas
     tarefas_devel = tarefas
       .where(tarefa_complementar: "NAO")
@@ -140,6 +141,9 @@ class IndicadoresService
         registro || { etapa: etapa, periodo: periodo, quantidade: 0 }
       end
     end
+
+    Rails.logger.info "Histograma completo: #{histograma_completo.inspect}"
+    Rails.logger.info "E01_ESTOQUE_DEVEL: #{dados_graficos_etapas[:tarefas_devel_por_etapa_por_mes_histograma].select { |h| h[:etapa] == "E01_ESTOQUE_DEVEL" }}"
 
     {
       tarefas_devel_por_etapa: tarefas_devel_por_etapa,
