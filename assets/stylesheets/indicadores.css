@@ -7,20 +7,18 @@
 }
 
 /* Estilo das abas */
-/* Ajuste no estilo das abas */
-.sky-indicadores .sky-tabs {
-  border-bottom: none; /* Remove a borda inferior existente */
-  margin-bottom: 24px;
-  background: #f3f4f6; /* Fundo cinza claro para toda a área das abas */
+.sky-indicadores .sky-tabs-nav {
+  background: #f3f4f6; /* Fundo cinza claro apenas para a navegação */
   padding: 8px;
-  border-radius: 8px; /* Arredonda os cantos do container das abas */
+  border-radius: 8px;
+  margin-bottom: 24px;
 }
 
 .sky-indicadores .nav-tabs {
   border: none;
-  margin-bottom: 0; /* Remove margem pois já temos padding no container */
+  margin: 0;
   display: flex;
-  gap: 8px; /* Reduz o gap entre as abas */
+  gap: 8px;
   padding: 0;
   list-style: none;
   width: 100%;
