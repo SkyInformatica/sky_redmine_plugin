@@ -116,94 +116,68 @@ module IndicadoresHelper
       safe_join([
         render_cards_row([
           render_card_valor(
-            "Total de tarefas",
-            100,
-            "Total de tarefas de desenvolvimento (Defeito, Funcionalidade, Retorno de testes, Conversão) no período selecionado",
-            "teste"
+            "E99 DESCONHECIDA",
+            dados_graficos_etapas[:tarefas_devel_por_etapa]["E99_DESCONHECIDA"],
+            "Total de tarefas com na etapa E99_DESCONHECIDA",
+            "Total de tarefas com o fluxo de desenvolvimento desconhecido"
           ),
+          render_card_valor(
+            "E99 INTERROMPIDA + INTERROMPIDA ANALISE",
+            dados_graficos_etapas[:tarefas_devel_por_etapa]["E99_INTERROMPIDA"] + dados_graficos_etapas[:tarefas_devel_por_etapa]["E99_INTERROMPIDA_ANALISE"],
+            "Total de tarefas na etapa E99_INTERROMPIDA + E99_INTERROMPIDA_ANALISE",
+            "Total de tarefas interrompidas"
+          ),
+        ]),
+
+        render_cards_row([
+          render_card_valor_grafico(
+            "01 ESTOQUE DEVEL",
+            "bar",
+            dados_graficos_etapas[:tarefas_devel_por_etapa_por_mes_histograma]["E01_ESTOQUE_DEVEL"],
+            "Tooltip explicativo",
+            [
+              {
+                valor: dados_graficos_etapas[:tarefas_devel_por_etapa]["E01_ESTOQUE_DEVEL"] + dados_graficos_etapas[:tarefas_devel_por_etapa]["E01_ESTOQUE_DEVEL_RT"],
+                descricao: "Total de tarefas",
+                tendencia: "RT: #{dados_graficos_etapas[:tarefas_devel_por_etapa]["E01_ESTOQUE_DEVEL_RT"]}",
+              },
+              {
+                valor: "456",
+                descricao: "Média dias",
+                tendencia: "",
+              },
+            ],
+            1
+          ),
+        ]),
+        render_cards_row([
+          render_card_valor_grafico(
+            "04 AGUARDA ENCAMINHAR QS",
+            "bar",
+            dados_graficos_etapas[:tarefas_devel_por_etapa_por_mes_histograma]["E04_AGUARDA_ENCAMINHAR_QS"],
+            "Tarefas resolvidas aguardando encaminhamento para QS",
+            [
+              {
+                valor: dados_graficos_etapas[:tarefas_devel_por_etapa]["E04_AGUARDA_ENCAMINHAR_QS"] + dados_graficos_etapas[:tarefas_devel_por_etapa]["E04_AGUARDA_ENCAMINHAR_QS_RT"],
+                descricao: "Total de tarefas",
+                tendencia: "RT: #{dados_graficos_etapas[:tarefas_devel_por_etapa]["E04_AGUARDA_ENCAMINHAR_QS_RT"]}",
+              },
+              {
+                valor: "456",
+                descricao: "Média dias",
+                tendencia: "↓ 2% em relação ao mês anterior",
+              },
+            ],
+            1 # Um card por linha
+          ),
+        ]),
+        render_cards_row([
           render_card_grafico(
             "Tarefas desenvolvimento em aberto por etapa",
             "bar",
             dados_graficos_etapas[:tarefas_devel_por_etapa],
             "Distribuição das tarefas em desenvolvimento em aberto por etapa atual (nao contabiliza as etapas E99_, E08_ e EM_ANDAMENTO)",
             "Total de tarefas na fila de cada etapa"
-          ),
-        ]),
-
-        render_cards_row([
-          render_card_valor(
-            "Total de tarefas",
-            100,
-            "Total de tarefas de desenvolvimento (Defeito, Funcionalidade, Retorno de testes, Conversão) no período selecionado",
-            "teste"
-          ),
-          render_card_grafico(
-            "E01_ESTOQUE_DEVEL",
-            "bar",
-            dados_graficos_etapas[:tarefas_devel_por_etapa_por_mes_histograma]["E01_ESTOQUE_DEVEL"],
-            "Distribuição temporal das tarefas em estoque",
-            "Total de tarefas: #{dados_graficos_etapas[:tarefas_devel_por_etapa]["E01_ESTOQUE_DEVEL"]}",
-            2
-          ),
-        ]),
-
-        render_cards_row([
-          render_card_valor(
-            "Total de tarefas",
-            100,
-            "Total de tarefas de desenvolvimento (Defeito, Funcionalidade, Retorno de testes, Conversão) no período selecionado",
-            "teste"
-          ),
-          render_card_grafico(
-            "E04_AGUARDA_ENCAMINHAR_QS",
-            "bar",
-            dados_graficos_etapas[:tarefas_devel_por_etapa_por_mes_histograma]["E04_AGUARDA_ENCAMINHAR_QS"],
-            "Distribuição temporal das tarefas aguardando encaminhamento para QS",
-            "Total de tarefas: #{dados_graficos_etapas[:tarefas_devel_por_etapa]["E04_AGUARDA_ENCAMINHAR_QS"]}",
-            1
-          ),
-        ]),
-
-        render_cards_row([
-          render_card_valor_grafico(
-            "Título do Card",
-            "bar",
-            dados_graficos_etapas[:tarefas_devel_por_etapa_por_mes_histograma]["E01_ESTOQUE_DEVEL"],
-            "Tooltip explicativo",
-            [
-              {
-                valor: "123",
-                descricao: "Primeira descrição",
-                tendencia: "↑ 5% em relação ao mês anterior",
-              },
-              {
-                valor: "456",
-                descricao: "Segunda descrição",
-                tendencia: "↓ 2% em relação ao mês anterior",
-              },
-            ],
-            2 # Um card por linha
-          ),
-        ]),
-        render_cards_row([
-          render_card_valor_grafico(
-            "Título do Card",
-            "bar",
-            dados_graficos_etapas[:tarefas_devel_por_etapa_por_mes_histograma]["E01_ESTOQUE_DEVEL"],
-            "Tooltip explicativo",
-            [
-              {
-                valor: "123",
-                descricao: "Primeira descrição",
-                tendencia: "↑ 5% em relação ao mês anterior",
-              },
-              {
-                valor: "456",
-                descricao: "Segunda descrição",
-                tendencia: "↓ 2% em relação ao mês anterior",
-              },
-            ],
-            1 # Um card por linha
           ),
         ]),
       ])
