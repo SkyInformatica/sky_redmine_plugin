@@ -124,6 +124,12 @@ module IndicadoresHelper
         ]),
 
         render_cards_row([
+          render_card_valor(
+            "Total de tarefas",
+            100,
+            "Total de tarefas de desenvolvimento (Defeito, Funcionalidade, Retorno de testes, Conversão) no período selecionado",
+            "teste"
+          ),
           render_card_grafico(
             "E01_ESTOQUE_DEVEL",
             "bar",
@@ -135,6 +141,12 @@ module IndicadoresHelper
         ]),
 
         render_cards_row([
+          render_card_valor(
+            "Total de tarefas",
+            100,
+            "Total de tarefas de desenvolvimento (Defeito, Funcionalidade, Retorno de testes, Conversão) no período selecionado",
+            "teste"
+          ),
           render_card_grafico(
             "E04_AGUARDA_ENCAMINHAR_QS",
             "bar",
