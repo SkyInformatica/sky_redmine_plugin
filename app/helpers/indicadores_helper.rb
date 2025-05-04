@@ -161,13 +161,28 @@ module IndicadoresHelper
           render_card_valor_grafico(
             "Título do Card",
             "bar",
-            {
-              labels: ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun"],
-              datasets: [{
-                data: [65, 30, 65, 70, 35, 80],
-                backgroundColor: "#36A2EB",
-              }],
-            },
+            dados_graficos_etapas[:tarefas_devel_por_etapa_por_mes_histograma]["E01_ESTOQUE_DEVEL"],
+            "Tooltip explicativo",
+            [
+              {
+                valor: "123",
+                descricao: "Primeira descrição",
+                tendencia: "↑ 5% em relação ao mês anterior",
+              },
+              {
+                valor: "456",
+                descricao: "Segunda descrição",
+                tendencia: "↓ 2% em relação ao mês anterior",
+              },
+            ],
+            2 # Um card por linha
+          ),
+        ]),
+        render_cards_row([
+          render_card_valor_grafico(
+            "Título do Card",
+            "bar",
+            dados_graficos_etapas[:tarefas_devel_por_etapa_por_mes_histograma]["E01_ESTOQUE_DEVEL"],
             "Tooltip explicativo",
             [
               {
