@@ -108,6 +108,12 @@ module IndicadoresHelper
     content_tag(:div, class: "graficos-container") do
       safe_join([
         render_cards_row([
+          render_card_valor(
+            "Total de tarefas",
+            dados_graficos[:tarefas_desenvolvimento].count,
+            "Total de tarefas de desenvolvimento (Defeito, Funcionalidade, Retorno de testes, Conversão) no período selecionado",
+            "Complementares: #{dados_graficos[:tarefas_complementar].count}"
+          ),
           render_card_grafico(
             "Tarefas desenvolvimento em aberto por etapa",
             "bar",
