@@ -169,6 +169,7 @@
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
   border: 1px solid rgba(200, 200, 200, 0.3);
   transition: transform 0.2s ease;
+  position: relative;
   /*gap: 24px;*/
 }
 
@@ -259,23 +260,29 @@
 }
 
 /* Card combinado valor e gráfico */
+/* Estilos específicos do card valor-grafico */
+.sky-indicadores .card-valor-grafico .card-content {
+  display: flex;
+  gap: 24px;
+}
 
 .sky-indicadores .card-valor-grafico .valores-section {
-  flex: 0 0 300px; /* Largura fixa para a seção de valores */
+  flex: 0 0 250px; /* Largura fixa menor para a seção de valores */
   display: flex;
   flex-direction: column;
   gap: 24px;
 }
 
+.sky-indicadores .card-valor-grafico .grafico-section {
+  flex: 1;
+  min-height: 200px; /* Altura mínima menor que o card-grafico padrão */
+}
+
+/* Reaproveitando estilos do card-valor para os valores */
 .sky-indicadores .card-valor-grafico .valor-container {
   display: flex;
   flex-direction: column;
-  gap: 8px;
-}
-
-.sky-indicadores .card-valor-grafico .grafico-section {
-  flex: 1;
-  min-width: 0; /* Previne overflow em containers flexíveis */
+  gap: 4px;
 }
 
 .sky-indicadores .card-valor-grafico .valor-principal {
@@ -297,7 +304,6 @@
   color: #888;
   font-style: italic;
 }
-
 
 /* Estilos da tabela */
 .sky-indicadores table.list.issues {
@@ -350,16 +356,12 @@
 }
 
 @media (max-width: 768px) {
-  .sky-indicadores .card-valor {
-    flex: 1 1 calc(50% - 24px);
-  }
-
-  .sky-indicadores .card-valor-grafico {
+  .sky-indicadores .card-valor-grafico .card-content {
     flex-direction: column;
   }
 
   .sky-indicadores .card-valor-grafico .valores-section {
-    flex: 0 0 auto;
+    flex: none;
     width: 100%;
   }
 

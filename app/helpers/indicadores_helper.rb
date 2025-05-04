@@ -306,7 +306,7 @@ module IndicadoresHelper
 
     content_tag(:div, class: "card-valor-grafico #{layout_class}") do
       [
-        render_card_header(titulo, tooltip),
+        render_card_header(titulo, tooltip), # Usa o mesmo header dos outros cards
         content_tag(:div, class: "card-content") do
           safe_join([
             # Seção de valores
