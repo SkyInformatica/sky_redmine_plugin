@@ -110,9 +110,9 @@ module IndicadoresHelper
         render_cards_row([
           render_card_valor(
             "Total de tarefas",
-            dados_graficos[:tarefas_desenvolvimento].count,
+            100,
             "Total de tarefas de desenvolvimento (Defeito, Funcionalidade, Retorno de testes, Conversão) no período selecionado",
-            "Complementares: #{dados_graficos[:tarefas_complementar].count}"
+            "teste"
           ),
           render_card_grafico(
             "Tarefas desenvolvimento em aberto por etapa",
