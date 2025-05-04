@@ -209,10 +209,19 @@
 }
 
 /* Card de gráfico */
-.sky-indicadores .card-grafico {
-  flex: 1 1 calc(30% - 24px);
+.sky-indicadores .card-grafico-third {
+  flex: 1 1 calc(30 - 24px);
   max-width: calc(30% - 24px);
-  padding: 24px;
+}
+
+.sky-indicadores .card-grafico-half {
+  flex: 1 1 calc(47% - 24px);
+  max-width: calc(47% - 24px);
+}
+
+.sky-indicadores .card-grafico-full {
+  flex: 1 1 100%;
+  max-width: 100%;
 }
 
 .sky-indicadores .card-grafico .card-header {
@@ -288,7 +297,8 @@
 
 /* Responsividade */
 @media (max-width: 824px) {
-  .sky-indicadores .card-grafico {
+  .sky-indicadores .card-grafico-third,
+  .sky-indicadores .card-grafico-half {
     flex: 1 1 100%;
     max-width: 100%;
   }

@@ -123,7 +123,8 @@ module IndicadoresHelper
             "bar",
             dados_graficos_etapas[:tarefas_devel_por_etapa_por_mes_histograma]["E01_ESTOQUE_DEVEL"],
             "Distribuição temporal das tarefas em estoque",
-            "Total de tarefas: #{dados_graficos_etapas[:tarefas_devel_por_etapa]["E01_ESTOQUE_DEVEL"]}"
+            "Total de tarefas: #{dados_graficos_etapas[:tarefas_devel_por_etapa]["E01_ESTOQUE_DEVEL"]}",
+            2
           ),
         ]),
 
@@ -133,7 +134,8 @@ module IndicadoresHelper
             "bar",
             dados_graficos_etapas[:tarefas_devel_por_etapa_por_mes_histograma]["E04_AGUARDA_ENCAMINHAR_QS"],
             "Distribuição temporal das tarefas aguardando encaminhamento para QS",
-            "Total de tarefas: #{dados_graficos_etapas[:tarefas_devel_por_etapa]["E04_AGUARDA_ENCAMINHAR_QS"]}"
+            "Total de tarefas: #{dados_graficos_etapas[:tarefas_devel_por_etapa]["E04_AGUARDA_ENCAMINHAR_QS"]}",
+            1
           ),
         ]),
       ])
@@ -194,8 +196,15 @@ module IndicadoresHelper
     end
   end
 
-  def render_card_grafico(titulo, tipo_grafico, dados, tooltip, descricao = nil)
-    content_tag(:div, class: "card-grafico") do
+  def render_card_grafico(titulo, tipo_grafico, dados, tooltip, descricao = nil, cards_por_linha = 3)
+    # Determina a classe CSS baseada no número de cards por linha
+    layout_class = case cards_por_linha
+      when 1 then "card-grafico-full"
+      when 2 then "card-grafico-half"
+      else "card-grafico-third"
+      end
+
+    content_tag(:div, class: "card-grafico #{layout_class}") do
       [
         render_card_header(titulo, tooltip),
         content_tag(:div, descricao, class: "card-subtitulo"),
