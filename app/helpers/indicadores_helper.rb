@@ -177,7 +177,8 @@ module IndicadoresHelper
             "bar",
             dados_graficos_etapas[:tarefas_devel_por_etapa],
             "Distribuição das tarefas em desenvolvimento em aberto por etapa atual (nao contabiliza as etapas E99_, E08_ e EM_ANDAMENTO)",
-            "Total de tarefas na fila de cada etapa"
+            "Total de tarefas na fila de cada etapa",
+            1
           ),
         ]),
       ])
