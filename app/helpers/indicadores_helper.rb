@@ -37,14 +37,16 @@ module IndicadoresHelper
             "doughnut",
             dados_graficos[:tempo_gasto_por_tipo_todas_tarefas],
             "Total do tempo gasto em horas por tipo de tarefa",
-            "Total do tempo gasto do desenvolvimento + QS"
+            "Total do tempo gasto do desenvolvimento + QS",
+            2
           ),
           render_card_grafico(
             "Tarefas de desenvolvimento",
             "bar",
             dados_graficos[:tarefas_devel_por_tipo],
             "Distribuição das tarefas por tipo no período selecionado",
-            "Total de tarefas agrupadas por tipo"
+            "Total de tarefas agrupadas por tipo",
+            2
           ),
         ]),
 
@@ -55,14 +57,16 @@ module IndicadoresHelper
             "bar",
             dados_graficos[:tarefas_devel_por_retorno_testes],
             "Quantidade de vezes que as tarefas retornaram dos testes",
-            "Total de tarefas agrupadas por quantidade de retornos de testes"
+            "Total de tarefas agrupadas por quantidade de retornos de testes",
+            2
           ),
           render_card_grafico(
             "Tarefas fechadas sem testes",
             "bar",
             dados_graficos[:tarefas_devel_fechadas_sem_testes],
             "Tarefas que foram fechadas antes de passar por testes",
-            "Total de tarefas fechadas sem passar por testes"
+            "Total de tarefas fechadas sem passar por testes",
+            2
           ),
         ]),
 
@@ -77,7 +81,8 @@ module IndicadoresHelper
               "Encaminhar QS" => dados_graficos[:tempo_medio_para_encaminhar_qs].to_f || 0,
             },
             "Gráfico de barras com os tempos médios de andamento, resolução e encaminhamento ao QS para tarefas fechadas",
-            "Tempos médios em dias para tarefas fechadas"
+            "Tempos médios em dias para tarefas fechadas",
+            3
           ),
           render_card_grafico(
             "Tempos médios do QS",
@@ -87,7 +92,8 @@ module IndicadoresHelper
               "Concluir Testes" => dados_graficos[:tempo_medio_resolucao_qs].to_f || 0,
             },
             "Gráfico de barras com os tempos médios de início e conclusão de testes para tarefas fechadas",
-            "Tempos médios em dias para tarefas fechadas"
+            "Tempos médios em dias para tarefas fechadas",
+            3
           ),
           render_card_grafico(
             "Tempos médios de liberação versão",
@@ -97,7 +103,8 @@ module IndicadoresHelper
               "Após concluir desenvolvimento" => dados_graficos[:tempo_medio_fechamento_devel].to_f || 0,
             },
             "Gráfico de barras com os tempos médios para liberar a versão. Após concluir o desenvolvimento inclui o tempo total entre a tarefa desenvolvimento ficar pronta, testar e liberar a versão",
-            "Tempos médios em dias para tarefas fechadas"
+            "Tempos médios em dias para tarefas fechadas",
+            3
           ),
         ]),
       ])
