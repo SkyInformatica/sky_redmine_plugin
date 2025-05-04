@@ -156,6 +156,34 @@ module IndicadoresHelper
             1
           ),
         ]),
+
+        render_cards_row([
+          render_card_valor_grafico(
+            "Título do Card",
+            "bar",
+            {
+              labels: ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun"],
+              datasets: [{
+                data: [65, 30, 65, 70, 35, 80],
+                backgroundColor: "#36A2EB",
+              }],
+            },
+            "Tooltip explicativo",
+            [
+              {
+                valor: "123",
+                descricao: "Primeira descrição",
+                tendencia: "↑ 5% em relação ao mês anterior",
+              },
+              {
+                valor: "456",
+                descricao: "Segunda descrição",
+                tendencia: "↓ 2% em relação ao mês anterior",
+              },
+            ],
+            1 # Um card por linha
+          ),
+        ]),
       ])
     end
   end
@@ -249,6 +277,48 @@ module IndicadoresHelper
           ].compact.join.html_safe
         end,
         render_card_footer(descricao),
+      ].join.html_safe
+    end
+  end
+
+  def render_card_valor_grafico(titulo, tipo_grafico, dados_grafico, tooltip, valores = [], cards_por_linha = 2)
+    # Determina a classe CSS baseada no número de cards por linha
+    layout_class = case cards_por_linha
+      when 1 then "card-grafico-full"
+      when 2 then "card-grafico-half"
+      else "card-grafico-third"
+      end
+
+    content_tag(:div, class: "card-valor-grafico #{layout_class}") do
+      [
+        render_card_header(titulo, tooltip),
+        content_tag(:div, class: "card-content") do
+          safe_join([
+            # Seção de valores
+            content_tag(:div, class: "valores-section") do
+              safe_join(
+                valores.map do |valor|
+                  content_tag(:div, class: "valor-container") do
+                    safe_join([
+                      content_tag(:div, valor[:valor], class: "valor-principal"),
+                      content_tag(:div, valor[:descricao], class: "valor-descricao"),
+                      valor[:tendencia] ? content_tag(:div, valor[:tendencia], class: "valor-tendencia") : nil,
+                    ].compact)
+                  end
+                end
+              )
+            end,
+            # Seção do gráfico
+            content_tag(:div, class: "grafico-section") do
+              content_tag(:canvas, "", data: {
+                                         grafico: {
+                                           tipo: tipo_grafico,
+                                           dados: dados_grafico,
+                                         }.to_json,
+                                       })
+            end,
+          ])
+        end,
       ].join.html_safe
     end
   end

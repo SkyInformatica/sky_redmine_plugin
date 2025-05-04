@@ -160,17 +160,21 @@
 
 /* Estilos dos cards */
 .sky-indicadores .card-grafico,
-.sky-indicadores .card-valor {
+.sky-indicadores .card-valor,
+.sky-indicadores .card-valor-grafico {
+  /*display: flex;*/
   background: rgba(255, 255, 255, 0.95);
   border-radius: 16px;
   padding: 20px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
   border: 1px solid rgba(200, 200, 200, 0.3);
   transition: transform 0.2s ease;
+  /*gap: 24px;*/
 }
 
 .sky-indicadores .card-grafico:hover,
-.sky-indicadores .card-valor:hover {
+.sky-indicadores .card-valor:hover,
+.sky-indicadores .card-valor-grafico:hover {
   transform: translateY(-5px);
 }
 
@@ -254,6 +258,47 @@
   margin-top: 12px;
 }
 
+/* Card combinado valor e gráfico */
+
+.sky-indicadores .card-valor-grafico .valores-section {
+  flex: 0 0 300px; /* Largura fixa para a seção de valores */
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.sky-indicadores .card-valor-grafico .valor-container {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.sky-indicadores .card-valor-grafico .grafico-section {
+  flex: 1;
+  min-width: 0; /* Previne overflow em containers flexíveis */
+}
+
+.sky-indicadores .card-valor-grafico .valor-principal {
+  font-size: 36px;
+  font-weight: 600;
+  color: #202020;
+  line-height: 1;
+  margin: 8px 0;
+}
+
+.sky-indicadores .card-valor-grafico .valor-descricao {
+  font-size: 14px;
+  color: #666;
+  margin: 0;
+}
+
+.sky-indicadores .card-valor-grafico .valor-tendencia {
+  font-size: 13px;
+  color: #888;
+  font-style: italic;
+}
+
+
 /* Estilos da tabela */
 .sky-indicadores table.list.issues {
   font-family: inherit;
@@ -308,7 +353,21 @@
   .sky-indicadores .card-valor {
     flex: 1 1 calc(50% - 24px);
   }
+
+  .sky-indicadores .card-valor-grafico {
+    flex-direction: column;
+  }
+
+  .sky-indicadores .card-valor-grafico .valores-section {
+    flex: 0 0 auto;
+    width: 100%;
+  }
+
+  .sky-indicadores .card-valor-grafico .grafico-section {
+    min-height: 300px;
+  }
 }
+
 
 @media (max-width: 480px) {
   .sky-indicadores .card-valor {
