@@ -131,6 +131,8 @@ class IndicadoresService
     end
 
     {
+      tarefas_devel: tarefas_devel,
+      tarefas_devel_total: tarefas_devel.count,
       tarefas_devel_por_etapa: tarefas_devel_por_etapa,
       tarefas_devel_por_etapa_por_mes_histograma: histograma_por_etapa,
     }

@@ -23,9 +23,9 @@ module IndicadoresHelper
             "Tarefas abertas sob responsabilidade do QS",
           ),
           render_card_valor(
-            "Versão liberada",
+            "Versão liberada (fechadas)",
             dados_graficos[:tarefas_desenvolvimento].where(equipe_responsavel_atual: SkyRedminePlugin::Constants::EquipeResponsavel::FECHADA).count,
-            "Total de tarefas com versão liberada no período selecionado",
+            "Total de tarefas FECHADAS",
             "Tarefas com versão liberada no período selecionado",
           ),
         ]),
@@ -119,13 +119,15 @@ module IndicadoresHelper
             "E99 DESCONHECIDA",
             dados_graficos_etapas[:tarefas_devel_por_etapa]["E99_DESCONHECIDA"],
             "Total de tarefas com na etapa E99_DESCONHECIDA",
-            "Total de tarefas com o fluxo de desenvolvimento desconhecido"
+            "Tarefas com o fluxo de desenvolvimento desconhecido",
+            format("%.1f%%", (dados_graficos_etapas[:tarefas_devel_por_etapa]["E99_DESCONHECIDA"]).to_f / dados_graficos_etapas[:tarefas_devel_total] * 100)
           ),
           render_card_valor(
             "E99 INTERROMPIDA + INTERROMPIDA ANALISE",
             dados_graficos_etapas[:tarefas_devel_por_etapa]["E99_INTERROMPIDA"] + dados_graficos_etapas[:tarefas_devel_por_etapa]["E99_INTERROMPIDA_ANALISE"],
             "Total de tarefas na etapa E99_INTERROMPIDA + E99_INTERROMPIDA_ANALISE",
-            "Total de tarefas interrompidas"
+            "Tarefas interrompidas",
+            format("%.1f%%", (dados_graficos_etapas[:tarefas_devel_por_etapa]["E99_INTERROMPIDA"] + dados_graficos_etapas[:tarefas_devel_por_etapa]["E99_INTERROMPIDA_ANALISE"]).to_f / dados_graficos_etapas[:tarefas_devel_total] * 100)
           ),
         ]),
 
