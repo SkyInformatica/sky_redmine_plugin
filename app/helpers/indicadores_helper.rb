@@ -134,7 +134,7 @@ module IndicadoresHelper
             "01 ESTOQUE DEVEL",
             "bar",
             dados_graficos_etapas[:tarefas_devel_por_etapa_por_mes_histograma]["E01_ESTOQUE_DEVEL"],
-            "Tooltip explicativo",
+            "Tarefa que está no estoque, uma tarefa DEVEL com a situação NOVA ",
             [
               {
                 valor: dados_graficos_etapas[:tarefas_devel_por_etapa]["E01_ESTOQUE_DEVEL"] + dados_graficos_etapas[:tarefas_devel_por_etapa]["E01_ESTOQUE_DEVEL_RT"],
@@ -147,6 +147,7 @@ module IndicadoresHelper
                 tendencia: "",
               },
             ],
+            "Tarefas em estoque",
             1
           ),
         ]),
@@ -155,7 +156,7 @@ module IndicadoresHelper
             "04 AGUARDA ENCAMINHAR QS",
             "bar",
             dados_graficos_etapas[:tarefas_devel_por_etapa_por_mes_histograma]["E04_AGUARDA_ENCAMINHAR_QS"],
-            "Tarefas resolvidas aguardando encaminhamento para QS",
+            "Tarefa DEVEL que está com a situação RESOLVIDA e os testes no desenvolvimento com TESTE_OK ou NAO_NECESSITA_TESTES",
             [
               {
                 valor: dados_graficos_etapas[:tarefas_devel_por_etapa]["E04_AGUARDA_ENCAMINHAR_QS"] + dados_graficos_etapas[:tarefas_devel_por_etapa]["E04_AGUARDA_ENCAMINHAR_QS_RT"],
@@ -168,6 +169,7 @@ module IndicadoresHelper
                 tendencia: "↓ 2% em relação ao mês anterior",
               },
             ],
+            "Tarefas aguardando encaminhamento para QS",
             1 # Um card por linha
           ),
         ]),
@@ -278,7 +280,7 @@ module IndicadoresHelper
     end
   end
 
-  def render_card_valor_grafico(titulo, tipo_grafico, dados_grafico, tooltip, valores = [], cards_por_linha = 2)
+  def render_card_valor_grafico(titulo, tipo_grafico, dados_grafico, tooltip, valores = [], descricao = nil, cards_por_linha = 2)
     # Determina a classe CSS baseada no número de cards por linha
     layout_class = case cards_por_linha
       when 1 then "card-grafico-full"
@@ -289,6 +291,7 @@ module IndicadoresHelper
     content_tag(:div, class: "card-valor-grafico #{layout_class}") do
       [
         render_card_header(titulo, tooltip), # Usa o mesmo header dos outros cards
+        content_tag(:div, descricao, class: "card-subtitulo"),
         content_tag(:div, class: "card-content") do
           safe_join([
             # Seção de valores
