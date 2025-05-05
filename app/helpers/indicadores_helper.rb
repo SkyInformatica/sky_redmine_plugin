@@ -280,8 +280,8 @@ module IndicadoresHelper
                 valor_secundario ? content_tag(:div, valor_secundario, class: "valor-secundario") : nil,
               ].compact.join.html_safe
             end,
-            tendencia ? content_tag(:div, tendencia, class: "valor-tendencia") : nil,
             content_tag(:div, descricao, class: "valor-descricao"),
+            tendencia ? content_tag(:div, tendencia, class: "valor-tendencia") : nil,
           ].compact.join.html_safe
         end,
       ].join.html_safe
@@ -313,8 +313,8 @@ module IndicadoresHelper
                           valor[:valor_secundario] ? content_tag(:div, valor[:valor_secundario], class: "valor-secundario") : nil,
                         ].compact)
                       end,
-                      valor[:tendencia] ? content_tag(:div, valor[:tendencia], class: "valor-tendencia") : nil,
                       content_tag(:div, valor[:descricao], class: "valor-descricao"),
+                      valor[:tendencia] ? content_tag(:div, valor[:tendencia], class: "valor-tendencia") : nil,
                     ].compact)
                   end
                 end
