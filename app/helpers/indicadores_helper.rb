@@ -123,20 +123,6 @@ module IndicadoresHelper
             format("%.1f%%", (dados_graficos_etapas[:tarefas_devel_por_etapa_agrupadas]["E01_ESTOQUE_DEVEL"]).to_f / dados_graficos_etapas[:tarefas_devel_total] * 100)
           ),
           render_card_valor(
-            "E02 EM ANDAMENTO DEVEL",
-            dados_graficos_etapas[:tarefas_devel_por_etapa_agrupadas]["E02_EM_ANDAMENTO_DEVEL"],
-            "Total de tarefas com na etapa E02_EM_ANDAMENTO_DEVEL + E02_EM_ANDAMENTO_DEVEL_RT",
-            "Tarefas em andamento no DEVEL (RT: #{dados_graficos_etapas[:tarefas_devel_por_etapa]["E02_EM_ANDAMENTO_DEVEL_RT"]})",
-            format("%.1f%%", (dados_graficos_etapas[:tarefas_devel_por_etapa_agrupadas]["E02_EM_ANDAMENTO_DEVEL"]).to_f / dados_graficos_etapas[:tarefas_devel_total] * 100)
-          ),
-          render_card_valor(
-            "E06 EM ANDAMENTO QS",
-            dados_graficos_etapas[:tarefas_devel_por_etapa_agrupadas]["E06_EM_ANDAMENTO_QS"],
-            "Total de tarefas com na etapa E06_EM_ANDAMENTO_QS + E06_EM_ANDAMENTO_QS_RT",
-            "Tarefas em andamento no QS (RT: #{dados_graficos_etapas[:tarefas_devel_por_etapa]["E06_EM_ANDAMENTO_QS_RT"]})",
-            format("%.1f%%", (dados_graficos_etapas[:tarefas_devel_por_etapa_agrupadas]["E06_EM_ANDAMENTO_QS"]).to_f / dados_graficos_etapas[:tarefas_devel_total] * 100)
-          ),
-          render_card_valor(
             "E99 DESCONHECIDA",
             dados_graficos_etapas[:tarefas_devel_por_etapa]["E99_DESCONHECIDA"],
             "Total de tarefas com na etapa E99_DESCONHECIDA",
@@ -149,6 +135,23 @@ module IndicadoresHelper
             "Total de tarefas na etapa E99_INTERROMPIDA + E99_INTERROMPIDA_ANALISE",
             "Tarefas interrompidas",
             format("%.1f%%", (dados_graficos_etapas[:tarefas_devel_por_etapa]["E99_INTERROMPIDA"] + dados_graficos_etapas[:tarefas_devel_por_etapa]["E99_INTERROMPIDA_ANALISE"]).to_f / dados_graficos_etapas[:tarefas_devel_total] * 100)
+          ),
+        ]),
+
+        render_cards_row([
+          render_card_valor(
+            "E02 EM ANDAMENTO DEVEL",
+            dados_graficos_etapas[:tarefas_devel_por_etapa_agrupadas]["E02_EM_ANDAMENTO_DEVEL"],
+            "Total de tarefas com na etapa E02_EM_ANDAMENTO_DEVEL + E02_EM_ANDAMENTO_DEVEL_RT",
+            "Tarefas em andamento no DEVEL (RT: #{dados_graficos_etapas[:tarefas_devel_por_etapa]["E02_EM_ANDAMENTO_DEVEL_RT"]})",
+            format("%.1f%%", (dados_graficos_etapas[:tarefas_devel_por_etapa_agrupadas]["E02_EM_ANDAMENTO_DEVEL"]).to_f / dados_graficos_etapas[:tarefas_devel_total] * 100)
+          ),
+          render_card_valor(
+            "E06 EM ANDAMENTO QS",
+            dados_graficos_etapas[:tarefas_devel_por_etapa_agrupadas]["E06_EM_ANDAMENTO_QS"],
+            "Total de tarefas com na etapa E06_EM_ANDAMENTO_QS + E06_EM_ANDAMENTO_QS_RT",
+            "Tarefas em andamento no QS (RT: #{dados_graficos_etapas[:tarefas_devel_por_etapa]["E06_EM_ANDAMENTO_QS_RT"]})",
+            format("%.1f%%", (dados_graficos_etapas[:tarefas_devel_por_etapa_agrupadas]["E06_EM_ANDAMENTO_QS"]).to_f / dados_graficos_etapas[:tarefas_devel_total] * 100)
           ),
         ]),
 
