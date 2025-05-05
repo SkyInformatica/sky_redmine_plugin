@@ -149,7 +149,7 @@ module IndicadoresHelper
           render_card_grafico(
             "Tarefas desenvolvimento em aberto por etapa",
             "bar",
-            dados_graficos_etapas[:tarefas_devel_por_etapa_agrupadas],
+            dados_graficos_etapas[:tarefas_devel_por_etapa_agrupadas].reject { |k, _| k == "E01_ESTOQUE_DEVEL" || k == "E08_VERSAO_LIBERADA" },
             "Distribuição das tarefas em desenvolvimento em aberto por etapa atual (nao contabiliza as etapas E99_, E08_ e EM_ANDAMENTO)",
             "Total de tarefas na fila de cada etapa",
             1
