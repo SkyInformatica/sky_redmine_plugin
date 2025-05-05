@@ -119,14 +119,14 @@ module IndicadoresHelper
             "E02 EM ANDAMENTO DEVEL",
             dados_graficos_etapas[:tarefas_devel_por_etapa_agrupadas]["E02_EM_ANDAMENTO_DEVEL"],
             "Total de tarefas com na etapa E02_EM_ANDAMENTO_DEVEL + E02_EM_ANDAMENTO_DEVEL_RT",
-            "Tarefas em andamento no DEVEL (RT: #{dados_graficos_etapas[:tarefas_devel_por_etapa]["E02_EM_ANDAMENTO_DEVEL_RT"]})",
+            "Tarefas em andamento no DEVEL (RT: #{dados_graficos_etapas[:tarefas_devel_por_etapa]["E02_EM_ANDAMENTO_DEVEL_RT"] ? dados_graficos_etapas[:tarefas_devel_por_etapa]["E02_EM_ANDAMENTO_DEVEL_RT"] : 0})",
             format("%.1f%%", (dados_graficos_etapas[:tarefas_devel_por_etapa_agrupadas]["E02_EM_ANDAMENTO_DEVEL"]).to_f / dados_graficos_etapas[:tarefas_devel_total] * 100)
           ),
           render_card_valor(
             "E06 EM ANDAMENTO QS",
             dados_graficos_etapas[:tarefas_devel_por_etapa_agrupadas]["E06_EM_ANDAMENTO_QS"],
             "Total de tarefas com na etapa E06_EM_ANDAMENTO_QS + E06_EM_ANDAMENTO_QS_RT",
-            "Tarefas em andamento no QS (RT: #{dados_graficos_etapas[:tarefas_devel_por_etapa]["E06_EM_ANDAMENTO_QS_RT"]})",
+            "Tarefas em andamento no QS (RT: #{dados_graficos_etapas[:tarefas_devel_por_etapa]["E06_EM_ANDAMENTO_QS_RT"] ? dados_graficos_etapas[:tarefas_devel_por_etapa]["E06_EM_ANDAMENTO_QS_RT"] : 0})",
             format("%.1f%%", (dados_graficos_etapas[:tarefas_devel_por_etapa_agrupadas]["E06_EM_ANDAMENTO_QS"]).to_f / dados_graficos_etapas[:tarefas_devel_total] * 100)
           ),
           render_card_valor(
@@ -164,8 +164,8 @@ module IndicadoresHelper
             "Tarefa que está no estoque, uma tarefa DEVEL com a situação NOVA ",
             [
               {
-                valor: dados_graficos_etapas[:tarefas_devel_por_etapa]["E01_ESTOQUE_DEVEL"] + dados_graficos_etapas[:tarefas_devel_por_etapa]["E01_ESTOQUE_DEVEL_RT"],
-                valor_secundario: format("%.1f%%", (dados_graficos_etapas[:tarefas_devel_por_etapa]["E01_ESTOQUE_DEVEL"] + dados_graficos_etapas[:tarefas_devel_por_etapa]["E01_ESTOQUE_DEVEL_RT"]).to_f / dados_graficos_etapas[:tarefas_devel_total] * 100),
+                valor: dados_graficos_etapas[:tarefas_devel_por_etapa_agrupadas]["E01_ESTOQUE_DEVEL"],
+                valor_secundario: format("%.1f%%", (dados_graficos_etapas[:tarefas_devel_por_etapa]["E01_ESTOQUE_DEVEL"]).to_f / dados_graficos_etapas[:tarefas_devel_total] * 100),
                 descricao: "Total de tarefas",
                 tendencia: "RT: #{dados_graficos_etapas[:tarefas_devel_por_etapa]["E01_ESTOQUE_DEVEL_RT"]}",
               },
@@ -227,8 +227,8 @@ module IndicadoresHelper
             "Tarefa DEVEL que está com a situação RESOLVIDA e os testes no desenvolvimento com TESTE_OK ou NAO_NECESSITA_TESTES",
             [
               {
-                valor: dados_graficos_etapas[:tarefas_devel_por_etapa]["E04_AGUARDA_ENCAMINHAR_QS"] + dados_graficos_etapas[:tarefas_devel_por_etapa]["E04_AGUARDA_ENCAMINHAR_QS_RT"],
-                valor_secundario: "#{format("%.1f%%", (dados_graficos_etapas[:tarefas_devel_por_etapa]["E04_AGUARDA_ENCAMINHAR_QS"] + dados_graficos_etapas[:tarefas_devel_por_etapa]["E04_AGUARDA_ENCAMINHAR_QS_RT"]).to_f / dados_graficos_etapas[:tarefas_devel_total] * 100)}",
+                valor: dados_graficos_etapas[:tarefas_devel_por_etapa_agrupadas]["E04_AGUARDA_ENCAMINHAR_QS"],
+                valor_secundario: "#{format("%.1f%%", (dados_graficos_etapas[:tarefas_devel_por_etapa_agrupadas]["E04_AGUARDA_ENCAMINHAR_QS"]).to_f / dados_graficos_etapas[:tarefas_devel_total] * 100)}",
                 descricao: "Total de tarefas",
                 tendencia: "RT: #{dados_graficos_etapas[:tarefas_devel_por_etapa]["E04_AGUARDA_ENCAMINHAR_QS_RT"]}",
               },
@@ -248,8 +248,8 @@ module IndicadoresHelper
             "Tarefa que está no estoque, uma tarefa DEVEL com a situação NOVA ",
             [
               {
-                valor: dados_graficos_etapas[:tarefas_devel_por_etapa]["E05_ESTOQUE_QS"] + dados_graficos_etapas[:tarefas_devel_por_etapa]["E05_ESTOQUE_QS_RT"],
-                valor_secundario: format("%.1f%%", (dados_graficos_etapas[:tarefas_devel_por_etapa]["E05_ESTOQUE_QS"] + dados_graficos_etapas[:tarefas_devel_por_etapa]["E05_ESTOQUE_QS_RT"]).to_f / dados_graficos_etapas[:tarefas_devel_total] * 100),
+                valor: dados_graficos_etapas[:tarefas_devel_por_etapa_agrupadas]["E05_ESTOQUE_QS"],
+                valor_secundario: format("%.1f%%", (dados_graficos_etapas[:tarefas_devel_por_etapa_agrupadas]["E05_ESTOQUE_QS"]).to_f / dados_graficos_etapas[:tarefas_devel_total] * 100),
                 descricao: "Total de tarefas",
                 tendencia: "RT: #{dados_graficos_etapas[:tarefas_devel_por_etapa]["E05_ESTOQUE_QS_RT"]}",
               },
@@ -290,8 +290,8 @@ module IndicadoresHelper
             "Tarefa que está no estoque, uma tarefa DEVEL com a situação NOVA ",
             [
               {
-                valor: dados_graficos_etapas[:tarefas_devel_por_etapa]["E07_AGUARDA_VERSAO"] + dados_graficos_etapas[:tarefas_devel_por_etapa]["E07_AGUARDA_VERSAO_RT"],
-                valor_secundario: format("%.1f%%", (dados_graficos_etapas[:tarefas_devel_por_etapa]["E07_AGUARDA_VERSAO"] + dados_graficos_etapas[:tarefas_devel_por_etapa]["E07_AGUARDA_VERSAO_RT"]).to_f / dados_graficos_etapas[:tarefas_devel_total] * 100),
+                valor: dados_graficos_etapas[:tarefas_devel_por_etapa_agrupadas]["E07_AGUARDA_VERSAO"],
+                valor_secundario: format("%.1f%%", (dados_graficos_etapas[:tarefas_devel_por_etapa_agrupadas]["E07_AGUARDA_VERSAO"]).to_f / dados_graficos_etapas[:tarefas_devel_total] * 100),
                 descricao: "Total de tarefas",
                 tendencia: "RT: #{dados_graficos_etapas[:tarefas_devel_por_etapa]["E07_AGUARDA_VERSAO_RT"]}",
               },
