@@ -140,6 +140,7 @@ module IndicadoresHelper
             [
               {
                 valor: dados_graficos_etapas[:tarefas_devel_por_etapa]["E01_ESTOQUE_DEVEL"] + dados_graficos_etapas[:tarefas_devel_por_etapa]["E01_ESTOQUE_DEVEL_RT"],
+                valor_secundario: format("%.1f%%", dados_graficos_etapas[:tarefas_devel_por_etapa]["E01_ESTOQUE_DEVEL"] + dados_graficos_etapas[:tarefas_devel_por_etapa]["E01_ESTOQUE_DEVEL_RT"] / dados_graficos_etapas[:tarefas_devel_total] * 100),
                 descricao: "Total de tarefas",
                 tendencia: "RT: #{dados_graficos_etapas[:tarefas_devel_por_etapa]["E01_ESTOQUE_DEVEL_RT"]}",
               },
@@ -161,6 +162,7 @@ module IndicadoresHelper
             [
               {
                 valor: dados_graficos_etapas[:tarefas_devel_por_etapa]["E04_AGUARDA_ENCAMINHAR_QS"] + dados_graficos_etapas[:tarefas_devel_por_etapa]["E04_AGUARDA_ENCAMINHAR_QS_RT"],
+                valor_secundario: format("%.1f%%", dados_graficos_etapas[:tarefas_devel_por_etapa]["E04_AGUARDA_ENCAMINHAR_QS"] + dados_graficos_etapas[:tarefas_devel_por_etapa]["E04_AGUARDA_ENCAMINHAR_QS_RT"] / dados_graficos_etapas[:tarefas_devel_total] * 100),
                 descricao: "Total de tarefas",
                 tendencia: "RT: #{dados_graficos_etapas[:tarefas_devel_por_etapa]["E04_AGUARDA_ENCAMINHAR_QS_RT"]}",
               },
@@ -265,13 +267,18 @@ module IndicadoresHelper
     end
   end
 
-  def render_card_valor(titulo, valor, tooltip, descricao = nil, tendencia = nil)
+  def render_card_valor(titulo, valor, tooltip, descricao = nil, tendencia = nil, valor_secundario = nil)
     content_tag(:div, class: "card-valor") do
       [
         render_card_header(titulo, tooltip),
         content_tag(:div, class: "card-body") do
           [
-            content_tag(:div, valor, class: "valor-principal"),
+            content_tag(:div, class: "valor-principal-container") do
+              [
+                content_tag(:div, valor, class: "valor-principal"),
+                valor_secundario ? content_tag(:div, valor_secundario, class: "valor-secundario") : nil,
+              ].compact.join.html_safe
+            end,
             tendencia ? content_tag(:div, tendencia, class: "valor-tendencia") : nil,
             content_tag(:div, descricao, class: "valor-descricao"),
           ].compact.join.html_safe
@@ -299,7 +306,12 @@ module IndicadoresHelper
                 valores.map do |valor|
                   content_tag(:div, class: "valor-container") do
                     safe_join([
-                      content_tag(:div, valor[:valor], class: "valor-principal"),
+                      content_tag(:div, class: "valor-principal-container") do
+                        safe_join([
+                          content_tag(:div, valor[:valor], class: "valor-principal"),
+                          valor[:valor_secundario] ? content_tag(:div, valor[:valor_secundario], class: "valor-secundario") : nil,
+                        ].compact)
+                      end,
                       valor[:tendencia] ? content_tag(:div, valor[:tendencia], class: "valor-tendencia") : nil,
                       content_tag(:div, valor[:descricao], class: "valor-descricao"),
                     ].compact)
