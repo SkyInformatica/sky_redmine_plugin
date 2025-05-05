@@ -154,6 +154,26 @@ module IndicadoresHelper
         ]),
         render_cards_row([
           render_card_valor_grafico(
+            "02 EM ANDAMENTO",
+            "bar",
+            dados_graficos_etapas[:tarefas_devel_por_etapa_por_mes_histograma]["E02_EM_ANDAMENTO"],
+            "Tarefa que está no estoque, uma tarefa DEVEL com a situação NOVA ",
+            [
+              {
+                valor: dados_graficos_etapas[:tarefas_devel_por_etapa]["E02_EM_ANDAMENTO"],
+                valor_secundario: format("%.1f%%", (dados_graficos_etapas[:tarefas_devel_por_etapa]["E02_EM_ANDAMENTO"]).to_f / dados_graficos_etapas[:tarefas_devel_total] * 100),
+                descricao: "Total de tarefas",
+              },
+              {
+                valor: format("%.1f", dados_graficos_etapas[:tarefas_devel_por_etapa_media_dias]["E02_EM_ANDAMENTO"]),
+                descricao: "Média dias",
+              },
+            ],
+            2
+          ),
+        ]),
+        render_cards_row([
+          render_card_valor_grafico(
             "04 AGUARDA ENCAMINHAR QS",
             "bar",
             dados_graficos_etapas[:tarefas_devel_por_etapa_por_mes_histograma]["E04_AGUARDA_ENCAMINHAR_QS"],
