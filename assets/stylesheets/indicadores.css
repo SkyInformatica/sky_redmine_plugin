@@ -260,8 +260,8 @@
 }
 
 .sky-indicadores .card-grafico-half {
-  flex: 1 1 calc(47% - 24px);
-  max-width: calc(47% - 24px);
+  flex: 1 1 calc(45% - 24px);
+  max-width: calc(45% - 24px);
 }
 
 .sky-indicadores .card-grafico-full {
