@@ -156,7 +156,9 @@ module IndicadoresHelper
           render_card_valor_grafico(
             "02 EM ANDAMENTO",
             "bar",
-            dados_graficos_etapas[:tarefas_devel_por_etapa_por_mes_histograma]["E02_EM_ANDAMENTO_DEVEL"],
+            dados_graficos_etapas[:tarefas_devel_por_etapa_por_mes_histograma]["E02_EM_ANDAMENTO_DEVEL"].to_a[0..3].to_h.merge(
+              "Demais" => dados_graficos_etapas[:tarefas_devel_por_etapa_por_mes_histograma]["E02_EM_ANDAMENTO_DEVEL"].to_a[4..].sum(&:last),
+            ),
             "Tarefa que está no estoque, uma tarefa DEVEL com a situação NOVA ",
             [
               {
