@@ -72,7 +72,7 @@ class IndicadoresService
 
   def self.obter_dados_graficos_etapas(tarefas)
     Rails.logger.info ">>> obter_dados_graficos_etapas"
-    # Obter dados de gráficos para etapas
+
     tarefas_devel = tarefas
       .where(tarefa_complementar: "NAO")
       .where.not(equipe_responsavel_atual: SkyRedminePlugin::Constants::EquipeResponsavel::FECHADA)
@@ -82,79 +82,54 @@ class IndicadoresService
       .group(:etapa_atual)
       .count
 
-    # Criar histograma por período
+    # Criar histograma diretamente no formato final
     data_atual = Date.today
-    histograma_etapas = []
+    histograma_por_etapa = {}
 
-    # Agrupar tarefas por etapa e período
     tarefas_devel.each do |tarefa|
       next unless tarefa.data_etapa_atual && tarefa.etapa_atual
 
       periodo = determinar_periodo(tarefa.data_etapa_atual.to_date, data_atual)
       next unless periodo
 
-      # Remover sufixo _RT da etapa para agrupamento
+      # Processar etapa
       etapa_base = if tarefa.etapa_atual.to_s.start_with?("E07_AGUARDA_ENCAMINHAR_RT")
           tarefa.etapa_atual
         else
           tarefa.etapa_atual.to_s.gsub(/_RT$/, "")
         end
 
-      # Criar chave única para o histograma
-      histograma_etapas << {
-        etapa: etapa_base,
-        periodo: periodo,
-        quantidade: 1,
-      }
+      # Criar rótulo do período
+      rotulo = case periodo
+        when "maior_2_anos"
+          "Maior que 2 anos"
+        when "maior_1_ano"
+          "Maior que 1 ano"
+        else
+          (Date.today - periodo.to_i.months).strftime("%Y.%m")
+        end
+
+      # Inicializar estruturas se necessário
+      histograma_por_etapa[etapa_base] ||= {}
+      histograma_por_etapa[etapa_base][rotulo] ||= 0
+      histograma_por_etapa[etapa_base][rotulo] += 1
     end
 
-    # Agregar quantidades
-    histograma_agregado = histograma_etapas.group_by { |h| [h[:etapa], h[:periodo]] }
-      .transform_values { |arr| arr.count }
-      .map { |k, v| { etapa: k[0], periodo: k[1], quantidade: v } }
+    # Garantir que todas as etapas tenham todos os períodos
+    periodos = (0..11).map { |m| (Date.today - m.months).strftime("%Y.%m") } +
+               ["Maior que 1 ano", "Maior que 2 anos"]
 
-    # Garantir que todas as etapas tenham todos os períodos (incluindo zeros)
-    etapas_unicas = histograma_agregado.map { |h| h[:etapa] }.uniq
-    periodos = (0..11).to_a + ["maior_1_ano", "maior_2_anos"]
-
-    histograma_completo = etapas_unicas.flat_map do |etapa|
-      periodos.map do |periodo|
-        registro = histograma_agregado.find { |h| h[:etapa] == etapa && h[:periodo] == periodo }
-        registro || { etapa: etapa, periodo: periodo, quantidade: 0 }
+    histograma_por_etapa.each do |etapa, dados|
+      periodos.each do |periodo|
+        dados[periodo] ||= 0
       end
     end
-
-    # Transformar o histograma em um formato adequado para o gráfico
-    histograma_por_etapa = {}
-    etapas_unicas.each do |etapa|
-      dados_etapa = {}
-      histograma_completo.select { |h| h[:etapa] == etapa }.each do |registro|
-        # Converter o período em um rótulo mais amigável
-        rotulo = case registro[:periodo]
-          when "maior_2_anos"
-            "Maior que 2 anos"
-          when "maior_1_ano"
-            "Maior que 1 ano"
-          else
-            # Calcular o mês baseado no período (0-11)
-            data = Date.today - registro[:periodo].to_i.months
-            data.strftime("%Y.%m") # Formato YYYY.MM
-          end
-        dados_etapa[rotulo] = registro[:quantidade]
-      end
-      histograma_por_etapa[etapa] = dados_etapa
-    end
-
-    Rails.logger.info ">>> Histograma completo: #{histograma_completo.inspect}"
-    Rails.logger.info ">>> tarefas_devel_por_etapa: #{tarefas_devel_por_etapa}"
-    Rails.logger.info ">>> histograma_por_etapa: #{histograma_por_etapa}"
 
     {
       tarefas_devel_por_etapa: tarefas_devel_por_etapa,
       tarefas_devel_por_etapa_por_mes_histograma: histograma_por_etapa,
     }
   end
-
   # Função auxiliar para determinar o período
   def self.determinar_periodo(data_etapa, data_atual)
     return nil unless data_etapa
