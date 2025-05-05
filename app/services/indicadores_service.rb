@@ -93,10 +93,14 @@ class IndicadoresService
       end
     end
 
-    tarefas_devel_por_etapa_agrupadas = tarefas_agrupadas
-      .order(:etapa_atual)
-      .group(:etapa_atual)
-      .count
+    # Hash para o grafico da quantidade de tarefas por etapa agrupada
+    tarefas_devel_por_etapa_agrupadas = {}
+    tarefas_agrupadas.each do |etapa_base, tarefas_grupo|
+      # Agrupar tarefas por etapa base
+      tarefas_devel_por_etapa_agrupadas[etapa_base] = tarefas_grupo.count
+    end
+    # Ordenar as etapas agrupadas
+    tarefas_devel_por_etapa_agrupadas = tarefas_devel_por_etapa_agrupadas.sort_by { |etapa, _| etapa }.to_h
 
     # Criar histograma diretamente no formato final
     data_atual = Date.today
