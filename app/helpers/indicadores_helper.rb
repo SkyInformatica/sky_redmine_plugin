@@ -175,7 +175,7 @@ module IndicadoresHelper
             [
               {
                 valor: dados_graficos_etapas[:tarefas_devel_por_etapa_agrupadas]["E01_ESTOQUE_DEVEL"],
-                valor_secundario: format("%.1f%%", (dados_graficos_etapas[:tarefas_devel_por_etapa]["E01_ESTOQUE_DEVEL"]).to_f / dados_graficos_etapas[:tarefas_devel_total] * 100),
+                valor_secundario: format("%.1f%%", (dados_graficos_etapas[:tarefas_devel_por_etapa_agrupadas]["E01_ESTOQUE_DEVEL"]).to_f / dados_graficos_etapas[:tarefas_devel_total] * 100),
                 descricao: "Total de tarefas",
                 tendencia: "RT: #{dados_graficos_etapas[:tarefas_devel_por_etapa]["E01_ESTOQUE_DEVEL_RT"]}",
               },
@@ -195,8 +195,8 @@ module IndicadoresHelper
             "Tarefa que está no estoque, uma tarefa DEVEL com a situação NOVA ",
             [
               {
-                valor: dados_graficos_etapas[:tarefas_devel_por_etapa]["E03_AGUARDA_TESTES_DEVEL"],
-                valor_secundario: format("%.1f%%", (dados_graficos_etapas[:tarefas_devel_por_etapa]["E03_AGUARDA_TESTES_DEVEL"]).to_f / dados_graficos_etapas[:tarefas_devel_total] * 100),
+                valor: dados_graficos_etapas[:tarefas_devel_por_etapa_agrupadas]["E03_AGUARDA_TESTES_DEVEL"],
+                valor_secundario: format("%.1f%%", (dados_graficos_etapas[:tarefas_devel_por_etapa_agrupadas]["E03_AGUARDA_TESTES_DEVEL"]).to_f / dados_graficos_etapas[:tarefas_devel_total] * 100),
                 descricao: "Total de tarefas",
               },
               {
@@ -213,8 +213,8 @@ module IndicadoresHelper
             "Tarefa que está no estoque, uma tarefa DEVEL com a situação NOVA ",
             [
               {
-                valor: dados_graficos_etapas[:tarefas_devel_por_etapa]["E03_AGUARDA_ENCAMINHAR_RT_DEVEL"] ? dados_graficos_etapas[:tarefas_devel_por_etapa]["E03_AGUARDA_ENCAMINHAR_RT_DEVEL"] : 0,
-                valor_secundario: format("%.1f%%", (dados_graficos_etapas[:tarefas_devel_por_etapa]["E03_AGUARDA_ENCAMINHAR_RT_DEVEL"]).to_f / dados_graficos_etapas[:tarefas_devel_total] * 100),
+                valor: dados_graficos_etapas[:tarefas_devel_por_etapa_agrupadas]["E03_AGUARDA_ENCAMINHAR_RT_DEVEL"] ? dados_graficos_etapas[:tarefas_devel_por_etapa]["E03_AGUARDA_ENCAMINHAR_RT_DEVEL"] : 0,
+                valor_secundario: format("%.1f%%", (dados_graficos_etapas[:tarefas_devel_por_etapa_agrupadas]["E03_AGUARDA_ENCAMINHAR_RT_DEVEL"]).to_f / dados_graficos_etapas[:tarefas_devel_total] * 100),
                 descricao: "Total de tarefas",
               },
               {
@@ -275,8 +275,8 @@ module IndicadoresHelper
             "Tarefa que está no estoque, uma tarefa DEVEL com a situação NOVA ",
             [
               {
-                valor: dados_graficos_etapas[:tarefas_devel_por_etapa]["E07_AGUARDA_ENCAMINHAR_RT"],
-                valor_secundario: format("%.1f%%", (dados_graficos_etapas[:tarefas_devel_por_etapa]["E07_AGUARDA_ENCAMINHAR_RT"]).to_f / dados_graficos_etapas[:tarefas_devel_total] * 100),
+                valor: dados_graficos_etapas[:tarefas_devel_por_etapa_agrupadas]["E07_AGUARDA_ENCAMINHAR_RT"],
+                valor_secundario: format("%.1f%%", (dados_graficos_etapas[:tarefas_devel_por_etapa_agrupadas]["E07_AGUARDA_ENCAMINHAR_RT"]).to_f / dados_graficos_etapas[:tarefas_devel_total] * 100),
                 descricao: "Total de tarefas",
                 tendencia: "RT: #{dados_graficos_etapas[:tarefas_devel_por_etapa]["E07_AGUARDA_ENCAMINHAR_RT"]}",
               },
