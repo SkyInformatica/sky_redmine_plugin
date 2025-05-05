@@ -116,6 +116,20 @@ module IndicadoresHelper
       safe_join([
         render_cards_row([
           render_card_valor(
+            "E02 EM ANDAMENTO DEVEL",
+            dados_graficos_etapas[:tarefas_devel_por_etapa]["E02_EM_ANDAMENTO_DEVEL"] + dados_graficos_etapas[:tarefas_devel_por_etapa]["E02_EM_ANDAMENTO_DEVEL_RT"],
+            "Total de tarefas com na etapa E02_EM_ANDAMENTO_DEVEL + E02_EM_ANDAMENTO_DEVEL_RT",
+            "Tarefas em andamento no DEVEL (RT: #{dados_graficos_etapas[:tarefas_devel_por_etapa]["E02_EM_ANDAMENTO_DEVEL_RT"]})",
+            format("%.1f%%", (dados_graficos_etapas[:tarefas_devel_por_etapa]["E02_EM_ANDAMENTO_DEVEL"] + dados_graficos_etapas[:tarefas_devel_por_etapa]["E02_EM_ANDAMENTO_DEVEL_RT"]).to_f / dados_graficos_etapas[:tarefas_devel_total] * 100)
+          ),
+          render_card_valor(
+            "E06 EM ANDAMENTO QS",
+            dados_graficos_etapas[:tarefas_devel_por_etapa]["E06_EM_ANDAMENTO_QS"] + dados_graficos_etapas[:tarefas_devel_por_etapa]["E06_EM_ANDAMENTO_QS_RT"],
+            "Total de tarefas com na etapa E06_EM_ANDAMENTO_QS + E06_EM_ANDAMENTO_QS_RT",
+            "Tarefas em andamento no QS (RT: #{dados_graficos_etapas[:tarefas_devel_por_etapa]["E06_EM_ANDAMENTO_QS_RT"]})",
+            format("%.1f%%", (dados_graficos_etapas[:tarefas_devel_por_etapa]["E06_EM_ANDAMENTO_QS"] + dados_graficos_etapas[:tarefas_devel_por_etapa]["E06_EM_ANDAMENTO_QS_RT"]).to_f / dados_graficos_etapas[:tarefas_devel_total] * 100)
+          ),
+          render_card_valor(
             "E99 DESCONHECIDA",
             dados_graficos_etapas[:tarefas_devel_por_etapa]["E99_DESCONHECIDA"],
             "Total de tarefas com na etapa E99_DESCONHECIDA",
@@ -153,27 +167,6 @@ module IndicadoresHelper
           ),
         ]),
         render_cards_row([
-          render_card_valor_grafico(
-            "02 EM ANDAMENTO",
-            "bar",
-            dados_graficos_etapas[:tarefas_devel_por_etapa_por_mes_histograma]["E02_EM_ANDAMENTO_DEVEL"].to_a[0..2].to_h.merge(
-              "Demais" => dados_graficos_etapas[:tarefas_devel_por_etapa_por_mes_histograma]["E02_EM_ANDAMENTO_DEVEL"].to_a[3..].sum(&:last),
-            ),
-            "Tarefa que está em desenvolvimento, uma tarefa DEVEL com a situação EM_ANDAMENTO",
-            [
-              {
-                valor: dados_graficos_etapas[:tarefas_devel_por_etapa]["E02_EM_ANDAMENTO_DEVEL"] + dados_graficos_etapas[:tarefas_devel_por_etapa]["E02_EM_ANDAMENTO_DEVEL_RT"],
-                valor_secundario: format("%.1f%%", (dados_graficos_etapas[:tarefas_devel_por_etapa]["E02_EM_ANDAMENTO_DEVEL"] + dados_graficos_etapas[:tarefas_devel_por_etapa]["E02_EM_ANDAMENTO_DEVEL_RT"]).to_f / dados_graficos_etapas[:tarefas_devel_total] * 100),
-                descricao: "Total de tarefas",
-                tendencia: "RT: #{dados_graficos_etapas[:tarefas_devel_por_etapa]["E02_EM_ANDAMENTO_DEVEL_RT"]}",
-              },
-              {
-                valor: format("%.1f", dados_graficos_etapas[:tarefas_devel_por_etapa_media_dias]["E02_EM_ANDAMENTO_DEVEL"]),
-                descricao: "Média dias",
-              },
-            ],
-            2
-          ),
           render_card_valor_grafico(
             "E03 AGUARDA TESTES DEVEL",
             "bar",
@@ -234,6 +227,69 @@ module IndicadoresHelper
               },
             ],
             1 # Um card por linha
+          ),
+        ]),
+        render_cards_row([
+          render_card_valor_grafico(
+            "05 ESTOQUE QS",
+            "bar",
+            dados_graficos_etapas[:tarefas_devel_por_etapa_por_mes_histograma]["E05_ESTOQUE_QS"],
+            "Tarefa que está no estoque, uma tarefa DEVEL com a situação NOVA ",
+            [
+              {
+                valor: dados_graficos_etapas[:tarefas_devel_por_etapa]["E05_ESTOQUE_QS"] + dados_graficos_etapas[:tarefas_devel_por_etapa]["E05_ESTOQUE_QS_RT"],
+                valor_secundario: format("%.1f%%", (dados_graficos_etapas[:tarefas_devel_por_etapa]["E05_ESTOQUE_QS"] + dados_graficos_etapas[:tarefas_devel_por_etapa]["E05_ESTOQUE_QS_RT"]).to_f / dados_graficos_etapas[:tarefas_devel_total] * 100),
+                descricao: "Total de tarefas",
+                tendencia: "RT: #{dados_graficos_etapas[:tarefas_devel_por_etapa]["E05_ESTOQUE_QS_RT"]}",
+              },
+              {
+                valor: format("%.1f", dados_graficos_etapas[:tarefas_devel_por_etapa_media_dias]["E05_ESTOQUE_QS"]),
+                descricao: "Média dias",
+              },
+            ],
+            1
+          ),
+        ]),
+        render_cards_row([
+          render_card_valor_grafico(
+            "07 AGUARDA ENCAMINHAR RT",
+            "bar",
+            dados_graficos_etapas[:tarefas_devel_por_etapa_por_mes_histograma]["E07_AGUARDA_ENCAMINHAR_RT"],
+            "Tarefa que está no estoque, uma tarefa DEVEL com a situação NOVA ",
+            [
+              {
+                valor: dados_graficos_etapas[:tarefas_devel_por_etapa]["E07_AGUARDA_ENCAMINHAR_RT"],
+                valor_secundario: format("%.1f%%", (dados_graficos_etapas[:tarefas_devel_por_etapa]["E07_AGUARDA_ENCAMINHAR_RT"]).to_f / dados_graficos_etapas[:tarefas_devel_total] * 100),
+                descricao: "Total de tarefas",
+                tendencia: "RT: #{dados_graficos_etapas[:tarefas_devel_por_etapa]["E07_AGUARDA_ENCAMINHAR_RT"]}",
+              },
+              {
+                valor: format("%.1f", dados_graficos_etapas[:tarefas_devel_por_etapa_media_dias]["E07_AGUARDA_ENCAMINHAR_RT"]),
+                descricao: "Média dias",
+              },
+            ],
+            1
+          ),
+        ]),
+        render_cards_row([
+          render_card_valor_grafico(
+            "07 AGUARDA VERSAO",
+            "bar",
+            dados_graficos_etapas[:tarefas_devel_por_etapa_por_mes_histograma]["E07_AGUARDA_VERSAO"],
+            "Tarefa que está no estoque, uma tarefa DEVEL com a situação NOVA ",
+            [
+              {
+                valor: dados_graficos_etapas[:tarefas_devel_por_etapa]["E07_AGUARDA_VERSAO"] + dados_graficos_etapas[:tarefas_devel_por_etapa]["E07_AGUARDA_VERSAO_RT"],
+                valor_secundario: format("%.1f%%", (dados_graficos_etapas[:tarefas_devel_por_etapa]["E07_AGUARDA_VERSAO"] + dados_graficos_etapas[:tarefas_devel_por_etapa]["E07_AGUARDA_VERSAO_RT"]).to_f / dados_graficos_etapas[:tarefas_devel_total] * 100),
+                descricao: "Total de tarefas",
+                tendencia: "RT: #{dados_graficos_etapas[:tarefas_devel_por_etapa]["E07_AGUARDA_VERSAO_RT"]}",
+              },
+              {
+                valor: format("%.1f", dados_graficos_etapas[:tarefas_devel_por_etapa_media_dias]["E07_AGUARDA_VERSAO"]),
+                descricao: "Média dias",
+              },
+            ],
+            1
           ),
         ]),
         render_cards_row([
