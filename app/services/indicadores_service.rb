@@ -130,11 +130,11 @@ class IndicadoresService
       histograma_por_etapa[etapa] = dados_ordenados
     end
 
+    # Calcular média de dias para cada etapa usando sintaxe MySQL
     tarefas_devel_por_etapa_media_dias = {}
     tarefas_devel_por_etapa.each do |etapa, count|
-      # Calcular a média de dias para cada etapa
       tarefas_etapa = tarefas_devel.where(etapa_atual: etapa)
-      dias_medio = tarefas_etapa.average("EXTRACT(EPOCH FROM (CURRENT_DATE - data_etapa_atual)) / 86400")
+      dias_medio = tarefas_etapa.average("DATEDIFF(CURRENT_DATE, data_etapa_atual)")
       tarefas_devel_por_etapa_media_dias[etapa] = dias_medio
     end
 
