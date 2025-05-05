@@ -49,6 +49,22 @@ module IndicadoresHelper
             2
           ),
         ]),
+      ])
+    end
+  end
+
+  def render_graficos_fechdas(dados_graficos)
+    content_tag(:div, class: "graficos-container") do
+      safe_join([
+        # Primeira linha - Cards de valores
+        render_cards_row([
+          render_card_valor(
+            "Total de tarefas",
+            dados_graficos[:tarefas_desenvolvimento].where(equipe_responsavel_atual: SkyRedminePlugin::Constants::EquipeResponsavel::FECHADA).count,
+            "Total de tarefas FECHADAS",
+            "Tarefas com versão liberada no período selecionado",
+          ),
+        ]),
 
         # Terceira linha - Cards de gráficos
         render_cards_row([

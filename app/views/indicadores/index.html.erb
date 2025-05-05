@@ -21,7 +21,7 @@
       </li>
       <li class="nav-item" role="presentation">
         <button class="nav-link" id="fechadas-tab" data-bs-toggle="tab" data-bs-target="#fechadas" type="button" role="tab" aria-controls="geral" aria-selected="true">
-          Etapas
+          Fechadas
         </button>
       </li>
       <li class="nav-item" role="presentation">
@@ -46,7 +46,7 @@
 
     <!-- Conteúdo da aba Fechadas -->
     <div class="tab-pane fade" id="fechadas" role="tabpanel" aria-labelledby="fechadas-tab">
-      <%= render_graficos_etapas(@dados_graficos_etapas) %>
+      <%= render_graficos_fechadas(@dados_graficos) %>
     </div>
 
     <!-- Aba Tarefas -->
