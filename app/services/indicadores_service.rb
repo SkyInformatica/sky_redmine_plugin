@@ -93,6 +93,22 @@ class IndicadoresService
       end
     end
 
+    # Validar e adicionar etapas faltantes
+    etapas_faltantes = SkyRedmineIndicadores::Constants::EtapaAtual::TODAS_ETAPAS - tarefas_devel_por_etapa.keys
+    etapas_faltantes.each do |etapa|
+      tarefas_devel_por_etapa[etapa] = 0
+    end
+
+    # Adicionar etapas faltantes no agrupamento também
+    etapas_faltantes.each do |etapa|
+      etapa_base = if etapa.to_s.start_with?("E07_AGUARDA_ENCAMINHAR_RT")
+          etapa
+        else
+          etapa.to_s.gsub(/_RT$/, "")
+        end
+      tarefas_agrupadas[etapa_base] ||= []
+    end
+
     # Hash para o grafico da quantidade de tarefas por etapa agrupada
     tarefas_devel_por_etapa_agrupadas = {}
     tarefas_agrupadas.each do |etapa_base, tarefas_grupo|

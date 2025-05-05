@@ -203,7 +203,7 @@ module IndicadoresHelper
             "Tarefa que está no estoque, uma tarefa DEVEL com a situação NOVA ",
             [
               {
-                valor: dados_graficos_etapas[:tarefas_devel_por_etapa]["E03_AGUARDA_ENCAMINHAR_RT_DEVEL"],
+                valor: dados_graficos_etapas[:tarefas_devel_por_etapa]["E03_AGUARDA_ENCAMINHAR_RT_DEVEL"] ? dados_graficos_etapas[:tarefas_devel_por_etapa]["E03_AGUARDA_ENCAMINHAR_RT_DEVEL"] : 0,
                 valor_secundario: format("%.1f%%", (dados_graficos_etapas[:tarefas_devel_por_etapa]["E03_AGUARDA_ENCAMINHAR_RT_DEVEL"]).to_f / dados_graficos_etapas[:tarefas_devel_total] * 100),
                 descricao: "Total de tarefas",
               },
