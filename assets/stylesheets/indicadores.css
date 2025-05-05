@@ -255,13 +255,13 @@
 
 /* Card de gráfico */
 .sky-indicadores .card-grafico-third {
-  flex: 1 1 calc(30% - 24px);
-  max-width: calc(30% - 24px);
+  flex: 1 1 calc(33% - 24px);
+  max-width: calc(33% - 24px);
 }
 
 .sky-indicadores .card-grafico-half {
-  flex: 1 1 calc(45% - 24px);
-  max-width: calc(45% - 24px);
+  flex: 1 1 calc(50% - 24px);
+  max-width: calc(50% - 24px);
 }
 
 .sky-indicadores .card-grafico-full {
