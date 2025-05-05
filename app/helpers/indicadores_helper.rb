@@ -300,8 +300,8 @@ module IndicadoresHelper
                   content_tag(:div, class: "valor-container") do
                     safe_join([
                       content_tag(:div, valor[:valor], class: "valor-principal"),
-                      content_tag(:div, valor[:descricao], class: "valor-descricao"),
                       valor[:tendencia] ? content_tag(:div, valor[:tendencia], class: "valor-tendencia") : nil,
+                      content_tag(:div, valor[:descricao], class: "valor-descricao"),
                     ].compact)
                   end
                 end
