@@ -182,7 +182,6 @@ module IndicadoresHelper
             "E03 AGUARDA TESTES DEVEL",
             "bar",
             dados_graficos_etapas[:tarefas_devel_por_etapa_por_mes_histograma]["E03_AGUARDA_TESTES_DEVEL"],
-            ),
             "Tarefa que está no estoque, uma tarefa DEVEL com a situação NOVA ",
             [
               {
@@ -201,7 +200,6 @@ module IndicadoresHelper
             "E03_AGUARDA_ENCAMINHAR_RT_DEVEL",
             "bar",
             dados_graficos_etapas[:tarefas_devel_por_etapa_por_mes_histograma]["E03_AGUARDA_ENCAMINHAR_RT_DEVEL"],
-            ),
             "Tarefa que está no estoque, uma tarefa DEVEL com a situação NOVA ",
             [
               {
