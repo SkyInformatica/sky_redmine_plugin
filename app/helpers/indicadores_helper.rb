@@ -116,11 +116,10 @@ module IndicadoresHelper
       safe_join([
         render_cards_row([
           render_card_valor(
-            "E01 ESTOQUE DEVEL",
-            dados_graficos_etapas[:tarefas_devel_por_etapa_agrupadas]["E01_ESTOQUE_DEVEL"],
-            "Total de tarefas com na etapa E01_ESTOQUE_DEVEL + E01_ESTOQUE_DEVEL_RT",
-            "Tarefas em estoque no DEVEL (RT: #{dados_graficos_etapas[:tarefas_devel_por_etapa]["E01_ESTOQUE_DEVEL_RT"]})",
-            format("%.1f%%", (dados_graficos_etapas[:tarefas_devel_por_etapa_agrupadas]["E01_ESTOQUE_DEVEL"]).to_f / dados_graficos_etapas[:tarefas_devel_total] * 100)
+            "TOTAL TAREFAS",
+            dados_graficos_etapas[:tarefas_devel_total],
+            "Total de tarefas que estão em desenvolvimento",
+            "Tarefas de RT: #{dados_graficos_etapas[:tarefas_devel_rt_total]} #{format("%.1f%%", (dados_graficos_etapas[:tarefas_devel_rt_total]).to_f / dados_graficos_etapas[:tarefas_devel_total] * 100)})"
           ),
           render_card_valor(
             "E99 DESCONHECIDA",
@@ -130,11 +129,12 @@ module IndicadoresHelper
             format("%.1f%%", (dados_graficos_etapas[:tarefas_devel_por_etapa]["E99_DESCONHECIDA"]).to_f / dados_graficos_etapas[:tarefas_devel_total] * 100)
           ),
           render_card_valor(
-            "E99 INTERROMPIDA + INTERROMPIDA ANALISE",
+            "E99 INTERROMPIDA",
             dados_graficos_etapas[:tarefas_devel_por_etapa]["E99_INTERROMPIDA"] + dados_graficos_etapas[:tarefas_devel_por_etapa]["E99_INTERROMPIDA_ANALISE"],
             "Total de tarefas na etapa E99_INTERROMPIDA + E99_INTERROMPIDA_ANALISE",
             "Tarefas interrompidas",
-            format("%.1f%%", (dados_graficos_etapas[:tarefas_devel_por_etapa]["E99_INTERROMPIDA"] + dados_graficos_etapas[:tarefas_devel_por_etapa]["E99_INTERROMPIDA_ANALISE"]).to_f / dados_graficos_etapas[:tarefas_devel_total] * 100)
+            format("%.1f%%", (dados_graficos_etapas[:tarefas_devel_por_etapa]["E99_INTERROMPIDA"] + dados_graficos_etapas[:tarefas_devel_por_etapa]["E99_INTERROMPIDA_ANALISE"]).to_f / dados_graficos_etapas[:tarefas_devel_total] * 100),
+            "para analise: #{dados_graficos_etapas[:tarefas_devel_por_etapa]["E99_INTERROMPIDA_ANALISE"]}"
           ),
         ]),
 

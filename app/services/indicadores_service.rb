@@ -109,6 +109,10 @@ class IndicadoresService
       tarefas_agrupadas[etapa_base] ||= []
     end
 
+    # total de tarefas devel e total tarefas devel que sao etapas de RT
+    tarefas_devel_total = tarefas_devel.count
+    tarefas_devel_rt_total = tarefas_devel.count
+
     # Hash para o grafico da quantidade de tarefas por etapa agrupada
     tarefas_devel_por_etapa_agrupadas = {}
     tarefas_agrupadas.each do |etapa_base, tarefas_grupo|
@@ -202,7 +206,8 @@ class IndicadoresService
 
     {
       tarefas_devel: tarefas_devel,
-      tarefas_devel_total: tarefas_devel.count,
+      tarefas_devel_total: tarefas_devel_total,
+      tarefas_devel_rt_total: tarefas_devel_rt_total,
       tarefas_devel_por_etapa: tarefas_devel_por_etapa,
       tarefas_devel_por_etapa_agrupadas: tarefas_devel_por_etapa_agrupadas,
       tarefas_devel_por_etapa_media_dias: tarefas_devel_por_etapa_media_dias,
