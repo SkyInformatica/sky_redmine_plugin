@@ -147,7 +147,6 @@ module IndicadoresHelper
               {
                 valor: format("%.1f", dados_graficos_etapas[:tarefas_devel_por_etapa_media_dias]["E01_ESTOQUE_DEVEL"]),
                 descricao: "Média dias",
-                tendencia: "",
               },
             ],
             1
@@ -163,12 +162,12 @@ module IndicadoresHelper
               {
                 valor: dados_graficos_etapas[:tarefas_devel_por_etapa]["E04_AGUARDA_ENCAMINHAR_QS"] + dados_graficos_etapas[:tarefas_devel_por_etapa]["E04_AGUARDA_ENCAMINHAR_QS_RT"],
                 valor_secundario: "#{format("%.1f%%", (dados_graficos_etapas[:tarefas_devel_por_etapa]["E04_AGUARDA_ENCAMINHAR_QS"] + dados_graficos_etapas[:tarefas_devel_por_etapa]["E04_AGUARDA_ENCAMINHAR_QS_RT"]).to_f / dados_graficos_etapas[:tarefas_devel_total] * 100)}",
-                descricao: "tarefas",
+                descricao: "Total de tarefas",
                 tendencia: "RT: #{dados_graficos_etapas[:tarefas_devel_por_etapa]["E04_AGUARDA_ENCAMINHAR_QS_RT"]}",
               },
               {
                 valor: format("%.1f", dados_graficos_etapas[:tarefas_devel_por_etapa_media_dias]["E04_AGUARDA_ENCAMINHAR_QS"]),
-                descricao: "Méida de dias",
+                descricao: "Média de dias",
               },
             ],
             1 # Um card por linha
