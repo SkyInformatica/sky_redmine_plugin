@@ -86,11 +86,7 @@ class IndicadoresService
     # Agrupar tarefas por etapa base para histograma e média de dias
     tarefas_agrupadas = tarefas_devel.group_by do |tarefa|
       next unless tarefa.etapa_atual
-      if tarefa.etapa_atual.to_s.start_with?("E07_AGUARDA_ENCAMINHAR_RT")
-        tarefa.etapa_atual
-      else
-        tarefa.etapa_atual.to_s.gsub(/_RT$/, "")
-      end
+      obter_etapa_base(tarefa.etapa_atual)[:etapa_base]
     end
 
     # Validar e adicionar etapas faltantes
@@ -101,18 +97,17 @@ class IndicadoresService
 
     # Adicionar etapas faltantes no agrupamento também
     etapas_faltantes.each do |etapa|
-      etapa_base = if etapa.to_s.start_with?("E07_AGUARDA_ENCAMINHAR_RT")
-          etapa
-        else
-          etapa.to_s.gsub(/_RT$/, "")
-        end
+      etapa_base = obter_etapa_base(etapa)[:etapa_base]
       tarefas_agrupadas[etapa_base] ||= []
     end
 
     # total de tarefas devel
     tarefas_devel_total = tarefas_devel.count
     # total tarefas devel que sao etapas de RT
-    tarefas_devel_rt_total = 0
+    tarefas_devel_rt_total = tarefas_devel.count do |tarefa|
+      next false unless tarefa.etapa_atual
+      obter_etapa_base(tarefa.etapa_atual)[:eh_rt]
+    end
 
     # Hash para o grafico da quantidade de tarefas por etapa agrupada
     tarefas_devel_por_etapa_agrupadas = {}
@@ -229,6 +224,16 @@ class IndicadoresService
       "maior_1_ano"
     elsif meses_diferenca >= 0
       meses_diferenca # retorna o número do mês (0 a 11)
+    end
+  end
+
+  def self.obter_etapa_base(etapa)
+    return unless etapa
+    if etapa.to_s.start_with?("E07_AGUARDA_ENCAMINHAR_RT")
+      { etapa_base: etapa, eh_rt: false }
+    else
+      etapa_base = etapa.to_s.gsub(/_RT$/, "")
+      { etapa_base: etapa_base, eh_rt: etapa.to_s.end_with?("_RT") }
     end
   end
 end
