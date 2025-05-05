@@ -94,7 +94,7 @@ class IndicadoresService
     end
 
     # Validar e adicionar etapas faltantes
-    etapas_faltantes = SkyRedmineIndicadores::Constants::EtapaAtual::TODAS_ETAPAS - tarefas_devel_por_etapa.keys
+    etapas_faltantes = SkyRedminePlugin::Constants::EtapaAtual::TODAS_ETAPAS - tarefas_devel_por_etapa.keys
     etapas_faltantes.each do |etapa|
       tarefas_devel_por_etapa[etapa] = 0
     end
