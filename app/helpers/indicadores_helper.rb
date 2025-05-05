@@ -146,6 +146,17 @@ module IndicadoresHelper
         ]),
 
         render_cards_row([
+          render_card_grafico(
+            "Tarefas desenvolvimento em aberto por etapa",
+            "bar",
+            dados_graficos_etapas[:tarefas_devel_por_etapa_agrupadas],
+            "Distribuição das tarefas em desenvolvimento em aberto por etapa atual (nao contabiliza as etapas E99_, E08_ e EM_ANDAMENTO)",
+            "Total de tarefas na fila de cada etapa",
+            1
+          ),
+        ]),
+
+        render_cards_row([
           render_card_valor_grafico(
             "01 ESTOQUE DEVEL",
             "bar",
@@ -292,16 +303,7 @@ module IndicadoresHelper
             1
           ),
         ]),
-        render_cards_row([
-          render_card_grafico(
-            "Tarefas desenvolvimento em aberto por etapa",
-            "bar",
-            dados_graficos_etapas[:tarefas_devel_por_etapa_agrupadas],
-            "Distribuição das tarefas em desenvolvimento em aberto por etapa atual (nao contabiliza as etapas E99_, E08_ e EM_ANDAMENTO)",
-            "Total de tarefas na fila de cada etapa",
-            1
-          ),
-        ]),
+
       ])
     end
   end
