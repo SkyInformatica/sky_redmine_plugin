@@ -273,9 +273,9 @@ module IndicadoresHelper
           [
             content_tag(:div, valor, class: "valor-principal"),
             tendencia ? content_tag(:div, tendencia, class: "valor-tendencia") : nil,
+            content_tag(:div, valor[:descricao], class: "valor-descricao"),
           ].compact.join.html_safe
         end,
-        render_card_footer(descricao),
       ].join.html_safe
     end
   end
@@ -328,14 +328,6 @@ module IndicadoresHelper
         content_tag(:h3, titulo, class: "card-titulo"),
         render_tooltip(tooltip),
       ].join.html_safe
-    end
-  end
-
-  def render_card_footer(descricao)
-    return nil unless descricao.present?
-
-    content_tag(:div, class: "card-footer") do
-      content_tag(:p, descricao, class: "card-descricao")
     end
   end
 
