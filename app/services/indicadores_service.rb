@@ -115,14 +115,19 @@ class IndicadoresService
       histograma_por_etapa[etapa_base][rotulo] += 1
     end
 
-    # Garantir que todas as etapas tenham todos os períodos
-    periodos = (0..11).map { |m| (Date.today - m.months).strftime("%Y.%m") } +
-               ["Maior que 1 ano", "Maior que 2 anos"]
+    # Definir períodos na ordem correta (do mais recente para o mais antigo)
+    periodos = (0..11).map { |m| (Date.today - m.months).strftime("%Y.%m") }
+    periodos_ordenados = periodos + ["Maior que 1 ano", "Maior que 2 anos"]
 
+    # Garantir que todas as etapas tenham todos os períodos e ordenar
     histograma_por_etapa.each do |etapa, dados|
-      periodos.each do |periodo|
-        dados[periodo] ||= 0
+      # Criar hash temporário com todos os períodos zerados
+      dados_ordenados = {}
+      periodos_ordenados.each do |periodo|
+        dados_ordenados[periodo] = dados[periodo] || 0
       end
+      # Substituir dados originais pelos ordenados
+      histograma_por_etapa[etapa] = dados_ordenados
     end
 
     {
