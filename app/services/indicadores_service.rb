@@ -110,41 +110,62 @@ class IndicadoresService
     tarefas_agrupadas.each do |etapa_base, tarefas_grupo|
       histograma_por_etapa[etapa_base] = {}
 
+      # Determinar se é uma das etapas especiais que precisam de tratamento diferenciado
+      etapa_especial = ["E03_AGUARDA_TESTES_DEVEL", "E03_AGUARDA_ENCAMINHAR_RT_DEVEL"].include?(etapa_base)
+
+      # Agrupar tarefas por período
+      agrupamento_por_periodo = {}
+
       tarefas_grupo.each do |tarefa|
         next unless tarefa.data_etapa_atual
 
         periodo = determinar_periodo(tarefa.data_etapa_atual.to_date, data_atual)
         next unless periodo
 
-        # Criar rótulo do período
-        rotulo = case periodo
-          when "maior_2_anos"
-            "Maior que 2 anos"
-          when "maior_1_ano"
-            "Maior que 1 ano"
+        if etapa_especial
+          # Para etapas especiais, considerar apenas últimos 3 meses
+          if periodo.is_a?(Integer) && periodo <= 2 # 0, 1, 2 representam os últimos 3 meses
+            rotulo = (Date.today - periodo.months).strftime("%Y.%m")
           else
-            (Date.today - periodo.to_i.months).strftime("%Y.%m")
+            rotulo = "Anterior a 4 meses"
           end
+        else
+          # Para outras etapas, manter o comportamento original
+          rotulo = case periodo
+            when "maior_2_anos"
+              "Maior que 2 anos"
+            when "maior_1_ano"
+              "Maior que 1 ano"
+            else
+              (Date.today - periodo.to_i.months).strftime("%Y.%m")
+            end
+        end
 
-        # Incrementar contagem no histograma
-        histograma_por_etapa[etapa_base][rotulo] ||= 0
-        histograma_por_etapa[etapa_base][rotulo] += 1
+        agrupamento_por_periodo[rotulo] ||= 0
+        agrupamento_por_periodo[rotulo] += 1
       end
-    end
 
-    # Definir períodos na ordem correta (do mais recente para o mais antigo)
-    periodos = (0..11).map { |m| (Date.today - m.months).strftime("%Y.%m") }
-    periodos_ordenados = periodos + ["Maior que 1 ano", "Maior que 2 anos"]
+      if etapa_especial
+        # Para etapas especiais, garantir ordem específica
+        periodos_ordenados = (0..2).map { |m| (Date.today - m.months).strftime("%Y.%m") }
+        periodos_ordenados << "Anterior a 4 meses"
 
-    # Garantir que todas as etapas tenham todos os períodos e ordenar
-    histograma_por_etapa.each do |etapa, dados|
-      # Criar hash temporário com todos os períodos zerados
-      dados_ordenados = {}
-      periodos_ordenados.each do |periodo|
-        dados_ordenados[periodo] = dados[periodo] || 0
+        dados_ordenados = {}
+        periodos_ordenados.each do |periodo|
+          dados_ordenados[periodo] = agrupamento_por_periodo[periodo] || 0
+        end
+        histograma_por_etapa[etapa_base] = dados_ordenados
+      else
+        # Para outras etapas, manter o comportamento original
+        periodos = (0..11).map { |m| (Date.today - m.months).strftime("%Y.%m") }
+        periodos_ordenados = periodos + ["Maior que 1 ano", "Maior que 2 anos"]
+
+        dados_ordenados = {}
+        periodos_ordenados.each do |periodo|
+          dados_ordenados[periodo] = agrupamento_por_periodo[periodo] || 0
+        end
+        histograma_por_etapa[etapa_base] = dados_ordenados
       end
-      # Substituir dados originais pelos ordenados
-      histograma_por_etapa[etapa] = dados_ordenados
     end
 
     # Calcular média de dias para cada etapa usando o mesmo agrupamento

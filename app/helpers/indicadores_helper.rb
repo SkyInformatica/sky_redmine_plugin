@@ -181,8 +181,7 @@ module IndicadoresHelper
           render_card_valor_grafico(
             "E03 AGUARDA TESTES DEVEL",
             "bar",
-            dados_graficos_etapas[:tarefas_devel_por_etapa_por_mes_histograma]["E03_AGUARDA_TESTES_DEVEL"].to_a[0..2].to_h.merge(
-              "Demais" => dados_graficos_etapas[:tarefas_devel_por_etapa_por_mes_histograma]["E03_AGUARDA_TESTES_DEVEL"].to_a[3..].sum(&:last),
+            dados_graficos_etapas[:tarefas_devel_por_etapa_por_mes_histograma]["E03_AGUARDA_TESTES_DEVEL"],
             ),
             "Tarefa que está no estoque, uma tarefa DEVEL com a situação NOVA ",
             [
@@ -201,8 +200,7 @@ module IndicadoresHelper
           render_card_valor_grafico(
             "E03_AGUARDA_ENCAMINHAR_RT_DEVEL",
             "bar",
-            dados_graficos_etapas[:tarefas_devel_por_etapa_por_mes_histograma]["E03_AGUARDA_ENCAMINHAR_RT_DEVEL"].to_a[0..2].to_h.merge(
-              "Demais" => dados_graficos_etapas[:tarefas_devel_por_etapa_por_mes_histograma]["E03_AGUARDA_ENCAMINHAR_RT_DEVEL"].to_a[3..].sum(&:last),
+            dados_graficos_etapas[:tarefas_devel_por_etapa_por_mes_histograma]["E03_AGUARDA_ENCAMINHAR_RT_DEVEL"],
             ),
             "Tarefa que está no estoque, uma tarefa DEVEL com a situação NOVA ",
             [
