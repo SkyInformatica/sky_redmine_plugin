@@ -193,14 +193,12 @@
 }
 
 .sky-indicadores .card-titulo {
-  font-size: 20px;
+  font-size: 18px;
   font-weight: 400;
   color: #666;
   margin: 0;
   line-height: 1.4;
 }
-
-
 
 .sky-indicadores .valor-principal-container {
   display: flex;
