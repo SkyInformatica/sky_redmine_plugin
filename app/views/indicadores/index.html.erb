@@ -46,6 +46,7 @@
 
     <!-- Conteúdo da aba Fechadas -->
     <div class="tab-pane fade" id="fechadas" role="tabpanel" aria-labelledby="fechadas-tab">
+      <%= render_filtros(@periodo, @equipe, @project) %>
       <%= render_graficos_fechadas(@dados_graficos) %>
     </div>
 

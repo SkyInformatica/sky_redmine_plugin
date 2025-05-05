@@ -346,17 +346,18 @@ module IndicadoresHelper
                 ["Este ano", "current_year"],
               ], selected: periodo_atual)
             ),
-            render_filtro_grupo(
-              "equipe",
-              "Responsável atual:",
-              options_for_select([
-                ["Todas", "all"],
-                ["Desenvolvimento", SkyRedminePlugin::Constants::EquipeResponsavel::DEVEL],
-                ["QS", SkyRedminePlugin::Constants::EquipeResponsavel::QS],
-                ["Desenvolvimento+QS", "#{SkyRedminePlugin::Constants::EquipeResponsavel::DEVEL}_#{SkyRedminePlugin::Constants::EquipeResponsavel::QS}"],
-                ["Versão liberada", SkyRedminePlugin::Constants::EquipeResponsavel::FECHADA],
-              ], selected: equipe_atual)
-            ),
+
+            #render_filtro_grupo(
+            #  "equipe",
+            #  "Responsável atual:",
+            #  options_for_select([
+            #    ["Todas", "all"],
+            #    ["Desenvolvimento", SkyRedminePlugin::Constants::EquipeResponsavel::DEVEL],
+            #    ["QS", SkyRedminePlugin::Constants::EquipeResponsavel::QS],
+            #    ["Desenvolvimento+QS", "#{SkyRedminePlugin::Constants::EquipeResponsavel::DEVEL}_#{SkyRedminePlugin::Constants::EquipeResponsavel::QS}"],
+            #    ["Versão liberada", SkyRedminePlugin::Constants::EquipeResponsavel::FECHADA],
+            #  ], selected: equipe_atual)
+            #),
             content_tag(:button, "Filtrar", type: "submit", class: "filtro-submit"),
           ])
         end
