@@ -193,7 +193,7 @@
   font-size: 36px;
   font-weight: 600;
   color: #202020;
-  margin: 8px 0;
+  /*margin: 8px 0;*/
   line-height: 1;
 }
 
@@ -205,17 +205,19 @@
   font-weight: 400;
 }
 
+.sky-indicadores .valor-descricao {
+  font-size: 14px;
+  color: #666;
+  margin: 0;
+}
+
 .sky-indicadores .valor-tendencia {
   font-size: 16px;
   color: #888;
   font-style: italic;
 }
 
-.sky-indicadores .valor-descricao {
-  font-size: 14px;
-  color: #666;
-  margin: 0;
-}
+
 
 
 /* Card de valor */
