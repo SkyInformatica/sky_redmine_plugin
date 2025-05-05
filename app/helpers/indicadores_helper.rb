@@ -273,7 +273,7 @@ module IndicadoresHelper
           [
             content_tag(:div, valor, class: "valor-principal"),
             tendencia ? content_tag(:div, tendencia, class: "valor-tendencia") : nil,
-            content_tag(:div, valor[:descricao], class: "valor-descricao"),
+            content_tag(:div, descricao, class: "valor-descricao"),
           ].compact.join.html_safe
         end,
       ].join.html_safe
