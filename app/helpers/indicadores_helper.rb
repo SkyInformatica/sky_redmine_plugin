@@ -147,7 +147,6 @@ module IndicadoresHelper
                 tendencia: "",
               },
             ],
-            "Tarefas em estoque",
             1
           ),
         ]),
@@ -169,7 +168,6 @@ module IndicadoresHelper
                 tendencia: "↓ 2% em relação ao mês anterior",
               },
             ],
-            "Tarefas aguardando encaminhamento para QS",
             1 # Um card por linha
           ),
         ]),
@@ -280,7 +278,7 @@ module IndicadoresHelper
     end
   end
 
-  def render_card_valor_grafico(titulo, tipo_grafico, dados_grafico, tooltip, valores = [], descricao = nil, cards_por_linha = 2)
+  def render_card_valor_grafico(titulo, tipo_grafico, dados_grafico, tooltip, valores = [], cards_por_linha = 2)
     # Determina a classe CSS baseada no número de cards por linha
     layout_class = case cards_por_linha
       when 1 then "card-grafico-full"
@@ -291,7 +289,6 @@ module IndicadoresHelper
     content_tag(:div, class: "card-valor-grafico #{layout_class}") do
       [
         render_card_header(titulo, tooltip), # Usa o mesmo header dos outros cards
-        content_tag(:div, descricao, class: "card-subtitulo"),
         content_tag(:div, class: "card-content") do
           safe_join([
             # Seção de valores
