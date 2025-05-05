@@ -172,7 +172,7 @@ module IndicadoresHelper
                 descricao: "Média dias",
               },
             ],
-            3
+            2
           ),
           render_card_valor_grafico(
             "E03 AGUARDA TESTES DEVEL",
@@ -192,7 +192,7 @@ module IndicadoresHelper
                 descricao: "Média dias",
               },
             ],
-            3
+            2
           ),
           render_card_valor_grafico(
             "E03_AGUARDA_ENCAMINHAR_RT_DEVEL",
@@ -212,7 +212,7 @@ module IndicadoresHelper
                 descricao: "Média dias",
               },
             ],
-            3
+            2
           ),
         ]),
         render_cards_row([
