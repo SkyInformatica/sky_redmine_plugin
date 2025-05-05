@@ -255,7 +255,7 @@
 
 /* Card de gráfico */
 .sky-indicadores .card-grafico-third {
-  flex: 1 1 calc(30 - 24px);
+  flex: 1 1 calc(30% - 24px);
   max-width: calc(30% - 24px);
 }
 
