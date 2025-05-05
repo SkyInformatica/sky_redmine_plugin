@@ -93,6 +93,11 @@ class IndicadoresService
       end
     end
 
+    tarefas_devel_por_etapa_agrupadas = tarefas_agrupadas
+      .order(:etapa_atual)
+      .group(:etapa_atual)
+      .count
+
     # Criar histograma diretamente no formato final
     data_atual = Date.today
     histograma_por_etapa = {}
@@ -158,6 +163,7 @@ class IndicadoresService
       tarefas_devel: tarefas_devel,
       tarefas_devel_total: tarefas_devel.count,
       tarefas_devel_por_etapa: tarefas_devel_por_etapa,
+      tarefas_devel_por_etapa_agrupadas: tarefas_devel_por_etapa_agrupadas,
       tarefas_devel_por_etapa_media_dias: tarefas_devel_por_etapa_media_dias,
       tarefas_devel_por_etapa_por_mes_histograma: histograma_por_etapa,
     }
