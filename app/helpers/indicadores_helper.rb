@@ -53,7 +53,7 @@ module IndicadoresHelper
     end
   end
 
-  def render_graficos_fechdas(dados_graficos)
+  def render_graficos_fechadas(dados_graficos)
     content_tag(:div, class: "graficos-container") do
       safe_join([
         # Primeira linha - Cards de valores
