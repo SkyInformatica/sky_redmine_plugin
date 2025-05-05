@@ -197,7 +197,7 @@ module IndicadoresHelper
                 descricao: "Total de tarefas",
               },
               {
-                valor: format("%.1f", dados_graficos_etapas[:tarefas_devel_por_etapa_media_dias]["E03_AGUARDA_TESTES_DEVEL"] ? dados_graficos_etapas[:tarefas_devel_por_etapa_media_dias]["E03_AGUARDA_TESTES_DEVEL"] : 0),
+                valor: format("%.1f", dados_graficos_etapas[:tarefas_devel_por_etapa_media_dias]["E03_AGUARDA_TESTES_DEVEL"]),
                 descricao: "Idade média em dias",
               },
             ],
@@ -215,7 +215,7 @@ module IndicadoresHelper
                 descricao: "Total de tarefas",
               },
               {
-                valor: format("%.1f", dados_graficos_etapas[:tarefas_devel_por_etapa_media_dias]["E03_AGUARDA_ENCAMINHAR_RT_DEVEL"] ? dados_graficos_etapas[:tarefas_devel_por_etapa_media_dias]["E03_AGUARDA_ENCAMINHAR_RT_DEVEL"] : 0),
+                valor: format("%.1f", dados_graficos_etapas[:tarefas_devel_por_etapa_media_dias]["E03_AGUARDA_ENCAMINHAR_RT_DEVEL"]),
                 descricao: "Idade média em dias",
               },
             ],
