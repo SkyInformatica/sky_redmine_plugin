@@ -20,6 +20,11 @@
         </button>
       </li>
       <li class="nav-item" role="presentation">
+        <button class="nav-link" id="fechadas-tab" data-bs-toggle="tab" data-bs-target="#fechadas" type="button" role="tab" aria-controls="geral" aria-selected="true">
+          Etapas
+        </button>
+      </li>
+      <li class="nav-item" role="presentation">
         <button class="nav-link" id="tarefas-tab" data-bs-toggle="tab" data-bs-target="#tarefas" type="button" role="tab" aria-controls="geral" aria-selected="true">
           Tarefas
         </button>
@@ -36,6 +41,11 @@
 
     <!-- Conteúdo da aba Etapas -->
     <div class="tab-pane fade" id="etapas" role="tabpanel" aria-labelledby="etapas-tab">
+      <%= render_graficos_etapas(@dados_graficos_etapas) %>
+    </div>
+
+    <!-- Conteúdo da aba Fechadas -->
+    <div class="tab-pane fade" id="fechadas" role="tabpanel" aria-labelledby="fechadas-tab">
       <%= render_graficos_etapas(@dados_graficos_etapas) %>
     </div>
 
