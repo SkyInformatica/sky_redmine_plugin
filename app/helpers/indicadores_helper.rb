@@ -144,7 +144,7 @@ module IndicadoresHelper
                 tendencia: "RT: #{dados_graficos_etapas[:tarefas_devel_por_etapa]["E01_ESTOQUE_DEVEL_RT"]}",
               },
               {
-                valor: format("%.1f%%", dados_graficos_etapas[:tarefas_devel_por_etapa_media_dias]["E01_ESTOQUE_DEVEL"]),
+                valor: format("%.1f", dados_graficos_etapas[:tarefas_devel_por_etapa_media_dias]["E01_ESTOQUE_DEVEL"]),
                 descricao: "Média dias",
                 tendencia: "",
               },
@@ -165,7 +165,7 @@ module IndicadoresHelper
                 tendencia: "RT: #{dados_graficos_etapas[:tarefas_devel_por_etapa]["E04_AGUARDA_ENCAMINHAR_QS_RT"]}",
               },
               {
-                valor: format("%.1f%%", dados_graficos_etapas[:tarefas_devel_por_etapa_media_dias]["E04_AGUARDA_ENCAMINHAR_QS"]),
+                valor: format("%.1f", dados_graficos_etapas[:tarefas_devel_por_etapa_media_dias]["E04_AGUARDA_ENCAMINHAR_QS"]),
                 descricao: "Média dias",
                 tendencia: "↓ 2% em relação ao mês anterior",
               },
