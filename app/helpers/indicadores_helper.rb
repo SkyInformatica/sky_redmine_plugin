@@ -150,7 +150,7 @@ module IndicadoresHelper
             "Tarefas desenvolvimento em aberto por etapa",
             "bar",
             dados_graficos_etapas[:tarefas_devel_por_etapa_agrupadas].reject { |k, _| k == "E08_VERSAO_LIBERADA" },
-            "Distribuição das tarefas em desenvolvimento em aberto por etapa atual (nao contabiliza as etapas E99_, E08_ e EM_ANDAMENTO)",
+            "Distribuição das tarefas em desenvolvimento em aberto por etapa atual (as etapas RT estao unificadas)",
             "Total de tarefas na fila de cada etapa",
             1
           ),
@@ -171,7 +171,7 @@ module IndicadoresHelper
               },
               {
                 valor: format("%.1f", dados_graficos_etapas[:tarefas_devel_por_etapa_media_dias]["E01_ESTOQUE_DEVEL"]),
-                descricao: "Média dias",
+                descricao: "Idade média em dias",
               },
             ],
             1
@@ -193,7 +193,7 @@ module IndicadoresHelper
               },
               {
                 valor: format("%.1f", dados_graficos_etapas[:tarefas_devel_por_etapa_media_dias]["E03_AGUARDA_TESTES_DEVEL"]),
-                descricao: "Média dias",
+                descricao: "Idade média em dias",
               },
             ],
             2
@@ -213,7 +213,7 @@ module IndicadoresHelper
               },
               {
                 valor: format("%.1f", dados_graficos_etapas[:tarefas_devel_por_etapa_media_dias]["E03_AGUARDA_ENCAMINHAR_RT_DEVEL"]),
-                descricao: "Média dias",
+                descricao: "Idade média em dias",
               },
             ],
             2
@@ -255,7 +255,7 @@ module IndicadoresHelper
               },
               {
                 valor: format("%.1f", dados_graficos_etapas[:tarefas_devel_por_etapa_media_dias]["E05_ESTOQUE_QS"]),
-                descricao: "Média dias",
+                descricao: "Idade média em dias",
               },
             ],
             1
@@ -276,7 +276,7 @@ module IndicadoresHelper
               },
               {
                 valor: format("%.1f", dados_graficos_etapas[:tarefas_devel_por_etapa_media_dias]["E07_AGUARDA_ENCAMINHAR_RT"]),
-                descricao: "Média dias",
+                descricao: "Idade média em dias",
               },
             ],
             1
@@ -297,7 +297,7 @@ module IndicadoresHelper
               },
               {
                 valor: format("%.1f", dados_graficos_etapas[:tarefas_devel_por_etapa_media_dias]["E07_AGUARDA_VERSAO"]),
-                descricao: "Média dias",
+                descricao: "Idade média em dias",
               },
             ],
             1
