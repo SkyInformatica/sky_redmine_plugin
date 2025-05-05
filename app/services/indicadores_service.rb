@@ -77,42 +77,50 @@ class IndicadoresService
       .where(tarefa_complementar: "NAO")
       .where.not(equipe_responsavel_atual: SkyRedminePlugin::Constants::EquipeResponsavel::FECHADA)
 
+    # Manter a contagem original com todas as etapas
     tarefas_devel_por_etapa = tarefas_devel
       .order(:etapa_atual)
       .group(:etapa_atual)
       .count
 
+    # Agrupar tarefas por etapa base para histograma e média de dias
+    tarefas_agrupadas = tarefas_devel.group_by do |tarefa|
+      next unless tarefa.etapa_atual
+      if tarefa.etapa_atual.to_s.start_with?("E07_AGUARDA_ENCAMINHAR_RT")
+        tarefa.etapa_atual
+      else
+        tarefa.etapa_atual.to_s.gsub(/_RT$/, "")
+      end
+    end
+
     # Criar histograma diretamente no formato final
     data_atual = Date.today
     histograma_por_etapa = {}
 
-    tarefas_devel.each do |tarefa|
-      next unless tarefa.data_etapa_atual && tarefa.etapa_atual
+    # Processar cada grupo de etapas
+    tarefas_agrupadas.each do |etapa_base, tarefas_grupo|
+      histograma_por_etapa[etapa_base] = {}
 
-      periodo = determinar_periodo(tarefa.data_etapa_atual.to_date, data_atual)
-      next unless periodo
+      tarefas_grupo.each do |tarefa|
+        next unless tarefa.data_etapa_atual
 
-      # Processar etapa
-      etapa_base = if tarefa.etapa_atual.to_s.start_with?("E07_AGUARDA_ENCAMINHAR_RT")
-          tarefa.etapa_atual
-        else
-          tarefa.etapa_atual.to_s.gsub(/_RT$/, "")
-        end
+        periodo = determinar_periodo(tarefa.data_etapa_atual.to_date, data_atual)
+        next unless periodo
 
-      # Criar rótulo do período
-      rotulo = case periodo
-        when "maior_2_anos"
-          "Maior que 2 anos"
-        when "maior_1_ano"
-          "Maior que 1 ano"
-        else
-          (Date.today - periodo.to_i.months).strftime("%Y.%m")
-        end
+        # Criar rótulo do período
+        rotulo = case periodo
+          when "maior_2_anos"
+            "Maior que 2 anos"
+          when "maior_1_ano"
+            "Maior que 1 ano"
+          else
+            (Date.today - periodo.to_i.months).strftime("%Y.%m")
+          end
 
-      # Inicializar estruturas se necessário
-      histograma_por_etapa[etapa_base] ||= {}
-      histograma_por_etapa[etapa_base][rotulo] ||= 0
-      histograma_por_etapa[etapa_base][rotulo] += 1
+        # Incrementar contagem no histograma
+        histograma_por_etapa[etapa_base][rotulo] ||= 0
+        histograma_por_etapa[etapa_base][rotulo] += 1
+      end
     end
 
     # Definir períodos na ordem correta (do mais recente para o mais antigo)
@@ -130,12 +138,20 @@ class IndicadoresService
       histograma_por_etapa[etapa] = dados_ordenados
     end
 
-    # Calcular média de dias para cada etapa usando sintaxe MySQL
+    # Calcular média de dias para cada etapa usando o mesmo agrupamento
     tarefas_devel_por_etapa_media_dias = {}
-    tarefas_devel_por_etapa.each do |etapa, count|
-      tarefas_etapa = tarefas_devel.where(etapa_atual: etapa)
-      dias_medio = tarefas_etapa.average("DATEDIFF(CURRENT_DATE, data_etapa_atual)")
-      tarefas_devel_por_etapa_media_dias[etapa] = dias_medio
+    tarefas_agrupadas.each do |etapa_base, tarefas_grupo|
+      # Calcular a média de dias para todas as tarefas desta etapa base
+      soma_dias = tarefas_grupo.sum do |tarefa|
+        if tarefa.data_etapa_atual
+          (Date.today - tarefa.data_etapa_atual.to_date).to_i
+        else
+          0
+        end
+      end
+
+      media_dias = tarefas_grupo.size > 0 ? (soma_dias.to_f / tarefas_grupo.size) : 0
+      tarefas_devel_por_etapa_media_dias[etapa_base] = media_dias
     end
 
     {
@@ -146,6 +162,7 @@ class IndicadoresService
       tarefas_devel_por_etapa_por_mes_histograma: histograma_por_etapa,
     }
   end
+
   # Função auxiliar para determinar o período
   def self.determinar_periodo(data_etapa, data_atual)
     return nil unless data_etapa
