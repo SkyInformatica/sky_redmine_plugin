@@ -140,7 +140,7 @@ module IndicadoresHelper
             [
               {
                 valor: dados_graficos_etapas[:tarefas_devel_por_etapa]["E01_ESTOQUE_DEVEL"] + dados_graficos_etapas[:tarefas_devel_por_etapa]["E01_ESTOQUE_DEVEL_RT"],
-                valor_secundario: format("%.1f%%", dados_graficos_etapas[:tarefas_devel_por_etapa]["E01_ESTOQUE_DEVEL"] + dados_graficos_etapas[:tarefas_devel_por_etapa]["E01_ESTOQUE_DEVEL_RT"] / dados_graficos_etapas[:tarefas_devel_total] * 100),
+                valor_secundario: format("%.1f%%", (dados_graficos_etapas[:tarefas_devel_por_etapa]["E01_ESTOQUE_DEVEL"] + dados_graficos_etapas[:tarefas_devel_por_etapa]["E01_ESTOQUE_DEVEL_RT"]).to_f / dados_graficos_etapas[:tarefas_devel_total] * 100),
                 descricao: "Total de tarefas",
                 tendencia: "RT: #{dados_graficos_etapas[:tarefas_devel_por_etapa]["E01_ESTOQUE_DEVEL_RT"]}",
               },
@@ -162,7 +162,7 @@ module IndicadoresHelper
             [
               {
                 valor: dados_graficos_etapas[:tarefas_devel_por_etapa]["E04_AGUARDA_ENCAMINHAR_QS"] + dados_graficos_etapas[:tarefas_devel_por_etapa]["E04_AGUARDA_ENCAMINHAR_QS_RT"],
-                valor_secundario: format("%.1f%%", dados_graficos_etapas[:tarefas_devel_por_etapa]["E04_AGUARDA_ENCAMINHAR_QS"] + dados_graficos_etapas[:tarefas_devel_por_etapa]["E04_AGUARDA_ENCAMINHAR_QS_RT"] / dados_graficos_etapas[:tarefas_devel_total] * 100),
+                valor_secundario: format("%.1f%%", (dados_graficos_etapas[:tarefas_devel_por_etapa]["E04_AGUARDA_ENCAMINHAR_QS"] + dados_graficos_etapas[:tarefas_devel_por_etapa]["E04_AGUARDA_ENCAMINHAR_QS_RT"]).to_f / dados_graficos_etapas[:tarefas_devel_total] * 100),
                 descricao: "Total de tarefas",
                 tendencia: "RT: #{dados_graficos_etapas[:tarefas_devel_por_etapa]["E04_AGUARDA_ENCAMINHAR_QS_RT"]}",
               },
