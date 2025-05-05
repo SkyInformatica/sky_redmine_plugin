@@ -181,6 +181,28 @@
   transform: translateY(-5px);
 }
 
+/* Estilos comuns para valores em cards */
+.sky-indicadores .valor-principal {
+  font-size: 36px;
+  font-weight: 600;
+  color: #202020;
+  margin: 8px 0;
+  line-height: 1;
+}
+
+.sky-indicadores .valor-tendencia {
+  font-size: 16px;
+  color: #888;
+  font-style: italic;
+}
+
+.sky-indicadores .valor-descricao {
+  font-size: 14px;
+  color: #666;
+  margin: 0;
+}
+
+
 /* Card de valor */
 .sky-indicadores .card-valor {
   flex: 0 1 auto;
@@ -205,26 +227,6 @@
   color: #666;
   margin: 0;
   line-height: 1.4;
-}
-
-.sky-indicadores .card-valor .valor-principal {
-  font-size: 36px;
-  font-weight: 600;
-  color: #202020;
-  margin: 16px 0;
-  line-height: 1;
-}
-
-.sky-indicadores .card-valor .valor-tendencia {
-  font-size: 14px;
-  color: #888;
-  font-style: italic;
-}
-
-.sky-indicadores .card-valor .valor-descricao {
-  font-size: 14px;
-  color: #666;
-  margin: 0;
 }
 
 
@@ -298,26 +300,6 @@
   display: flex;
   flex-direction: column;
   gap: 4px;
-}
-
-.sky-indicadores .card-valor-grafico .valor-principal {
-  font-size: 36px;
-  font-weight: 600;
-  color: #202020;
-  line-height: 1;
-  margin: 8px 0;
-}
-
-.sky-indicadores .card-valor-grafico .valor-descricao {
-  font-size: 14px;
-  color: #666;
-  margin: 0;
-}
-
-.sky-indicadores .card-valor-grafico .valor-tendencia {
-  font-size: 13px;
-  color: #888;
-  font-style: italic;
 }
 
 .sky-indicadores .card-valor-grafico .tooltip-container {
