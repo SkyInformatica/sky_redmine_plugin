@@ -150,6 +150,7 @@ module IndicadoresHelper
             dados_graficos_etapas[:tarefas_devel_por_etapa]["E99_DESCONHECIDA"],
             "Total de tarefas com na etapa E99_DESCONHECIDA",
             nil,
+            nil,
             format("%.1f%%", (dados_graficos_etapas[:tarefas_devel_por_etapa]["E99_DESCONHECIDA"]).to_f / dados_graficos_etapas[:tarefas_devel_total] * 100)
           ),
         ]),
