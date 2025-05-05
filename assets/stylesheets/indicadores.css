@@ -183,13 +183,14 @@
 
 /* Estilos comuns para valores em cards */
 
+/*
 .sky-indicadores .card-header {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
   gap: 16px;
   margin-bottom: 4px;
-  /*padding-right: 24px;*/
+  
 }
 
 .sky-indicadores .card-titulo {
@@ -199,6 +200,37 @@
   margin: 0;
   line-height: 1.4;
   gap: 16px;
+}
+
+.sky-indicadores .tooltip-container {
+  position: absolute;
+  top: 24px;
+  right: 24px;
+  margin-left: 8px;
+}
+*/
+
+.sky-indicadores .tooltip-container {
+  margin-left: 8px;
+  display: flex; /* Adicionar display flex */
+  align-items: center; /* Centralizar verticalmente */
+}
+
+.sky-indicadores .card-header {
+  display: flex;
+  justify-content: flex-start; 
+  align-items: center; 
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.sky-indicadores .card-titulo {
+  font-size: 18px;
+  font-weight: 400;
+  color: #666;
+  margin: 0;
+  line-height: 1.4;
+  flex-grow: 1; 
 }
 
 .sky-indicadores .valor-principal-container {
@@ -236,12 +268,7 @@
   font-style: italic;
 }
 
-.sky-indicadores .tooltip-container {
-  position: absolute;
-  top: 24px;
-  right: 24px;
-  margin-left: 8px;
-}
+
 
 
 
