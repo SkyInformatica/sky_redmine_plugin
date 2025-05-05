@@ -144,7 +144,7 @@ module IndicadoresHelper
                 tendencia: "RT: #{dados_graficos_etapas[:tarefas_devel_por_etapa]["E01_ESTOQUE_DEVEL_RT"]}",
               },
               {
-                valor: "456",
+                valor: dados_graficos_etapas[:tarefas_devel_por_etapa_media_dias]["E01_ESTOQUE_DEVEL"],
                 descricao: "Média dias",
                 tendencia: "",
               },

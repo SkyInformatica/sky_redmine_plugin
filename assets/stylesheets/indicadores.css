@@ -215,6 +215,13 @@
   line-height: 1;
 }
 
+.sky-indicadores .card-valor .valor-tendencia {
+  font-size: 13px;
+  color: #888;
+  font-style: italic;
+}
+
+
 /* Card de gráfico */
 .sky-indicadores .card-grafico-third {
   flex: 1 1 calc(30 - 24px);

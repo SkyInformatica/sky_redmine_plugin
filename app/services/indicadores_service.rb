@@ -130,10 +130,19 @@ class IndicadoresService
       histograma_por_etapa[etapa] = dados_ordenados
     end
 
+    tarefas_devel_por_etapa_media_dias = {}
+    tarefas_devel_por_etapa.each do |etapa, count|
+      # Calcular a média de dias para cada etapa
+      tarefas_etapa = tarefas_devel.where(etapa_atual: etapa)
+      dias_medio = tarefas_etapa.average("EXTRACT(EPOCH FROM (CURRENT_DATE - data_etapa_atual)) / 86400")
+      tarefas_devel_por_etapa_media_dias[etapa] = dias_medio
+    end
+
     {
       tarefas_devel: tarefas_devel,
       tarefas_devel_total: tarefas_devel.count,
       tarefas_devel_por_etapa: tarefas_devel_por_etapa,
+      tarefas_devel_por_etapa_media_dias: tarefas_devel_por_etapa_media_dias,
       tarefas_devel_por_etapa_por_mes_histograma: histograma_por_etapa,
     }
   end
