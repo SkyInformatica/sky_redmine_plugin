@@ -117,7 +117,6 @@ namespace :sky_redmine_plugin do
         qtd_retorno_testes_devel: indicador.qtd_retorno_testes_devel,
 
         # Datas DEVEL
-        data_atendimento_primeira_tarefa_devel: indicador.data_atendimento_primeira_tarefa_devel,
         data_criacao_ou_atendimento_primeira_tarefa_devel: indicador.data_criacao_ou_atendimento_primeira_tarefa_devel,
         data_andamento_primeira_tarefa_devel: indicador.data_andamento_primeira_tarefa_devel,
         data_resolvida_ultima_tarefa_devel: indicador.data_resolvida_ultima_tarefa_devel,

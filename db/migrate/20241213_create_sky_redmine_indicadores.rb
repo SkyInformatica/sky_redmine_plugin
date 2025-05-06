@@ -20,7 +20,6 @@ class CreateSkyRedmineIndicadores < ActiveRecord::Migration[5.2]
       t.datetime :data_etapa_atual
       t.integer :qtd_retorno_testes_qs
       t.integer :qtd_retorno_testes_devel
-      t.datetime :data_atendimento_primeira_tarefa_devel
       t.datetime :data_criacao_ou_atendimento_primeira_tarefa_devel
       t.datetime :data_andamento_primeira_tarefa_devel
       t.datetime :data_resolvida_ultima_tarefa_devel
