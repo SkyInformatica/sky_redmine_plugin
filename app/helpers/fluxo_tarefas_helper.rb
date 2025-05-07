@@ -286,7 +286,7 @@ module FluxoTarefasHelper
 
   def render_fluxo_tarefas_html(issue)
     tarefas_relacionadas = SkyRedminePlugin::TarefasRelacionadas.obter_lista_tarefas_relacionadas(issue)
-    indicadores = SkyRedmineIndicadores.find_by(primeira_tarefa_devel_id: tarefas_relacionadas.first.id)
+    indicadores = SkyRedmineIndicadores.find_by(id_tarefa: tarefas_relacionadas.first.id)
 
     # Gerar HTML dos cards de indicadores
     html = ""
@@ -477,7 +477,7 @@ module FluxoTarefasHelper
                           "",
                           "Equipe responsável pela tarefa")
 
-      if (indicadores.tipo_primeira_tarefa_devel != SkyRedminePlugin::Constants::Trackers::CONVERSAO) &&
+      if (indicadores.tipo != SkyRedminePlugin::Constants::Trackers::CONVERSAO) &&
          (indicadores.etapa_atual != SkyRedminePlugin::Constants::EtapaAtual::FECHADA_SEM_DESENVOLVIMENTO)
         # Card de retorno de testes
         retornos = []
@@ -506,29 +506,29 @@ module FluxoTarefasHelper
 
       # Cards DEVEL
       html << "<div class='indicadores-grupo'>"
-      tempo_gasto_devel = format("%.2f", indicadores.tempo_gasto_devel.to_f)
+      tempo_gasto = format("%.2f", indicadores.tempo_gasto.to_f)
       tempo_total_devel = if indicadores.tempo_total_devel
           "#{indicadores.tempo_total_devel} #{indicadores.tempo_total_devel == 1 ? "dia" : "dias"}"
-        elsif indicadores.tempo_andamento_devel
+        elsif indicadores.tempo_andamento
           "em desenvolvimento"
         else
           "desenvolvimento não iniciado"
         end
-      html << "<div class='indicadores-titulo'>Desenvolvimento - Tempo gasto total: #{tempo_gasto_devel}h - #{tempo_total_devel}</div>"
+      html << "<div class='indicadores-titulo'>Desenvolvimento - Tempo gasto total: #{tempo_gasto}h - #{tempo_total_devel}</div>"
       html << "<div class='indicadores-cards'>"
 
       # Para iniciar desenvolvimento
       html << render_card("Iniciar desenvolvimento",
-                          formatar_dias(indicadores.tempo_andamento_devel),
-                          indicadores.tempo_andamento_devel_detalhes,
+                          formatar_dias(indicadores.tempo_andamento),
+                          indicadores.tempo_andamento_detalhes,
                           "Tempo entre a data do atendimento/criação da tarefa até ele ser iniciada o desenvolvimento colocando a situação da tarefa em andamento")
 
       # Para concluir desenvolvimento
       html << render_card("Concluir desenvolvimento",
-                          formatar_dias(indicadores.tempo_resolucao_devel), indicadores.tempo_resolucao_devel_detalhes,
+                          formatar_dias(indicadores.tempo_resolucao), indicadores.tempo_resolucao_detalhes,
                           "Tempo entre a tarefa de desenvolvimento ser colocada em andamento e sua situação ser resolvida (considerando o todos os ciclos incluindo os retornos de testes)")
 
-      if (indicadores.tipo_primeira_tarefa_devel != SkyRedminePlugin::Constants::Trackers::CONVERSAO) &&
+      if (indicadores.tipo != SkyRedminePlugin::Constants::Trackers::CONVERSAO) &&
          (indicadores.etapa_atual != SkyRedminePlugin::Constants::EtapaAtual::FECHADA_SEM_DESENVOLVIMENTO)
         # Para encaminhar QS
         html << render_card("Encaminhar QS", formatar_dias(indicadores.tempo_para_encaminhar_qs), indicadores.tempo_para_encaminhar_qs_detalhes,
@@ -537,7 +537,7 @@ module FluxoTarefasHelper
       html << "</div>" # indicadores-cards
       html << "</div>" # indicadores-grupo
 
-      if (indicadores.tipo_primeira_tarefa_devel != SkyRedminePlugin::Constants::Trackers::CONVERSAO) &&
+      if (indicadores.tipo != SkyRedminePlugin::Constants::Trackers::CONVERSAO) &&
          (indicadores.etapa_atual != SkyRedminePlugin::Constants::EtapaAtual::FECHADA_SEM_DESENVOLVIMENTO)
         # Cards QS
         html << "<div class='indicadores-grupo'>"
@@ -546,7 +546,7 @@ module FluxoTarefasHelper
             "#{indicadores.tempo_total_testes} #{indicadores.tempo_total_testes == 1 ? "dia" : "dias"}"
           elsif indicadores.tempo_andamento_qs
             "em testes"
-          elsif indicadores.data_criacao_primeira_tarefa_qs
+          elsif indicadores.data_criacao_qs
             "testes ainda não iniciados"
           else
             "testes ainda não encaminhados"
@@ -579,10 +579,10 @@ module FluxoTarefasHelper
 
         # Cards Liberar versão
         html << "<div class='indicadores-grupo'>"
-        tempo_gasto_devel = format("%.2f", indicadores.tempo_gasto_devel.to_f)
+        tempo_gasto = format("%.2f", indicadores.tempo_gasto.to_f)
         tempo_total_liberar_versao = if indicadores.tempo_total_liberar_versao
             "#{indicadores.tempo_total_liberar_versao} #{indicadores.tempo_total_liberar_versao == 1 ? "dia" : "dias"}"
-          elsif indicadores.tempo_andamento_devel
+          elsif indicadores.tempo_andamento
             "em desenvolvimento"
           else
             "desenvolvimento não iniciado"
@@ -595,7 +595,7 @@ module FluxoTarefasHelper
                             "Tempo entre a tarefa de QS ser concluída (TESTE OK) e a tarefa de desenvolvimento ser fechada")
 
         # Para liberar versão
-        html << render_card("Liberar versão após concluir o desenvolvimento", formatar_dias(indicadores.tempo_fechamento_devel), indicadores.tempo_fechamento_devel_detalhes,
+        html << render_card("Liberar versão após concluir o desenvolvimento", formatar_dias(indicadores.tempo_fechamento), indicadores.tempo_fechamento_detalhes,
                             "Tempo entre tarefa de desenvolvimento estar concluída e ser fechada (entre estes tempos existe o tempo das tarefas do QS)")
 
         html << "</div>" # indicadores-cards
@@ -651,7 +651,7 @@ module FluxoTarefasHelper
       return html
     end
 
-    if !indicadores.tipo_primeira_tarefa_devel.nil? && indicadores.tipo_primeira_tarefa_devel == SkyRedminePlugin::Constants::Trackers::CONVERSAO
+    if !indicadores.tipo.nil? && indicadores.tipo == SkyRedminePlugin::Constants::Trackers::CONVERSAO
       fluxo = SkyRedminePlugin::Constants::EtapaAtual::FLUXO_SEM_QS
       indice_atual = fluxo.index(etapa_atual)
       html << render_timeline_normal(fluxo, indice_atual, indicadores)

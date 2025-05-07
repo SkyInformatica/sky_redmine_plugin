@@ -38,7 +38,7 @@ namespace :sky_redmine_plugin do
       return
     end
 
-    indicador = SkyRedmineIndicadores.find_by(primeira_tarefa_devel_id: primeira_tarefa.id)
+    indicador = SkyRedmineIndicadores.find_by(id_tarefa: primeira_tarefa.id)
 
     # Gerar JSON das tarefas relacionadas
     json_tarefas = tarefas_relacionadas.map do |tarefa|
@@ -87,20 +87,20 @@ namespace :sky_redmine_plugin do
     if indicador
       json_resultado[:indicador] = {
         # Campos de identificação das tarefas DEVEL
-        primeira_tarefa_devel_id: indicador.primeira_tarefa_devel_id,
-        tipo_primeira_tarefa_devel: indicador.tipo_primeira_tarefa_devel,
-        ultima_tarefa_devel_id: indicador.ultima_tarefa_devel_id,
-        status_ultima_tarefa_devel: indicador.status_ultima_tarefa_devel,
+        id_tarefa: indicador.id_tarefa,
+        tipo: indicador.tipo,
+        id_ultima_tarefa: indicador.id_ultima_tarefa,
+        status: indicador.status,
 
         # Informações da primeira tarefa DEVEL
-        prioridade_primeira_tarefa_devel: indicador.prioridade_primeira_tarefa_devel,
-        projeto_primeira_tarefa_devel: indicador.projeto_primeira_tarefa_devel,
-        sprint_primeira_tarefa_devel: indicador.sprint_primeira_tarefa_devel,
-        origem_primeira_tarefa_devel: indicador.origem_primeira_tarefa_devel,
-        skynet_primeira_tarefa_devel: indicador.skynet_primeira_tarefa_devel,
+        prioridade: indicador.prioridade,
+        projeto: indicador.projeto,
+        sprint: indicador.sprint,
+        origem: indicador.origem,
+        skynet: indicador.skynet,
 
         # Sprints
-        sprint_ultima_tarefa_devel: indicador.sprint_ultima_tarefa_devel,
+        sprint_ultima_tarefa: indicador.sprint_ultima_tarefa,
 
         # Campos de controle e status
         tarefa_complementar: indicador.tarefa_complementar,
@@ -109,34 +109,34 @@ namespace :sky_redmine_plugin do
         etapa_atual: indicador.etapa_atual,
 
         # Tempos DEVEL
-        tempo_estimado_devel: indicador.tempo_estimado_devel,
-        tempo_gasto_devel: indicador.tempo_gasto_devel,
+        tempo_estimado: indicador.tempo_estimado,
+        tempo_gasto: indicador.tempo_gasto,
 
         # Contadores de retorno
         qtd_retorno_testes_qs: indicador.qtd_retorno_testes_qs,
         qtd_retorno_testes_devel: indicador.qtd_retorno_testes_devel,
 
         # Datas DEVEL
-        data_criacao_ou_atendimento_primeira_tarefa_devel: indicador.data_criacao_ou_atendimento_primeira_tarefa_devel,
-        data_andamento_primeira_tarefa_devel: indicador.data_andamento_primeira_tarefa_devel,
-        data_resolvida_ultima_tarefa_devel: indicador.data_resolvida_ultima_tarefa_devel,
-        data_fechamento_ultima_tarefa_devel: indicador.data_fechamento_ultima_tarefa_devel,
+        data_criacao_ou_atendimento: indicador.data_criacao_ou_atendimento,
+        data_andamento: indicador.data_andamento,
+        data_resolvida: indicador.data_resolvida,
+        data_fechamento: indicador.data_fechamento,
 
         # Tempos de processamento DEVEL
-        tempo_andamento_devel: indicador.tempo_andamento_devel,
-        tempo_resolucao_devel: indicador.tempo_resolucao_devel,
-        tempo_fechamento_devel: indicador.tempo_fechamento_devel,
+        tempo_andamento: indicador.tempo_andamento,
+        tempo_resolucao: indicador.tempo_resolucao,
+        tempo_fechamento: indicador.tempo_fechamento,
         tempo_para_encaminhar_qs: indicador.tempo_para_encaminhar_qs,
 
         # Campos de identificação das tarefas QS
-        primeira_tarefa_qs_id: indicador.primeira_tarefa_qs_id,
-        ultima_tarefa_qs_id: indicador.ultima_tarefa_qs_id,
-        status_ultima_tarefa_qs: indicador.status_ultima_tarefa_qs,
+        id_tarefa_qs: indicador.id_tarefa_qs,
+        id_ultima_tarefa_qs: indicador.id_ultima_tarefa_qs,
+        status_qs: indicador.status_qs,
 
         # Informações das tarefas QS
-        sprint_primeira_tarefa_qs: indicador.sprint_primeira_tarefa_qs,
+        sprint_qs: indicador.sprint_qs,
         sprint_ultima_tarefa_qs: indicador.sprint_ultima_tarefa_qs,
-        projeto_primeira_tarefa_qs: indicador.projeto_primeira_tarefa_qs,
+        projeto_qs: indicador.projeto_qs,
 
         # Tempos QS
         tempo_estimado_qs: indicador.tempo_estimado_qs,
@@ -146,10 +146,10 @@ namespace :sky_redmine_plugin do
         houve_teste_nok: indicador.houve_teste_nok,
 
         # Datas QS
-        data_criacao_primeira_tarefa_qs: indicador.data_criacao_primeira_tarefa_qs,
-        data_andamento_primeira_tarefa_qs: indicador.data_andamento_primeira_tarefa_qs,
-        data_resolvida_ultima_tarefa_qs: indicador.data_resolvida_ultima_tarefa_qs,
-        data_fechamento_ultima_tarefa_qs: indicador.data_fechamento_ultima_tarefa_qs,
+        data_criacao_qs: indicador.data_criacao_qs,
+        data_andamento_qs: indicador.data_andamento_qs,
+        data_resolvida_qs: indicador.data_resolvida_qs,
+        data_fechamento_qs: indicador.data_fechamento_qs,
 
         # Tempos de processamento QS
         tempo_andamento_qs: indicador.tempo_andamento_qs,

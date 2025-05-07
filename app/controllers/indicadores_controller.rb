@@ -36,7 +36,7 @@ class IndicadoresController < ApplicationController
 
     # Adicionar ordenação
     sort_init "id", "desc"
-    sort_update %w(primeira_tarefa_devel_id ultima_tarefa_devel_id status_ultima_tarefa_devel tempo_estimado_devel tempo_gasto_devel)
+    sort_update %w(id_tarefa id_ultima_tarefa status tempo_estimado tempo_gasto)
 
     # Logs para debug da ordenação
     Rails.logger.info "Params de ordenação: #{params[:sort]}, #{params[:order]}"

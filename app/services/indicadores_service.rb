@@ -21,11 +21,11 @@ class IndicadoresService
     tarefas_complementar = tarefas.where(tarefa_complementar: "SIM")
 
     # Buscar as tarefas agrupadas por tipo e calcular tempo gasto
-    tempo_gasto_por_tipo_todas_tarefas = tarefas.group(:tipo_primeira_tarefa_devel)
-      .sum("ROUND(CAST(COALESCE(tempo_gasto_devel, 0) + COALESCE(tempo_gasto_qs, 0) AS DECIMAL(10,1)), 1)")
+    tempo_gasto_por_tipo_todas_tarefas = tarefas.group(:tipo)
+      .sum("ROUND(CAST(COALESCE(tempo_gasto, 0) + COALESCE(tempo_gasto_qs, 0) AS DECIMAL(10,1)), 1)")
 
     # Tarefas de desenvolvimento agrupadas por tipo
-    tarefas_devel_por_tipo = tarefas_desenvolvimento.group(:tipo_primeira_tarefa_devel).count
+    tarefas_devel_por_tipo = tarefas_desenvolvimento.group(:tipo).count
 
     # Criar tarefas apenas para tarefas fechadas
     tarefas_devel_fechadas = tarefas_desenvolvimento.where(equipe_responsavel_atual: SkyRedminePlugin::Constants::EquipeResponsavel::FECHADA)
@@ -37,8 +37,8 @@ class IndicadoresService
     tarefas_devel_fechadas_sem_testes = tarefas_devel_fechadas.group(:tarefa_fechada_sem_testes).count
 
     # Calcular tempos médios para tarefas fechadas
-    tempo_medio_andamento_devel = tarefas_devel_fechadas.average(:tempo_andamento_devel)
-    tempo_medio_resolucao_devel = tarefas_devel_fechadas.average(:tempo_resolucao_devel)
+    tempo_medio_andamento_devel = tarefas_devel_fechadas.average(:tempo_andamento)
+    tempo_medio_resolucao_devel = tarefas_devel_fechadas.average(:tempo_resolucao)
     tempo_medio_para_encaminhar_qs = tarefas_devel_fechadas.average(:tempo_para_encaminhar_qs)
 
     # Calcular tempos médios do QS
@@ -47,7 +47,7 @@ class IndicadoresService
 
     # Calcular tempos médios adicionais
     tempo_medio_concluido_testes_versao_liberada = tarefas_devel_fechadas.average(:tempo_concluido_testes_versao_liberada)
-    tempo_medio_fechamento_devel = tarefas_devel_fechadas.average(:tempo_fechamento_devel)
+    tempo_medio_fechamento_devel = tarefas_devel_fechadas.average(:tempo_fechamento)
 
     {
       tarefas: tarefas,

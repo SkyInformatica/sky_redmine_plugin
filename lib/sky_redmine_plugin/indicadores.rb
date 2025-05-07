@@ -13,23 +13,23 @@ module SkyRedminePlugin
       # Se é uma exclusão, procurar o indicador por qualquer um dos campos de ID
       if is_exclusao
         indicador = SkyRedmineIndicadores.find_by(
-          "primeira_tarefa_devel_id = ? OR ultima_tarefa_devel_id = ? OR primeira_tarefa_qs_id = ? OR ultima_tarefa_qs_id = ?",
+          "id_tarefa = ? OR id_ultima_tarefa = ? OR id_tarefa_qs = ? OR id_ultima_tarefa_qs = ?",
           issue.id, issue.id, issue.id, issue.id
         )
 
         if indicador
           Rails.logger.info ">>> encontrado indicador para issue.id: #{issue.id}"
 
-          # Se a tarefa excluída é a primeira_tarefa_devel_id, excluir o indicador
-          if indicador.primeira_tarefa_devel_id == issue.id
-            Rails.logger.info ">>> excluindo indicador pois issue.id é a primeira_tarefa_devel_id"
+          # Se a tarefa excluída é a id_tarefa, excluir o indicador
+          if indicador.id_tarefa == issue.id
+            Rails.logger.info ">>> excluindo indicador pois issue.id é a id_tarefa"
             indicador.destroy
             return
           end
 
-          # Se não é a primeira_tarefa_devel_id, reprocessar o indicador
-          Rails.logger.info ">>> reprocessando indicador usando primeira_tarefa_devel_id: #{indicador.primeira_tarefa_devel_id}"
-          issue = Issue.find(indicador.primeira_tarefa_devel_id)
+          # Se não é a id_tarefa, reprocessar o indicador
+          Rails.logger.info ">>> reprocessando indicador usando id_tarefa: #{indicador.id_tarefa}"
+          issue = Issue.find(indicador.id_tarefa)
         end
       end
 
@@ -53,27 +53,27 @@ module SkyRedminePlugin
         end
 
         # Encontrar ou inicializar o indicador
-        indicador = SkyRedmineIndicadores.find_or_initialize_by(primeira_tarefa_devel_id: primeira_tarefa_devel.id)
+        indicador = SkyRedmineIndicadores.find_or_initialize_by(id_tarefa: primeira_tarefa_devel.id)
 
         # Limpar todos os campos antes de processar
         limpar_campos_indicador(indicador)
 
-        indicador.ultima_tarefa_devel_id = ultima_tarefa_devel.id
-        indicador.tipo_primeira_tarefa_devel = primeira_tarefa_devel.tracker.name
-        indicador.status_ultima_tarefa_devel = ultima_tarefa_devel.status.name
-        indicador.prioridade_primeira_tarefa_devel = primeira_tarefa_devel.priority.name
-        indicador.projeto_primeira_tarefa_devel = primeira_tarefa_devel.project.name
-        indicador.sprint_primeira_tarefa_devel = primeira_tarefa_devel.fixed_version.present? ? primeira_tarefa_devel.fixed_version.name : nil
-        indicador.sprint_ultima_tarefa_devel = ultima_tarefa_devel.fixed_version.present? ? ultima_tarefa_devel.fixed_version.name : nil
+        indicador.id_ultima_tarefa = ultima_tarefa_devel.id
+        indicador.tipo = primeira_tarefa_devel.tracker.name
+        indicador.status = ultima_tarefa_devel.status.name
+        indicador.prioridade = primeira_tarefa_devel.priority.name
+        indicador.projeto = primeira_tarefa_devel.project.name
+        indicador.sprint = primeira_tarefa_devel.fixed_version.present? ? primeira_tarefa_devel.fixed_version.name : nil
+        indicador.sprint_ultima_tarefa = ultima_tarefa_devel.fixed_version.present? ? ultima_tarefa_devel.fixed_version.name : nil
         indicador.tarefa_complementar = primeira_tarefa_devel.tarefa_complementar
         indicador.teste_no_desenvolvimento = primeira_tarefa_devel.teste_no_desenvolvimento
-        indicador.tempo_estimado_devel = tarefas_devel.sum { |t| t.estimated_hours.to_f }
-        indicador.tempo_gasto_devel = tarefas_devel.sum { |t| t.spent_hours.to_f }
-        indicador.origem_primeira_tarefa_devel = SkyRedminePlugin::TarefasRelacionadas.obter_valor_campo_personalizado(primeira_tarefa_devel, "Origem")
-        indicador.skynet_primeira_tarefa_devel = SkyRedminePlugin::TarefasRelacionadas.obter_valor_campo_personalizado(primeira_tarefa_devel, "Sky.NET")
-        indicador.data_criacao_ou_atendimento_primeira_tarefa_devel = primeira_tarefa_devel.data_criacao
-        indicador.data_resolvida_ultima_tarefa_devel = ultima_tarefa_devel.data_resolvida
-        indicador.data_fechamento_ultima_tarefa_devel = ultima_tarefa_devel.data_fechada
+        indicador.tempo_estimado = tarefas_devel.sum { |t| t.estimated_hours.to_f }
+        indicador.tempo_gasto = tarefas_devel.sum { |t| t.spent_hours.to_f }
+        indicador.origem = SkyRedminePlugin::TarefasRelacionadas.obter_valor_campo_personalizado(primeira_tarefa_devel, "Origem")
+        indicador.skynet = SkyRedminePlugin::TarefasRelacionadas.obter_valor_campo_personalizado(primeira_tarefa_devel, "Sky.NET")
+        indicador.data_criacao_ou_atendimento = primeira_tarefa_devel.data_criacao
+        indicador.data_resolvida = ultima_tarefa_devel.data_resolvida
+        indicador.data_fechamento = ultima_tarefa_devel.data_fechada
         indicador.versao_teste = ultima_tarefa_devel.versao_teste
         indicador.versao_estavel = ultima_tarefa_devel.versao_estavel
 
@@ -112,22 +112,22 @@ module SkyRedminePlugin
               break
             end
           end
-          indicador.data_andamento_primeira_tarefa_devel = data_andamento
+          indicador.data_andamento = data_andamento
 
           # Calcular tempos DEVEL
-          if indicador.data_criacao_ou_atendimento_primeira_tarefa_devel.present? && indicador.data_andamento_primeira_tarefa_devel.present?
-            indicador.tempo_andamento_devel = (indicador.data_andamento_primeira_tarefa_devel.to_date - indicador.data_criacao_ou_atendimento_primeira_tarefa_devel.to_date).to_i
-            indicador.tempo_andamento_devel_detalhes = "De #{indicador.data_criacao_ou_atendimento_primeira_tarefa_devel&.strftime("%d/%m/%Y")} até #{indicador.data_andamento_primeira_tarefa_devel&.strftime("%d/%m/%Y")}"
+          if indicador.data_criacao_ou_atendimento.present? && indicador.data_andamento.present?
+            indicador.tempo_andamento = (indicador.data_andamento.to_date - indicador.data_criacao_ou_atendimento.to_date).to_i
+            indicador.tempo_andamento_detalhes = "De #{indicador.data_criacao_ou_atendimento&.strftime("%d/%m/%Y")} até #{indicador.data_andamento&.strftime("%d/%m/%Y")}"
           end
 
-          if indicador.data_andamento_primeira_tarefa_devel.present? && indicador.data_resolvida_ultima_tarefa_devel.present?
-            indicador.tempo_resolucao_devel = (indicador.data_resolvida_ultima_tarefa_devel.to_date - indicador.data_andamento_primeira_tarefa_devel.to_date).to_i
-            indicador.tempo_resolucao_devel_detalhes = "De #{indicador.data_andamento_primeira_tarefa_devel&.strftime("%d/%m/%Y")} até #{indicador.data_resolvida_ultima_tarefa_devel&.strftime("%d/%m/%Y")}"
+          if indicador.data_andamento.present? && indicador.data_resolvida.present?
+            indicador.tempo_resolucao = (indicador.data_resolvida.to_date - indicador.data_andamento.to_date).to_i
+            indicador.tempo_resolucao_detalhes = "De #{indicador.data_andamento&.strftime("%d/%m/%Y")} até #{indicador.data_resolvida&.strftime("%d/%m/%Y")}"
           end
 
-          if indicador.data_resolvida_ultima_tarefa_devel.present? && indicador.data_fechamento_ultima_tarefa_devel.present?
-            indicador.tempo_fechamento_devel = (indicador.data_fechamento_ultima_tarefa_devel.to_date - indicador.data_resolvida_ultima_tarefa_devel.to_date).to_i
-            indicador.tempo_fechamento_devel_detalhes = "De #{indicador.data_resolvida_ultima_tarefa_devel&.strftime("%d/%m/%Y")} até #{indicador.data_fechamento_ultima_tarefa_devel&.strftime("%d/%m/%Y")}"
+          if indicador.data_resolvida.present? && indicador.data_fechamento.present?
+            indicador.tempo_fechamento = (indicador.data_fechamento.to_date - indicador.data_resolvida.to_date).to_i
+            indicador.tempo_fechamento_detalhes = "De #{indicador.data_resolvida&.strftime("%d/%m/%Y")} até #{indicador.data_fechamento&.strftime("%d/%m/%Y")}"
           end
 
           # Processar dados QS
@@ -135,17 +135,17 @@ module SkyRedminePlugin
             primeira_tarefa_qs = tarefas_qs.first
             ultima_tarefa_qs = tarefas_qs.last
 
-            indicador.primeira_tarefa_qs_id = primeira_tarefa_qs.id
-            indicador.ultima_tarefa_qs_id = ultima_tarefa_qs.id
-            indicador.sprint_primeira_tarefa_qs = primeira_tarefa_qs.fixed_version.present? ? primeira_tarefa_qs.fixed_version.name : nil
+            indicador.id_tarefa_qs = primeira_tarefa_qs.id
+            indicador.id_ultima_tarefa_qs = ultima_tarefa_qs.id
+            indicador.sprint_qs = primeira_tarefa_qs.fixed_version.present? ? primeira_tarefa_qs.fixed_version.name : nil
             indicador.sprint_ultima_tarefa_qs = ultima_tarefa_qs.fixed_version.present? ? ultima_tarefa_qs.fixed_version.name : nil
-            indicador.projeto_primeira_tarefa_qs = primeira_tarefa_qs.project.name
+            indicador.projeto_qs = primeira_tarefa_qs.project.name
 
             indicador.tempo_estimado_qs = tarefas_qs.sum { |t| t.estimated_hours.to_f }
             indicador.tempo_gasto_qs = tarefas_qs.sum { |t| t.spent_hours.to_f }
-            indicador.status_ultima_tarefa_qs = ultima_tarefa_qs.status.name
+            indicador.status_qs = ultima_tarefa_qs.status.name
             indicador.houve_teste_nok = tarefas_qs.any? { |t| [SkyRedminePlugin::Constants::IssueStatus::TESTE_NOK, SkyRedminePlugin::Constants::IssueStatus::TESTE_NOK_FECHADA].include?(t.status.name) }
-            indicador.data_criacao_primeira_tarefa_qs = primeira_tarefa_qs.created_on.to_date
+            indicador.data_criacao_qs = primeira_tarefa_qs.created_on.to_date
 
             # Separar tarefas QS em ciclos de teste
             ciclos_qs = SkyRedminePlugin::TarefasRelacionadas.separar_ciclos_qs(tarefas_relacionadas)
@@ -159,38 +159,38 @@ module SkyRedminePlugin
                 break
               end
             end
-            indicador.data_andamento_primeira_tarefa_qs = data_andamento_qs
+            indicador.data_andamento_qs = data_andamento_qs
 
             # Usar as datas já calculadas pela função obter_lista_tarefas_relacionadas
-            indicador.data_resolvida_ultima_tarefa_qs = ultima_tarefa_qs.data_resolvida
-            indicador.data_fechamento_ultima_tarefa_qs = ultima_tarefa_qs.data_fechada
+            indicador.data_resolvida_qs = ultima_tarefa_qs.data_resolvida
+            indicador.data_fechamento_qs = ultima_tarefa_qs.data_fechada
 
             # Calcular tempos QS
-            if indicador.data_criacao_primeira_tarefa_qs.present? && indicador.data_andamento_primeira_tarefa_qs.present?
-              indicador.tempo_andamento_qs = (indicador.data_andamento_primeira_tarefa_qs.to_date - indicador.data_criacao_primeira_tarefa_qs.to_date).to_i
-              indicador.tempo_andamento_qs_detalhes = "De #{indicador.data_criacao_primeira_tarefa_qs&.strftime("%d/%m/%Y")} até #{indicador.data_andamento_primeira_tarefa_qs&.strftime("%d/%m/%Y")}"
+            if indicador.data_criacao_qs.present? && indicador.data_andamento_qs.present?
+              indicador.tempo_andamento_qs = (indicador.data_andamento_qs.to_date - indicador.data_criacao_qs.to_date).to_i
+              indicador.tempo_andamento_qs_detalhes = "De #{indicador.data_criacao_qs&.strftime("%d/%m/%Y")} até #{indicador.data_andamento_qs&.strftime("%d/%m/%Y")}"
             end
 
-            if indicador.data_andamento_primeira_tarefa_qs.present? && indicador.data_resolvida_ultima_tarefa_qs.present?
-              indicador.tempo_resolucao_qs = (indicador.data_resolvida_ultima_tarefa_qs.to_date - indicador.data_andamento_primeira_tarefa_qs.to_date).to_i
-              indicador.tempo_resolucao_qs_detalhes = "De #{indicador.data_andamento_primeira_tarefa_qs&.strftime("%d/%m/%Y")} até #{indicador.data_resolvida_ultima_tarefa_qs&.strftime("%d/%m/%Y")}"
+            if indicador.data_andamento_qs.present? && indicador.data_resolvida_qs.present?
+              indicador.tempo_resolucao_qs = (indicador.data_resolvida_qs.to_date - indicador.data_andamento_qs.to_date).to_i
+              indicador.tempo_resolucao_qs_detalhes = "De #{indicador.data_andamento_qs&.strftime("%d/%m/%Y")} até #{indicador.data_resolvida_qs&.strftime("%d/%m/%Y")}"
             end
 
-            if indicador.data_resolvida_ultima_tarefa_qs.present? && indicador.data_fechamento_ultima_tarefa_qs.present?
-              indicador.tempo_fechamento_qs = (indicador.data_fechamento_ultima_tarefa_qs.to_date - indicador.data_resolvida_ultima_tarefa_qs.to_date).to_i
-              indicador.tempo_fechamento_qs_detalhes = "De #{indicador.data_resolvida_ultima_tarefa_qs&.strftime("%d/%m/%Y")} até #{indicador.data_fechamento_ultima_tarefa_qs&.strftime("%d/%m/%Y")}"
+            if indicador.data_resolvida_qs.present? && indicador.data_fechamento_qs.present?
+              indicador.tempo_fechamento_qs = (indicador.data_fechamento_qs.to_date - indicador.data_resolvida_qs.to_date).to_i
+              indicador.tempo_fechamento_qs_detalhes = "De #{indicador.data_resolvida_qs&.strftime("%d/%m/%Y")} até #{indicador.data_fechamento_qs&.strftime("%d/%m/%Y")}"
             end
 
             # Calcular tempo para encaminhar para QS (apenas no primeiro ciclo)
-            if primeiro_ciclo_devel.last.data_resolvida.present? && indicador.data_criacao_primeira_tarefa_qs.present?
-              indicador.tempo_para_encaminhar_qs = (indicador.data_criacao_primeira_tarefa_qs.to_date - primeiro_ciclo_devel.last.data_resolvida.to_date).to_i
-              indicador.tempo_para_encaminhar_qs_detalhes = "De #{primeiro_ciclo_devel.last.data_resolvida&.strftime("%d/%m/%Y")} até #{indicador.data_criacao_primeira_tarefa_qs&.strftime("%d/%m/%Y")}"
+            if primeiro_ciclo_devel.last.data_resolvida.present? && indicador.data_criacao_qs.present?
+              indicador.tempo_para_encaminhar_qs = (indicador.data_criacao_qs.to_date - primeiro_ciclo_devel.last.data_resolvida.to_date).to_i
+              indicador.tempo_para_encaminhar_qs_detalhes = "De #{primeiro_ciclo_devel.last.data_resolvida&.strftime("%d/%m/%Y")} até #{indicador.data_criacao_qs&.strftime("%d/%m/%Y")}"
             end
 
             # Calcular tempo entre conclusão dos testes e liberação da versão
-            if indicador.data_resolvida_ultima_tarefa_qs.present? && indicador.data_fechamento_ultima_tarefa_devel.present?
-              indicador.tempo_concluido_testes_versao_liberada = (indicador.data_fechamento_ultima_tarefa_devel.to_date - indicador.data_resolvida_ultima_tarefa_qs.to_date).to_i
-              indicador.tempo_concluido_testes_versao_liberada_detalhes = "De #{indicador.data_resolvida_ultima_tarefa_qs&.strftime("%d/%m/%Y")} até #{indicador.data_fechamento_ultima_tarefa_devel&.strftime("%d/%m/%Y")}"
+            if indicador.data_resolvida_qs.present? && indicador.data_fechamento.present?
+              indicador.tempo_concluido_testes_versao_liberada = (indicador.data_fechamento.to_date - indicador.data_resolvida_qs.to_date).to_i
+              indicador.tempo_concluido_testes_versao_liberada_detalhes = "De #{indicador.data_resolvida_qs&.strftime("%d/%m/%Y")} até #{indicador.data_fechamento&.strftime("%d/%m/%Y")}"
             end
           end
 
@@ -222,7 +222,7 @@ module SkyRedminePlugin
 
           # Determinar se a tarefa foi fechada sem testes
           Rails.logger.info ">>> Verificando se a tarefa foi fechada sem testes"
-          if indicador.data_fechamento_ultima_tarefa_devel.present?
+          if indicador.data_fechamento.present?
             if tarefas_qs.empty?
               # Se não existe tarefa QS e a última tarefa DEVEL está fechada
               indicador.tarefa_fechada_sem_testes = "SIM"
@@ -233,8 +233,8 @@ module SkyRedminePlugin
                 indicador.tarefa_fechada_sem_testes = "NAO"
               else
                 # Se existe tarefa QS, verificar se a tarefa DEVEL foi fechada antes da tarefa QS
-                if indicador.data_fechamento_ultima_tarefa_qs.present?
-                  if indicador.data_fechamento_ultima_tarefa_devel.to_date < indicador.data_fechamento_ultima_tarefa_qs.to_date
+                if indicador.data_fechamento_qs.present?
+                  if indicador.data_fechamento.to_date < indicador.data_fechamento_qs.to_date
                     Rails.logger.info ">>> A tarefa DEVEL foi fechada antes da tarefa QS"
                     # Se a tarefa DEVEL foi fechada antes da tarefa QS
                     indicador.tarefa_fechada_sem_testes = "SIM"
@@ -253,26 +253,26 @@ module SkyRedminePlugin
           end
 
           # Calcular tempo total para liberar versão
-          if indicador.data_criacao_ou_atendimento_primeira_tarefa_devel && indicador.data_fechamento_ultima_tarefa_devel
-            indicador.tempo_total_liberar_versao = (indicador.data_fechamento_ultima_tarefa_devel.to_date - indicador.data_criacao_ou_atendimento_primeira_tarefa_devel.to_date).to_i
+          if indicador.data_criacao_ou_atendimento && indicador.data_fechamento
+            indicador.tempo_total_liberar_versao = (indicador.data_fechamento.to_date - indicador.data_criacao_ou_atendimento.to_date).to_i
           end
 
           # Calcular tempo total de desenvolvimento
-          if indicador.data_criacao_ou_atendimento_primeira_tarefa_devel && indicador.data_resolvida_ultima_tarefa_devel
-            indicador.tempo_total_devel = (indicador.data_resolvida_ultima_tarefa_devel.to_date - indicador.data_criacao_ou_atendimento_primeira_tarefa_devel.to_date).to_i
+          if indicador.data_criacao_ou_atendimento && indicador.data_resolvida
+            indicador.tempo_total_devel = (indicador.data_resolvida.to_date - indicador.data_criacao_ou_atendimento.to_date).to_i
           end
 
           # Calcular tempo total de testes
           # Calcular tempo total de testes
-          if indicador.data_criacao_primeira_tarefa_qs && indicador.data_resolvida_ultima_tarefa_qs &&
+          if indicador.data_criacao_qs && indicador.data_resolvida_qs &&
              [SkyRedminePlugin::Constants::IssueStatus::TESTE_OK,
               SkyRedminePlugin::Constants::IssueStatus::TESTE_OK_FECHADA].include?(ultima_tarefa_qs.status.name)
-            indicador.tempo_total_testes = (indicador.data_resolvida_ultima_tarefa_qs.to_date - indicador.data_criacao_primeira_tarefa_qs.to_date).to_i
+            indicador.tempo_total_testes = (indicador.data_resolvida_qs.to_date - indicador.data_criacao_qs.to_date).to_i
           end
 
           # Calcular tempo total desde a criação da tarefa até a conclusão dos testes
-          if indicador.data_criacao_ou_atendimento_primeira_tarefa_devel && indicador.data_resolvida_ultima_tarefa_qs
-            indicador.tempo_total_devel_concluir_testes = (indicador.data_resolvida_ultima_tarefa_qs.to_date - indicador.data_criacao_ou_atendimento_primeira_tarefa_devel.to_date).to_i
+          if indicador.data_criacao_ou_atendimento && indicador.data_resolvida_qs
+            indicador.tempo_total_devel_concluir_testes = (indicador.data_resolvida_qs.to_date - indicador.data_criacao_ou_atendimento.to_date).to_i
           end
 
           # Determinar a situação atual do desenvolvimento
@@ -288,45 +288,45 @@ module SkyRedminePlugin
     def self.limpar_campos_indicador(indicador)
       Rails.logger.info ">>> Limpando todos os campos do indicador"
       # Campos de DEVEL
-      indicador.ultima_tarefa_devel_id = nil
-      indicador.tipo_primeira_tarefa_devel = nil
-      indicador.status_ultima_tarefa_devel = nil
-      indicador.prioridade_primeira_tarefa_devel = nil
-      indicador.projeto_primeira_tarefa_devel = nil
-      indicador.sprint_primeira_tarefa_devel = nil
-      indicador.sprint_ultima_tarefa_devel = nil
+      indicador.id_ultima_tarefa = nil
+      indicador.tipo = nil
+      indicador.status = nil
+      indicador.prioridade = nil
+      indicador.projeto = nil
+      indicador.sprint = nil
+      indicador.sprint_ultima_tarefa = nil
       indicador.tarefa_complementar = nil
       indicador.teste_no_desenvolvimento = nil
-      indicador.tempo_estimado_devel = nil
-      indicador.tempo_gasto_devel = nil
-      indicador.origem_primeira_tarefa_devel = nil
-      indicador.skynet_primeira_tarefa_devel = nil
+      indicador.tempo_estimado = nil
+      indicador.tempo_gasto = nil
+      indicador.origem = nil
+      indicador.skynet = nil
       indicador.qtd_retorno_testes_qs = nil
-      indicador.data_criacao_ou_atendimento_primeira_tarefa_devel = nil
-      indicador.data_resolvida_ultima_tarefa_devel = nil
-      indicador.data_fechamento_ultima_tarefa_devel = nil
-      indicador.data_andamento_primeira_tarefa_devel = nil
-      indicador.tempo_andamento_devel = nil
-      indicador.tempo_resolucao_devel = nil
-      indicador.tempo_fechamento_devel = nil
+      indicador.data_criacao_ou_atendimento = nil
+      indicador.data_resolvida = nil
+      indicador.data_fechamento = nil
+      indicador.data_andamento = nil
+      indicador.tempo_andamento = nil
+      indicador.tempo_resolucao = nil
+      indicador.tempo_fechamento = nil
       indicador.tempo_para_encaminhar_qs = nil
       indicador.tempo_total_liberar_versao = nil
       indicador.tempo_total_devel_concluir_testes = nil
 
       # Campos de QS
-      indicador.primeira_tarefa_qs_id = nil
-      indicador.ultima_tarefa_qs_id = nil
-      indicador.sprint_primeira_tarefa_qs = nil
+      indicador.id_tarefa_qs = nil
+      indicador.id_ultima_tarefa_qs = nil
+      indicador.sprint_qs = nil
       indicador.sprint_ultima_tarefa_qs = nil
-      indicador.projeto_primeira_tarefa_qs = nil
+      indicador.projeto_qs = nil
       indicador.tempo_estimado_qs = nil
       indicador.tempo_gasto_qs = nil
-      indicador.status_ultima_tarefa_qs = nil
+      indicador.status_qs = nil
       indicador.houve_teste_nok = nil
-      indicador.data_criacao_primeira_tarefa_qs = nil
-      indicador.data_andamento_primeira_tarefa_qs = nil
-      indicador.data_resolvida_ultima_tarefa_qs = nil
-      indicador.data_fechamento_ultima_tarefa_qs = nil
+      indicador.data_criacao_qs = nil
+      indicador.data_andamento_qs = nil
+      indicador.data_resolvida_qs = nil
+      indicador.data_fechamento_qs = nil
       indicador.tempo_andamento_qs = nil
       indicador.tempo_resolucao_qs = nil
       indicador.tempo_fechamento_qs = nil

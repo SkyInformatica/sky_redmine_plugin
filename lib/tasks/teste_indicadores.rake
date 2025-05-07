@@ -269,7 +269,7 @@ namespace :sky_redmine_plugin do
     puts "\n>> Verificação do Indicador para a Tarefa ##{issue_id}"
 
     # Buscar o indicador pelo número da tarefa
-    indicador = SkyRedmineIndicadores.find_by(primeira_tarefa_devel_id: issue_id)
+    indicador = SkyRedmineIndicadores.find_by(id_tarefa: issue_id)
 
     if indicador
       puts "✓ Indicador encontrado"
