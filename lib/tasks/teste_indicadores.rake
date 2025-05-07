@@ -253,13 +253,13 @@ namespace :sky_redmine_plugin do
 
     tarefa_continuidade = SkyRedminePlugin::TarefasRelacionadas.localizar_tarefa_continuidade(issue)
     if tarefa_continuidade
-      puts "✓ Tarefa #{tarefa_continuidade.id} continua na proxima sprint criadao com sucesso para tarefa ##{tarefa_qs.id}"
+      puts "✓ Tarefa #{tarefa_continuidade.id} continua na proxima sprint criadao com sucesso para tarefa ##{issue.id}"
       puts "  Projeto: #{tarefa_continuidade.project.name}"
       puts "  Sprint: #{tarefa_continuidade.fixed_version.name}"
       puts "  Tempo estimado: #{tarefa_continuidade.estimated_hours} horas"
       return tarefa_continuidade
     else
-      puts "✗ Falha ao criar tarefa de continuidade na proxima sprint para ##{tarefa_qs.id}"
+      puts "✗ Falha ao criar tarefa de continuidade na proxima sprint para ##{issue.id}"
       return nil
     end
   end
