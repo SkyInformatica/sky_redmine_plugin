@@ -277,6 +277,7 @@ module SkyRedminePlugin
 
           # Determinar a situação atual do desenvolvimento
           indicador.etapa_atual = determinar_etapa_atual(indicador, tarefas_relacionadas, tarefas_devel, tarefas_qs, ciclos_devel, ciclos_qs)
+          #indicador.etapa_atual_agrupado_retorno_testes = obter_etapa_atual_agrupado_retorno_testes(indicador.etapa_atual)
           # Atualizar as tags das tarefas com a situação atual
           atualizar_tags_etapa_atual(tarefas_devel, tarefas_qs, indicador.etapa_atual)
         end
@@ -419,7 +420,7 @@ module SkyRedminePlugin
       #Rails.logger.info ">>> Indicador: #{indicador.to_json}"
 
       # Primeiro verificar se é uma situação DESCONHECIDA
-      resultado_desconhecida = verificar_situacao_desconhecida(tarefas_relacionadas, tarefas_devel, ciclos_devel)
+      resultado_desconhecida = verificar_situacao_desconhecida(tarefas_relacionadas, tarefas_devel, tarefas_qs, ciclos_devel, ciclos_qs)
       if resultado_desconhecida[:situacao]
         # Atualizar o motivo no indicador
         indicador.motivo_situacao_desconhecida = resultado_desconhecida[:motivo]
@@ -657,7 +658,7 @@ module SkyRedminePlugin
     end
 
     # Método para verificar se a situação é DESCONHECIDA
-    def self.verificar_situacao_desconhecida(tarefas_relacionadas, tarefas_devel, ciclos_devel)
+    def self.verificar_situacao_desconhecida(tarefas_relacionadas, tarefas_devel, tarefas_qs, ciclos_devel, ciclos_qs)
       Rails.logger.info ">>> Verificando situação desconhecida para a tarefa #{tarefas_relacionadas.last.id}"
 
       # Estrutura para retornar situação e motivo
@@ -665,6 +666,7 @@ module SkyRedminePlugin
 
       ultima_tarefa_ciclo = tarefas_relacionadas.last
       ultima_tarefa_devel = tarefas_devel.last
+      ultima_tarefa_qs = tarefas_qs.last
 
       # Regra 1: Verificar se a última tarefa do último ciclo DEVEL é FECHADA_CONTINUA_RETORNO_TESTES
       if ultima_tarefa_devel.status.name == SkyRedminePlugin::Constants::IssueStatus::FECHADA_CONTINUA_RETORNO_TESTES
@@ -711,8 +713,30 @@ module SkyRedminePlugin
         return resultado
       end
 
+      # Regra 6: Verificar se há alguma tarefa do QS com status FECHADA ou RESOLVIDA
+      # Regra 6: Verificar se há alguma tarefa do QS com status FECHADA ou RESOLVIDA
+      tarefas_qs_invalidas = tarefas_qs.select { |tarefa|
+        tarefa.status.name == SkyRedminePlugin::Constants::IssueStatus::FECHADA ||
+        tarefa.status.name == SkyRedminePlugin::Constants::IssueStatus::RESOLVIDA
+      }
+
+      if tarefas_qs_invalidas.any?
+        ids_e_status = tarefas_qs_invalidas.map { |t| "#{t.id} com situação #{t.status.name}" }.join(", ")
+        resultado[:situacao] = SkyRedminePlugin::Constants::EtapaAtual::DESCONHECIDA
+        resultado[:motivo] = "Tarefa do QS #{ids_e_status} o que não é esperado. Tarefas do QS devem usar Teste OK ou NOK. "
+        return resultado
+      end
+
       # Se não atende nenhuma condição de DESCONHECIDA, retorna nil para continuar a verificação
       resultado
+    end
+  end
+
+  def self.obter_etapa_atual_agrupado_retorno_testes(etapa)
+    if etapa.to_s.start_with?("E07_AGUARDA_ENCAMINHAR_RT")
+      return etapa
+    else
+      return etapa.to_s.gsub(/_RT$/, "")
     end
   end
 end

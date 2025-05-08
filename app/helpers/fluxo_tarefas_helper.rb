@@ -755,7 +755,12 @@ module FluxoTarefasHelper
 
   # Método auxiliar para renderizar os passos da timeline
   def render_timeline_steps(fluxo, indice_atual, indicadores, esta_na_parte_atual = true)
-    Rails.logger.info(">>>> render_timeline_steps: #{fluxo}, #{indice_atual}, #{indicadores}, #{esta_na_parte_atual}")
+    Rails.logger.info(">>>> render_timeline_steps: #{fluxo}, #{indice_atual}, #{esta_na_parte_atual}")
+
+    if (!indice_atual)
+      return render_timeline_desconhecida(indicadores.etapa_atual, "Etapa não encontrada no fluxo")
+    end
+
     html = "<div class='timeline'>"
 
     fluxo.each_with_index do |etapa, i|

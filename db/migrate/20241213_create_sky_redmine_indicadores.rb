@@ -2,22 +2,35 @@ class CreateSkyRedmineIndicadores < ActiveRecord::Migration[5.2]
   def change
     create_table :sky_redmine_indicadores do |t|
       t.integer :id_tarefa
-      t.string :tipo
       t.integer :id_ultima_tarefa
+      t.string :projeto
+      t.string :tipo
+      t.string :tarefa_complementar
       t.string :status
       t.string :prioridade
-      t.string :projeto
+      t.string :atribuido_para
+      t.string :categoria
       t.string :sprint
       t.string :sprint_ultima_tarefa
-      t.string :tarefa_complementar
-      t.string :teste_no_desenvolvimento
-      t.float :tempo_estimado
-      t.float :tempo_gasto
+      t.string :sistema
       t.string :origem
       t.string :skynet
+      t.string :cliente
+      t.string :clientenome
+      t.string :clientecidade
+      t.string :qtde_skynet
+      t.datetime :data_prevista
+      t.float :tempo_estimado
+      t.float :tempo_gasto
+      t.boolean :tarefa_nao_planejada_imediata
+      t.boolean :tarefa_antecipada_sprint
+      t.string :versao_estavel
+      t.string :versao_teste
+      t.string :teste_no_desenvolvimento
       t.string :equipe_responsavel_atual
       t.string :etapa_atual
-      t.boolean :etapa_atual_eh_retorno_testes
+      t.string :etapa_atual_agrupado_retorno_testes
+      t.string :etapa_atual_eh_retorno_testes
       t.datetime :data_etapa_atual
       t.integer :qtd_retorno_testes_qs
       t.integer :qtd_retorno_testes_devel
@@ -34,12 +47,15 @@ class CreateSkyRedmineIndicadores < ActiveRecord::Migration[5.2]
       t.integer :tempo_para_encaminhar_qs
       t.string :tempo_para_encaminhar_qs_detalhes
       t.integer :id_tarefa_qs
+      t.string :projeto_qs
       t.integer :id_ultima_tarefa_qs
       t.string :sprint_qs
       t.string :sprint_ultima_tarefa_qs
-      t.string :projeto_qs
+      t.string :atribuido_para_qs
       t.float :tempo_estimado_qs
       t.float :tempo_gasto_qs
+      t.boolean :tarefa_nao_planejada_imediata_qs
+      t.boolean :tarefa_antecipada_sprint_qs
       t.string :status_qs
       t.boolean :houve_teste_nok
       t.datetime :data_criacao_qs
@@ -60,8 +76,6 @@ class CreateSkyRedmineIndicadores < ActiveRecord::Migration[5.2]
       t.string :tarefa_fechada_sem_testes
       t.integer :tempo_total_devel_concluir_testes
       t.string :motivo_situacao_desconhecida
-      t.string :versao_estavel
-      t.string :versao_teste
 
       t.timestamps
     end
