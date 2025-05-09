@@ -16,9 +16,34 @@ class IndicadoresV2Controller < ApplicationController
     }
 
     token = JWT.encode(payload, METABASE_SECRET_KEY)
-    # Usando CGI.escape para codificar corretamente o valor do projeto
-    encoded_project = CGI.escape(@project.to_s)
-    @iframe_url = "#{METABASE_SITE_URL}/embed/dashboard/#{token}?projeto=#{encoded_project}#bordered=true&titled=false"
+
+    # Hash com os parâmetros da URL para os filtros editaveis
+    # Se colocar no parametro no payload o filtro fica bloqueado.
+    url_params = {
+      "projeto" => @project.to_s,
+    }
+
+    # Hash com os parâmetros do fragment (#)
+    fragment_params = {
+      "background" => "false",
+      "bordered" => "true",
+      "titled" => "false",
+    }
+
+    # Monta a query string codificando os parâmetros
+    query_string = url_params.map { |k, v| "#{k}=#{CGI.escape(v.to_s)}" }.join("&")
+
+    # Monta o fragment
+    fragment_string = fragment_params.map { |k, v| "#{k}=#{v}" }.join("&")
+
+    # Monta a URL final
+    @iframe_url = [
+      METABASE_SITE_URL,
+      "/embed/dashboard/",
+      token,
+      "?#{query_string}",
+      "##{fragment_string}",
+    ].join
     Rails.logger.info "#{@iframe_url}"
   end
 
