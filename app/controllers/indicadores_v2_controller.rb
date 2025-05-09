@@ -10,14 +10,12 @@ class IndicadoresV2Controller < ApplicationController
   def index
     payload = {
       :resource => { :dashboard => 4 },
-      :params => {
-        projeto: @project,
-      },
+      :params => {},
       :exp => Time.now.to_i + (60 * 10), # 10 minute expiration
     }
 
     token = JWT.encode(payload, METABASE_SECRET_KEY)
-    @iframe_url = "#{METABASE_SITE_URL}/embed/dashboard/#{token}#bordered=true&titled=true"
+    @iframe_url = "#{METABASE_SITE_URL}/embed/dashboard/#{token}#bordered=true&titled=false"
   end
 
   private
