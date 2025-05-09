@@ -758,7 +758,7 @@ module FluxoTarefasHelper
     Rails.logger.info(">>>> render_timeline_steps: #{fluxo}, #{indice_atual}, #{esta_na_parte_atual}")
 
     if (!indice_atual)
-      return render_timeline_desconhecida(indicadores.etapa_atual, "AVALIAR ALGORITMO DO CONTROLE DE ETAPAS: Etapa não encontrada no fluxo")
+      return render_timeline_desconhecida(indicadores.etapa_atual, "AVALIAR ALGORITMO DO CONTROLE DE ETAPAS: Etapa não encontrada no fluxo #{fluxo}")
     end
 
     html = "<div class='timeline'>"
