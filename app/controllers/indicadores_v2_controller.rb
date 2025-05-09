@@ -10,7 +10,9 @@ class IndicadoresV2Controller < ApplicationController
   def index
     payload = {
       :resource => { :dashboard => 4 },
-      :params => {},
+      :params => {
+        projeto: @project,
+      },
       :exp => Time.now.to_i + (60 * 10), # 10 minute expiration
     }
 
