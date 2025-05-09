@@ -318,7 +318,7 @@ module SkyRedminePlugin
 
           # Determinar a situação atual do desenvolvimento
           indicador.etapa_atual = determinar_etapa_atual(indicador, tarefas_relacionadas, tarefas_devel, tarefas_qs, ciclos_devel, ciclos_qs)
-          #indicador.etapa_atual_agrupado_retorno_testes = obter_etapa_atual_agrupado_retorno_testes(indicador.etapa_atual)
+          indicador.etapa_atual_agrupado_retorno_testes = obter_etapa_atual_agrupado_retorno_testes(indicador.etapa_atual)
           # Atualizar as tags das tarefas com a situação atual
           atualizar_tags_etapa_atual(tarefas_devel, tarefas_qs, indicador.etapa_atual)
         end
