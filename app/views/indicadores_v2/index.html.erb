@@ -1,9 +1,8 @@
 <% content_for :header_tags do %>
-  <%= stylesheet_link_tag 'indicadores_v2', plugin: 'sky_redmine_plugin' %>
+  <%= stylesheet_link_tag "indicadores_v2_", plugin: "sky_redmine_plugin" %>
 <% end %>
 
-<div class="indicadores-v2-container">
-  <h2>Dashboard Metabase</h2>
+<div class="indicadores-v2-container">  
   <div class="metabase-dashboard">
     <iframe 
       src="<%= @iframe_url %>" 
