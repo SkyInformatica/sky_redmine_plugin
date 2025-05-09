@@ -384,7 +384,7 @@ module SkyRedminePlugin
       indicador.tempo_estimado_qs = nil
       indicador.tempo_gasto_qs = nil
       indicador.houve_teste_nok = nil
-      indicaodr.categoria_teste_nok = nil
+      indicador.categoria_teste_nok = nil
       indicador.data_criacao_qs = nil
       indicador.data_andamento_qs = nil
       indicador.data_resolvida_qs = nil
