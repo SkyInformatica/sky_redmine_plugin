@@ -15,7 +15,7 @@ class IndicadoresV2Controller < ApplicationController
     }
 
     token = JWT.encode(payload, METABASE_SECRET_KEY)
-    @iframe_url = "#{METABASE_SITE_URL}/embed/dashboard/#{token}#bordered=true&titled=false"
+    @iframe_url = "#{METABASE_SITE_URL}/embed/dashboard/#{token}#bordered=true&titled=false?projeto=#{@project}"
   end
 
   private
