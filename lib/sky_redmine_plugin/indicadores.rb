@@ -84,8 +84,14 @@ module SkyRedminePlugin
         indicador.clientecidade = SkyRedminePlugin::TarefasRelacionadas.obter_valor_campo_personalizado(primeira_tarefa_devel, SkyRedminePlugin::Constants::CustomFields::CLIENTE_CIDADE)
         indicador.qtde_skynet = SkyRedminePlugin::TarefasRelacionadas.obter_valor_campo_personalizado(primeira_tarefa_devel, SkyRedminePlugin::Constants::CustomFields::QUANTIDADE_SKYNET)
         indicador.data_prevista = primeira_tarefa_devel.due_date
-        indicador.tarefa_nao_planejada_imediata = SkyRedminePlugin::TarefasRelacionadas.obter_valor_campo_personalizado(primeira_tarefa_devel, SkyRedminePlugin::Constants::CustomFields::TAREFA_NAO_PLANEJADA_IMEDIATA)
-        indicador.tarefa_antecipada_sprint = SkyRedminePlugin::TarefasRelacionadas.obter_valor_campo_personalizado(primeira_tarefa_devel, SkyRedminePlugin::Constants::CustomFields::TAREFA_ANTECIPADA_SPRINT)
+        indicador.tarefa_nao_planejada_imediata = tarefas_devel.any? { |tarefa_qs|
+          SkyRedminePlugin::TarefasRelacionadas.obter_valor_campo_personalizado(tarefa_qs, SkyRedminePlugin::Constants::CustomFields::TAREFA_NAO_PLANEJADA_IMEDIATA) == "Sim"
+        } ? "Sim" : "Não"
+
+        # Verificar se alguma tarefa QS tem tarefa antecipada sprint = "Sim"
+        indicador.tarefa_antecipada_sprint = tarefas_devel.any? { |tarefa_qs|
+          SkyRedminePlugin::TarefasRelacionadas.obter_valor_campo_personalizado(tarefa_qs, SkyRedminePlugin::Constants::CustomFields::TAREFA_ANTECIPADA_SPRINT) == "Sim"
+        } ? "Sim" : "Não"
         if indicador.tarefa_complementar == "NAO"
           # Contar retornos de testes baseado no fluxo entre projetos
           qtd_retorno_testes_qs = 0
@@ -149,10 +155,33 @@ module SkyRedminePlugin
             indicador.sprint_qs = primeira_tarefa_qs.fixed_version.present? ? primeira_tarefa_qs.fixed_version.name : nil
             indicador.sprint_ultima_tarefa_qs = ultima_tarefa_qs.fixed_version.present? ? ultima_tarefa_qs.fixed_version.name : nil
             indicador.projeto_qs = primeira_tarefa_qs.project.name
-            # Campos que faltam adicionar
             indicador.atribuido_para_qs = primeira_tarefa_qs.assigned_to&.name
+            # Verificar se alguma tarefa QS tem tarefa não planejada imediata = "Sim"
+            indicador.tarefa_nao_planejada_imediata_qs = tarefas_qs.any? { |tarefa_qs|
+              SkyRedminePlugin::TarefasRelacionadas.obter_valor_campo_personalizado(tarefa_qs, SkyRedminePlugin::Constants::CustomFields::TAREFA_NAO_PLANEJADA_IMEDIATA) == "Sim"
+            } ? "Sim" : "Não"
+
+            # Verificar se alguma tarefa QS tem tarefa antecipada sprint = "Sim"
+            indicador.tarefa_antecipada_sprint_qs = tarefas_qs.any? { |tarefa_qs|
+              SkyRedminePlugin::TarefasRelacionadas.obter_valor_campo_personalizado(tarefa_qs, SkyRedminePlugin::Constants::CustomFields::TAREFA_ANTECIPADA_SPRINT) == "Sim"
+            } ? "Sim" : "Não"
             indicador.tarefa_nao_planejada_imediata_qs = SkyRedminePlugin::TarefasRelacionadas.obter_valor_campo_personalizado(primeira_tarefa_qs, SkyRedminePlugin::Constants::CustomFields::TAREFA_NAO_PLANEJADA_IMEDIATA)
             indicador.tarefa_antecipada_sprint_qs = SkyRedminePlugin::TarefasRelacionadas.obter_valor_campo_personalizado(primeira_tarefa_qs, SkyRedminePlugin::Constants::CustomFields::TAREFA_ANTECIPADA_SPRINT)
+
+            categorias_teste_nok = tarefas_qs.map { |tarefa_qs|
+              valor = SkyRedminePlugin::TarefasRelacionadas.obter_valor_campo_personalizado(tarefa_qs, SkyRedminePlugin::Constants::CustomFields::CATEGORIA_TESTE_NOK)
+              valor.present? ? valor : nil
+            }.compact.uniq.join(", ")
+
+            # Guardar todas as categorias
+            indicador.categoria_teste_nok_todas_tarefas_qs = categorias_teste_nok.presence
+
+            # Pegar apenas a primeira categoria de forma mais segura
+            indicador.categoria_teste_nok = if categorias_teste_nok.present?
+                categorias_teste_nok.split(",").first&.strip
+              else
+                nil
+              end
             indicador.tempo_estimado_qs = tarefas_qs.sum { |t| t.estimated_hours.to_f }
             indicador.tempo_gasto_qs = tarefas_qs.sum { |t| t.spent_hours.to_f }
             indicador.status_qs = ultima_tarefa_qs.status.name
@@ -355,6 +384,7 @@ module SkyRedminePlugin
       indicador.tempo_estimado_qs = nil
       indicador.tempo_gasto_qs = nil
       indicador.houve_teste_nok = nil
+      indicaodr.categoria_teste_nok = nil
       indicador.data_criacao_qs = nil
       indicador.data_andamento_qs = nil
       indicador.data_resolvida_qs = nil

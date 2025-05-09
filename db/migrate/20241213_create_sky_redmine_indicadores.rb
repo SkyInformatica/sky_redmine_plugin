@@ -59,6 +59,8 @@ class CreateSkyRedmineIndicadores < ActiveRecord::Migration[5.2]
       t.float :tempo_estimado_qs
       t.float :tempo_gasto_qs
       t.boolean :houve_teste_nok
+      t.string :categoria_teste_nok
+      t.string :categoria_teste_nok_todas_tarefas_qs
       t.datetime :data_criacao_qs
       t.datetime :data_andamento_qs
       t.datetime :data_resolvida_qs

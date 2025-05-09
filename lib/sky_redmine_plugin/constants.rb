@@ -76,6 +76,7 @@ module SkyRedminePlugin
       TAREFA_ANTECIPADA_SPRINT = "Tarefa antecipada na sprint"
       ORIGEM = "Origem"
       SKYNET = "Sky.NET"
+      CATEGORIA_TESTE_NOK = "Categoria Teste NOK"
     end
 
     module CustomFieldsValues
