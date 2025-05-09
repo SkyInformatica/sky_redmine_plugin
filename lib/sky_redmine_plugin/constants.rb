@@ -68,6 +68,14 @@ module SkyRedminePlugin
       RESULTADO_TESTE_NOK = "Resultado Teste NOK"
       VERSAO_TESTE = "Versão teste"
       VERSAO_ESTAVEL = "Versão estável"
+      CLIENTE = "Cliente"
+      CLIENTE_NOME = "Cliente Nome"
+      CLIENTE_CIDADE = "Cliente Cidade"
+      QUANTIDADE_SKYNET = "Quantidade Sky.NET"
+      TAREFA_NAO_PLANEJADA_IMEDIATA = "Tarefa não planejada IMEDIATA"
+      TAREFA_ANTECIPADA_SPRINT = "Tarefa antecipada na sprint"
+      ORIGEM = "Origem"
+      SKYNET = "Sky.NET"
     end
 
     module CustomFieldsValues

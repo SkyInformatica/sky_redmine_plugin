@@ -69,14 +69,23 @@ module SkyRedminePlugin
         indicador.teste_no_desenvolvimento = primeira_tarefa_devel.teste_no_desenvolvimento
         indicador.tempo_estimado = tarefas_devel.sum { |t| t.estimated_hours.to_f }
         indicador.tempo_gasto = tarefas_devel.sum { |t| t.spent_hours.to_f }
-        indicador.origem = SkyRedminePlugin::TarefasRelacionadas.obter_valor_campo_personalizado(primeira_tarefa_devel, "Origem")
-        indicador.skynet = SkyRedminePlugin::TarefasRelacionadas.obter_valor_campo_personalizado(primeira_tarefa_devel, "Sky.NET")
         indicador.data_criacao_ou_atendimento = primeira_tarefa_devel.data_criacao
         indicador.data_resolvida = ultima_tarefa_devel.data_resolvida
         indicador.data_fechamento = ultima_tarefa_devel.data_fechada
         indicador.versao_teste = ultima_tarefa_devel.versao_teste
         indicador.versao_estavel = ultima_tarefa_devel.versao_estavel
-
+        indicador.atribuido_para = primeira_tarefa_devel.assigned_to&.name
+        indicador.categoria = primeira_tarefa_devel.category&.name
+        indicador.origem = SkyRedminePlugin::TarefasRelacionadas.obter_valor_campo_personalizado(primeira_tarefa_devel, SkyRedminePlugin::Constants::CustomFields::ORIGEM)
+        indicador.skynet = SkyRedminePlugin::TarefasRelacionadas.obter_valor_campo_personalizado(primeira_tarefa_devel, SkyRedminePlugin::Constants::CustomFields::SKYNET)
+        indicador.sistema = SkyRedminePlugin::TarefasRelacionadas.obter_valor_campo_personalizado(primeira_tarefa_devel, SkyRedminePlugin::Constants::CustomFields::SISTEMA)
+        indicador.cliente = SkyRedminePlugin::TarefasRelacionadas.obter_valor_campo_personalizado(primeira_tarefa_devel, SkyRedminePlugin::Constants::CustomFields::CLIENTE)
+        indicador.clientenome = SkyRedminePlugin::TarefasRelacionadas.obter_valor_campo_personalizado(primeira_tarefa_devel, SkyRedminePlugin::Constants::CustomFields::CLIENTE_NOME)
+        indicador.clientecidade = SkyRedminePlugin::TarefasRelacionadas.obter_valor_campo_personalizado(primeira_tarefa_devel, SkyRedminePlugin::Constants::CustomFields::CLIENTE_CIDADE)
+        indicador.qtde_skynet = SkyRedminePlugin::TarefasRelacionadas.obter_valor_campo_personalizado(primeira_tarefa_devel, SkyRedminePlugin::Constants::CustomFields::QUANTIDADE_SKYNET)
+        indicador.data_prevista = primeira_tarefa_devel.due_date
+        indicador.tarefa_nao_planejada_imediata = SkyRedminePlugin::TarefasRelacionadas.obter_valor_campo_personalizado(primeira_tarefa_devel, SkyRedminePlugin::Constants::CustomFields::TAREFA_NAO_PLANEJADA_IMEDIATA)
+        indicador.tarefa_antecipada_sprint = SkyRedminePlugin::TarefasRelacionadas.obter_valor_campo_personalizado(primeira_tarefa_devel, SkyRedminePlugin::Constants::CustomFields::TAREFA_ANTECIPADA_SPRINT)
         if indicador.tarefa_complementar == "NAO"
           # Contar retornos de testes baseado no fluxo entre projetos
           qtd_retorno_testes_qs = 0
@@ -140,7 +149,10 @@ module SkyRedminePlugin
             indicador.sprint_qs = primeira_tarefa_qs.fixed_version.present? ? primeira_tarefa_qs.fixed_version.name : nil
             indicador.sprint_ultima_tarefa_qs = ultima_tarefa_qs.fixed_version.present? ? ultima_tarefa_qs.fixed_version.name : nil
             indicador.projeto_qs = primeira_tarefa_qs.project.name
-
+            # Campos que faltam adicionar
+            indicador.atribuido_para_qs = primeira_tarefa_qs.assigned_to&.name
+            indicador.tarefa_nao_planejada_imediata_qs = SkyRedminePlugin::TarefasRelacionadas.obter_valor_campo_personalizado(primeira_tarefa_qs, SkyRedminePlugin::Constants::CustomFields::TAREFA_NAO_PLANEJADA_IMEDIATA)
+            indicador.tarefa_antecipada_sprint_qs = SkyRedminePlugin::TarefasRelacionadas.obter_valor_campo_personalizado(primeira_tarefa_qs, SkyRedminePlugin::Constants::CustomFields::TAREFA_ANTECIPADA_SPRINT)
             indicador.tempo_estimado_qs = tarefas_qs.sum { |t| t.estimated_hours.to_f }
             indicador.tempo_gasto_qs = tarefas_qs.sum { |t| t.spent_hours.to_f }
             indicador.status_qs = ultima_tarefa_qs.status.name
@@ -296,13 +308,23 @@ module SkyRedminePlugin
       indicador.projeto = nil
       indicador.sprint = nil
       indicador.sprint_ultima_tarefa = nil
-      indicador.tarefa_complementar = nil
+      indicador.atribuido_para = nil
+      indicador.categoria = nil
+      indicador.sistema = nil
+      indicador.origem = nil
+      indicador.skynet = nil
+      indicador.cliente = nil
+      indicador.clientenome = nil
+      indicador.clientecidade = nil
+      indicador.qtde_skynet = nil
+      indicador.data_prevista = nil
+      indicador.tarefa_nao_planejada_imediata = nil
+      indicador.tarefa_antecipada_sprint = nil
+      indicador.versao_estavel = nil
+      indicador.versao_teste = nil
       indicador.teste_no_desenvolvimento = nil
       indicador.tempo_estimado = nil
       indicador.tempo_gasto = nil
-      indicador.origem = nil
-      indicador.skynet = nil
-      indicador.qtd_retorno_testes_qs = nil
       indicador.data_criacao_ou_atendimento = nil
       indicador.data_resolvida = nil
       indicador.data_fechamento = nil
@@ -313,16 +335,25 @@ module SkyRedminePlugin
       indicador.tempo_para_encaminhar_qs = nil
       indicador.tempo_total_liberar_versao = nil
       indicador.tempo_total_devel_concluir_testes = nil
+      indicador.tempo_andamento_detalhes = nil
+      indicador.tempo_resolucao_detalhes = nil
+      indicador.tempo_fechamento_detalhes = nil
+      indicador.tempo_para_encaminhar_qs_detalhes = nil
+      indicador.tempo_total_devel = nil
+      indicador.qtd_retorno_testes_devel = nil
 
       # Campos de QS
       indicador.id_tarefa_qs = nil
       indicador.id_ultima_tarefa_qs = nil
+      indicador.status_qs = nil
+      indicador.projeto_qs = nil
       indicador.sprint_qs = nil
       indicador.sprint_ultima_tarefa_qs = nil
-      indicador.projeto_qs = nil
+      indicador.atribuido_para_qs = nil
+      indicador.tarefa_nao_planejada_imediata_qs = nil
+      indicador.tarefa_antecipada_sprint_qs = nil
       indicador.tempo_estimado_qs = nil
       indicador.tempo_gasto_qs = nil
-      indicador.status_qs = nil
       indicador.houve_teste_nok = nil
       indicador.data_criacao_qs = nil
       indicador.data_andamento_qs = nil
@@ -333,14 +364,22 @@ module SkyRedminePlugin
       indicador.tempo_fechamento_qs = nil
       indicador.tempo_concluido_testes_versao_liberada = nil
       indicador.tempo_total_testes = nil
+      indicador.tempo_andamento_qs_detalhes = nil
+      indicador.tempo_resolucao_qs_detalhes = nil
+      indicador.tempo_fechamento_qs_detalhes = nil
+      indicador.tempo_concluido_testes_versao_liberada_detalhes = nil
+      indicador.qtd_retorno_testes_qs = nil
 
-      # Campo de localização
+      # Campos de controle/status
+      indicador.tarefa_complementar = nil
       indicador.equipe_responsavel_atual = nil
       indicador.tarefa_fechada_sem_testes = nil
       indicador.etapa_atual = nil
+      indicador.etapa_atual_agrupado_retorno_testes = nil
+      indicador.etapa_atual_eh_retorno_testes = nil
       indicador.data_etapa_atual = nil
+      indicador.motivo_situacao_desconhecida = nil
     end
-
     # Método para atualizar as tags das tarefas com a situação atual
     def self.atualizar_tags_etapa_atual(tarefas_devel, tarefas_qs, etapa_atual)
       begin
