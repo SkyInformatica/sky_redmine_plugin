@@ -410,6 +410,7 @@ module SkyRedminePlugin
       indicador.data_etapa_atual = nil
       indicador.motivo_situacao_desconhecida = nil
     end
+
     # Método para atualizar as tags das tarefas com a situação atual
     def self.atualizar_tags_etapa_atual(tarefas_devel, tarefas_qs, etapa_atual)
       begin
@@ -799,13 +800,13 @@ module SkyRedminePlugin
       # Se não atende nenhuma condição de DESCONHECIDA, retorna nil para continuar a verificação
       resultado
     end
-  end
 
-  def self.obter_etapa_atual_agrupado_retorno_testes(etapa)
-    if etapa.to_s.start_with?("E07_AGUARDA_ENCAMINHAR_RT")
-      return etapa
-    else
-      return etapa.to_s.gsub(/_RT$/, "")
+    def self.obter_etapa_atual_agrupado_retorno_testes(etapa)
+      if etapa.to_s.start_with?("E07_AGUARDA_ENCAMINHAR_RT")
+        return etapa
+      else
+        return etapa.to_s.gsub(/_RT$/, "")
+      end
     end
   end
 end
