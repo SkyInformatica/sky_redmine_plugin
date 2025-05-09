@@ -4,7 +4,7 @@ class IndicadoresV2Controller < ApplicationController
   before_action :authorize
   menu_item :indicadores_v2
 
-  METABASE_SITE_URL = "https://metabase.skyinformatica.com"
+  METABASE_SITE_URL = "https://metabase.skyinformatica.com.br"
   METABASE_SECRET_KEY = "0ea69615468a2ff4859d94bb587f94850e8bf2277c2c0b7bb502a7070bbfb337"
 
   def index
