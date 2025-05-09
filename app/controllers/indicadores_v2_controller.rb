@@ -16,7 +16,9 @@ class IndicadoresV2Controller < ApplicationController
     }
 
     token = JWT.encode(payload, METABASE_SECRET_KEY)
-    @iframe_url = "#{METABASE_SITE_URL}/embed/dashboard/#{token}#bordered=true&titled=false?projeto=#{@project}"
+    # Usando CGI.escape para codificar corretamente o valor do projeto
+    encoded_project = CGI.escape(@project.to_s)
+    @iframe_url = "#{METABASE_SITE_URL}/embed/dashboard/#{token}?projeto=#{encoded_project}#bordered=true&titled=false"
     Rails.logger.info "#{@iframe_url}"
   end
 
