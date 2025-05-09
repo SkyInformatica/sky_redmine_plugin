@@ -1,0 +1,14 @@
+.indicadores-v2-container {
+  padding: 20px;
+}
+
+.metabase-dashboard {
+  background: white;
+  border-radius: 4px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+  margin-top: 20px;
+}
+
+.metabase-dashboard iframe {
+  border-radius: 4px;
+}

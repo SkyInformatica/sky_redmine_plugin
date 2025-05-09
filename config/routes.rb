@@ -20,6 +20,7 @@ post "processar_indicadores_2024", to: "processar_indicadores#processar_indicado
 post "limpar_tags_indicadores", to: "processar_indicadores#limpar_tags_indicadores", as: "limpar_tags_indicadores"
 
 match "projects/:id/indicadores", to: "indicadores#index", via: "get", as: "indicadores"
+match "projects/:id/indicadores_v2", to: "indicadores_v2#index", via: "get", as: "indicadores_v2"
 
 # processar indicadores
 get "processar_indicadores_lote", to: "processar_indicadores#processar_indicadores_lote", as: "processar_indicadores_lote"
