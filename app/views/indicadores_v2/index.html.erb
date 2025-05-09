@@ -1,15 +1,18 @@
 <% content_for :header_tags do %>
-  <%= stylesheet_link_tag "indicadores_v2_", plugin: "sky_redmine_plugin" %>
+  <%= stylesheet_link_tag "indicadores_v2", plugin: "sky_redmine_plugin" %>
 <% end %>
 
-<div class="indicadores-v2-container_">  
-  <div class="metabase-dashboard_">
+<div class="indicadores-v2-container">  
+  <div class="metabase-dashboard">
     <iframe 
       src="<%= @iframe_url %>" 
       frameborder="0" 
       width="100%" 
-      height="2000px" 
+      height="1080px" 
       allowtransparency>
     </iframe>
+  </div>
+  <div class="metabase-link" style="text-align: center; margin-top: 20px; margin-bottom: 20px;">
+    <%= link_to "Abrir no Metabase", @metabase_direct_url, target: "_blank", class: "button" %>
   </div>
 </div>

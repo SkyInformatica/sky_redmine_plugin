@@ -36,7 +36,7 @@ class IndicadoresV2Controller < ApplicationController
     # Monta o fragment
     fragment_string = fragment_params.map { |k, v| "#{k}=#{v}" }.join("&")
 
-    # Monta a URL final
+    # Monta a URL final do iframe
     @iframe_url = [
       METABASE_SITE_URL,
       "/embed/dashboard/",
@@ -44,6 +44,10 @@ class IndicadoresV2Controller < ApplicationController
       "?#{query_string}",
       "##{fragment_string}",
     ].join
+
+    # Monta a URL direta para o Metabase
+    @metabase_direct_url = "#{METABASE_SITE_URL}/dashboard/4-redmine-indicadores?projeto=#{CGI.escape(@project.to_s)}"
+
     Rails.logger.info "#{@iframe_url}"
   end
 
