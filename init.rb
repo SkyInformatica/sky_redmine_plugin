@@ -4,8 +4,7 @@
 #  Rails.logger.error "Whenever gem não está instalada. Por favor, adicione 'gem \"whenever\"' ao Gemfile e execute 'bundle install'"
 #end
 require "redmine"
-require "chartkick"
-require "groupdate"
+require "jwt"
 require_relative "app/helpers/fluxo_tarefas_helper"
 require_relative "lib/sky_redmine_plugin/patches/issue_helper_patch"
 #require_relative "lib/sky_redmine_plugin/issue_helper_patch"
