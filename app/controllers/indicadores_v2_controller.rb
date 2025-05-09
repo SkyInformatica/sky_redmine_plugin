@@ -26,7 +26,7 @@ class IndicadoresV2Controller < ApplicationController
     # Hash com os parâmetros do fragment (#)
     fragment_params = {
       "background" => "false",
-      "bordered" => "true",
+      "bordered" => "false",
       "titled" => "false",
     }
 
