@@ -6,8 +6,7 @@
   background: white;
   border-radius: 4px;
   box-shadow: 0 1px 3px rgba(0,0,0,0.12);
-  margin-top: 20px;
-  position: relative;
+  margin-bottom: 10px;  /* Adicionado espaço entre o dashboard e o link */
 }
 
 .metabase-dashboard iframe {
@@ -15,28 +14,15 @@
 }
 
 .metabase-link {
-  position: absolute;
-  top: 60px;
-  right: 73px;
-  z-index: 1000;
+  margin-top: 10px;
 }
 
 .metabase-link a {
-  color: #1C7ED6;
-  text-decoration: none;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  font-size: 14px;
-  font-weight: 400;
   display: inline-flex;
   align-items: center;
   gap: 4px;
 }
 
-.metabase-link a:hover {
-  color: #1971C2;
-}
-
 .metabase-link i {
   font-size: 12px;
-  margin-right: 2px; /* Mudei de margin-left para margin-right */
 }

@@ -5,12 +5,6 @@
 
 <div class="indicadores-v2-container">  
   <div class="metabase-dashboard">
-    <div class="metabase-link">
-      <%= link_to @metabase_direct_url, target: "_blank" do %>
-        <i class="fa-solid fa-arrow-up-right-from-square"></i>
-        Abrir no Metabase
-      <% end %>
-    </div>
     <iframe 
       src="<%= @iframe_url %>" 
       frameborder="0" 
@@ -18,5 +12,11 @@
       height="1080px" 
       allowtransparency>
     </iframe>
+  </div>
+  <div class="metabase-link">
+    <%= link_to @metabase_direct_url, target: "_blank" do %>
+      <i class="fa-solid fa-arrow-up-right-from-square"></i>
+      Abrir no Metabase
+    <% end %>
   </div>
 </div>
