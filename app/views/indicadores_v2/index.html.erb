@@ -1,11 +1,15 @@
 <% content_for :header_tags do %>
   <%= stylesheet_link_tag "indicadores_v2", plugin: "sky_redmine_plugin" %>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 <% end %>
 
 <div class="indicadores-v2-container">  
   <div class="metabase-dashboard">
     <div class="metabase-link">
-      <%= link_to "Abrir no Metabase", @metabase_direct_url, target: "_blank" %>
+      <%= link_to @metabase_direct_url, target: "_blank" do %>
+        Abrir no Metabase
+        <i class="fa-solid fa-arrow-up-right-from-square"></i>
+      <% end %>
     </div>
     <iframe 
       src="<%= @iframe_url %>" 
