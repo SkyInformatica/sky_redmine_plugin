@@ -16,16 +16,21 @@
 
 .metabase-link {
   position: absolute;
-  top: 10px;
-  right: 140px; /* Ajustado para ficar à esquerda do link "Exportar aba como PDF" */
+  top: 40px; /* Ajustado para ficar abaixo do "Exportar aba como PDF" */
+  right: 10px;
   z-index: 1000;
 }
 
 .metabase-link a {
-  color: #2996cc;
+  color: #1C7ED6; /* Cor similar ao padrão Mantine */
   text-decoration: none;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  display: inline-flex;
+  align-items: center;
 }
 
 .metabase-link a:hover {
-  text-decoration: underline;
+  color: #1971C2; /* Cor mais escura no hover */
 }
