@@ -16,8 +16,8 @@
 
 .metabase-link {
   position: absolute;
-  top: 40px; /* Ajustado para ficar abaixo do "Exportar aba como PDF" */
-  right: 10px;
+  top: 60px; /* Ajustado para ficar abaixo do "Exportar aba como PDF" */
+  right: 50px;
   z-index: 1000;
 }
 
